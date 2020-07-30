@@ -1,0 +1,19 @@
+//
+//  Constants.swift
+//  FoodPicker
+//
+//  Created by 陳翰霖 on 2020/7/9.
+//  Copyright © 2020 陳翰霖. All rights reserved.
+//
+
+import Foundation
+import Firebase
+
+let DID_SELECT_KEY = "restaurantDidSelect"
+let DID_LIKE_KEY = "restaurantDidLike"
+let categoryPreload = ["Restaurant", "Coffee"]
+
+let DB_REF = Database.database().reference()
+
+let REF_USER = DB_REF.child("user")
+let REF_USER_LIKE = DB_REF.child("user-likes")
