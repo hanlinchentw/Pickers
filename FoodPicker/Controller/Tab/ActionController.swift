@@ -8,6 +8,7 @@
 
 import UIKit
 import iOSLuckyWheel
+import RxSwift
 
 private let selectedIdentifier = "FavoriteCell"
 

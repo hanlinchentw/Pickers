@@ -19,7 +19,7 @@ protocol CardCellDelegate : class {
 
 class CardCell : UICollectionViewCell {
     //MARK: - Properties
-    var restaurant : Restaurant! {didSet{indicator.stopAnimating(); configure()}}
+    var restaurant : Restaurant! {didSet{configure()}}
     private let optionImageView : UIImageView = {
         let iv = UIImageView()
         iv.clipsToBounds = true
@@ -75,21 +75,13 @@ class CardCell : UICollectionViewCell {
         button.setImage(UIImage(named: "icnHeart")?.withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
-    
-    private let indicator = UIActivityIndicatorView()
+
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame:frame)
         backgroundColor = .white
         layer.cornerRadius = 16
-        addSubview(indicator)
-        indicator.style = .large
-        indicator.centerX(inView: self)
-        indicator.centerY(inView: self)
-        indicator.color = .black
-        indicator.startAnimating()
-        
-        
+
         addSubview(optionImageView)
         optionImageView.anchor(top:topAnchor, left: leftAnchor, right: rightAnchor,bottom: bottomAnchor,
                                paddingTop: 8, paddingLeft:8, paddingRight: 8,paddingBottom: 104 )
