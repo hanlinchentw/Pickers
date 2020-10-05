@@ -15,40 +15,56 @@ protocol IntroViewDelegate : class {
 class IntroView : UIView {
     //MARK: - Properties
     weak var delegate : IntroViewDelegate?
-    private let facebookButton  :UIButton = {
-        let button = UIButton().createAccountButton(withText: "Start with facebook")
-        button.rx.tap.bind{
-            
-        }.dispose()
-        return button
+    private let logoImageView : UIImageView = {
+        let iv = UIImageView()
+        iv.image = UIImage(named: "logoY")
+        iv.contentMode = .scaleAspectFit
+        return iv
     }()
-    private lazy var googleButton  :UIButton = {
-        let button = UIButton().createAccountButton(withText: "Start with google")
-        button.rx.tap.bind{
-            
-        }.dispose()
-        return button
+    private let sloganLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Pick for you, help you choose"
+        label.font = UIFont(name: "Arial-BoldMT", size: 16)
+        label.textColor = .gray
+        return label
     }()
-    private lazy var emailButton  :UIButton = {
-        let button = UIButton().createAccountButton(withText: "Start with Email")
-        button.rx.tap.bind{
-            self.delegate?.didTapCreateButton()
-        }.dispose()
-        return button
+    private let facebookButton  :UIView = {
+        let view = UIView().createAccountButton(withText: "Start with facebook",
+                                                backgroundColor: .denimBlue,
+                                                textColor : .white,
+                                                imageName : "icnFbXs")
+        return view
+    }()
+    private lazy var emailButton  :UIView = {
+        let view = UIView().createAccountButton(withText: "Start with Email",
+                                                backgroundColor: .white,
+                                                textColor : .customblack,
+                                                imageName:"icnMailXs")
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(startWithEmailAuth))
+        view.addGestureRecognizer(tap)
+        view.isUserInteractionEnabled = true
+        return view
     }()
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame:frame)
         backgroundColor = .white
+        addSubview(logoImageView)
+        logoImageView.center(inView: self, xConstant: 0, yConstant: -201)
+        logoImageView.anchor(width: 120, height: 120)
         
-        let buttonstack = UIStackView(arrangedSubviews: [facebookButton, googleButton, emailButton])
+        addSubview(sloganLabel)
+        sloganLabel.centerX(inView: self)
+        sloganLabel.anchor(top: logoImageView.bottomAnchor)
+        
+        let buttonstack = UIStackView(arrangedSubviews: [facebookButton, emailButton])
         buttonstack.axis = .vertical
-        buttonstack.spacing = 8
+        buttonstack.spacing = 16
         buttonstack.distribution = .fillEqually
         addSubview(buttonstack)
-        buttonstack.centerX(inView: self)
-        buttonstack.centerY(inView: self)
+        buttonstack.center(inView: self, xConstant: 0, yConstant: 201)
     }
     
     required init?(coder: NSCoder) {
@@ -57,4 +73,7 @@ class IntroView : UIView {
     //MARK: - Helpers
     
     //MARK: - Selectors
+    @objc func startWithEmailAuth(){
+        delegate?.didTapCreateButton()
+    }
 }

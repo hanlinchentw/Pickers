@@ -11,9 +11,13 @@ import Firebase
 
 let DID_SELECT_KEY = "restaurantDidSelect"
 let DID_LIKE_KEY = "restaurantDidLike"
-let categoryPreload = ["Restaurant", "Coffee"]
+let categoryPreload = [ "NewInPicker", "Coffee", "BubbleTea", "Hamburger", "Pizza",
+                        "Korean", "Italian", "Chinese", "Taiwanese","Japanese", "Thai",
+                         "Health"]
 
 let DB_REF = Database.database().reference()
 
 let REF_USER = DB_REF.child("user")
 let REF_USER_LIKE = DB_REF.child("user-likes")
+let REF_USER_SEARCH = DB_REF.child("user-search")
+let REF_SEARCH = DB_REF.child("search")

@@ -19,7 +19,7 @@ struct LuckyWheelViewModel  {
             if restaurants.count % 2 == 0{
                 for (index, item) in restaurants.enumerated(){
                     let itemColor : UIColor = index%2 != 0 ? .white : .pale
-                    let wheelItem1 = WheelItem(title: item.name, titleColor: .black, itemColor: itemColor)
+                    let wheelItem1 = WheelItem(title: item.name, titleColor: .customblack, itemColor: itemColor)
                     items1.append(wheelItem1)
                     items2 = items1
                 }
@@ -27,15 +27,15 @@ struct LuckyWheelViewModel  {
                 for (index, item) in self.restaurants.enumerated(){
                     let itemColor : UIColor = index%2 != 0 ? .white : .pale
                     let oppsiteColor : UIColor = itemColor == .white ? .pale : .white
-                    let wheelItem1 = WheelItem(title: item.name, titleColor: .black, itemColor: itemColor)
-                    let wheelItem2 = WheelItem(title: item.name, titleColor: .black, itemColor: oppsiteColor)
+                    let wheelItem1 = WheelItem(title: item.name, titleColor: .customblack, itemColor: itemColor)
+                    let wheelItem2 = WheelItem(title: item.name, titleColor: .customblack, itemColor: oppsiteColor)
                     items1.append(wheelItem1)
                     items2.append(wheelItem2)
                 }
             }
              return items1 + items2
         }
-        return [WheelItem(title: "", titleColor: .black, itemColor: .pale)]
+        return [WheelItem(title: "", titleColor: .customblack, itemColor: .pale)]
     }
     init(restaurants: [Restaurant]) {
         self.restaurants = restaurants

@@ -41,9 +41,10 @@ class IntroController : UIViewController {
 }
 extension IntroController : IntroViewDelegate {
     func didTapCreateButton() {
-        UIView.animate(withDuration: 0.3) {
-            let signUp = AuthController()
-            self.navigationController?.pushViewController(signUp, animated: true)
-        }
+        let auth = AuthController()
+        let nav = UINavigationController(rootViewController: auth)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true, completion: nil)
+        
     }
 }

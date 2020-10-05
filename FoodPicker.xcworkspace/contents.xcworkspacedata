@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/chenhanlin/Desktop/new life/app develpoer/My own project/FoodPicker/FoodPicker/Core data entity/LikedRestaurant+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:LikedRestaurant+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
       location = "group:FoodPicker.xcodeproj">
    </FileRef>
    <FileRef

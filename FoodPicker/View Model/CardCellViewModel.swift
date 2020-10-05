@@ -7,37 +7,25 @@
 //
 
 import UIKit
+import CoreLocation
 
 struct CardCellViewModel {
     
     var restaurant : Restaurant
     
     var priceString : NSAttributedString? {
-        let attributedTitle =  NSMutableAttributedString(string: "\(restaurant.price) ・ \(restaurant.type)", attributes:
+        let attributedTitle =  NSMutableAttributedString(string: "\(restaurant.price)・\(restaurant.type)・\(distance) m", attributes:
             [NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14),
-             NSAttributedString.Key.foregroundColor:UIColor(red: 151/255, green: 151/255, blue: 151/255, alpha: 1) ])
-      
+             NSAttributedString.Key.foregroundColor:UIColor.gray ])
         return attributedTitle
     }
     
-    static var numberFormatter : NumberFormatter{
-        let nf = NumberFormatter()
-        nf.numberStyle = .none
-        nf.maximumFractionDigits = 0
-        
-        return nf
-    }
-    
-    var formattedDistance : String? {
-        return CardCellViewModel.numberFormatter.string(from: restaurant.distance as NSNumber)
-    }
-    
     var selectButtonImage : UIImage? {
-        return restaurant.isSelected  ? UIImage(named: "icnOvalSelected") :  UIImage(named: "icnOval")
+        return restaurant.isSelected  ? UIImage(named: "icnOvalSelected") :  UIImage(named: "addL")
     }
     
-    var heartColor : UIColor {
-        return restaurant.isLiked ? .red : .clear
+    var likeButtonImagename : String {
+        return restaurant.isLiked ? "btnBookmarkHeartPressed" : "icnHeart"
     }
     
     var businessString : NSAttributedString? {
@@ -49,7 +37,7 @@ struct CardCellViewModel {
         [NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14),
          NSAttributedString.Key.foregroundColor:UIColor.freshGreen])
         
-        return restaurant.isClosed ? closedText : openText
+        return restaurant.isClosed ?? true ? closedText : openText
     }
     
     var ratedString : NSAttributedString? {
@@ -63,12 +51,18 @@ struct CardCellViewModel {
             [NSAttributedString.Key.foregroundColor : UIColor(red: 151/255, green: 151/255, blue: 151/255, alpha: 1),
              NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14), ]))
         
-        guard let distance = formattedDistance else { return attributedTitle }
-        attributedTitle.append(NSAttributedString(string: "・\(distance) m away", attributes:
-        [NSAttributedString.Key.foregroundColor : UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1),
-         NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14), ]))
+        
         return attributedTitle
     }
+    
+    var distance : Int {
+        let location = CLLocation(latitude: restaurant.coordinates.latitude,
+                                  longitude: restaurant.coordinates.longitude)
+        guard let currentLocation = LocationHandler.shared.locationManager.location else { return 1000 }
+        let distance = location.distance(from: currentLocation)
+        return Int(distance)
+    }
+    
     
     init(restaurant : Restaurant) {
         self.restaurant = restaurant

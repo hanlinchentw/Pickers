@@ -7,12 +7,12 @@ target 'FoodPicker' do
 
   # Pods for FoodPicker
   pod 'iOSLuckyWheel'
+  
   pod 'Moya', '~> 14.0'
   pod 'AlamofireImage', '~> 4.1'
+  pod "ImageSlideshow/Alamofire"
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
-  pod 'Firebase/Storage'
-  pod 'RxSwift', '~> 5'
-  pod 'RxCocoa', '~> 5'
+  pod 'ImageSlideshow', '~> 1.9.0'
 end

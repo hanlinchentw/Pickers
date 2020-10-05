@@ -8,112 +8,116 @@
 
 import UIKit
 import MapKit
+import CoreLocation
+import Firebase
+import CoreData
 
+private let foodCardSection = "FoodCardCell"
+private let headerCell = "SortHeader"
+private let footerCell = "AllRestaurantsSection"
 
-private let reuseIdentifier = "FoodCardCell"
-private let annoIdentifier = "MapAnnoView"
-
-struct FoodCardDataSoruce {
+struct SortedDataSource {
+    var option : SortOption
     var restaurants : [Restaurant]
-    var option : FilterOptions
 }
 class MainPageController: UICollectionViewController {
     
     //MARK: - Properties
     private var mapView : MKMapView!
-    private let navBarView = MainPageHeader()
-    
-    private let filterButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "icnFilter")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handleFilter), for: .touchUpInside)
-        return button
-    }()
+    private let locationManager = LocationHandler.shared.locationManager
+    private let navBarView = MainPageNavigationBar()
     private var filterView = FilterView()
+    private let actionSheetLauncher = ActionSheetLauncher()
+    private var dataSource = [Restaurant]()
     
-    private var options = [FilterOptions]() {
-        didSet {
-            filterView.options = self.options
-        }
-    }
-    private var mutableOption : FilterOptions? {
-        didSet{
-            guard let option = mutableOption else { return }
-            if !options.contains(option){
-                self.options.append(option)
-                fetchRestaurants(option: option)
-                return
-            }else {
-                self.options.remove(at: self.options.firstIndex(of: option)!)
-                for (index, item) in dataSource.enumerated() {
-                    if item.option == option{
-                        self.dataSource.remove(at: index)
-                        return
-                    }
-                }
-            }
-        }
-    }
-    private var restaurants : [Restaurant]? {
-        didSet {
-            guard let restaurants = restaurants else {return }
-            guard let option = restaurants[0].filterOption else { return }
-            let source = FoodCardDataSoruce(restaurants: restaurants, option: option)
-            self.dataSource.append(source)
-            addAnnotations(restaurants:restaurants)
-            return
-        }
-    }
-    private var dataSource = [FoodCardDataSoruce]() {
-        didSet {
-            self.collectionView.reloadData()
-            self.mapView.removeAnnotations(self.mapView.annotations)
-            self.dataSource.forEach { (source) in
-                let restaurants = source.restaurants
-                self.addAnnotations(restaurants: restaurants)
-            }
-        }
-    }
+    private var recommendSectionDataSource = [SortedDataSource]()
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        LocationHandler.shared.enableLocationServices()
+        preloadAllRestaurants()
+        preloadRecommendation()
         configureCollectionView()
         configureNavBar()
-        configureUI()
+        configureFilterView()
         configureMapView()
-        preloadRestaurants()
     }
-    func preloadRestaurants(){
-        let preload : [FilterOptions]  = [.nearby, .popular, .highestRate]
-        for option in preload {
-            self.mutableOption = option
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.barStyle = .default
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isTranslucent = true
+        tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isTranslucent = true
+    }
+    private func preloadAllRestaurants(){
+            self.fetchAllRestaurants(offset: 0, limit: 20)
+    }
+    private func preloadRecommendation(){
+        let defaultOptions : [SortOption] = [.topPick, .popular]
+        for option in defaultOptions {
+            self.fetchRestaurantsByOption(option: option)
         }
     }
     //MARK: - API
-    func fetchRestaurants(withCategory category : String = "food", option: FilterOptions){
-        guard let location = LocationHandler.shared.currentLocation else { return }
-        let sortBy = option.sortby
-        
-        NetworkService.shared.fetchRestaurant(lat: location.latitude, lon: location.longitude,
-                                              withOffset: 0,
-                                              category: category,
-                                              sortBy: sortBy,
-                                              option: option)
-        { (res) in
-            self.restaurants = res
+    func fetchAllRestaurants(offset: Int, limit: Int){
+        guard let location = locationManager.location?.coordinate else { return }
+        NetworkService.shared
+            .fetchRestaurants(lat: location.latitude, lon: location.longitude,
+                                              withOffset: offset,
+                                              limit: limit)
+        { (restaurants) in
+            guard let res = restaurants, !res.isEmpty else {
+                print("DEBUG: Failed to get the restaurants..")
+                return
+            }
+            print("DEBUG: Did fetch these restaurants...\(res[0].name)")
+            self.dataSource += res
+            self.addAnnotations(restaurants: res)
+            self.collectionView.reloadData()
         }
     }
-    //MARK: - Selectors
-    @objc func handleFilter(){
-        filterView.isHidden.toggle()
+    func fetchRestaurantsByOption(option: SortOption){
+        guard let location = locationManager.location?.coordinate else { return }
+        
+        NetworkService.shared
+            .fetchRestaurants(lat: location.latitude, lon: location.longitude,
+                            withOffset: 0, sortBy: option.sortby,
+                            option: option, limit: 6)
+            { (restaurants) in
+                guard let res = restaurants, !res.isEmpty else {
+                    print("DEBUG: Failed to get the restaurants..")
+                    return
+                }
+                let result = SortedDataSource(option: option, restaurants: res)
+                self.recommendSectionDataSource.append(result)
+                self.collectionView.reloadData()
+        }
+    }
+    func checkIfUserLiked(res: [Restaurant], completion: @escaping([Restaurant])->Void){
+        var checkedRestaurants = [Restaurant]()
+        for (index, item) in res.enumerated(){
+            RestaurantService.shared.checkIfUserLikeRestaurant(restaurantID: item.restaurantID) { isLiked in
+                var restaurant = item
+                restaurant.isLiked = isLiked
+                checkedRestaurants.append(restaurant)
+            }
+        }
+        completion(checkedRestaurants)
+    }
+    
+    func updateLikeRestaurant(restaurant: Restaurant){
+        RestaurantService.shared.updateLikedRestaurant(restaurant: restaurant) { (err, ref) in
+            if let err = err {
+                print("DEBUG: Failed to update restaurant...\(err.localizedDescription)")
+            }
+        }
     }
     //MARK: - Helpers
-    
     func configureNavBar(){
-        navigationController?.navigationBar.isHidden = true
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.barStyle = .default
         navBarView.delegate = self
         view.addSubview(navBarView)
         navBarView.anchor(top: view.topAnchor,
@@ -122,88 +126,118 @@ class MainPageController: UICollectionViewController {
                           height: 104)
         
     }
-    func configureCollectionView(){
-        collectionView.contentInset = UIEdgeInsets(top: 152 - 44, left: 16, bottom: 0, right: 0)
-        collectionView.backgroundColor = .backgroundColor
-        collectionView.register(FoodCardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-    }
-    func configureUI(){
-        collectionView.addSubview(filterButton)
-        filterButton.anchor(top:collectionView.topAnchor,right:view.rightAnchor,
-                            paddingTop: -44, paddingRight: 16,
-                            width: 48, height: 48)
-        
-        collectionView.addSubview(filterView)
-        filterView.anchor(top:collectionView.topAnchor, left: view.leftAnchor,
-                          right: view.rightAnchor, paddingLeft: 8, paddingRight: 8,
-                          height: 200)
-        filterView.isHidden = true
+    func configureFilterView(){
         filterView.delegate = self
+        filterView.backgroundColor = .backgroundColor
+        view.addSubview(filterView)
+        filterView.anchor(top: navBarView.bottomAnchor, left: view.leftAnchor,
+                          right: view.rightAnchor,
+                          height: 72)
+        actionSheetLauncher.delegate = self
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = .backgroundColor
+        view.insertSubview(backgroundView, aboveSubview: collectionView)
+        backgroundView.fit(inView: navBarView)
+    }
+    func configureCollectionView(){
+        let refresher = UIRefreshControl()
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refresher
+        
+        if let safeAreaHeight = UIApplication.shared.keyWindow?.safeAreaInsets.top {
+            collectionView.contentInset = UIEdgeInsets(top: 104 - safeAreaHeight + 72,
+                                                       left: 0, bottom: 16, right: 0)
+        }else {
+            collectionView.contentInset = UIEdgeInsets(top: 104 + 72,
+                                                       left: 0, bottom: 16, right: 0)
+        }
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .backgroundColor
+        collectionView.register(FilterResultSection.self, forCellWithReuseIdentifier: foodCardSection)
+        collectionView.register(CategoriesCard.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerCell)
+        collectionView.register(AllRestaurantsSection.self, forSupplementaryViewOfKind:UICollectionView.elementKindSectionFooter,
+                                withReuseIdentifier: footerCell)
     }
     func configureMapView(){
         mapView = MKMapView(frame: view.bounds)
-        
+        locationManager.delegate = self
         view.insertSubview(mapView, at: 1)
         mapView.isHidden = true
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         mapView.isZoomEnabled = true
     }
+    //MARK: - Selectors
+    @objc func handleRefresh(){
+        collectionView.refreshControl?.beginRefreshing()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            self.collectionView.refreshControl?.endRefreshing()
+        }
+    }
 }
 //MARK: -  UICollectionView Delegate/ DataSource
 extension MainPageController {
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
-    }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? 1 : dataSource.count
+        return recommendSectionDataSource.count
     }
-    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-            as! FoodCardCell
-        var feed = [Restaurant]()
-        
-        if indexPath.section == 1{
-            let option = dataSource[indexPath.row].option
-            feed = dataSource[indexPath.row].restaurants
-            
-            cell.options = option
-            cell.restaurants = feed
-            cell.cardSize = CGSize(width: 280, height: 240)
-            cell.delegate = self
-            cell.numofCell = feed.count
-        }else{
-            cell.options = nil
-            cell.cardSize = CGSize(width: 136, height: 168)
-            cell.numofCell = categoryPreload.count
-        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: foodCardSection, for: indexPath)
+            as! FilterResultSection
+        cell.options = recommendSectionDataSource[indexPath.row].option
+        cell.restaurants = recommendSectionDataSource[indexPath.row].restaurants
+        cell.delegate = self
         return cell
     }
-    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerCell, for: indexPath) as! CategoriesCard
+            return header
+        }else {
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerCell, for: indexPath) as! AllRestaurantsSection
+            footer.restaurants = dataSource
+            footer.delegate = self
+            return footer
+        }
+    }
 }
 //MARK: - UICollectionViewDelegateFlowLayout
 extension MainPageController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return indexPath.section == 0 ?
-            CGSize(width: view.frame.width, height: 168) : CGSize(width: view.frame.width, height: 280)
+        return CGSize(width: view.frame.width, height: 304)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: view.frame.width, height: 80)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 24)
+        let height : CGFloat = dataSource.isEmpty ?
+            132 : 132 + 8 + CGFloat(104*dataSource.count)
+        print("DEBUG: \(height) \(dataSource.count)")
+        return CGSize(width: view.frame.width - 32 , height: height)
     }
-    
 }
 //MARK: -  Map Helpers
 private extension MainPageController {
     func addAnnotations(restaurants : [Restaurant]){
         restaurants.forEach { (restaurant) in
             let anno = MKPointAnnotation()
-            anno.coordinate = restaurant.location
+            anno.coordinate = restaurant.coordinates
             anno.title = restaurant.name
             self.mapView.addAnnotation(anno)
         }
         self.mapView.showAnnotations(self.mapView.annotations, animated: true)
+    }
+}
+//MARK: -  CLLocationManagerDelegate
+extension MainPageController : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations[0].coordinate
+        print("DEBUG: Did update location ... ")
+        let region = MKCoordinateRegion(center: location
+            , latitudinalMeters: 5000, longitudinalMeters: 5000)
+        self.mapView.setRegion(region, animated: true)
     }
 }
 //MARK: - MainPageHeaderDelegate
@@ -215,14 +249,53 @@ extension MainPageController : MainPageHeaderDelegate {
 }
 //MARK: - FoodCardCellDelegate
 extension MainPageController : FoodCardCellDelegate {
-    func didSelectCell(_ restaurant: Restaurant) {
+    func didLikeRestaurant(_ restaurant: Restaurant) {
+        updateLikeRestaurant(restaurant: restaurant)
+    }
+    func didTappedRestaurant(_ restaurant: Restaurant) {
         let detailVC = DetailController(restaurant: restaurant)
-        navigationController?.pushViewController(detailVC, animated: true)
+        detailVC.fetchDetail()
+        
+        self.collectionView.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.4) {
+            self.navigationController?.navigationBar.barStyle = .black
+            self.navigationController?.pushViewController(detailVC, animated: true)
+            self.collectionView.isUserInteractionEnabled = true
+        }
+    }
+}
+//MARK: - AllRestaurantsSectionDelegate
+extension MainPageController: AllRestaurantsSectionDelegate {
+    func didSelectRestaurant(restaurant: Restaurant) {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: DID_SELECT_KEY),
+        object: nil,
+        userInfo: ["Restaurant": restaurant as Restaurant])
+    }
+    func didTapRestaurant(restaurant: Restaurant) {
+        let detailVC = DetailController(restaurant: restaurant)
+        detailVC.fetchDetail()
+        self.collectionView.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
+            self.navigationController?.navigationBar.barStyle = .black
+            self.navigationController?.pushViewController(detailVC, animated: true)
+            self.collectionView.isUserInteractionEnabled = true
+        }
     }
 }
 //MARK: - FilterViewDelegate
 extension MainPageController : FilterViewDelegate {
-    func didSelectOption(_ filter: FilterOptions){
-        self.mutableOption = filter
+    func didTapSortButton() {
+        actionSheetLauncher.show(isSortButton: true)
+    }
+    
+    func didTapPriceButton() {
+        actionSheetLauncher.show(isSortButton: false)
+    }
+}
+//MARK: -
+extension MainPageController: ActionSheetLauncherDelegate {
+    func didSelectSortOption(shouldAdd: Bool, option: SortOption) {
+        print("DEBUG: Did select \(option.description)")
+    
     }
 }

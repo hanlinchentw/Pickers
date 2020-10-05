@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,10 +17,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = HomeController()
         window?.makeKeyAndVisible()
+        window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+            let home = HomeController()
+            self.window?.rootViewController = home
+            let image = UIImage(named: "bar")
+            let tabBarImage = self.resize(image: image!, newWidth: home.view.frame.width)
+            home.tabBar.backgroundImage = tabBarImage
+            
+        }
     }
+    func resize(image: UIImage, newWidth: CGFloat) -> UIImage {
 
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: image.size.height))
+        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: image.size.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return newImage!
+    }
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

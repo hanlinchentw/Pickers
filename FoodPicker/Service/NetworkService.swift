@@ -9,19 +9,24 @@
 import UIKit
 import Moya
 
-private let apiKey = "EkoMg_mY0_BwpaUO3qgNECPvepWDa4_kozc_3nguycgSz3UH_Fvg7GaSIDgQAefiKI2Ep-i4JsY3_GNGeJO61F3MpuIW_D9zx8zFxP8tt7jsAEaxxk02HhV_kFENX3Yx"
+private let apiKey = "OnCr8hVaHIl-FaEAPoYbCaLR6A60fcNmTMq7IQzZhwnANuQZsD2Kfj6RmKYWLdLvQQtthwjXDLGBiFzgkYi1ZsgnWSKy2Aaplt_4HY5MaYA8QbWH7ZLZQah96hdfX3Yx"
 
 private let clientID = "YuD9cka95Qb_g7WsdCA-rQ"
 
 enum YelpService{
     enum BusinessesProvider : TargetType {
-        case search(lat: Double, lon: Double, offset: Int = 0, category: String = "food", sortBy : String)
+        case searchByTerm(lat:Double, lon: Double, term: String)
+        case search(lat: Double, lon: Double,
+            offset: Int = 0,
+            category: String = "food", sortBy : String,
+            limit: Int)
         case detail(id:String)
         
         var baseURL: URL { return URL(string:"https://api.yelp.com/v3/businesses")! }
         
         var path: String {
             switch self {
+            case .searchByTerm: return "/search"
             case .search: return "/search"
             case let .detail(id): return "/\(id)"
             }
@@ -32,57 +37,95 @@ enum YelpService{
         
         var task: Task {
             switch self {
-            case let .search(lat,lon,offset, category, sortBy):
-                return .requestParameters(parameters: ["categories":category,
+            case let .search(lat,lon,offset, category, sortBy, limit):
+                return .requestParameters(parameters: ["categories": category,
                                                        "latitude":lat, "longitude": lon,
-                                                       "limit":6,
-                                                       "offset":offset,
-                                                       "radius": 2000,
-                                                       "sort_by":sortBy,
+                                                       "limit":limit,
+                                                       "offset": offset,
+                                                       "radius": 5000,
+                                                       "sort_by": sortBy,
                                                        "locale":"zh_TW"],
                                           encoding:URLEncoding.queryString )
+            case let .searchByTerm(lat, lon, term):
+                return .requestParameters(parameters: ["latitude":lat, "longitude": lon,
+                                                       "limit" : 20 ,
+                                                       "term": term,
+                                                       "locale":"zh_TW"],
+                                          encoding: URLEncoding.queryString)
             case .detail :
-                return .requestPlain
+                return .requestParameters(parameters: ["locale":"zh_TW"], encoding: URLEncoding.queryString)
             }
         }
         var headers: [String : String]? { return ["Authorization":"Bearer \(apiKey)"]}
     }
 }
-struct  NetworkService {
+class  NetworkService {
     let service = MoyaProvider<YelpService.BusinessesProvider>()
     let jsonDecoder = JSONDecoder()
     static let shared = NetworkService()
-    
-    func fetchRestaurant(lat: Double, lon: Double, withOffset offset:Int,category: String, sortBy : String, option: FilterOptions, completion: @escaping([Restaurant])->Void){
+    func fetchRestaurants(lat: Double, lon: Double,
+                         withOffset offset: Int = 0,
+                         category: String = "food",
+                         sortBy : String = "distance",
+                         option: SortOption? = nil,
+                         limit: Int, completion: @escaping([Restaurant]?)->Void){
         var restaurants = [Restaurant]()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        
-        service.request(.search(lat: lat, lon: lon, offset:offset, category: category, sortBy : sortBy)) { (result) in
+        service.request(.search(lat: lat, lon: lon,
+                                offset: offset,
+                                category: category,
+                                sortBy: sortBy,
+                                limit: limit)) { (result) in
             switch result {
             case .success(let response):
                 do {
                     let root = try self.jsonDecoder.decode(Root.self, from: response.data)
                     root.businesses.forEach { (business) in
-                        var restaurant = Restaurant(business: business)
-                        restaurant.filterOption = option
+                        var restaurant = Restaurant(detail: nil, business: business)
+                        restaurant.sortOption = option
                         restaurants.append(restaurant)
                     }
-                }catch{
-                    print("DEBUG: JsonDecode error with ..\(error.localizedDescription)")
-                }
                 completion(restaurants)
+                }catch{
+                    print("DEBUG: JsonDecode error with ..\(error)")
+                }
             case .failure(let error):
                 print("DEBUG:\(error.localizedDescription)")
             }
         }
     }
-    func fetchDetail(id : String, completion: @escaping(Details?)->Void){
+    func fetchRestaurantsByTerm(lat: Double, lon: Double,terms:String, completion: @escaping([Restaurant]?)->Void){
+        var restaurants = [Restaurant]()
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        service.request(.searchByTerm(lat: lat, lon: lon, term: terms)) { (result) in
+            switch result {
+            case .success(let response):
+                do {
+                    let root = try self.jsonDecoder.decode(Root.self, from: response.data)
+                    root.businesses.forEach { (business) in
+                        let restaurant = Restaurant(detail: nil, business: business)
+                        restaurants.append(restaurant)
+                    }
+                completion(restaurants)
+                }catch{
+                    print("DEBUG: JsonDecode error with ..\(error)")
+                }
+            case .failure(let error):
+                print("DEBUG:\(error.localizedDescription)")
+            }
+        }
+    }
+    func fetchDetail(id : String, completion: @escaping(Details)->Void){
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         service.request(.detail(id:id)) {(result) in
             switch result {
             case .success(let response):
-                let detail = try? self.jsonDecoder.decode(Details.self, from: response.data)
-                completion(detail)
+                do {
+                     let detail = try self.jsonDecoder.decode(Details.self, from: response.data)
+                    completion(detail)
+                }catch {
+                    print("DEBUG: Failed to return detail \(error)")
+                }
             case .failure(let error):
                 print("DEBUG:\(error.localizedDescription)")
                 return
