@@ -9,18 +9,38 @@
 import UIKit
 
 private let cardIdentifier = "CardCell"
-
-protocol FoodCardCellDelegate: class {
+private let footerIdentifier = "footerView"
+protocol FilterResultSectionDelegate: class {
     func didTappedRestaurant(_ restaurant: Restaurant)
     func didLikeRestaurant(_ restaurant: Restaurant)
+    func didSelectRestaurant(_ restaurant: Restaurant, option: recommendOption)
+    func shouldShowMoreRestaurants(_ restaurants: [Restaurant])
 }
-class FilterResultSection : UICollectionViewCell {
+
+enum recommendOption: CaseIterable {
+    case topPick
+    case popular
+    
+    var description: String {
+        switch self {
+        case .topPick: return "Top Picks"
+        case .popular: return "Popular"
+        }
+    }
+    var search: String {
+        switch self {
+        case .topPick: return "rating"
+        case .popular: return "review_count"
+        }
+    }
+}
+class FilterResultSection: UICollectionViewCell {
     //MARK: - Properties
-    weak var delegate : FoodCardCellDelegate?
+    weak var delegate : FilterResultSectionDelegate?
     var restaurants = [Restaurant]() { didSet { collectionView.reloadData() } }
-    var options : SortOption? {
+    var option : recommendOption? {
         didSet {
-            titleLabel.text = options?.description
+            titleLabel.text = option?.description
             collectionView.reloadData()
         }
     }
@@ -60,17 +80,20 @@ class FilterResultSection : UICollectionViewCell {
         collectionView.dataSource = self
         collectionView.showsHorizontalScrollIndicator  =  false
         collectionView.register(RestaurantCardCell.self, forCellWithReuseIdentifier: cardIdentifier)
+        collectionView.register(MoreRestaurantsFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footerIdentifier)
     }
 }
 //MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 extension FilterResultSection : UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return restaurants.count
+        return 6
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardIdentifier, for: indexPath)
             as! RestaurantCardCell
-        cell.restaurant = self.restaurants[indexPath.row]
+        if !self.restaurants.isEmpty{
+            cell.restaurant = self.restaurants[indexPath.row]
+        }
         cell.delegate = self
         return cell
         
@@ -78,6 +101,12 @@ extension FilterResultSection : UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         delegate?.didTappedRestaurant(restaurants[indexPath.row])
     }
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerIdentifier, for: indexPath) as! MoreRestaurantsFooterView
+        footer.delegate = self
+        return footer
+    }
+    
 }
 
 extension FilterResultSection : UICollectionViewDelegateFlowLayout {
@@ -87,15 +116,13 @@ extension FilterResultSection : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 8
     }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: 112, height: 240)
+    }
 }
 extension FilterResultSection : CardCellDelegate {
     func didLikeRestaurant(_ restaurant: Restaurant) {
-        for (index, res) in restaurants.enumerated() {
-            if res.restaurantID == restaurant.restaurantID {
-                self.restaurants[index].isLiked.toggle()
-                break
-            }
-        }
+        
         delegate?.didLikeRestaurant(restaurant)
     }
     func didSeletRestaurant(_ restaurant:Restaurant) {
@@ -104,5 +131,12 @@ extension FilterResultSection : CardCellDelegate {
                 self.restaurants[index].isSelected = restaurant.isSelected
             }
         }
+        guard let option = option else { return }
+        delegate?.didSelectRestaurant(restaurant, option: option)
+    }
+}
+extension FilterResultSection: MoreRestaurantsFooterViewDelegate{
+    func shouldShowMoreRestaurants() {
+        delegate?.shouldShowMoreRestaurants(self.restaurants)
     }
 }

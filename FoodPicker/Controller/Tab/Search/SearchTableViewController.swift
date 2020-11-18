@@ -16,7 +16,7 @@ private let searchCellIdentifier = "searchCell"
 class SearchTableViewController : UITableViewController{
     //MARK: - Properties
     weak var delegate : SearchTableViewControllerDelegate?
-    private var historicalRecords = [String]() { didSet{ self.tableView.reloadData() }}
+    var historicalRecords = [String]() { didSet{ self.tableView.reloadData()}}
     private let backButton : UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "icnBack")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -35,6 +35,7 @@ class SearchTableViewController : UITableViewController{
         tf.clearButtonMode = .whileEditing
         tf.returnKeyType = .search
         tf.enablesReturnKeyAutomatically = true
+        tf.keyboardType = .asciiCapable
         return tf
     }()
     private lazy var searchBarContainerView : UIView = {
@@ -51,7 +52,7 @@ class SearchTableViewController : UITableViewController{
     }()
     //MARK: - Lifecycle
     override func viewDidLoad() {
-        self.fetchHistoricalRecord()
+        
         searchBarTextField.becomeFirstResponder()
         configureTableView()
         
@@ -84,11 +85,7 @@ class SearchTableViewController : UITableViewController{
     }
     
     //MARK: - API
-    func fetchHistoricalRecord(){
-        RestaurantService.shared.fetchHistoricalRecord { (records) in
-            self.historicalRecords = records
-        }
-    }
+    
 }
 
 //MARK: - UITableViewDelegate / DataSource
@@ -134,7 +131,6 @@ extension SearchTableViewController{
         }else if indexPath.section == 2{
             
         }
-        
     }
 }
 //MARK: - UITextFieldDelegate

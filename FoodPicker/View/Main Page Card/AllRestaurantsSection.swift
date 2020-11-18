@@ -9,13 +9,14 @@
 import UIKit
 private let restaurantsListIdentifier = "ListCell"
 
-protocol AllRestaurantsSectionDelegate:class {
+protocol AllRestaurantsSectionDelegate: class {
     func didSelectRestaurant(restaurant:Restaurant)
     func didTapRestaurant(restaurant:Restaurant)
+    func shouldSeeAllRestaurants(restaurants:[Restaurant])
 }
 class AllRestaurantsSection: UICollectionReusableView{
     //MARK: - Properties
-    var restaurants = [Restaurant]() { didSet { tableView.reloadData()} }
+    var restaurants = [Restaurant]() { didSet { self.tableView.restaurants = self.restaurants } }
     weak var delegate : AllRestaurantsSectionDelegate?
     
     private let titleLabel : UILabel = {
@@ -25,18 +26,25 @@ class AllRestaurantsSection: UICollectionReusableView{
         return label
     }()
     
-    private let tableView = UITableView()
+    private let tableView = RestaurantsList()
     
-    private let footerView : UIView = {
+    private lazy var footerView : UIView = {
         let view = UIView()
-        view.backgroundColor = .customblack
+        view.backgroundColor = .white
         view.layer.cornerRadius = 12
+        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.borderWidth = 1
         let label = UILabel()
         label.text = "See All Restaurants"
         label.font = UIFont.arialBoldMT
-        label.textColor = .white
+        label.textColor = .black
         view.addSubview(label)
         label.center(inView: view)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(SeeMoreRestaurants))
+        view.addGestureRecognizer(tap)
+        view.isUserInteractionEnabled = true
+        
         return view
     }()
     //MARK: - Lifecycle
@@ -56,45 +64,32 @@ class AllRestaurantsSection: UICollectionReusableView{
     }
     func configureTableview(){
         tableView.delegate = self
-        tableView.dataSource = self
-        tableView.showsVerticalScrollIndicator = false
-        tableView.isScrollEnabled = false
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .white
-        tableView.rowHeight = 88 + 16
-        tableView.layer.cornerRadius = 16
-        
-        
+        tableView.listDelegate = self
+        tableView.register(RestaurantListCell.self, forCellReuseIdentifier: restaurantsListIdentifier)
+
         addSubview(tableView)
         tableView.anchor(top: titleLabel.bottomAnchor, left: leftAnchor,
-                              right: rightAnchor,bottom: bottomAnchor,
-                              paddingTop: 0)
-        tableView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
-        tableView.register(RestaurantListCell.self, forCellReuseIdentifier: restaurantsListIdentifier)
+                              right: rightAnchor,bottom: bottomAnchor)
         
         addSubview(footerView)
-        footerView.anchor(bottom: tableView.bottomAnchor, paddingBottom: 16, width: 336, height: 48)
+        footerView.anchor(left:tableView.leftAnchor, right: tableView.rightAnchor, bottom: tableView.bottomAnchor,
+                          paddingLeft: 32, paddingRight: 32, paddingBottom: 24,
+                          height: 48)
         footerView.centerX(inView: self)
     }
+    //MARK: - Seletors
+    @objc func SeeMoreRestaurants(){
+        delegate?.shouldSeeAllRestaurants(restaurants: self.restaurants)
+    }
 }
-
-extension AllRestaurantsSection: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return restaurants.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: restaurantsListIdentifier, for: indexPath)
-        as! RestaurantListCell
-        cell.viewModel = CardCellViewModel(restaurant: restaurants[indexPath.row])
-        cell.delegate = self
-        cell.selectionStyle = .none
-        return cell
-    }
+//MARK: - UITableViewDelegate
+extension AllRestaurantsSection: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
          delegate?.didTapRestaurant(restaurant: restaurants[indexPath.row])
     }
 }
-extension AllRestaurantsSection: RestaurantListCellDelegate{
+//MARK: - RestaurantListCellDelegate
+extension AllRestaurantsSection: RestaurantsListDelegate{
     func didSelectRestaurant(_ restaurant: Restaurant) {
         delegate?.didSelectRestaurant(restaurant: restaurant)
     }

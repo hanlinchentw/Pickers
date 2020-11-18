@@ -41,9 +41,8 @@ class RestaurantListCell : UITableViewCell {
     //MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         addSubview(optionImageView)
-        optionImageView.anchor(left: leftAnchor, paddingLeft: 16, width: 88, height: 88)
+        optionImageView.anchor(left: leftAnchor, paddingLeft: 16, width: 93, height: 93)
         optionImageView.centerY(inView: self)
         addSubview(selectButton)
         selectButton.anchor(right: rightAnchor, paddingRight: 16,width: 48, height: 48)
@@ -58,14 +57,22 @@ class RestaurantListCell : UITableViewCell {
                             paddingLeft: 18, paddingRight: 8)
         captionStack.centerY(inView: self)
     }
-        
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.optionImageView.image = nil
+        self.restaurantName.text = nil
+        self.ratedLabel.text = nil
+        self.priceLabel.text = nil
+    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     //MARK: - Selectors
     @objc func handleSelectButtonTapped(){
-        self.viewModel!.restaurant.isSelected.toggle()
-        self.delegate?.didSelectRestaurant(self.viewModel!.restaurant)
+        if let _ = self.viewModel?.restaurant{
+            self.viewModel!.restaurant.isSelected.toggle()
+            self.delegate?.didSelectRestaurant(self.viewModel!.restaurant)
+        }
     }
     //MARK: - Helpers
     func configure(){

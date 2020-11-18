@@ -17,22 +17,20 @@ protocol CardCellDelegate : class {
 
 class RestaurantCardCell : UICollectionViewCell {
     //MARK: - Properties
-    var restaurant : Restaurant! { didSet{configure() }}
+    var restaurant : Restaurant? { didSet{configure() }}
     
     let optionImageView : UIImageView = {
         let iv = UIImageView()
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 16
-        iv.backgroundColor = .blue
+        iv.backgroundColor = UIColor(white: 0.9, alpha: 1)
         iv.contentMode = .scaleAspectFill
-        iv.image = UIImage(named: "new york")
         return iv
     }()
     weak var delegate : CardCellDelegate?
     let restaurantName : UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
-        label.text = "New York"
         label.textAlignment = .left
         label.numberOfLines = 1
         return label
@@ -40,7 +38,6 @@ class RestaurantCardCell : UICollectionViewCell {
     let businessLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Avenir-Heavy", size: 14)
-        label.text = "OPEN"
         label.textAlignment = .left
         label.textColor = .freshGreen
         return label
@@ -96,6 +93,7 @@ class RestaurantCardCell : UICollectionViewCell {
     }
     //MARK: - Helpers
     func configure(){
+        guard let restaurant = restaurant else { return }
         let viewModel = CardCellViewModel(restaurant: restaurant)
         
         restaurantName.text = restaurant.name
@@ -108,16 +106,15 @@ class RestaurantCardCell : UICollectionViewCell {
     }
     //MARK: - Selectors
     @objc func handleLikeButtonTapped(){
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: DID_LIKE_KEY),
-                                    object: nil,
-                                    userInfo: ["Restaurant": restaurant as Restaurant])
-        self.delegate?.didLikeRestaurant(self.restaurant)
+        guard let _ = restaurant else { return }
+        self.delegate?.didLikeRestaurant(self.restaurant!)
     }
     @objc func handleSelectButtonTapped(){
+        guard let restaurant = restaurant else { return }
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: DID_SELECT_KEY),
                                     object: nil,
-                                    userInfo: ["Restaurant":self.restaurant as Restaurant])
-        self.restaurant.isSelected.toggle()
-        self.delegate?.didSeletRestaurant(self.restaurant)
+                                    userInfo: ["Restaurant":restaurant as Restaurant])
+        self.restaurant!.isSelected.toggle()
+        self.delegate?.didSeletRestaurant(self.restaurant!)
     }
 }

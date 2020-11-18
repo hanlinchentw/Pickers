@@ -13,14 +13,14 @@ private let tableViewCellID = "sortIdentifier"
 private let priceRangeHeader = "headerIdentifier"
 private let priceRangeFooter = "footerIdentifier"
 
-protocol ActionSheetLauncherDelegate : class {
-    func didSelectSortOption(shouldAdd: Bool, option: SortOption)
+protocol ActionSheetLauncherDelegate: class {
+    func didSelectSortOption(option: SortOption)
 }
 
-class ActionSheetLauncher : NSObject {
+class ActionSheetLauncher: NSObject {
     //MARK: - Properties
-    private var window : UIWindow?
-    weak var delegate : ActionSheetLauncherDelegate?
+    private var window: UIWindow?
+    weak var delegate: ActionSheetLauncherDelegate?
     private lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -62,6 +62,9 @@ class ActionSheetLauncher : NSObject {
     }()
     private var selectedOptionIndexPath =  IndexPath(row: 0, section: 0) { didSet{ self.tableView.reloadData()} }
     private var selectedPriceIndexPath =  [IndexPath]() { didSet{ self.collectionView.reloadData()}}
+    
+    private let sortSheetHeight: CGFloat = 320
+    private let priceSheetHeight: CGFloat = 256
     private var isPriceSheetFold = true
     private var isSortSheetFold = true
     //MARK: - Lifecycle
@@ -70,19 +73,16 @@ class ActionSheetLauncher : NSObject {
         configureCollecionView()
         configureTableView()
     }
-    
     //MARK: - Helpers
     func show(isSortButton: Bool){
-        print("DEBUG: Show action sheet ... ")
         guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
         self.window = window
         window.addSubview(blackView)
         blackView.frame = window.frame
-        
         if isSortButton {
             window.addSubview(tableView)
             tableView.frame = CGRect(x: 0, y: window.frame.height,
-                                          width: window.frame.width, height: 276)
+                                          width: window.frame.width, height: sortSheetHeight)
             window.addSubview(notchView)
             notchView.centerX(inView: window)
             notchView.anchor(top: tableView.topAnchor, paddingTop: 7)
@@ -91,18 +91,16 @@ class ActionSheetLauncher : NSObject {
         }else {
             window.addSubview(collectionView)
             collectionView.frame = CGRect(x: 0, y: window.frame.height,
-                                          width: window.frame.width, height: 260)
+                                          width: window.frame.width, height: priceSheetHeight)
         }
-        
-        
         UIView.animate(withDuration: 0.5) {
             self.blackView.alpha = 1
             if isSortButton {
                 self.isSortSheetFold = false
-                self.tableView.frame.origin.y -= 276
+                self.tableView.frame.origin.y -= self.sortSheetHeight
             }else{
                 self.isPriceSheetFold = false
-                self.collectionView.frame.origin.y -= 260
+                self.collectionView.frame.origin.y -= self.priceSheetHeight
             }
         }
     }
@@ -131,10 +129,11 @@ class ActionSheetLauncher : NSObject {
             self.blackView.alpha = 0
             if !self.isSortSheetFold {
                 self.isSortSheetFold = true
-                self.tableView.frame.origin.y += 276
+                self.tableView.frame.origin.y += self.sortSheetHeight
+                self.delegate?.didSelectSortOption(option: SortOption(rawValue: self.selectedOptionIndexPath.row) ?? SortOption.nearby)
             } else if !self.isPriceSheetFold{
                 self.isPriceSheetFold = true
-                self.collectionView.frame.origin.y += 260
+                self.collectionView.frame.origin.y += self.priceSheetHeight
             }
         }
     }
@@ -206,7 +205,6 @@ extension ActionSheetLauncher: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let option = SortOption(rawValue: indexPath.row) else { return }
         guard let selectedIndexPath = tableView.indexPathForSelectedRow else { return }
-        
         self.selectedOptionIndexPath = selectedIndexPath
     }
 }

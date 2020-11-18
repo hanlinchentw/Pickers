@@ -13,13 +13,34 @@ protocol FilterViewDelegate : class  {
     func didTapPriceButton()
 }
 
-
-
 class FilterView : UIView {
     //MARK: - Properties
     weak var delegate : FilterViewDelegate?
+    
+    public var sortOptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Sort: Nearby"
+        label.font = UIFont(name: "Arial-BoldMT", size: 14)
+        label.textColor = .customblack
+        label.textAlignment = .center
+        return label
+    }()
+    
     private lazy var sortButton : UIView = {
-        let view = UIView().createFilterButton(text: "Sort: Popular ")
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 220 / 255, alpha: 1)
+        view.layer.cornerRadius = 20
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "icnArrowDropDown")?.withRenderingMode(.alwaysOriginal)
+        imageView.setDimension(width: 30, height: 30)
+        
+        let stack = UIStackView(arrangedSubviews: [sortOptionLabel, imageView])
+        stack.axis = .horizontal
+        stack.spacing = 4
+        view.addSubview(stack)
+        stack.fit(inView: view)
+        
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleSortButtonTapped))
         view.addGestureRecognizer(tap)
         view.isUserInteractionEnabled = true

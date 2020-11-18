@@ -15,14 +15,13 @@ class CategoryCardCell : UICollectionViewCell {
         let iv = UIImageView()
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 12
-        iv.backgroundColor = .blue
+        iv.backgroundColor = .lightGray
         iv.contentMode = .scaleAspectFill
-        iv.image = UIImage(named: "new york")
         return iv
     }()
     private let seeMoreView: UIView = {
         let view = UIView()
-        
+
         return view
     }()
     //MARK: - Lifecycle

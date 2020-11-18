@@ -9,25 +9,26 @@
 import UIKit
 
 enum SortOption: Int, CaseIterable {
-    case topPick
+    case nearby
     case popular
+    case latest
     case rating
     case numOfFavortie
     
-    
     var description : String {
         switch self {
-        case .topPick: return "Top Pick"
+        case .nearby: return "Nearby"
         case .popular: return "Popular"
+        case .latest: return "Latest"
         case .rating: return "Rating"
         case .numOfFavortie: return "Numbers of Favorite"
-        
         }
     }
     var sortby : String {
         switch self {
-        case .topPick: return "rating"
+        case .nearby: return "distance"
         case .popular: return "review_count"
+        case .latest: return "Latest"
         case .rating: return ""
         case .numOfFavortie: return ""
         }

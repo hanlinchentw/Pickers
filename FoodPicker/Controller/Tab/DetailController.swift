@@ -7,21 +7,27 @@
 //
 
 import UIKit
-
+import MapKit
+import Alamofire
+import AlamofireImage
 
 private let detailCellIdentifier = "DetailCell"
 private let headerIdentifier = "DetailHeader"
 
+protocol DetailControllerDelegate:class {
+    func willPopViewController(_ controller: DetailController)
+}
+
 class DetailController : UICollectionViewController {
     //MARK: - Prorperties
-    private var restaurant : Restaurant { didSet { self.collectionView.reloadData() } }
+    var restaurant : Restaurant { didSet { self.collectionView.reloadData() } }
+    weak var delegate: DetailControllerDelegate?
     private var isExpanded = false
     private lazy var addButton : UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "btnFloatingbtnAddToSpinL")?.withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
-   
     //MARK: - Lifecycle
     init(restaurant:Restaurant) {
         self.restaurant = restaurant
@@ -34,11 +40,18 @@ class DetailController : UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        fetchNumOfLike()
     }
     //MARK: - API
     func fetchDetail(){
         NetworkService.shared.fetchDetail(id: restaurant.restaurantID) { (detail) in
             self.restaurant.details = detail
+        }
+    }
+    func fetchNumOfLike(){
+        RestaurantService.shared.fetchRestaurantNumOfLike(restaurantID: self.restaurant.restaurantID)
+        { count in
+            self.restaurant.numOfLike = count
         }
     }
     //MARK: - Helpers
@@ -55,6 +68,18 @@ class DetailController : UICollectionViewController {
         addButton.anchor(right:view.rightAnchor, bottom: view.bottomAnchor,
                          paddingRight: 16, paddingBottom: 30)
     }
+    func openMapForPlace(name: String, coordinate: CLLocationCoordinate2D) {
+        let regionDistance:CLLocationDistance = 3000
+        let regionSpan = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
+        let options = [
+            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
+            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
+        ]
+        let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: nil)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = name
+        mapItem.openInMaps(launchOptions: options)
+    }
 }
 extension DetailController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -65,7 +90,7 @@ extension DetailController {
         as! DetailCell
         
         let config = RestaurantDetail(rawValue: indexPath.row)
-        let viewModel = DetailViewModel(restaurant: restaurant, config: config, isExpanded: isExpanded)
+        let viewModel = DetailCellViewModel(restaurant: restaurant, config: config, isExpanded: isExpanded)
         cell.config = config
         cell.viewModel = viewModel
         cell.delegate = self
@@ -76,10 +101,9 @@ extension DetailController {
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: headerIdentifier, for: indexPath) as! DetailHeader
         header.delegate = self
-        let config = RestaurantDetail(rawValue: indexPath.row)
-        let viewModel = DetailViewModel(restaurant: restaurant, config: config, isExpanded: isExpanded)
-        guard let urls =  viewModel.imageUrl else { return  header}
-        header.imageUrl = urls
+        
+        let viewModel = DetailHeaderViewModel(restaurant: restaurant)
+        header.viewModel = viewModel
         return header
     }
 }
@@ -89,7 +113,7 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
             return  CGSize(width: collectionView.frame.width, height: 262)
         }
         let config = RestaurantDetail(rawValue: indexPath.row)
-        let viewModel = DetailViewModel(restaurant: restaurant, config: config, isExpanded: isExpanded)
+        let viewModel = DetailCellViewModel(restaurant: restaurant, config: config, isExpanded: isExpanded)
         return  CGSize(width: collectionView.frame.width, height: viewModel.heightForEachCell)
         
     }
@@ -103,18 +127,26 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
 //MARK: - DetailHeaderDelegate
 extension DetailController : DetailHeaderDelegate {
     func handleDismissDetailPage() {
-        self.navigationController?.popViewController(animated: true)
-        print("DEBUG: Did tapped in controller")
+        delegate?.willPopViewController(self)
     }
     func handleLikeRestaurant() {
-        print("DEBUG: Like a restaurnat..")
+        restaurant.isLiked.toggle()
+        self.collectionView.reloadData()
     }
     func handleShareRestaurant() {
-        print("DEBUG: Shard a Restaurant")
+        let imageView = UIImageView()
+        imageView.af.setImage(withURL: restaurant.imageUrl)
+        guard let image = imageView.image else { return }
+        
+        let activityViewController = UIActivityViewController(activityItems: [image, restaurant.name], applicationActivities: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
 }
 //MARK: - DetailCellDelegate
 extension DetailController: DetailCellDelegate {
+    func didTapMapOption(name: String, coordinate: CLLocationCoordinate2D) {
+        openMapForPlace(name: name, coordinate: coordinate)
+    }
     func shouldCellExpand(_ isExpanded: Bool, config: RestaurantDetail) {
         print("DEBUG: Expand...\(isExpanded)")
         if config == .businessHour {

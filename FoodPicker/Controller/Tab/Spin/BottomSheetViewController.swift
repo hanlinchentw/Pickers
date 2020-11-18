@@ -12,7 +12,7 @@ private let selectedIdentifier = "RestaurantListCell"
 
 class BottomSheetViewController : UIViewController {
     //MARK: - Properties
-    var selectedRestaurants = [Restaurant]()  { didSet { tableView.reloadData() }}
+    var selectedRestaurants = [Restaurant]()  {  didSet { self.tableView.restaurants = self.selectedRestaurants }}
     var gesture : UIPanGestureRecognizer?
     private let notchView : UIView = {
         let view = UIView()
@@ -27,23 +27,14 @@ class BottomSheetViewController : UIViewController {
         label.text = "My selected list"
         return label
     }()
-    private let tableView = UITableView()
+    private let tableView = RestaurantsList()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.layer.cornerRadius = 24
-        view.backgroundColor = .white
-        gesture = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
-        gesture?.delegate = self
-        view.addGestureRecognizer(gesture!)
+        configurePanGesture()
         configureUI()
     }
-    //MARK: - ChildController Delegate
-    override func didMove(toParent parent: UIViewController?) {
-        
-    }
     //MARK: - Selectors
-    
     @objc func panGesture(recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self.view)
         let y = self.view.frame.minY
@@ -54,7 +45,14 @@ class BottomSheetViewController : UIViewController {
         recognizer.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
     }
     //MARK: - Helpers
+    func configurePanGesture(){
+        gesture = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
+        gesture?.delegate = self
+        view.addGestureRecognizer(gesture!)
+    }
     func configureUI(){
+        view.layer.cornerRadius = 24
+        view.backgroundColor = .white
         view.addSubview(notchView)
         notchView.anchor(top: view.topAnchor, paddingTop: 8)
         notchView.centerX(inView: view)
@@ -66,29 +64,6 @@ class BottomSheetViewController : UIViewController {
         tableView.anchor(top: titleLabel.bottomAnchor, left:view.leftAnchor,
                               right: view.rightAnchor,bottom: view.bottomAnchor,
                               paddingTop: 16, paddingBottom: 200)
-        configureTableView()
-    }
-    func configureTableView(){
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(RestaurantListCell.self, forCellReuseIdentifier: selectedIdentifier )
-        tableView.rowHeight = 88 + 16
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .white
-    }
-}
-
-//MARK: - UICollectionViewDelegate, UICollectionViewDataSource
-extension BottomSheetViewController : UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return selectedRestaurants.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: selectedIdentifier, for: indexPath)
-        as! RestaurantListCell
-        let viewModel = CardCellViewModel(restaurant: selectedRestaurants[indexPath.row])
-        cell.viewModel = viewModel
-        return cell
     }
 }
 //MARK: - UIGestureRecognizerDelegate
@@ -108,8 +83,6 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
         } else {
             tableView.isScrollEnabled = false
         }
-        
         return false
     }
-    
 }

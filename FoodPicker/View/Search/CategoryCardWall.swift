@@ -1,22 +1,18 @@
 //
-//  SearchShortcutSection.swift
+//  CategoryCardWall.swift
 //  FoodPicker
 //
-//  Created by 陳翰霖 on 2020/9/20.
+//  Created by 陳翰霖 on 2020/10/9.
 //  Copyright © 2020 陳翰霖. All rights reserved.
 //
 
 import UIKit
-
-private let keywordCardCellIdentifier = "keywordCard"
-
-
-class SearchShortcutSection : UICollectionViewCell {
-    //MARK: - Properties
-    var keywords = [String]() { didSet{ self.collectionView.reloadData() }}
-    
+private let categoryCardIdentifier = "categoryCard"
+class CategoryCardWall: UICollectionReusableView{
+    //MARK: - Properites
     var titleLabel : UILabel = {
         let label = UILabel()
+        label.text = "Top Categories"
         label.font = UIFont(name: "Arial-BoldMT", size: 14)
         return label
     }()
@@ -32,39 +28,46 @@ class SearchShortcutSection : UICollectionViewCell {
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingLeft: 24)
-        
-        addSubview(collectionView)
-        collectionView.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor,
-                              right: rightAnchor,  bottom: bottomAnchor, paddingTop: 4)
+        configureUI()
         configureCollectionView()
         
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: - Helpers
     func configureCollectionView(){
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsHorizontalScrollIndicator  =  false
-        collectionView.register(KeywordCardCell.self, forCellWithReuseIdentifier: keywordCardCellIdentifier)
+        collectionView.register(CategoryCardCell.self, forCellWithReuseIdentifier: categoryCardIdentifier)
+    }
+    func configureUI(){
+        addSubview(titleLabel)
+        titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 24,paddingLeft: 24)
+        
+        addSubview(collectionView)
+        collectionView.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor,
+                              right: rightAnchor,  bottom: bottomAnchor, paddingTop: 4)
     }
 }
 //MARK: - UICollectionViewDelegate, UICollectionViewDataSource
-extension SearchShortcutSection : UICollectionViewDelegate, UICollectionViewDataSource {
+extension CategoryCardWall: UICollectionViewDelegate, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return keywords.count
+        return categoryPreload.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: keywordCardCellIdentifier, for: indexPath) as! KeywordCardCell
-        cell.keyword = keywords[indexPath.row]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCardIdentifier, for: indexPath) as! CategoryCardCell
+        cell.category = categoryPreload[indexPath.row]
         return cell
     }
 }
-extension SearchShortcutSection : UICollectionViewDelegateFlowLayout {
+
+//MARK: - UICollectionViewDelegateFlowLayout
+extension CategoryCardWall: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: 100, height: 32)
+        let size = CGSize(width: 116, height: 80)
         return size
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -72,28 +75,5 @@ extension SearchShortcutSection : UICollectionViewDelegateFlowLayout {
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 8
-    }
-}
-class KeywordCardCell : UICollectionViewCell {
-    //MARK: - Properties
-    var keyword : String? { didSet{ keywordLabel.text = keyword}}
-    private let keywordLabel : UILabel = {
-        let label = UILabel()
-        label.font = UIFont(name: "ArialMT", size: 14)
-        label.textAlignment = .center
-        label.backgroundColor = .white
-        label.layer.cornerRadius = 12
-        label.layer.masksToBounds = true
-        return label
-    }()
-   
-    //MARK: - Lifecycle
-    override init(frame: CGRect) {
-        super.init(frame:frame)
-        addSubview(keywordLabel)
-        keywordLabel.fit(inView: self)
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

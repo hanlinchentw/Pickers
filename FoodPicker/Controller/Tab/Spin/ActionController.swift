@@ -12,14 +12,10 @@ import iOSLuckyWheel
 class ActionViewController: UIViewController {
     //MARK: - Properties
     var selectedRestaurants = [Restaurant]() { didSet { bottomSheetVC.selectedRestaurants = selectedRestaurants }}
+    var viewModel: LuckyWheelViewModel? { didSet{ configureWheel() } }
     private var wheel : LuckyWheel?
     private let bottomSheetVC = BottomSheetViewController()
-    var viewModel : LuckyWheelViewModel? {
-        didSet{
-            wheel?.removeFromSuperview()
-            configureWheel()
-        }
-    }
+    
     private let resultView : ResultView = {
         let result = ResultView()
         result.alpha = 0
@@ -37,25 +33,19 @@ class ActionViewController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureWheel()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configureBottomSheetView()
         view.backgroundColor = .backgroundColor
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .default
-        configureWheel()
-        view.addSubview(resultView)
-        resultView.setDimension(width: 280, height: 240)
-        resultView.center(inView: view, yConstant: -100)
-        
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        configureBottomSheetView()
-        view.bringSubviewToFront(resultView)
     }
     //MARK: - Helpers
     func configureBottomSheetView(){
         self.addChild(bottomSheetVC)
         self.view.addSubview(bottomSheetVC.view)
-        bottomSheetVC.didMove(toParent: self)
 
         let height = view.frame.height
         let width  = view.frame.width
@@ -78,15 +68,20 @@ class ActionViewController: UIViewController {
         startButton.centerX(inView: view)
         startButton.isUserInteractionEnabled = !selectedRestaurants.isEmpty
     }
-    func configure(){
-        wheel = LuckyWheel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 40 , height: 365.6))
-        wheel?.delegate = self
-        wheel?.dataSource = self
-        wheel?.isUserInteractionEnabled = false
-        self.view.addSubview(wheel!)
-        wheel?.center = view.center
-        wheel?.frame.origin.y = view.frame.origin.y + 48 + 24
-        wheel?.animateLanding = true
+    func configureResultView(valueRelateToResult value: Int){
+        view.addSubview(resultView)
+        resultView.setDimension(width: 280, height: 240)
+        resultView.center(inView: view, yConstant: -100)
+        
+        resultView.restaurant = selectedRestaurants[value - 1]
+        let blureffect = UIBlurEffect(style: .regular)
+        let visualeffect = UIVisualEffectView(effect: blureffect)
+        self.view.insertSubview(visualeffect, belowSubview: resultView)
+        UIView.animate(withDuration: 2) {
+            self.resultView.alpha = 1
+            visualeffect.fit(inView: self.view)
+            self.tabBarController?.tabBar.isHidden = true
+        }
     }
     //MARK: - Selectors
     @objc func handleStartButtonTapped(){
@@ -102,16 +97,7 @@ class ActionViewController: UIViewController {
 //MARK: - LuckyWheelDelegate, LuckyWheelDataSource
 extension ActionViewController : LuckyWheelDelegate, LuckyWheelDataSource {
     func wheelDidChangeValue(_ newValue: Int) {
-        print(newValue)
-        resultView.restaurant = selectedRestaurants[newValue - 1]
-        let blureffect = UIBlurEffect(style: .regular)
-        let visualeffect = UIVisualEffectView(effect: blureffect)
-        self.view.insertSubview(visualeffect, belowSubview: resultView)
-        UIView.animate(withDuration: 2) {
-            self.resultView.alpha = 1
-            visualeffect.fit(inView: self.view)
-            self.tabBarController?.tabBar.isHidden = true
-        }
+        configureResultView(valueRelateToResult: newValue)
     }
     func numberOfSections() -> Int {
         if selectedRestaurants.count == 0 {
@@ -137,15 +123,13 @@ class ResultView : RestaurantCardCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     override func configure() {
         let viewModel = CardCellViewModel(restaurant: restaurant)
-        
         restaurantName.text = restaurant.name
         priceLabel.attributedText = viewModel.priceString
         ratedLabel.attributedText = viewModel.ratedString
         businessLabel.attributedText = viewModel.businessString
         optionImageView.af.setImage(withURL: restaurant.imageUrl)
-
+        
     }
 }

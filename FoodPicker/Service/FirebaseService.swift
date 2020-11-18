@@ -46,24 +46,25 @@ struct RestaurantService {
 
     func checkIfUserLikeRestaurant(restaurantID: String, completion: @escaping(Bool)->Void){
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        REF_USER_LIKE.child(uid).child(restaurantID).observeSingleEvent(of: .value) { (snapshot) in
+        REF_USER_LIKE.child(uid).child(restaurantID).observe(.value) { (snapshot) in
             completion(snapshot.exists())
         }
     }
     
-    func updateLikedRestaurant(restaurant:Restaurant, completion: @escaping(DatabaseCompletion)){
+    func updateLikedRestaurant(restaurant:Restaurant, shouldLike: Bool){
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let restaurantID = restaurant.restaurantID
         let lat = restaurant.coordinates.latitude
         let lon = restaurant.coordinates.longitude
         let name = restaurant.name
 
-        if restaurant.isLiked {
+        if !shouldLike {
             REF_USER_LIKE.child(uid).child(restaurantID).removeValue()
+            REF_RESTAURANT_LIKE.child(restaurantID).child(uid).removeValue()
         }else {
             let values = ["Name": name , "Latitude":lat,  "Longitude":lon] as [String : Any]
-            REF_USER_LIKE.child(uid).child(restaurantID).updateChildValues(values,
-                                   withCompletionBlock: completion)
+            REF_USER_LIKE.child(uid).child(restaurantID).updateChildValues(values)
+            REF_RESTAURANT_LIKE.child(restaurantID).updateChildValues([uid:1])
         }
     }
     func fetchLikedRestaurants(completion: @escaping(([Restaurant])->Void)){
@@ -71,7 +72,7 @@ struct RestaurantService {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         REF_USER_LIKE.child(uid).observe(.childAdded) { (snapshot) in
             NetworkService.shared.fetchDetail(id: snapshot.key) { (detail) in
-                let restaurant = Restaurant(detail: detail, business: nil)
+                let restaurant = Restaurant(business: nil, detail: detail)
                 restaurants.append(restaurant)
                 completion(restaurants)
             }
@@ -90,19 +91,21 @@ struct RestaurantService {
     
     func updateSearchTerm(term: String){
         REF_SEARCH.observeSingleEvent(of: .value) { (snapshot) in
-            let enumerator = snapshot.children
-            while let rest = enumerator.nextObject() as? DataSnapshot {
-                if rest.key == term{
-                    guard let num = rest.value as? Int else { return }
-                    REF_SEARCH.updateChildValues([term:num+1])
-                    return
-                }else{
-                    REF_SEARCH.updateChildValues([term:1])
-                }
+            if !snapshot.exists(){
+                REF_SEARCH.child(term).updateChildValues(["num_of_searches": 1])
+            }
+        }
+        REF_SEARCH.child(term).observeSingleEvent(of: .value) { (snapshot) in
+            guard let dictionary = snapshot.value as? [String:Any] else { return }
+            if let value = dictionary["num_of_searches"] as? Int {
+                print("DEBUG:Database has this child ... ")
+                REF_SEARCH.child(term).updateChildValues(["num_of_searches": value+1])
+            }else{
+                print("DEBUG:Database doesn't have this child ... ")
+                REF_SEARCH.child(term).updateChildValues(["num_of_searches": 1])
             }
         }
     }
-    
     func fetchHistoricalRecord(completion: @escaping(([String])->Void)){
         var historicalRecord = [String]()
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -112,6 +115,18 @@ struct RestaurantService {
             historicalRecord = Array(historicalRecord.prefix(3))
             completion(historicalRecord)
         }
-        
+    }
+    
+    func fetchTopSearches(completion: @escaping(([String])->Void)){
+        REF_SEARCH.queryOrderedByValue().observeSingleEvent(of: .value) { (snapshot) in
+            print(snapshot)
+        }
+    }
+    func fetchRestaurantNumOfLike(restaurantID:String, completion: @escaping((Int)->Void)){
+        var count = 0
+        REF_RESTAURANT_LIKE.child(restaurantID).observeSingleEvent(of: .value) { (snapshot) in
+            count = Int(snapshot.childrenCount)
+            completion(count)
+        }
     }
 }

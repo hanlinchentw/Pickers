@@ -37,7 +37,6 @@ class FavoriteController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavBar()
-        
         configureTableView()
         configureUI()
         fetchLikedRestauants()
@@ -131,8 +130,7 @@ extension FavoriteController : UITextFieldDelegate {
 
 extension FavoriteController: RestaurantListCellDelegate {
     func didSelectRestaurant(_ restaurant:Restaurant) {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: DID_SELECT_KEY),
-                                        object: nil,
-                                        userInfo: ["Restaurant": restaurant as Restaurant])
+        let tab = self.tabBarController as? HomeController
+        tab?.didSelect(restaurant: restaurant)
     }
 }

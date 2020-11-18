@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct DetailViewModel {
+struct DetailCellViewModel {
     let restaurant : Restaurant
     var config : RestaurantDetail?
     var detail : Details?
@@ -49,7 +49,7 @@ struct DetailViewModel {
         case .main: return mainSub
         case .businessHour: return businessHourSub
         case .address: return addressSub
-        case .phone: return phoneSub
+        case .phone: return NSAttributedString(string:phoneSub ?? "No providing")
         case .none: return NSAttributedString()
         }
     }
@@ -84,13 +84,6 @@ struct DetailViewModel {
         default: return true
         }
     }
-    //MARK: - Header
-    var imageUrl : [URL]? {
-        guard let photos = detail?.photos else {
-            return [restaurant.imageUrl]
-        }
-        return photos
-    }
     //MARK: - Main
     var mainSub : NSAttributedString {
         let attributedString = NSMutableAttributedString(string: "\(restaurant.price) ・ \(restaurant.categories[0].title)",
@@ -103,6 +96,9 @@ struct DetailViewModel {
     
     var reviewCount : Int {
         return restaurant.reviewCount
+    }
+    var numOfLike : Int {
+        return restaurant.numOfLike
     }
     //MARK: - Business Hour
     let date = Calendar.current.dateComponents(in: TimeZone.current, from: Date())
@@ -194,12 +190,8 @@ struct DetailViewModel {
         return attributedString
     }
     //MARK: - Phone Number
-    var phoneSub : NSAttributedString {
-        guard let detail = detail else { return NSAttributedString(string: "No Providing") }
-        guard detail.displayPhone != "" else { return NSAttributedString(string: "No Providing")}
-        let attributedString = NSMutableAttributedString(string: "\(detail.displayPhone)",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.customblack])
-        return attributedString
+    var phoneSub : String? {
+        return detail?.displayPhone
     }
 }
 

@@ -59,7 +59,6 @@ class HomeController : UITabBarController {
         }else{
             configureTabBar()
             configureTabBarController()
-            confiugureObserver()
         }
     }
     func logUserOut(){
@@ -122,21 +121,13 @@ class HomeController : UITabBarController {
         nav.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
         return nav
     }
-    
-    func confiugureObserver(){
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: DID_SELECT_KEY), object: nil, queue: .main) { [weak self] (notification) in
-            self?.didSelectRestaurant(noti: notification as NSNotification)
-        }
-    }
     //MARK: - Selectors
-    @objc func didSelectRestaurant(noti : NSNotification){
-        if let info = noti.userInfo {
-            guard var restaurant = info["Restaurant"] as? Restaurant else { return }
-            if restaurant.isSelected {
-                selectedRestaurants.append(restaurant)
-            }else {
-                selectedRestaurants = selectedRestaurants.filter{($0.restaurantID != restaurant.restaurantID)}
-            }
+    func didSelect(restaurant : Restaurant){
+        print("DEBUG: Did select")
+        if restaurant.isSelected {
+            selectedRestaurants.append(restaurant)
+        }else {
+            selectedRestaurants = selectedRestaurants.filter{($0.restaurantID != restaurant.restaurantID)}
         }
     }
 }

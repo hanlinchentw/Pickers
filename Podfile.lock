@@ -98,6 +98,7 @@ PODS:
   - PromisesObjC (1.2.8)
 
 DEPENDENCIES:
+  - Alamofire (~> 5.2)
   - AlamofireImage (~> 4.1)
   - Firebase/Auth
   - Firebase/Core
@@ -156,6 +157,6 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
 
-PODFILE CHECKSUM: d55d62dcda80b18d3f209be6da987331accf3ce8
+PODFILE CHECKSUM: 5b0a09c90fc85fbf344e44d58e9efe99997d6645
 
 COCOAPODS: 1.9.1

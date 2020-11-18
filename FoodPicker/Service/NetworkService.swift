@@ -9,7 +9,11 @@
 import UIKit
 import Moya
 
-private let apiKey = "OnCr8hVaHIl-FaEAPoYbCaLR6A60fcNmTMq7IQzZhwnANuQZsD2Kfj6RmKYWLdLvQQtthwjXDLGBiFzgkYi1ZsgnWSKy2Aaplt_4HY5MaYA8QbWH7ZLZQah96hdfX3Yx"
+private let apiKey = """
+mzNNky9rzZY1Z1Yg5qHpuHO7Ck-7Tui_lJyOKcBBPidownX
+h8vEZ4pQ2-xonen-jJn2onateIVBQgNYjCDzzaYI-nXYcODr6
+dayDgKzJtcByX_rK9K3NCWy8_7qzX3Yx
+"""
 
 private let clientID = "YuD9cka95Qb_g7WsdCA-rQ"
 
@@ -42,13 +46,14 @@ enum YelpService{
                                                        "latitude":lat, "longitude": lon,
                                                        "limit":limit,
                                                        "offset": offset,
-                                                       "radius": 5000,
+                                                       "radius": 3000,
                                                        "sort_by": sortBy,
                                                        "locale":"zh_TW"],
                                           encoding:URLEncoding.queryString )
             case let .searchByTerm(lat, lon, term):
                 return .requestParameters(parameters: ["latitude":lat, "longitude": lon,
-                                                       "limit" : 20 ,
+                                                       "sort_by": "distance",
+                                                       "limit" : 50,
                                                        "term": term,
                                                        "locale":"zh_TW"],
                                           encoding: URLEncoding.queryString)
@@ -63,26 +68,24 @@ class  NetworkService {
     let service = MoyaProvider<YelpService.BusinessesProvider>()
     let jsonDecoder = JSONDecoder()
     static let shared = NetworkService()
-    func fetchRestaurants(lat: Double, lon: Double,
-                         withOffset offset: Int = 0,
-                         category: String = "food",
-                         sortBy : String = "distance",
-                         option: SortOption? = nil,
-                         limit: Int, completion: @escaping([Restaurant]?)->Void){
+    func fetchRestaurants(lat: Double, lon: Double, withOffset offset: Int = 0,
+                         category: String = "food", option: recommendOption? = nil, limit: Int,
+                         completion: @escaping([Restaurant]?)->Void){
+        
         var restaurants = [Restaurant]()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         service.request(.search(lat: lat, lon: lon,
                                 offset: offset,
                                 category: category,
-                                sortBy: sortBy,
+                                sortBy: option?.search ?? "distance",
                                 limit: limit)) { (result) in
             switch result {
             case .success(let response):
                 do {
                     let root = try self.jsonDecoder.decode(Root.self, from: response.data)
                     root.businesses.forEach { (business) in
-                        var restaurant = Restaurant(detail: nil, business: business)
-                        restaurant.sortOption = option
+                        var restaurant = Restaurant(business: business)
+                        restaurant.division = option?.description ?? "All restaurants"
                         restaurants.append(restaurant)
                     }
                 completion(restaurants)
@@ -97,13 +100,14 @@ class  NetworkService {
     func fetchRestaurantsByTerm(lat: Double, lon: Double,terms:String, completion: @escaping([Restaurant]?)->Void){
         var restaurants = [Restaurant]()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        
         service.request(.searchByTerm(lat: lat, lon: lon, term: terms)) { (result) in
             switch result {
             case .success(let response):
                 do {
                     let root = try self.jsonDecoder.decode(Root.self, from: response.data)
                     root.businesses.forEach { (business) in
-                        let restaurant = Restaurant(detail: nil, business: business)
+                        let restaurant = Restaurant(business: business)
                         restaurants.append(restaurant)
                     }
                 completion(restaurants)
