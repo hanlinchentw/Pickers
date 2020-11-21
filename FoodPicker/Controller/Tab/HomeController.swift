@@ -17,8 +17,8 @@ class HomeController : UITabBarController {
             guard let nav2 = viewControllers?[2] as? UINavigationController else { return }
             guard let action = nav2.viewControllers[0] as? ActionViewController else { return }
             let viewModel = LuckyWheelViewModel(restaurants: selectedRestaurants)
-            action.selectedRestaurants = self.selectedRestaurants
             action.viewModel = viewModel
+            action.configureList(list:nil)
         }
     }
     private let numOfSelectedLabel : UILabel = {
@@ -86,7 +86,7 @@ class HomeController : UITabBarController {
     }
     
     func configureTabBarController(){
-        let main = MainPageController(collectionViewLayout: UICollectionViewFlowLayout())
+        let main = MainPageController()
         let nav1 = templateNavigationController(image: UIImage(named: "homeUnselectedS"),
                                                 rootViewController: main)
         nav1.tabBarItem.selectedImage = UIImage(named: "homeSelectedS")?.withRenderingMode(.alwaysOriginal)

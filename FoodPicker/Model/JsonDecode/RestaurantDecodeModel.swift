@@ -15,7 +15,7 @@ struct Details : Decodable {
     let hours : [Open]?
     let location : Address?
     
-    let id : String
+    let id : String?
     let name: String
     let rating : Double
     let isClosed : Bool?
@@ -47,7 +47,7 @@ struct Business : Decodable {
     let id : String
     let name : String
     let rating : Double
-    let price : String
+    let price : String?
     let imageUrl : String
     let distance : Double
     let isClosed : Bool

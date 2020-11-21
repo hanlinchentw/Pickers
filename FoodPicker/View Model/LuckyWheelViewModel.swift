@@ -11,7 +11,9 @@ import iOSLuckyWheel
 
 struct LuckyWheelViewModel  {
     var restaurants : [Restaurant]
-    
+    var numOfSection: Int {
+        return restaurants.count*2
+    }
     var itemForSection : [WheelItem] {
         var items1 = [WheelItem]()
         var items2 = [WheelItem]()

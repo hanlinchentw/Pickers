@@ -129,4 +129,48 @@ struct RestaurantService {
             completion(count)
         }
     }
+    
+    func saveList(list: List)->String?{
+        guard let uid = Auth.auth().currentUser?.uid else { return nil }
+        
+        let name = list.name
+        let timestamp = list.timeStamp
+        let resID = list.restaurantsID
+        let value = ["Name": name,"Timestamp": timestamp, "RestaurantsID": resID] as [String : Any]
+        
+        let autoID = REF_USER_LIST.child(uid).childByAutoId()
+        autoID.updateChildValues(value)
+        return autoID.key
+    }
+    func fetchSavedLists(completion: @escaping([List])->Void){
+        var lists = [List]()
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        REF_USER_LIST.child(uid).observe(.childAdded) { (snapshot) in
+            let listID = snapshot.key
+            guard let dict = snapshot.value as? [String : Any] else { return }
+            guard let name = dict["Name"] as? String else { return }
+            guard let resID = dict["RestaurantsID"] as? [String] else { return }
+            guard let timestamp = dict["Timestamp"] as? Double else { return }
+            var list = List(name: name, restaurantsID: resID, timestamp: timestamp)
+            list.id = listID
+            lists.append(list)
+            completion(lists)
+        }
+    }
+    func updateSavedList(list:List){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let listID = list.id else { return }
+        let name = list.name
+        let timestamp = list.timeStamp
+        let resID = list.restaurantsID
+
+        REF_USER_LIST.child(uid).child(listID).child("RestaurantsID").observeSingleEvent(of: .value, with: { (snapshot) in
+            if !snapshot.exists(){
+                REF_USER_LIST.child(uid).child(listID).removeValue()
+            }else{
+                let value = ["Name": name,"Timestamp": timestamp, "RestaurantsID": resID] as [String : Any]
+                REF_USER_LIST.child(uid).child(listID).updateChildValues(value)
+            }
+        })
+    }
 }

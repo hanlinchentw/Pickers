@@ -8,9 +8,22 @@
 
 import Foundation
 
-struct List{
-    let name: String
-    let restaurants: [Restaurant]
+struct List {
+    var id: String?
+    var name: String
+    var restaurantsID: [String]
+    var restaurants = [Restaurant]()
     let timeStamp: Double
-    let count: Int
+    
+    var count: Int
+    var isEdited : Bool = false
+    init(name:String, restaurantsID: [String], timestamp: Double) {
+        self.name = name
+        self.restaurantsID = restaurantsID
+        self.timeStamp = timestamp
+        self.count = restaurantsID.count
+    }
+    
 }
+
+

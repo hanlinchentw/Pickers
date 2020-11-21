@@ -33,7 +33,7 @@ struct Restaurant {
     init(business:Business?, detail: Details? = nil) {
         if let detail = detail {
             self.details = detail
-            self.restaurantID = detail.id
+            self.restaurantID = detail.id ?? ""
             self.name = detail.name
             self.imageUrl = detail.imageUrl ?? URL(string:defaultImageURL)!
             self.distance = 0
@@ -53,14 +53,14 @@ struct Restaurant {
         }else{
             self.restaurantID = business!.id
             self.name = business!.name
-            self.imageUrl = URL(string:business!.imageUrl)!
+            self.imageUrl = URL(string:business!.imageUrl) ?? URL(string: defaultImageURL)!
             
             self.distance = business!.distance
             
             self.rating = business!.rating
             self.isClosed = business!.isClosed
             self.reviewCount = business!.reviewCount
-            self.price = business!.price
+            self.price = business!.price ?? "$"
             self.coordinates = business!.coordinates
             self.categories = business!.categories
             guard !business!.categories.isEmpty else {
