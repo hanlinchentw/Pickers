@@ -7,18 +7,21 @@
 //
 
 import UIKit
-import iOSLuckyWheel
 
 class ActionViewController: UIViewController {
     //MARK: - Properties
+    var state: ListState?
+    var selectedRestaurants = [Restaurant]()
     var viewModel: LuckyWheelViewModel? { didSet{ configureWheel() } }
     
-    private let resultView : ResultView = {
-        let result = ResultView()
+    private let resultView: RestaurantCardCell = {
+        let result = RestaurantCardCell()
+        result.selectButton.isHidden = true
+        result.backgroundColor = .white
         result.alpha = 0
         return result
     }()
-    private var startButton  : UIButton = {
+    private var startButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Go", for: .normal)
         button.tintColor = .black
@@ -31,6 +34,11 @@ class ActionViewController: UIViewController {
         button.setImage(UIImage(named: "btnNote")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleListButtonTapped), for: .touchUpInside)
         return button
+    }()
+    private let stateLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Arial-BoldMT", size: 16)
+        return label
     }()
     private var wheel : LuckyWheel?
     private let bottomSheetVC = BottomSheetViewController()
@@ -46,6 +54,15 @@ class ActionViewController: UIViewController {
         view.backgroundColor = .backgroundColor
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .default
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.bottomSheetVC.tableView.restaurants = self.selectedRestaurants
+        self.bottomSheetVC.list?.restaurants = self.selectedRestaurants
+        if self.selectedRestaurants.isEmpty{
+            self.state = .temp
+            self.bottomSheetVC.state = .temp
+        }
     }
     //MARK: - Helpers
     func configureUI(){
@@ -68,7 +85,7 @@ class ActionViewController: UIViewController {
         wheel?.dataSource = self
         wheel?.isUserInteractionEnabled = false
         
-        self.view.insertSubview(wheel!, at: 1)
+        self.view.addSubview(wheel!)
         wheel?.center = view.center
         wheel?.frame.origin.y = view.frame.origin.y + 48 + 24
         wheel?.animateLanding = false
@@ -78,51 +95,88 @@ class ActionViewController: UIViewController {
         startButton.setDimension(width: 40, height: 40)
         startButton.layer.cornerRadius = 40 / 2
         startButton.isUserInteractionEnabled = !(viewModel == nil)
-    }
-    func configureResultView(valueRelateToResult value: Int){
-        guard let viewModel = viewModel else { return }
-        view.addSubview(resultView)
-        resultView.setDimension(width: 280, height: 240)
-        resultView.center(inView: view, yConstant: -100)
         
-        resultView.restaurant = viewModel.restaurants[value - 1]
-        let blureffect = UIBlurEffect(style: .regular)
-        let visualeffect = UIVisualEffectView(effect: blureffect)
-        self.view.insertSubview(visualeffect, belowSubview: resultView)
-        UIView.animate(withDuration: 2) {
-            self.resultView.alpha = 1
-            visualeffect.fit(inView: self.view)
-            self.tabBarController?.tabBar.isHidden = true
-        }
+        self.view.bringSubviewToFront(self.bottomSheetVC.view)
     }
-    func configureList(list: List?){
+    
+    func configureList(list: List?, addRestaurant: Restaurant? = nil){
         if list == nil{
-            guard let viewModel = viewModel else { return }
-            let resID = viewModel.restaurants.map{$0.restaurantID}
-            let timestamp = NSDate().timeIntervalSince1970
-            var list = List(name: "My selected list", restaurantsID: resID, timestamp: timestamp)
-            list.restaurants = viewModel.restaurants
-            bottomSheetVC.list = list
-            bottomSheetVC.tableView.restaurants = viewModel.restaurants
             bottomSheetVC.state = (bottomSheetVC.state == .temp) ? .temp : .edited
+            self.state = bottomSheetVC.state
+            guard let viewModel = viewModel else { return }
+            if self.state == .temp{
+                let resID = viewModel.restaurants.map {$0.restaurantID}
+                let timestamp = NSDate().timeIntervalSince1970
+                let list = List(name: "My selected list", restaurantsID: resID, timestamp: timestamp)
+                bottomSheetVC.list = list
+                bottomSheetVC.tableView.restaurants = viewModel.restaurants
+            }else{
+                guard let restaurant = addRestaurant else { return }
+                if restaurant.isSelected{
+                    bottomSheetVC.list?.restaurantsID.append(restaurant.restaurantID)
+                    if let index = bottomSheetVC.tableView.restaurants
+                        .firstIndex(where: { $0.restaurantID == restaurant.restaurantID}){
+                        bottomSheetVC.tableView.restaurants[index].isSelected.toggle()
+                    }else{
+                        bottomSheetVC.tableView.restaurants.append(restaurant)
+                    }
+                }else{
+                    guard let newlistID =
+                        (bottomSheetVC.list?.restaurantsID.filter({ $0 != restaurant.restaurantID })) else { return }
+                    bottomSheetVC.list?.restaurantsID = newlistID
+                    bottomSheetVC.tableView.restaurants = bottomSheetVC.tableView.restaurants.filter({ $0.restaurantID != restaurant.restaurantID })
+                }
+            }
         }else if let list = list{
+            self.state = .existed
+            self.selectedRestaurants = list.restaurants
             bottomSheetVC.list = list
             bottomSheetVC.tableView.restaurants = list.restaurants
             bottomSheetVC.state = .existed
             let viewModel = LuckyWheelViewModel(restaurants: list.restaurants)
             self.viewModel = viewModel
+            
+            guard let tab = self.tabBarController as? HomeController else { return }
+            tab.deselectAll()
+            self.selectedRestaurants.forEach{tab.updateSelectedRestaurants(from: self, restaurant: $0)}
         }
+    }
+    func configureSpiningUI(){
+        self.bottomSheetVC.view.isHidden = true
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.image = UIImage(named: "hungryGirl")?.withRenderingMode(.alwaysOriginal)
+        
+        view.addSubview(stateLabel)
+        stateLabel.text = "What's for today?"
+        stateLabel.centerX(inView: view)
+        stateLabel.anchor(top: wheel?.bottomAnchor, paddingTop: 32)
+        
+        view.addSubview(iv)
+        iv.anchor(top: stateLabel.bottomAnchor, paddingTop: 16, width: 200, height: 200)
+        iv.centerX(inView: view)
+    }
+    func configureResultView(valueRelateToResult value: Int){
+        guard let restaurant = self.viewModel?.restaurants[value-1] else { return }
+        view.addSubview(resultView)
+        resultView.anchor(top: stateLabel.bottomAnchor, left: view.leftAnchor,
+                          right: view.rightAnchor, paddingTop: 16, paddingLeft: 16,
+                          paddingRight: 16, height: 260)
+        resultView.restaurant = restaurant
+        stateLabel.text = "✔︎ \(restaurant.name) for TODAY !"
+        self.resultView.alpha = 1
     }
     //MARK: - Selectors
     @objc func handleStartButtonTapped(){
         guard let viewModel = self.viewModel else { return }
-        wheel?.manualRotation(aCircleTime: 1)
         let resultNumber = Int.random(in: 1...viewModel.restaurants.count)
         self.wheel?.setTarget(section: resultNumber)
         startButton.isHidden = true
         bottomSheetVC.view.isHidden = true
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
-            self.wheel?.manualRotation(aCircleTime: 5)
+        wheel?.manualRotation(aCircleTime: 0.3)
+        configureSpiningUI()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
+            self.wheel?.manualRotation(aCircleTime: 0.7)
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
                 self.wheel?.stop()
             }
@@ -140,14 +194,29 @@ extension ActionViewController : LuckyWheelDelegate, LuckyWheelDataSource {
         configureResultView(valueRelateToResult: newValue)
     }
     func numberOfSections() -> Int {
-        guard let viewModel = self.viewModel else { return 1 }
+        guard let viewModel = self.viewModel, !selectedRestaurants.isEmpty else { return 1 }
         return viewModel.numOfSection
     }
     
     func itemsForSections() -> [WheelItem] {
         let item = WheelItem(title: "", titleColor: .customblack, itemColor: .pale)
-        guard let viewModel = viewModel else { return [item]}
+        guard let viewModel = viewModel, !selectedRestaurants.isEmpty else { return [item]}
         return viewModel.itemForSection
+    }
+}
+//MARK: -  BottomSheetDelegate
+extension ActionViewController{
+    func didSelectFromSheet(restaurant: Restaurant){
+        if restaurant.isSelected {
+            selectedRestaurants.append(restaurant)
+        }else {
+            selectedRestaurants = selectedRestaurants.filter{($0.restaurantID != restaurant.restaurantID)}
+        }
+        let viewModel = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
+        self.viewModel = viewModel
+        
+        guard let tab = self.tabBarController as? HomeController else { return }
+        tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
     }
 }
 //MARK: - ListTableViewControllerDelegate
@@ -156,29 +225,20 @@ extension ActionViewController: ListTableViewControllerDelegate{
         configureList(list: list)
         controller.navigationController?.popViewController(animated: true)
     }
-    func willPopViewController(_ controller: ListTableViewController) {
+    func willPopViewController(_ controller: ListTableViewController){
+        let list = self.bottomSheetVC.list
+        if let index = controller.lists.firstIndex(where: {$0.id == list?.id}){
+            var mutableList = controller.lists[index]
+            guard mutableList.isEdited else { controller.navigationController?.popViewController(animated: true)
+                    return }
+            controller.fetchRestaurants(restaurantsID: mutableList.restaurantsID) { (restaurants) in
+                mutableList.restaurants = restaurants
+                self.configureList(list: mutableList)
+                guard mutableList.restaurantsID.count == restaurants.count else { return }
+                controller.navigationController?.popViewController(animated: true)
+                return
+            }
+        }
         controller.navigationController?.popViewController(animated: true)
-    }
-}
-
-//MARK: - ResultView
-class ResultView : RestaurantCardCell {
-    //MARK: - Properties
-    override var restaurant : Restaurant! { didSet{ configure() }}
-    //MARK: - Lifecycle
-    override init(frame: CGRect) {
-        super.init(frame:frame)
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    override func configure() {
-        let viewModel = CardCellViewModel(restaurant: restaurant)
-        restaurantName.text = restaurant.name
-        priceLabel.attributedText = viewModel.priceString
-        ratedLabel.attributedText = viewModel.ratedString
-        businessLabel.attributedText = viewModel.businessString
-    
-        
     }
 }

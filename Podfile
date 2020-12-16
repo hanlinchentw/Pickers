@@ -6,8 +6,6 @@ target 'FoodPicker' do
   use_frameworks!
 
   # Pods for FoodPicker
-  pod 'iOSLuckyWheel'
-  
   pod 'Moya', '~> 14.0'
   pod 'Alamofire', '~> 5.2'
   pod 'AlamofireImage', '~> 4.1'

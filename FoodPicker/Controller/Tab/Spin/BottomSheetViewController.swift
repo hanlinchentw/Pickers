@@ -16,6 +16,7 @@ enum ListState{
     case edited
     
 }
+
 class BottomSheetViewController : UIViewController {
     //MARK: - Properties
     var list: List?
@@ -112,8 +113,11 @@ class BottomSheetViewController : UIViewController {
             alertVC.addAction(okAction)
             present(alertVC, animated: true)
         }else{
-            RestaurantService.shared.updateSavedList(list: list)
-            self.state = .existed
+            self.cleanUnselectRestaurants {
+                guard self.tableView.restaurants.count == self.list?.restaurantsID.count else { return }
+                RestaurantService.shared.updateSavedList(list: list)
+                self.state = .existed
+            }
         }
     }
     //MARK: - Helpers
@@ -146,11 +150,12 @@ class BottomSheetViewController : UIViewController {
                          right: view.rightAnchor,bottom: view.bottomAnchor,
                          paddingTop: 16, paddingBottom: 200)
         tableView.listDelegate = self
+        tableView.config = .sheet
+        tableView.isLoading = nil
     }
     
     func didChangeState(){
         print("DEBUG: Current state is \(state) ")
-        
         guard let list = self.list else { return }
         switch state {
         case .temp:
@@ -177,6 +182,10 @@ class BottomSheetViewController : UIViewController {
         }
         self.view.layoutIfNeeded()
     }
+    func cleanUnselectRestaurants(completion: ()-> Void){
+        self.tableView.restaurants = self.tableView.restaurants.filter { $0.isSelected }
+        completion()
+    }
     //MARK: - API
     func saveList(){
         guard let list = self.list else { return }
@@ -187,13 +196,21 @@ class BottomSheetViewController : UIViewController {
 extension BottomSheetViewController: RestaurantsListDelegate{
     func didSelectRestaurant(_ restaurant: Restaurant) {
         self.state = self.state == .temp ? .temp : .edited
+        
+        guard let index = self.tableView.restaurants
+            .firstIndex(where: {$0.restaurantID == restaurant.restaurantID}) else { return }
+        self.tableView.restaurants[index].isSelected.toggle()
+        self.tableView.reloadData()
+        
         if restaurant.isSelected{
             self.list?.restaurantsID.append(restaurant.restaurantID)
         }else{
-            guard let newListID = (self.list?.restaurantsID.filter{$0 != restaurant.restaurantID})
+            guard let newListID = (self.list?.restaurantsID.filter{ $0 != restaurant.restaurantID })
                 else { return }
             self.list?.restaurantsID = newListID
         }
+        guard let parent = self.parent as? ActionViewController else { return }
+        parent.didSelectFromSheet(restaurant:restaurant)
     }
 }
 //MARK: - UIGestureRecognizerDelegate
@@ -203,12 +220,12 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
 //        let direction = gesture.velocity(in: view).y
         
         let y = view.frame.minY
-        if y == view.frame.height - 100 {
+        if y == view.frame.height - 50 {
             gesture.isEnabled = false
         }else {
             gesture.isEnabled = true
         }
-        if y <= 100{
+        if y <= 150{
             tableView.isScrollEnabled = true
         } else {
             tableView.isScrollEnabled = false

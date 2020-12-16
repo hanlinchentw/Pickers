@@ -1,14 +1,14 @@
 {
   "images" : [
     {
-      "filename" : "icnEditSmall.png",
+      "scale" : "1x",
       "idiom" : "universal",
-      "scale" : "1x"
+      "filename" : "icnEditSmall.png"
     },
     {
-      "scale" : "2x",
+      "filename" : "icnEditSmall@2x.png",
       "idiom" : "universal",
-      "filename" : "icnEditSmall@2x.png"
+      "scale" : "2x"
     },
     {
       "scale" : "3x",

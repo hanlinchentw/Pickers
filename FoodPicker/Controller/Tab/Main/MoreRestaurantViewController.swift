@@ -11,10 +11,10 @@ import UIKit
 private let listIdentifier = "ListIdentifier"
 
 protocol ListViewControllerDelegate:class {
-    func willPopViewController(_ controller: ListViewController)
+    func willPopViewController(_ controller: MoreRestaurantViewController)
 }
 
-class ListViewController: UIViewController {
+class MoreRestaurantViewController: UIViewController {
     //MARK: - Properties
     var restaurants: [Restaurant]
     var selectedRestaurants = [Restaurant]()
@@ -68,6 +68,7 @@ class ListViewController: UIViewController {
     func configureUI(){
         view.backgroundColor = .backgroundColor
         tableView.listDelegate = self
+        tableView.config = .sheet
         tableView.isScrollEnabled = true
         tableView.register(RestaurantListCell.self, forCellReuseIdentifier: listIdentifier)
         view.addSubview(tableView)
@@ -106,7 +107,7 @@ class ListViewController: UIViewController {
     }
 }
 //MARK: - RestaurantListCellDelegate
-extension ListViewController: RestaurantsListDelegate{
+extension MoreRestaurantViewController: RestaurantsListDelegate{
     func loadMoreData() {
         self.loadData()
         DispatchQueue.main.async {
@@ -119,6 +120,5 @@ extension ListViewController: RestaurantsListDelegate{
         }else{
             self.selectedRestaurants = self.selectedRestaurants.filter { $0.restaurantID != restaurant.restaurantID }
         }
-        print(self.selectedRestaurants)
     }
 }

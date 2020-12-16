@@ -17,17 +17,19 @@ protocol RestaurantsListDelegate: class {
 extension RestaurantsListDelegate{
     func loadMoreData(){}
 }
+
 class RestaurantsList: UITableView{
     //MARK: - Properties
     weak var listDelegate : RestaurantsListDelegate?
     var restaurants = [Restaurant]() { didSet { self.reloadData() }}
-    private var isLoading = false
+    var config: ListConfiguration? { didSet { self.reloadData() }}
+    var isLoading: Bool? = false
     //MARK: - Lifecycle
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: .plain)
         layer.cornerRadius = 16
         rowHeight = 93 + 24
-        backgroundColor = .white
+        backgroundColor = .clear
         separatorStyle = .none
         delegate = self
         dataSource = self
@@ -40,7 +42,7 @@ class RestaurantsList: UITableView{
     }
     //MARK: - API
     func loadMoreData(){
-        if !self.isLoading{
+        if let isLoading = self.isLoading, !isLoading{
             self.isLoading = true
             DispatchQueue.global().async {
                 sleep(1)
@@ -71,11 +73,13 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource{
             cell.delegate = self
             let viewModel = CardCellViewModel(restaurant: self.restaurants[indexPath.row])
             cell.viewModel = viewModel
+            cell.config = self.config
+            cell.contentView.isUserInteractionEnabled = true
             return cell
         }else{
             let cell = self.dequeueReusableCell(withIdentifier: loadingCellIdentifier, for: indexPath)
             as! LoadingCell
-            if isLoading { cell.indicator.startAnimating() }
+            if let isLoading = isLoading, isLoading { cell.indicator.startAnimating() }
             return cell
         }
     }
@@ -86,10 +90,11 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource{
 //MARK: - UIScrollViewDelegate
 extension RestaurantsList: UIScrollViewDelegate{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let isLoading = isLoading else { return }
         let threshold : CGFloat = 55
         let offsetY = scrollView.contentOffset.y
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.height
-        if (maximumOffset - offsetY <= threshold) && !self.isLoading {
+        if (maximumOffset - offsetY <= threshold) && !isLoading {
             loadMoreData()
         }
     }

@@ -30,6 +30,10 @@
 		B647A4FD24B2F4A70098B7A2 /* RestaurantCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4FC24B2F4A70098B7A2 /* RestaurantCardCell.swift */; };
 		B647A4FF24B3007A0098B7A2 /* CategoryCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4FE24B3007A0098B7A2 /* CategoryCardCell.swift */; };
 		B647A50124B3145B0098B7A2 /* CardCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A50024B3145B0098B7A2 /* CardCellViewModel.swift */; };
+		B650ECD4257F2655004A4049 /* LuckyWheelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD0257F2655004A4049 /* LuckyWheelItem.swift */; };
+		B650ECD5257F2655004A4049 /* LuckyWheelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD1257F2655004A4049 /* LuckyWheelText.swift */; };
+		B650ECD6257F2655004A4049 /* CircularTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD2257F2655004A4049 /* CircularTextLayer.swift */; };
+		B650ECD7257F2655004A4049 /* LuckyWheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD3257F2655004A4049 /* LuckyWheel.swift */; };
 		B685484424B44938009BC800 /* LocaionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484324B44938009BC800 /* LocaionHandler.swift */; };
 		B685484624B4511A009BC800 /* RestaurantListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484524B4511A009BC800 /* RestaurantListCell.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
@@ -39,6 +43,8 @@
 		B689A7A22564CBDF009D270B /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A12564CBDF009D270B /* CategoriesViewController.swift */; };
 		B689A7A42564DBBE009D270B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A32564DBBE009D270B /* ListTableViewController.swift */; };
 		B689A7A72564DFE4009D270B /* ListInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A62564DFE4009D270B /* ListInfoCell.swift */; };
+		B689A7A9256B84EF009D270B /* MoreOptionAlertViewContrller.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */; };
+		B689A7AB2574EDB4009D270B /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7AA2574EDB4009D270B /* EditViewController.swift */; };
 		B698777224DE741E006A8F53 /* FoodPicker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B698777024DE741E006A8F53 /* FoodPicker.xcdatamodeld */; };
 		B698777524DE74DF006A8F53 /* LikedRestaurant+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B698777324DE74DF006A8F53 /* LikedRestaurant+CoreDataClass.swift */; };
 		B698777E24DE80D7006A8F53 /* LikedRestaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B698777D24DE80D7006A8F53 /* LikedRestaurant+CoreDataProperties.swift */; };
@@ -50,7 +56,7 @@
 		B6B41AC4251316E800A5ACBE /* SortOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B41AC3251316E800A5ACBE /* SortOptionCell.swift */; };
 		B6B41AC6251316F300A5ACBE /* PriceRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B41AC5251316F300A5ACBE /* PriceRangeCell.swift */; };
 		B6C7D5AA2554E510005D2AA0 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5A92554E510005D2AA0 /* MapViewController.swift */; };
-		B6C7D5AE255824B7005D2AA0 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5AD255824B7005D2AA0 /* ListViewController.swift */; };
+		B6C7D5AE255824B7005D2AA0 /* MoreRestaurantViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5AD255824B7005D2AA0 /* MoreRestaurantViewController.swift */; };
 		B6C7D5B0255843C1005D2AA0 /* MoreRestaurantsFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5AF255843C1005D2AA0 /* MoreRestaurantsFooterView.swift */; };
 		B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5B1255992E0005D2AA0 /* LoadingCell.swift */; };
 		B6C7D5B4255BA967005D2AA0 /* DetailHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5B3255BA967005D2AA0 /* DetailHeaderViewModel.swift */; };
@@ -97,6 +103,10 @@
 		B647A4FC24B2F4A70098B7A2 /* RestaurantCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCardCell.swift; sourceTree = "<group>"; };
 		B647A4FE24B3007A0098B7A2 /* CategoryCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCardCell.swift; sourceTree = "<group>"; };
 		B647A50024B3145B0098B7A2 /* CardCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCellViewModel.swift; sourceTree = "<group>"; };
+		B650ECD0257F2655004A4049 /* LuckyWheelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheelItem.swift; sourceTree = "<group>"; };
+		B650ECD1257F2655004A4049 /* LuckyWheelText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheelText.swift; sourceTree = "<group>"; };
+		B650ECD2257F2655004A4049 /* CircularTextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularTextLayer.swift; sourceTree = "<group>"; };
+		B650ECD3257F2655004A4049 /* LuckyWheel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheel.swift; sourceTree = "<group>"; };
 		B685484324B44938009BC800 /* LocaionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaionHandler.swift; sourceTree = "<group>"; };
 		B685484524B4511A009BC800 /* RestaurantListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantListCell.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -106,6 +116,8 @@
 		B689A7A12564CBDF009D270B /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
 		B689A7A32564DBBE009D270B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		B689A7A62564DFE4009D270B /* ListInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInfoCell.swift; sourceTree = "<group>"; };
+		B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreOptionAlertViewContrller.swift; sourceTree = "<group>"; };
+		B689A7AA2574EDB4009D270B /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		B698777124DE741E006A8F53 /* FoodPicker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FoodPicker.xcdatamodel; sourceTree = "<group>"; };
 		B698777324DE74DF006A8F53 /* LikedRestaurant+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LikedRestaurant+CoreDataClass.swift"; sourceTree = "<group>"; };
 		B698777D24DE80D7006A8F53 /* LikedRestaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "LikedRestaurant+CoreDataProperties.swift"; path = "/Users/chenhanlin/Desktop/new life/app develpoer/My own project/FoodPicker/FoodPicker/Core data entity/LikedRestaurant+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
@@ -117,7 +129,7 @@
 		B6B41AC3251316E800A5ACBE /* SortOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptionCell.swift; sourceTree = "<group>"; };
 		B6B41AC5251316F300A5ACBE /* PriceRangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceRangeCell.swift; sourceTree = "<group>"; };
 		B6C7D5A92554E510005D2AA0 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		B6C7D5AD255824B7005D2AA0 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		B6C7D5AD255824B7005D2AA0 /* MoreRestaurantViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreRestaurantViewController.swift; sourceTree = "<group>"; };
 		B6C7D5AF255843C1005D2AA0 /* MoreRestaurantsFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreRestaurantsFooterView.swift; sourceTree = "<group>"; };
 		B6C7D5B1255992E0005D2AA0 /* LoadingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCell.swift; sourceTree = "<group>"; };
 		B6C7D5B3255BA967005D2AA0 /* DetailHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeaderViewModel.swift; sourceTree = "<group>"; };
@@ -247,6 +259,7 @@
 		B647A4E524B203650098B7A2 /* Utilis */ = {
 			isa = PBXGroup;
 			children = (
+				B650ECCF257F2648004A4049 /* LuckyWheel */,
 				B647A4E624B2039D0098B7A2 /* Extension.swift */,
 				B685484B24B6D390009BC800 /* Constants.swift */,
 				B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */,
@@ -264,6 +277,17 @@
 				B6C7D5B3255BA967005D2AA0 /* DetailHeaderViewModel.swift */,
 			);
 			path = "View Model";
+			sourceTree = "<group>";
+		};
+		B650ECCF257F2648004A4049 /* LuckyWheel */ = {
+			isa = PBXGroup;
+			children = (
+				B650ECD2257F2655004A4049 /* CircularTextLayer.swift */,
+				B650ECD3257F2655004A4049 /* LuckyWheel.swift */,
+				B650ECD0257F2655004A4049 /* LuckyWheelItem.swift */,
+				B650ECD1257F2655004A4049 /* LuckyWheelText.swift */,
+			);
+			path = LuckyWheel;
 			sourceTree = "<group>";
 		};
 		B685484F24BD8605009BC800 /* Service */ = {
@@ -300,6 +324,8 @@
 				B647A4F024B22B010098B7A2 /* ActionController.swift */,
 				B6AE009C24DD188400423D72 /* BottomSheetViewController.swift */,
 				B689A7A32564DBBE009D270B /* ListTableViewController.swift */,
+				B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */,
+				B689A7AA2574EDB4009D270B /* EditViewController.swift */,
 			);
 			path = Spin;
 			sourceTree = "<group>";
@@ -361,7 +387,7 @@
 				B647A4F624B22B4D0098B7A2 /* MainPageController.swift */,
 				B689A7A12564CBDF009D270B /* CategoriesViewController.swift */,
 				B6C7D5A92554E510005D2AA0 /* MapViewController.swift */,
-				B6C7D5AD255824B7005D2AA0 /* ListViewController.swift */,
+				B6C7D5AD255824B7005D2AA0 /* MoreRestaurantViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -530,6 +556,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B685484E24BB0090009BC800 /* Restaurant.swift in Sources */,
+				B650ECD5257F2655004A4049 /* LuckyWheelText.swift in Sources */,
 				B6B41AC6251316F300A5ACBE /* PriceRangeCell.swift in Sources */,
 				B647A4F724B22B4D0098B7A2 /* MainPageController.swift in Sources */,
 				B685484C24B6D390009BC800 /* Constants.swift in Sources */,
@@ -546,7 +573,7 @@
 				B63C19A325179B090012CC4A /* SearchShortcutSection.swift in Sources */,
 				B6D1307E24CEE80C00040F85 /* FilterViewModel.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
-				B6C7D5AE255824B7005D2AA0 /* ListViewController.swift in Sources */,
+				B6C7D5AE255824B7005D2AA0 /* MoreRestaurantViewController.swift in Sources */,
 				B647A4FF24B3007A0098B7A2 /* CategoryCardCell.swift in Sources */,
 				B698777524DE74DF006A8F53 /* LikedRestaurant+CoreDataClass.swift in Sources */,
 				B647A50124B3145B0098B7A2 /* CardCellViewModel.swift in Sources */,
@@ -554,17 +581,21 @@
 				B6A2FA8B25304A48005CB171 /* CategoryCardWall.swift in Sources */,
 				B6AE009D24DD188400423D72 /* BottomSheetViewController.swift in Sources */,
 				B6D1306A24C4183300040F85 /* DetailController.swift in Sources */,
+				B689A7A9256B84EF009D270B /* MoreOptionAlertViewContrller.swift in Sources */,
 				B63C19A7251B97850012CC4A /* SearchTableViewController.swift in Sources */,
 				B647A4FB24B2BE940098B7A2 /* MainPageNavigationBar.swift in Sources */,
 				B647A4CF24B1F7BA0098B7A2 /* SceneDelegate.swift in Sources */,
 				B6D1305E24C01B3600040F85 /* AuthController.swift in Sources */,
+				B650ECD4257F2655004A4049 /* LuckyWheelItem.swift in Sources */,
 				B647A4F124B22B010098B7A2 /* ActionController.swift in Sources */,
 				B647A4E124B1FA640098B7A2 /* HomeController.swift in Sources */,
 				B647A4E724B2039D0098B7A2 /* Extension.swift in Sources */,
 				B6AE009924D7F94F00423D72 /* CategoriesCard.swift in Sources */,
 				B6B41AC4251316E800A5ACBE /* SortOptionCell.swift in Sources */,
 				B685485124BD8631009BC800 /* NetworkService.swift in Sources */,
+				B650ECD7257F2655004A4049 /* LuckyWheel.swift in Sources */,
 				B647A4F924B22D530098B7A2 /* FilterResultSection.swift in Sources */,
+				B650ECD6257F2655004A4049 /* CircularTextLayer.swift in Sources */,
 				B6D1306324C02BFA00040F85 /* IntroView.swift in Sources */,
 				B6C7D5BD2563F65A005D2AA0 /* List.swift in Sources */,
 				B63C19A9251B97EA0012CC4A /* SearchCell.swift in Sources */,
@@ -580,6 +611,7 @@
 				B647A4FD24B2F4A70098B7A2 /* RestaurantCardCell.swift in Sources */,
 				B6C7D5B82563F4F3005D2AA0 /* RestaurantAnnotation.swift in Sources */,
 				B6B41AC024FE3C3F00A5ACBE /* AllRestaurantsSection.swift in Sources */,
+				B689A7AB2574EDB4009D270B /* EditViewController.swift in Sources */,
 				B685485324BECC7F009BC800 /* LuckyWheelViewModel.swift in Sources */,
 				B6D1307C24CEE1AF00040F85 /* FilterView.swift in Sources */,
 				B6D1306524C040BC00040F85 /* IntroController.swift in Sources */,

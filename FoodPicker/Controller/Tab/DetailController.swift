@@ -44,8 +44,8 @@ class DetailController : UICollectionViewController {
     }
     //MARK: - API
     func fetchDetail(){
-        NetworkService.shared.fetchDetail(id: restaurant.restaurantID) { (detail) in
-            self.restaurant.details = detail
+        NetworkService.shared.fetchDetail(id: restaurant.restaurantID) { [weak self](detail) in
+            self?.restaurant.details = detail
         }
     }
     func fetchNumOfLike(){

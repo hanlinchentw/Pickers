@@ -84,7 +84,6 @@ PODS:
     - AlamofireImage (~> 4.0)
     - ImageSlideshow/Core
   - ImageSlideshow/Core (1.9.1)
-  - iOSLuckyWheel (0.1.1)
   - leveldb-library (1.22)
   - Moya (14.0.0):
     - Moya/Core (= 14.0.0)
@@ -105,7 +104,6 @@ DEPENDENCIES:
   - Firebase/Database
   - ImageSlideshow (~> 1.9.0)
   - ImageSlideshow/Alamofire
-  - iOSLuckyWheel
   - Moya (~> 14.0)
 
 SPEC REPOS:
@@ -127,7 +125,6 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - ImageSlideshow
-    - iOSLuckyWheel
     - leveldb-library
     - Moya
     - nanopb
@@ -151,12 +148,11 @@ SPEC CHECKSUMS:
   GoogleUtilities: ad0f3b691c67909d03a3327cc205222ab8f42e0e
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   ImageSlideshow: 67184be896a28472bd3b906c33ce4e0734aa3d22
-  iOSLuckyWheel: ee2fb6d2bca159f57d6536524aab8db4a2cf9376
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
 
-PODFILE CHECKSUM: 5b0a09c90fc85fbf344e44d58e9efe99997d6645
+PODFILE CHECKSUM: cd0a209dd23249fe129e71786a0cab9aad65eaa8
 
 COCOAPODS: 1.9.1

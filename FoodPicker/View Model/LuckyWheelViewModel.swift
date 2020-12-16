@@ -6,11 +6,11 @@
 //  Copyright © 2020 陳翰霖. All rights reserved.
 //
 
-import Foundation
-import iOSLuckyWheel
+import UIKit
 
 struct LuckyWheelViewModel  {
     var restaurants : [Restaurant]
+    
     var numOfSection: Int {
         return restaurants.count*2
     }

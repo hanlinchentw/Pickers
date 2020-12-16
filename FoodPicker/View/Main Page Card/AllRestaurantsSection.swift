@@ -59,12 +59,12 @@ class AllRestaurantsSection: UICollectionReusableView{
     func configureUI(){
         addSubview(titleLabel)
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 16, paddingLeft: 24, height: 36)
-        
         configureTableview()
     }
     func configureTableview(){
         tableView.delegate = self
         tableView.listDelegate = self
+        tableView.config = .sheet
         tableView.register(RestaurantListCell.self, forCellReuseIdentifier: restaurantsListIdentifier)
 
         addSubview(tableView)
@@ -90,7 +90,7 @@ extension AllRestaurantsSection: UITableViewDelegate{
 }
 //MARK: - RestaurantListCellDelegate
 extension AllRestaurantsSection: RestaurantsListDelegate{
-    func didSelectRestaurant(_ restaurant: Restaurant) {
+    func didSelectRestaurant(_ restaurant: Restaurant){
         delegate?.didSelectRestaurant(restaurant: restaurant)
     }
 }

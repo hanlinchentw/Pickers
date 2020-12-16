@@ -8,14 +8,26 @@
 
 import UIKit
 
+enum ListConfiguration{
+    case sheet
+    case table
+    case edit
+}
+
 protocol RestaurantListCellDelegate : class {
     func didSelectRestaurant(_ restaurant : Restaurant)
+    func shouldDeleteCell(_ restaurantID: String)
+}
+extension RestaurantListCellDelegate{
+    func didSelectRestaurant(_ restaurant : Restaurant){}
+    func shouldDeleteCell(_ restaurantID: String){}
 }
 
 class RestaurantListCell : UITableViewCell {
     //MARK: - Properties
     weak var delegate : RestaurantListCellDelegate?
-    var viewModel : CardCellViewModel? { didSet{ configure() }}
+    var config: ListConfiguration? { didSet{ configure()}}
+    var viewModel : CardCellViewModel?
     private let optionImageView : UIImageView = {
         let iv = UIImageView()
         iv.clipsToBounds = true
@@ -32,28 +44,29 @@ class RestaurantListCell : UITableViewCell {
         return label
     }()
     private let priceLabel = UILabel()
-    lazy var selectButton : UIButton = {
+    lazy var actionButton : UIButton = {
         let button = UIButton(type: .system)
-        button.addTarget(self, action: #selector(handleSelectButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleActionButtonTapped), for: .touchUpInside)
         return button
     }()
     private let ratedLabel = UILabel()
     //MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         addSubview(optionImageView)
         optionImageView.anchor(left: leftAnchor, paddingLeft: 16, width: 93, height: 93)
         optionImageView.centerY(inView: self)
-        addSubview(selectButton)
-        selectButton.anchor(right: rightAnchor, paddingRight: 16,width: 48, height: 48)
-        selectButton.centerY(inView: self)
+        contentView.addSubview(actionButton)
+        actionButton.anchor(right: rightAnchor, paddingRight: 16,width: 48, height: 48)
+        actionButton.centerY(inView: self)
         
         let captionStack = UIStackView(arrangedSubviews: [restaurantName, priceLabel, ratedLabel])
         captionStack.distribution = .fillEqually
         captionStack.spacing = 0
         captionStack.axis = .vertical
         addSubview(captionStack)
-        captionStack.anchor(left: optionImageView.rightAnchor, right:selectButton.leftAnchor,
+        captionStack.anchor(left: optionImageView.rightAnchor, right: actionButton.leftAnchor,
                             paddingLeft: 18, paddingRight: 8)
         captionStack.centerY(inView: self)
     }
@@ -68,20 +81,30 @@ class RestaurantListCell : UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     //MARK: - Selectors
-    @objc func handleSelectButtonTapped(){
-        if let _ = self.viewModel?.restaurant{
-            self.viewModel!.restaurant.isSelected.toggle()
+    @objc func handleActionButtonTapped(){
+        print("DEBUG: Did tapped action button ... ")
+        guard self.viewModel != nil else { return }
+        if config == .edit{
+            self.delegate?.shouldDeleteCell(viewModel!.restaurant.restaurantID)
+        }else{
+            print("DEBUG: Did select restaurant ... from cell")
+            self.viewModel?.restaurant.isSelected.toggle()
             self.delegate?.didSelectRestaurant(self.viewModel!.restaurant)
         }
     }
     //MARK: - Helpers
     func configure(){
-        guard let viewModel = viewModel else { return }
+        guard let viewModel = viewModel, let config = config else { return }
         restaurantName.text = viewModel.restaurant.name
         priceLabel.attributedText = viewModel.priceString
         ratedLabel.attributedText = viewModel.ratedString
         optionImageView.af.setImage(withURL: viewModel.restaurant.imageUrl)
-        selectButton.setImage(viewModel.selectButtonImage?.withRenderingMode(.alwaysOriginal), for: .normal)
+        actionButton.setImage(viewModel.selectButtonImage?.withRenderingMode(.alwaysOriginal), for: .normal)
+        if config == .table{
+            backgroundColor = .backgroundColor
+        }else if config == .edit{
+            actionButton.setImage(UIImage(named: "icnDeleteNoShadow")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
     }
 }
 

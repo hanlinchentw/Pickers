@@ -11,16 +11,7 @@ import Firebase
 
 class HomeController : UITabBarController {
     //MARK: - Properties
-    private var selectedRestaurants  = [Restaurant]() {
-        didSet{
-            configureActionIcon()
-            guard let nav2 = viewControllers?[2] as? UINavigationController else { return }
-            guard let action = nav2.viewControllers[0] as? ActionViewController else { return }
-            let viewModel = LuckyWheelViewModel(restaurants: selectedRestaurants)
-            action.viewModel = viewModel
-            action.configureList(list:nil)
-        }
-    }
+    var selectedRestaurants  = [Restaurant]()
     private let numOfSelectedLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.arialBoldMT
@@ -42,9 +33,6 @@ class HomeController : UITabBarController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-//        print("DEBUG: Picker path is at ... \(paths[0])")
         authenticateUserAndConfigureUI()
 //        logUserOut()
     }
@@ -90,6 +78,7 @@ class HomeController : UITabBarController {
         let nav1 = templateNavigationController(image: UIImage(named: "homeUnselectedS"),
                                                 rootViewController: main)
         nav1.tabBarItem.selectedImage = UIImage(named: "homeSelectedS")?.withRenderingMode(.alwaysOriginal)
+        main.preloadData()
         
         let search = SearchController(collectionViewLayout: UICollectionViewFlowLayout())
         let nav2 = templateNavigationController(image: UIImage(named: "searchUnselectedS"),
@@ -121,14 +110,41 @@ class HomeController : UITabBarController {
         nav.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
         return nav
     }
+    func updateSelectedRestaurants(from controller: UIViewController, restaurant: Restaurant){
+        didSelect(restaurant: restaurant)
+        configureActionIcon()
+        if controller.isKind(of: CategoriesViewController.self){
+            guard let nav = viewControllers?[2] as? UINavigationController else { return }
+            guard let action = nav.viewControllers[0] as? ActionViewController else { return }
+            let vm = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
+            action.selectedRestaurants = self.selectedRestaurants
+            action.viewModel = vm
+            if action.state == .temp || action.state == nil{
+                action.configureList(list: nil)
+            }else if action.state == .existed || action.state == .edited{
+                action.configureList(list: nil, addRestaurant: restaurant)
+            }
+        }else if controller.isKind(of: ActionViewController.self){
+            guard let nav = viewControllers?[0] as? UINavigationController else { return }
+            guard let main = nav.viewControllers[0] as? MainPageController else { return }
+            guard let cate = main.children[1] as? CategoriesViewController else { return }
+            cate.updateSelectStauts(restaurant: restaurant)
+        }
+    }
     //MARK: - Selectors
     func didSelect(restaurant : Restaurant){
-        print("DEBUG: Did select")
         if restaurant.isSelected {
             selectedRestaurants.append(restaurant)
         }else {
             selectedRestaurants = selectedRestaurants.filter{($0.restaurantID != restaurant.restaurantID)}
         }
+    }
+    func deselectAll(){
+        guard let nav = viewControllers?[0] as? UINavigationController else { return }
+        guard let main = nav.viewControllers[0] as? MainPageController else { return }
+        guard let cate = main.children[1] as? CategoriesViewController else { return }
+        cate.deselectAll()
+        selectedRestaurants.removeAll()
     }
 }
 

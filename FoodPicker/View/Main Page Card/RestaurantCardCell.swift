@@ -15,7 +15,7 @@ protocol CardCellDelegate : class {
     func didLikeRestaurant(_ restaurant : Restaurant)
 }
 
-class RestaurantCardCell : UICollectionViewCell {
+class RestaurantCardCell: UICollectionViewCell {
     //MARK: - Properties
     var restaurant : Restaurant? { didSet{configure() }}
     
@@ -42,9 +42,7 @@ class RestaurantCardCell : UICollectionViewCell {
         label.textColor = .freshGreen
         return label
     }()
-    
     let priceLabel = UILabel()
-    
     lazy var selectButton : UIButton = {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(handleSelectButtonTapped), for: .touchUpInside)
@@ -63,10 +61,10 @@ class RestaurantCardCell : UICollectionViewCell {
         super.init(frame:frame)
         backgroundColor = .white
         layer.cornerRadius = 16
-
+        layer.masksToBounds = true
         addSubview(optionImageView)
-        optionImageView.anchor(top:topAnchor, left: leftAnchor, right: rightAnchor,bottom: bottomAnchor,
-                               paddingTop: 8, paddingLeft:8, paddingRight: 8,paddingBottom: 104 )
+        optionImageView.anchor(top:topAnchor, left: leftAnchor, right: rightAnchor,
+                               paddingTop: 8, paddingLeft:8, paddingRight: 8, height: 130)
         
         addSubview(selectButton)
         selectButton.anchor(top:optionImageView.topAnchor, right: optionImageView.rightAnchor,
@@ -82,7 +80,7 @@ class RestaurantCardCell : UICollectionViewCell {
         captionStack.spacing = 0
         captionStack.axis = .vertical
         addSubview(captionStack)
-        captionStack.anchor(top:optionImageView.bottomAnchor, left: leftAnchor,bottom: bottomAnchor,
+        captionStack.anchor(top: optionImageView.bottomAnchor, left: leftAnchor,bottom: bottomAnchor,
                             paddingTop: 8, paddingLeft: 16, paddingBottom: 8)
     }
     deinit {

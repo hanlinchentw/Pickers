@@ -130,7 +130,7 @@ struct RestaurantService {
         }
     }
     
-    func saveList(list: List)->String?{
+    func saveList(list: List) -> String?{
         guard let uid = Auth.auth().currentUser?.uid else { return nil }
         
         let name = list.name
@@ -157,20 +157,45 @@ struct RestaurantService {
             completion(lists)
         }
     }
-    func updateSavedList(list:List){
+    func updateListAfterEditing(listID: String, completion: @escaping(List?)->Void){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        REF_USER_LIST.child(uid).child(listID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if !snapshot.exists(){
+                completion(nil)
+            }else{
+                let listID = snapshot.key
+                guard let dict = snapshot.value as? [String : Any] else { return }
+                guard let name = dict["Name"] as? String else { return }
+                guard let resID = dict["RestaurantsID"] as? [String] else { return }
+                guard let timestamp = dict["Timestamp"] as? Double else { return }
+                var list = List(name: name, restaurantsID: resID, timestamp: timestamp)
+                list.id = listID
+                list.isEdited = true
+                completion(list)
+            }
+        })
+    }
+    func updateSavedList(list:List, compltion:(()->Void)? = nil){
         guard let uid = Auth.auth().currentUser?.uid else { return }
         guard let listID = list.id else { return }
         let name = list.name
         let timestamp = list.timeStamp
         let resID = list.restaurantsID
 
-        REF_USER_LIST.child(uid).child(listID).child("RestaurantsID").observeSingleEvent(of: .value, with: { (snapshot) in
-            if !snapshot.exists(){
+        REF_USER_LIST.child(uid).child(listID).child("RestaurantsID")
+            .observeSingleEvent(of: .value, with: { (snapshot) in
+            if !snapshot.exists() || list.restaurantsID.isEmpty {
                 REF_USER_LIST.child(uid).child(listID).removeValue()
             }else{
                 let value = ["Name": name,"Timestamp": timestamp, "RestaurantsID": resID] as [String : Any]
                 REF_USER_LIST.child(uid).child(listID).updateChildValues(value)
             }
+            guard let completion = compltion else { return }
+            completion()
         })
+    }
+    func deleteList(listID:String){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        REF_USER_LIST.child(uid).child(listID).removeValue()
     }
 }
