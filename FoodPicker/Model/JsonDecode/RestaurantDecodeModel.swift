@@ -16,7 +16,7 @@ struct Details : Decodable {
     let location : Address?
     
     let id : String?
-    let name: String
+    let name: String?
     let rating : Double
     let isClosed : Bool?
     let imageUrl : URL?
@@ -43,14 +43,14 @@ struct Root : Decodable{
     let businesses : [Business]
 }
 
-struct Business : Decodable {
+struct Business: Decodable {
     let id : String
     let name : String
     let rating : Double
     let price : String?
     let imageUrl : String
-    let distance : Double
-    let isClosed : Bool
+    let distance : Double?
+    let isClosed : Bool?
     let categories : [Categories]
     let reviewCount : Int
     let coordinates : CLLocationCoordinate2D

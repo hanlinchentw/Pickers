@@ -72,6 +72,7 @@ struct RestaurantService {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         REF_USER_LIKE.child(uid).observe(.childAdded) { (snapshot) in
             NetworkService.shared.fetchDetail(id: snapshot.key) { (detail) in
+                print("DEBUG: Successfully fetch liked restaurants.")
                 let restaurant = Restaurant(business: nil, detail: detail)
                 restaurants.append(restaurant)
                 completion(restaurants)

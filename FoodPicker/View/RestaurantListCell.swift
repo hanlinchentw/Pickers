@@ -12,15 +12,18 @@ enum ListConfiguration{
     case sheet
     case table
     case edit
+    case list
+    case all
 }
 
 protocol RestaurantListCellDelegate : class {
     func didSelectRestaurant(_ restaurant : Restaurant)
-    func shouldDeleteCell(_ restaurantID: String)
+    func shouldDeleteCell(_ restaurant: Restaurant)
 }
+
 extension RestaurantListCellDelegate{
     func didSelectRestaurant(_ restaurant : Restaurant){}
-    func shouldDeleteCell(_ restaurantID: String){}
+    func shouldDeleteCell(_ restaurant: Restaurant){}
 }
 
 class RestaurantListCell : UITableViewCell {
@@ -82,14 +85,16 @@ class RestaurantListCell : UITableViewCell {
     }
     //MARK: - Selectors
     @objc func handleActionButtonTapped(){
-        print("DEBUG: Did tapped action button ... ")
-        guard self.viewModel != nil else { return }
+        guard let viewModel = viewModel else { return }
         if config == .edit{
-            self.delegate?.shouldDeleteCell(viewModel!.restaurant.restaurantID)
+            print("DEBUG: Should delete restaurant ... ")
+            self.delegate?.shouldDeleteCell(viewModel.restaurant)
         }else{
             print("DEBUG: Did select restaurant ... from cell")
-            self.viewModel?.restaurant.isSelected.toggle()
+            self.viewModel!.restaurant.isSelected.toggle()
+            print("DEBUG: Restaurant is Selected \(self.viewModel!.restaurant.isSelected)")
             self.delegate?.didSelectRestaurant(self.viewModel!.restaurant)
+            self.actionButton.setImage(UIImage(named: self.viewModel!.selectButtonImagename)?.withRenderingMode(.alwaysOriginal), for: .normal)
         }
     }
     //MARK: - Helpers
@@ -99,11 +104,26 @@ class RestaurantListCell : UITableViewCell {
         priceLabel.attributedText = viewModel.priceString
         ratedLabel.attributedText = viewModel.ratedString
         optionImageView.af.setImage(withURL: viewModel.restaurant.imageUrl)
-        actionButton.setImage(viewModel.selectButtonImage?.withRenderingMode(.alwaysOriginal), for: .normal)
         if config == .table{
             backgroundColor = .backgroundColor
+            changeImageWithAninamation(imageName: viewModel.selectButtonImagename)
         }else if config == .edit{
-            actionButton.setImage(UIImage(named: "icnDeleteNoShadow")?.withRenderingMode(.alwaysOriginal), for: .normal)
+            changeImageWithAninamation(imageName: "icnDeleteNoShadow")
+        }else if config == .list{
+            backgroundColor = .backgroundColor
+            actionButton.isHidden = true
+        }else if config == .sheet || config ==  .all {
+            self.actionButton.setImage(UIImage(named: viewModel.selectButtonImagename)?.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+    }
+    func changeImageWithAninamation(imageName: String){
+        self.actionButton.alpha = 0
+        UIView.animate(withDuration: 1) {
+            self.actionButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
+        } completion: { _ in
+            UIView.animate(withDuration: 0.5) {
+                self.actionButton.alpha = 1
+            }
         }
     }
 }

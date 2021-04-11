@@ -8,8 +8,16 @@
 
 import UIKit
 import Firebase
+import CoreData
+
+enum SelectRestaurantResult: Error {
+    case success
+    case upToLimit
+    case error
+}
 
 class HomeController : UITabBarController {
+
     //MARK: - Properties
     var selectedRestaurants  = [Restaurant]()
     private let numOfSelectedLabel : UILabel = {
@@ -30,9 +38,14 @@ class HomeController : UITabBarController {
         numOfSelectedLabel.center(inView: iv)
         return iv
     }()
+    
+    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    private lazy var context = appDelegate.persistentContainer.viewContext
+    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         authenticateUserAndConfigureUI()
 //        logUserOut()
     }
@@ -70,39 +83,36 @@ class HomeController : UITabBarController {
         tabBar.layer.cornerRadius = 36
         tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         tabBar.layer.masksToBounds = true
-
     }
     
     func configureTabBarController(){
+        // Create main page view controller
         let main = MainPageController()
         let nav1 = templateNavigationController(image: UIImage(named: "homeUnselectedS"),
                                                 rootViewController: main)
         nav1.tabBarItem.selectedImage = UIImage(named: "homeSelectedS")?.withRenderingMode(.alwaysOriginal)
         main.preloadData()
-        
+        // Create searcg page view controller
         let search = SearchController(collectionViewLayout: UICollectionViewFlowLayout())
         let nav2 = templateNavigationController(image: UIImage(named: "searchUnselectedS"),
                                                 rootViewController: search)
         nav2.tabBarItem.selectedImage = UIImage(named: "searchSelectedS")?.withRenderingMode(.alwaysOriginal)
-        
+        // Create Spin page view controller
         let action = ActionViewController()
         let nav3 = templateNavigationController(image: UIImage(named: ""),
-                                                rootViewController: action)
- 
-        
-        
+                                            rootViewController: action)
+        // Create favorite View controller
         let favorite = FavoriteController()
         let nav4 = templateNavigationController(image: UIImage(named: "favoriteUnselectedS"),
                                                 rootViewController: favorite)
         nav4.tabBarItem.selectedImage = UIImage(named: "icnTabHeartSelected")?.withRenderingMode(.alwaysOriginal)
 
-        
+        // Create profile view controller
         let profile = ProfileController()
         let nav5 = templateNavigationController(image: UIImage(named: "profileUnselectedS"),
                                                 rootViewController: profile)
         
         viewControllers = [nav1, nav2, nav3, nav4, nav5]
-        
     }
     func templateNavigationController(image: UIImage?, rootViewController:UIViewController) -> UINavigationController{
         let nav = UINavigationController(rootViewController: rootViewController)
@@ -110,28 +120,31 @@ class HomeController : UITabBarController {
         nav.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
         return nav
     }
-    func updateSelectedRestaurants(from controller: UIViewController, restaurant: Restaurant){
-        didSelect(restaurant: restaurant)
-        configureActionIcon()
-        if controller.isKind(of: CategoriesViewController.self){
-            guard let nav = viewControllers?[2] as? UINavigationController else { return }
-            guard let action = nav.viewControllers[0] as? ActionViewController else { return }
-            let vm = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
-            action.selectedRestaurants = self.selectedRestaurants
-            action.viewModel = vm
-            if action.state == .temp || action.state == nil{
-                action.configureList(list: nil)
-            }else if action.state == .existed || action.state == .edited{
-                action.configureList(list: nil, addRestaurant: restaurant)
+    
+    //MARK: - SelectRestaurant Data flow
+    func updateSelectedRestaurants(from controller: UIViewController, restaurant: Restaurant) throws {
+        self.didSelect(restaurant: restaurant)
+        guard self.selectedRestaurants.count <= 8  else { throw SelectRestaurantResult.upToLimit }
+            self.configureActionIcon()
+            if controller.isKind(of: MainPageController.self) || controller.isKind(of: FavoriteController.self){
+                guard let nav = viewControllers?[2] as? UINavigationController else { return }
+                guard let action = nav.viewControllers[0] as? ActionViewController else { return }
+                let vm = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
+                action.selectedRestaurants = self.selectedRestaurants
+                action.viewModel = vm
+                if action.state == .temp || action.state == nil{
+                    action.configureList(list: nil)
+                }else if action.state == .existed || action.state == .edited{
+                    action.configureList(list: nil, addRestaurant: restaurant)
+                }
             }
-        }else if controller.isKind(of: ActionViewController.self){
-            guard let nav = viewControllers?[0] as? UINavigationController else { return }
-            guard let main = nav.viewControllers[0] as? MainPageController else { return }
-            guard let cate = main.children[1] as? CategoriesViewController else { return }
-            cate.updateSelectStauts(restaurant: restaurant)
-        }
+            if controller.isKind(of: ActionViewController.self) || controller.isKind(of: FavoriteController.self){
+                guard let nav = viewControllers?[0] as? UINavigationController else { return }
+                guard let main = nav.viewControllers[0] as? MainPageController else { return }
+                guard let cate = main.children[1] as? CategoriesViewController else { return }
+                cate.updateSelectStatus(restaurantID: restaurant.restaurantID)
+            }
     }
-    //MARK: - Selectors
     func didSelect(restaurant : Restaurant){
         if restaurant.isSelected {
             selectedRestaurants.append(restaurant)
@@ -139,12 +152,10 @@ class HomeController : UITabBarController {
             selectedRestaurants = selectedRestaurants.filter{($0.restaurantID != restaurant.restaurantID)}
         }
     }
-    func deselectAll(){
-        guard let nav = viewControllers?[0] as? UINavigationController else { return }
-        guard let main = nav.viewControllers[0] as? MainPageController else { return }
-        guard let cate = main.children[1] as? CategoriesViewController else { return }
-        cate.deselectAll()
+    func deselectAllFromActionViewController(actionVC: ActionViewController){
+        self.selectedRestaurants.forEach { try! updateSelectedRestaurants(from: actionVC, restaurant: $0)}
         selectedRestaurants.removeAll()
+        let connect = CoredataConnect(context: context)
+        connect.deselectAllRestaurants()
     }
 }
-

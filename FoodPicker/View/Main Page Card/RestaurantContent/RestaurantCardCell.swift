@@ -10,12 +10,12 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
-protocol CardCellDelegate : class {
-    func didSeletRestaurant(_ restaurant : Restaurant)
+protocol RestaurantCardCellDelegate : class {
+    func didSelectRestaurant(_ restaurant : Restaurant)
     func didLikeRestaurant(_ restaurant : Restaurant)
 }
 
-class RestaurantCardCell: UICollectionViewCell {
+class RestaurantCardCell: UICollectionViewCell{
     //MARK: - Properties
     var restaurant : Restaurant? { didSet{configure() }}
     
@@ -27,7 +27,7 @@ class RestaurantCardCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFill
         return iv
     }()
-    weak var delegate : CardCellDelegate?
+    weak var delegate : RestaurantCardCellDelegate?
     let restaurantName : UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
@@ -37,7 +37,7 @@ class RestaurantCardCell: UICollectionViewCell {
     }()
     let businessLabel : UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Avenir-Heavy", size: 14)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
         label.textColor = .freshGreen
         return label
@@ -93,26 +93,27 @@ class RestaurantCardCell: UICollectionViewCell {
     func configure(){
         guard let restaurant = restaurant else { return }
         let viewModel = CardCellViewModel(restaurant: restaurant)
-        
+        layer.cornerRadius = 16
+        layer.masksToBounds = true
         restaurantName.text = restaurant.name
         priceLabel.attributedText = viewModel.priceString
         ratedLabel.attributedText = viewModel.ratedString
         businessLabel.attributedText = viewModel.businessString
         optionImageView.af.setImage(withURL: restaurant.imageUrl)
-        selectButton.setImage(viewModel.selectButtonImage?.withRenderingMode(.alwaysOriginal), for: .normal)
-        likeButton.setImage(UIImage(named: viewModel.likeButtonImagename)?.withRenderingMode(.alwaysOriginal) , for: .normal)
+        selectButton.setImage(UIImage(named: viewModel.selectButtonImagename)?
+                                .withRenderingMode(.alwaysOriginal), for: .normal)
+        likeButton.setImage(UIImage(named: viewModel.likeButtonImagename)?
+                                .withRenderingMode(.alwaysOriginal) , for: .normal)
     }
     //MARK: - Selectors
     @objc func handleLikeButtonTapped(){
-        guard let _ = restaurant else { return }
+        guard self.restaurant != nil else { return }
+        self.restaurant!.isLiked.toggle()
         self.delegate?.didLikeRestaurant(self.restaurant!)
     }
     @objc func handleSelectButtonTapped(){
-        guard let restaurant = restaurant else { return }
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: DID_SELECT_KEY),
-                                    object: nil,
-                                    userInfo: ["Restaurant":restaurant as Restaurant])
+        guard self.restaurant != nil else { return }
         self.restaurant!.isSelected.toggle()
-        self.delegate?.didSeletRestaurant(self.restaurant!)
+        self.delegate?.didSelectRestaurant(self.restaurant!)
     }
 }

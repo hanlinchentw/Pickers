@@ -82,15 +82,12 @@ open class LuckyWheel :UIControl{
         labelsView = LuckyWheelText(frame: CGRect(x: 0, y: -wheelRadius / 2, width: bounds.width, height: bounds.height + wheelRadius ))
         labelsView.setAngles(angles, withRadius: Float(wheelRadius), items: (dataSource?.itemsForSections())!)
         addSubview(labelsView)
-        
         if numberOfSections > 2 {
-            let landingPostion = delegate?.landingPostion?() ?? .bottom
+            let landingPostion = delegate?.landingPostion?() ?? .top
             let initialRotationAngle: CGFloat = (numberOfSections >= 4) ? CGFloat(landingPostion.rawValue) - angleSize : angleSize - 45
             rotationValue = (numberOfSections >= 4) ? torad(initialRotationAngle +  angleSize / 2 ) : torad(initialRotationAngle)
             let t: CGAffineTransform = container.transform.rotated(by: rotationValue)
             container.transform = t
-            let angle = torad(initialRotationAngle +  angleSize)
-            labelsView.transform = labelsView.transform.rotated(by:angle )
         }
     }
     func drawPath(_ start: CGFloat, and end: CGFloat, with color: UIColor?, andName name: String?, andIndex index: Int) {
@@ -98,7 +95,12 @@ open class LuckyWheel :UIControl{
         let center = CGPoint(x: frame.size.width / 2, y: 0)
         path.move(to: center)
         path.addArc(withCenter: CGPoint(x: frame.size.width / 2, y: 0), radius: wheelRadius, startAngle: torad(start), endAngle: torad(end), clockwise: true)
-        angles.append(torad(end))
+        if (((dataSource?.numberOfSections())!)%4 == 0){
+            angles.append(torad(start))
+        }else{
+            let midRad = torad(angleSize)/2 + torad(start)
+            angles.append(midRad)
+        }
         //segment
         let layer = CAShapeLayer()
         layer.path = path.cgPath
@@ -137,13 +139,15 @@ open class LuckyWheel :UIControl{
     }
     @objc public func stop() {
         self.isUserInteractionEnabled = false
-        selectdSection = selectdSection + 1
+        var increment = (dataSource!.numberOfSections()/2)
+        if increment  % 2 == 0 { increment -= 1 }
+        increment /= 2
         if isAnimating {
             self.isAnimating = false
             let time :Double = infinteRotation ? 2 : 0.5
             let zKeyPath = "layer.presentationLayer.transform.rotation.z"
             let currentRotation = (self.value(forKeyPath: zKeyPath) as? NSNumber)?.floatValue ?? 0.0
-            let toArrow =  ( angleSize * CGFloat(selectdSection ) - angleSize)
+            let toArrow = (angleSize * CGFloat(selectdSection + increment))
             let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation")
             rotationAnimation.fromValue = currentRotation
             rotationAnimation.toValue = torad(toArrow) +  2 * .pi
@@ -151,8 +155,8 @@ open class LuckyWheel :UIControl{
             rotationAnimation.fillMode = CAMediaTimingFillMode.forwards
             rotationAnimation.isRemovedOnCompletion = false
             layer.add(rotationAnimation, forKey: nil)
-            rotationAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-            let aniamtedSection = selectdSection - 1
+            rotationAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+            let aniamtedSection = selectdSection
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + time, execute: {
                 self.getSelectedSector(aniamtedSection)
             })
@@ -176,7 +180,7 @@ open class LuckyWheel :UIControl{
         return res
     }
     func animateSelectedSector() {
-        if  let lastAnimation = delegate?.lastAnimation?() {
+        if let lastAnimation = delegate?.lastAnimation?() {
             selectedSection!.add(lastAnimation, forKey: "lastAnimation")
         }else{
             if animateLanding {

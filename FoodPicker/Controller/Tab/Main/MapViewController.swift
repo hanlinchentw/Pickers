@@ -9,18 +9,19 @@
 import UIKit
 import MapKit
 import CoreLocation
-
+private let mapAnnotationIdentifier = "mapAnnotationIdentifier"
 private let mapCardCellIdentifier = "mapCellIdentifier"
+
+protocol MapViewControllerDelegate: CategoriesViewControllerDelegate{}
 
 class MapViewController: UIViewController{
     //MARK: - Properties
     public var restaurants = [Restaurant]() { didSet{
-        addAnnotations(restaurants: self.restaurants)
-        self.collecionView.reloadData()
+            self.addAnnotations(restaurants: self.restaurants)
+            self.collecionView.reloadData()
         }
     }
-    
-    private lazy var collecionView: UICollectionView = {
+    lazy var collecionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -30,11 +31,27 @@ class MapViewController: UIViewController{
     
     private var mapView : MKMapView!
     private let locationManager = LocationHandler.shared.locationManager
+    weak var delegate: MapViewControllerDelegate?
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureMapView()
         configureCollectionView()
+    }
+    //MARK: - API
+    func checkBeforeRestaurantLoaded(completion: (()->Void)?){
+        for (index, item) in self.restaurants.enumerated(){
+            let connect = CoredataConnect(context: context)
+            connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: item.restaurantID) { (isSelected) in
+                guard isSelected else { return }
+                self.restaurants[index].isSelected = true
+            }
+            connect.checkIfRestaurantIsIn(entity: likedEntityName, id: item.restaurantID) { (isLiked) in
+                guard isLiked else { return }
+                self.restaurants[index].isLiked = true
+            }
+        }
     }
     //MARK: - Helpers
     func configureCollectionView(){
@@ -94,7 +111,7 @@ class MapViewController: UIViewController{
         self.mapView.setRegion(region, animated: true)
     }
 }
-//MARK: -
+//MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 extension MapViewController: UICollectionViewDelegate, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return restaurants.count
@@ -103,12 +120,25 @@ extension MapViewController: UICollectionViewDelegate, UICollectionViewDataSourc
         let cell = collecionView.dequeueReusableCell(withReuseIdentifier: mapCardCellIdentifier, for: indexPath)
         as! RestaurantCardCell
         cell.restaurant = self.restaurants[indexPath.row]
+        cell.delegate = self
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.delegate?.pushToDetailVC(restaurants[indexPath.row])
     }
 }
 extension MapViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 280, height: 240)
+    }
+}
+//MARK: - CardCellDelegate
+extension MapViewController : RestaurantCardCellDelegate{
+    func didLikeRestaurant(_ restaurant: Restaurant) {
+        delegate?.didLikeRestaurant(restaurant: restaurant)
+    }
+    func didSelectRestaurant(_ restaurant: Restaurant) {
+        delegate?.didSelectRestaurant(restaurant: restaurant)
     }
 }
 //MARK: -  Map Helpers
@@ -131,8 +161,20 @@ private extension MapViewController {
 extension MapViewController: MKMapViewDelegate{
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let anno = view.annotation as? RestaurantAnnotation,
-            let index = anno.index else { return }
+              let index = anno.index else { return }
+        view.image = #imageLiteral(resourceName: "btnLocationSelected").withRenderingMode(.alwaysOriginal)
         self.collecionView.scrollToItem(at: IndexPath(row: index, section: 0),
                                         at: .centeredHorizontally, animated: true)
+    }
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let annotation = annotation as? RestaurantAnnotation {
+            let view = MKAnnotationView(annotation: annotation, reuseIdentifier: mapAnnotationIdentifier)
+            view.image = #imageLiteral(resourceName: "btnLocationUnselect").withRenderingMode(.alwaysOriginal)
+            view.contentMode = .scaleAspectFit
+            view.canShowCallout = true
+            return view
+        }else{
+            return nil
+        }
     }
 }

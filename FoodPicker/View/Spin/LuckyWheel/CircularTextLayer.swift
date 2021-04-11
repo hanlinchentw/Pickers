@@ -17,7 +17,6 @@ class CircularTextLayer :NSObject {
     var potintialOffset :CGFloat = 0
     var offsetsY = [CGFloat]()
     var cutPoints = [Int]()
-    var arcs :[CGFloat] = []
     var attributes:[NSAttributedString.Key : NSObject]?
     @objc
     func centreArcPerpendicular(text strd: String, context: CGContext, radius r: CGFloat, angle theta: CGFloat, colour c: UIColor, font: UIFont, clockwise: Bool, numOfSections:Int){
@@ -30,50 +29,12 @@ class CircularTextLayer :NSObject {
         offsetsY = [CGFloat]()
         cutPoints = [Int]()
         
-        
         var characters: [String] = strd.map { String($0) } // An array of single character strings, each character in str
         var l = characters.count
-        if numOfSections <= 4{
-            if l > 30{
-                characters = characters.dropLast(10)
-                characters.append("...")
-            }
-        }else if numOfSections > 4, numOfSections <= 6{
-            if l > 30, l <= 40{
-                characters = characters.dropLast(5)
-                characters.append("...")
-            }else if l > 40{
-                characters = characters.dropLast(10)
-                characters.append("...")
-            }
-        }else if numOfSections > 6, numOfSections <= 8{
-            if l > 20, l <= 30{
-                characters = characters.dropLast(10)
-                characters.append("...")
-            }else if l > 30{
-                characters = characters.dropLast(15)
-                characters.append("...")
-            }
-        }else if numOfSections > 8, numOfSections <= 12{
-            if l > 18, l <= 25{
-                characters = characters.dropLast(12)
-                characters.append("...")
-            }else if l > 25{
-                characters = characters.dropLast(18)
-                characters.append("...")
-            }
-        }
         l = characters.count
         attributes = [NSAttributedString.Key.foregroundColor: c, NSAttributedString.Key.font: font]
         
-        arcs = [] // This will be the arcs subtended by each character
-        var totalArc: CGFloat = 0 // ... and the total arc subtended by the string
         
-        // Calculate the arc subtended by each letter and their total
-        for i in 0 ..< l {
-            arcs += [chordToArc(characters[i].size(withAttributes: attributes).width, radius: r)]
-            totalArc += arcs[i]
-        }
         // Are we writing clockwise (right way up at 12 o'clock, upside down at 6 o'clock)
         // or anti-clockwise (right way up at 6 o'clock)?
         let direction: CGFloat = clockwise ? -1 : 1
@@ -90,7 +51,6 @@ class CircularTextLayer :NSObject {
         currentOffset = (potintialOffset != 0 && offsetsY.count == 1) ? potintialOffset : offsetsY[0]
         var line = 0
         for i in 0 ..< l {
-           offsets += arcs[i]
             if cutPoints.contains(i) {
                 // new line
                 thetaI =  theta - direction * (lineLength - 0.1) / 2
@@ -100,21 +60,20 @@ class CircularTextLayer :NSObject {
                 currentOffset = offsetsY[line]
             }
            
-           thetaI += direction * arcs[i] / 2
+            let correction: CGFloat = i%2 == 0 ? -1 : 1
             // Call centerText with each character in turn.
             // Remember to add +/-90º to the slantAngle otherwise
             // the characters will "stack" round the arc rather than "text flow"
-            centre(text: characters[i], context: context, radius: r, angle: thetaI, colour: c, font: font, slantAngle: thetaI + slantCorrection)
+            centre(text: characters[i], context: context, radius: r, angle: thetaI, colour: c, font: font, numOfChars: CGFloat(i), correction: correction)
             // The centre of the next character will then be at
-            // thetaI = thetaI + arcs[i] / 2 + arcs[i + 1] / 2
+    
             // but again we leave the last term to the start of the next loop...
-            thetaI += direction * arcs[i] / 2
 
         }
     }
     func spearteInLines(characters: [String]) {
         for i in 0 ..< characters.count  {
-            offsets += arcs[i]
+
             if offsets >= lineLength - 0.1 {
                 offsets = 0
                 let offset = characters[i].size(withAttributes: attributes)
@@ -134,14 +93,8 @@ class CircularTextLayer :NSObject {
             }
         }
     }
-    func chordToArc(_ chord: CGFloat, radius: CGFloat) -> CGFloat {
-        // *******************************************************
-        // Simple geometry
-        // *******************************************************
-        return 2 * asin(chord / (2 * radius))
-    }
-    
-    func centre(text str: String, context: CGContext, radius r: CGFloat, angle theta: CGFloat, colour c: UIColor, font: UIFont, slantAngle: CGFloat ) {
+
+    func centre(text str: String, context: CGContext, radius r: CGFloat, angle theta: CGFloat, colour c: UIColor, font: UIFont, numOfChars: CGFloat, correction: CGFloat) {
         // *******************************************************
         // This draws the String str centred at the position
         // specified by the polar coordinates (r, theta)
@@ -155,15 +108,13 @@ class CircularTextLayer :NSObject {
         // Save the context
         context.saveGState()
         // Undo the inversion of the Y-axis (or the text goes backwards!)
-        context.scaleBy(x: 1, y: -1)
+        context.scaleBy(x: 1, y: correction*1)
         // Move the origin to the centre of the text (negating the y-axis manually)
-        context.translateBy(x: r * cos(theta), y: -(r * sin(theta)))
-        // Rotate the coordinate system
-        context.rotate(by: -slantAngle)
+        context.translateBy(x: 0.15*r * cos(theta), y: -numOfChars*0.15*(r * sin(theta)))
         // Calculate the width of the text
         let offset = str.size(withAttributes: attributes)
         // Move the origin by half the size of the text
-        context.translateBy (x: -offset.width / 2, y:currentOffset) // Move the origin to the centre of the text (negating the y-axis manually)
+        context.translateBy (x: -offset.width / 2, y: currentOffset) // Move the origin to the centre of the text (negating the y-axis manually)
         // Draw the text
         str.draw(at: CGPoint(x: 0, y: 0), withAttributes: attributes)
         // Restore the context

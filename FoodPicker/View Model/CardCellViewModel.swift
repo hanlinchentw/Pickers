@@ -14,14 +14,14 @@ struct CardCellViewModel {
     var restaurant : Restaurant
     
     var priceString : NSAttributedString? {
-        let attributedTitle =  NSMutableAttributedString(string: "\(restaurant.price)・\(restaurant.type)・\(distance) m", attributes:
+        let attributedTitle =  NSMutableAttributedString(string: "\(restaurant.price)・\(restaurant.categories)・\(distance) m", attributes:
             [NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14),
              NSAttributedString.Key.foregroundColor:UIColor.gray ])
         return attributedTitle
     }
     
-    var selectButtonImage : UIImage? {
-        return restaurant.isSelected  ? UIImage(named: "icnOvalSelected") :  UIImage(named: "addL")
+    var selectButtonImagename : String {
+        return restaurant.isSelected  ? "icnOvalSelected" :  "addL"
     }
     
     var likeButtonImagename : String {

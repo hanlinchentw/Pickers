@@ -99,7 +99,7 @@ extension FilterResultSection : UICollectionViewDelegate, UICollectionViewDataSo
         
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.didTappedRestaurant(restaurants[indexPath.row])
+        if !self.restaurants.isEmpty{ delegate?.didTappedRestaurant(restaurants[indexPath.row]) }
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerIdentifier, for: indexPath) as! MoreRestaurantsFooterView
@@ -120,12 +120,11 @@ extension FilterResultSection : UICollectionViewDelegateFlowLayout {
         return CGSize(width: 112, height: 240)
     }
 }
-extension FilterResultSection : CardCellDelegate {
+extension FilterResultSection : RestaurantCardCellDelegate {
     func didLikeRestaurant(_ restaurant: Restaurant) {
-        
         delegate?.didLikeRestaurant(restaurant)
     }
-    func didSeletRestaurant(_ restaurant:Restaurant) {
+    func didSelectRestaurant(_ restaurant:Restaurant) {
         for (index, res) in restaurants.enumerated() {
             if res.restaurantID == restaurant.restaurantID {
                 self.restaurants[index].isSelected = restaurant.isSelected

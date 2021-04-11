@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ActionViewController: UIViewController {
     //MARK: - Properties
@@ -17,14 +18,13 @@ class ActionViewController: UIViewController {
     private let resultView: RestaurantCardCell = {
         let result = RestaurantCardCell()
         result.selectButton.isHidden = true
-        result.backgroundColor = .white
         result.alpha = 0
         return result
     }()
     private var startButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Go", for: .normal)
-        button.tintColor = .black
+        button.setImage(UIImage(named: "btnSpin")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
         button.addTarget(self, action: #selector(handleStartButtonTapped), for: .touchUpInside)
         button.isUserInteractionEnabled = false
         return button
@@ -42,6 +42,8 @@ class ActionViewController: UIViewController {
     }()
     private var wheel : LuckyWheel?
     private let bottomSheetVC = BottomSheetViewController()
+    
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,7 +79,7 @@ class ActionViewController: UIViewController {
         self.view.addSubview(bottomSheetVC.view)
         let height = view.frame.height
         let width  = view.frame.width
-        bottomSheetVC.view.frame = CGRect(x: 0,y: self.wheel!.frame.maxY + 24,width: width, height: height)
+        bottomSheetVC.view.frame = CGRect(x: 0, y: self.wheel!.frame.maxY + 24, width: width, height: height)
     }
     func configureWheel(){
         wheel = LuckyWheel(frame: CGRect(x: 0, y: 0, width: 330 , height: 330))
@@ -92,7 +94,7 @@ class ActionViewController: UIViewController {
         
         view.addSubview(startButton)
         startButton.center(inView: wheel!)
-        startButton.setDimension(width: 40, height: 40)
+        startButton.setDimension(width: 85, height: 85)
         startButton.layer.cornerRadius = 40 / 2
         startButton.isUserInteractionEnabled = !(viewModel == nil)
         
@@ -137,8 +139,11 @@ class ActionViewController: UIViewController {
             self.viewModel = viewModel
             
             guard let tab = self.tabBarController as? HomeController else { return }
-            tab.deselectAll()
-            self.selectedRestaurants.forEach{tab.updateSelectedRestaurants(from: self, restaurant: $0)}
+            tab.deselectAllFromActionViewController(actionVC: self)
+            self.selectedRestaurants.forEach{
+                try! tab.updateSelectedRestaurants(from: self, restaurant: $0)
+                self.updateSelectedRestaurantsInCoredata(restaurant: $0)
+            }
         }
     }
     func configureSpiningUI(){
@@ -159,19 +164,35 @@ class ActionViewController: UIViewController {
     func configureResultView(valueRelateToResult value: Int){
         guard let restaurant = self.viewModel?.restaurants[value-1] else { return }
         view.addSubview(resultView)
-        resultView.anchor(top: stateLabel.bottomAnchor, left: view.leftAnchor,
-                          right: view.rightAnchor, paddingTop: 16, paddingLeft: 16,
-                          paddingRight: 16, height: 260)
+        resultView.centerX(inView: self.view)
+        resultView.anchor(top: stateLabel.bottomAnchor, paddingTop: 16, width: 382, height: 279)
         resultView.restaurant = restaurant
         stateLabel.text = "✔︎ \(restaurant.name) for TODAY !"
         self.resultView.alpha = 1
     }
+    private func updateSelectedRestaurantsInCoredata(restaurant: Restaurant){
+        let connect = CoredataConnect(context: context)
+        connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: restaurant.restaurantID) { (isSelected) in
+            if isSelected{
+                connect.deleteRestaurantIn(entityName: selectedEntityName, id: restaurant.restaurantID)
+            }else{
+                let entity = NSEntityDescription.entity(forEntityName: selectedEntityName, in: self.context)
+                let object = NSManagedObject(entity: entity!, insertInto: self.context) as! SelectedRestaurant
+                object.id = restaurant.restaurantID
+                object.name = restaurant.name
+                connect.saveData(entityName: selectedEntityName, NSManagedObject: object)
+            }
+        }
+    }
     //MARK: - Selectors
     @objc func handleStartButtonTapped(){
         guard let viewModel = self.viewModel else { return }
+        guard !viewModel.restaurants.isEmpty else { return}
+        self.startButton.changeImageButtonWithBounceAnimation(changeTo: "btnSpin")
+        
         let resultNumber = Int.random(in: 1...viewModel.restaurants.count)
+        
         self.wheel?.setTarget(section: resultNumber)
-        startButton.isHidden = true
         bottomSheetVC.view.isHidden = true
         wheel?.manualRotation(aCircleTime: 0.3)
         configureSpiningUI()
@@ -182,7 +203,7 @@ class ActionViewController: UIViewController {
             }
         }
     }
-    @objc func handleListButtonTapped(){
+    @objc func handleListButtonTapped(){  
         let table = ListTableViewController()
         table.delegate = self
         self.navigationController?.pushViewController(table, animated: true)
@@ -194,13 +215,16 @@ extension ActionViewController : LuckyWheelDelegate, LuckyWheelDataSource {
         configureResultView(valueRelateToResult: newValue)
     }
     func numberOfSections() -> Int {
-        guard let viewModel = self.viewModel, !selectedRestaurants.isEmpty else { return 1 }
+        guard let viewModel = self.viewModel, !selectedRestaurants.isEmpty else { return 4 }
         return viewModel.numOfSection
     }
-    
     func itemsForSections() -> [WheelItem] {
-        let item = WheelItem(title: "", titleColor: .customblack, itemColor: .pale)
-        guard let viewModel = viewModel, !selectedRestaurants.isEmpty else { return [item]}
+        let item1 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .white)
+        let item2 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .pale)
+        let item3 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .white)
+        let item4 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .pale)
+        
+        guard let viewModel = viewModel, !selectedRestaurants.isEmpty else { return [item1, item2, item3, item4]}
         return viewModel.itemForSection
     }
 }
@@ -215,8 +239,9 @@ extension ActionViewController{
         let viewModel = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
         self.viewModel = viewModel
         
+        self.updateSelectedRestaurantsInCoredata(restaurant: restaurant)
         guard let tab = self.tabBarController as? HomeController else { return }
-        tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
+        try! tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
     }
 }
 //MARK: - ListTableViewControllerDelegate

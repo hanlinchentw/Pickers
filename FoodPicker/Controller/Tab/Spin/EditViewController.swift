@@ -9,12 +9,16 @@
 import UIKit
 
 private let editIdentifier = "EditCell"
+
+
+
 protocol EditViewControllerDelegate: class {
     func didEditList(_ controller: EditViewController)
 }
 
 class EditViewController: UITableViewController{
     //MARK: - Properties
+    private var isEdited = false
     var list: List { didSet{ tableView.reloadData() }}
     weak var delegate : EditViewControllerDelegate?
     private lazy var backButton: UIButton = {
@@ -93,28 +97,22 @@ class EditViewController: UITableViewController{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI()
-        configureNavBar()
         configureTableView()
+        configureUI()
     }
+    
     //MARK: - Helpers
-    func configureNavBar(){
-        guard let navBar = navigationController?.navigationBar else { return }
-        navBar.isHidden = false
-        navBar.shadowImage = UIImage()
-        navBar.barTintColor = .backgroundColor
-        navBar.isTranslucent = true
+
+    func configureUI(){
+        view.backgroundColor = .backgroundColor
+        listNameTextField.delegate = self
         navigationItem.title = "Edit List"
-        
+
         let backButtonView = UIView(frame: CGRect(x: 0, y: 0, width: 56, height: 40))
         backButtonView.bounds = backButtonView.bounds.offsetBy(dx: 18, dy: 0)
         backButtonView.addSubview(backButton)
         let leftBarItem = UIBarButtonItem(customView: backButtonView)
         navigationItem.leftBarButtonItem = leftBarItem
-    }
-    func configureUI(){
-        view.backgroundColor = .backgroundColor
-        listNameTextField.delegate = self
     }
     func configureTableView(){
         tableView.dataSource = self
@@ -157,10 +155,23 @@ class EditViewController: UITableViewController{
         self.navigationController?.popViewController(animated: true)
     }
     @objc func handleSaveAction(){
-        saveList()
+        self.saveList()
     }
     @objc func handleCancelAction(){
-         self.navigationController?.popViewController(animated: true)
+        if isEdited{
+            let alert = UIAlertController(title: "Are you sure you want to leave?",
+                                          message: "all the edits won't be saved. are you sure to leave?",
+                                          preferredStyle: .alert)
+            let leaveAction = UIAlertAction(title: "Leave", style: .default){ _ in
+                self.navigationController?.popViewController(animated: true)
+            }
+            let keepEditingAction = UIAlertAction(title: "Keep editing", style: .cancel)
+            alert.addAction(keepEditingAction)
+            alert.addAction(leaveAction)
+            present(alert, animated: true)
+        }else{
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }
 //MARK: - UITableViewDelegate/ DataSoruce
@@ -216,6 +227,7 @@ extension EditViewController{
 //MARK: - UITextFieldDelegate
 extension EditViewController: UITextFieldDelegate{
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        self.isEdited = true
         var tempString = ""
         if let text = textField.text { tempString += text}
         tempString += string
@@ -234,15 +246,16 @@ extension EditViewController: UITextFieldDelegate{
 }
 //MARK: -RestaurantListCellDelegate
 extension EditViewController: RestaurantListCellDelegate{
-    func shouldDeleteCell(_ restaurantID: String) {
-        guard let index = self.list.restaurants.firstIndex(where: { $0.restaurantID == restaurantID }) else { return }
+    func shouldDeleteCell(_ restaurant: Restaurant) {
+        guard let index = self.list.restaurants.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
         tableView.beginUpdates()
         self.list.restaurants.remove(at: index)
         self.list.restaurantsID.remove(at: index)
-        UIView.animate(withDuration: 1) {
-            self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .right)
+        UIView.animate(withDuration: 0.1) {
+            self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
         }
         tableView.endUpdates()
         self.numOfRestaurantsLabel.text = "\(self.list.restaurantsID.count) restaurants"
+        self.isEdited = true
     }
 }

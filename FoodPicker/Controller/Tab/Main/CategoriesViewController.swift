@@ -6,9 +6,9 @@
 //  Copyright © 2020 陳翰霖. All rights reserved.
 //
 import UIKit
-import MapKit
 import CoreLocation
 import Firebase
+import CoreData
 
 private let foodCardSection = "FoodCardCell"
 private let headerCell = "SortHeader"
@@ -16,12 +16,15 @@ private let footerCell = "AllRestaurantsSection"
 
 protocol CategoriesViewControllerDelegate: class {
     func pushToDetailVC(_ restaurant: Restaurant)
-    func didLikeRestaurant(_ restaurant: Restaurant)
+    func didSelectRestaurant(restaurant:Restaurant)
+    func didLikeRestaurant(restaurant:Restaurant)
 }
+
 class CategoriesViewController: UICollectionViewController {
     //MARK: - Properties
     private let locationManager = LocationHandler.shared.locationManager
     weak var delegate: CategoriesViewControllerDelegate?
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     let defaultOptions : [recommendOption] = [.popular, .topPick]
     var dataSource = [Restaurant]() { didSet{ self.collectionView.reloadData()}}
@@ -31,10 +34,9 @@ class CategoriesViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
+        deselectAll()
     }
-    func updateLikeRestaurant(restaurant: Restaurant, shouldLike:Bool){
-        RestaurantService.shared.updateLikedRestaurant(restaurant: restaurant, shouldLike: shouldLike)
-    }
+   
     //MARK: - Helpers
     func configureCollectionView(){
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
@@ -45,21 +47,32 @@ class CategoriesViewController: UICollectionViewController {
         collectionView.register(AllRestaurantsSection.self, forSupplementaryViewOfKind:UICollectionView.elementKindSectionFooter,
                                 withReuseIdentifier: footerCell)
     }
-    public func updateSelectStauts(restaurant: Restaurant){
-        if let index = self.popularDataSource.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) {
+    func updateSelectStatus(restaurantID: String){
+        if let index = self.popularDataSource.firstIndex(where: { $0.restaurantID == restaurantID}) {
             self.popularDataSource[index].isSelected.toggle()
         }
-        if let index = self.topPicksDataSource.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }){
+        if let index = self.topPicksDataSource.firstIndex(where: { $0.restaurantID == restaurantID}){
             self.topPicksDataSource[index].isSelected.toggle()
         }
-        if let index = self.dataSource.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }){
+        if let index = self.dataSource.firstIndex(where: { $0.restaurantID == restaurantID}){
             self.dataSource[index].isSelected.toggle()
         }
     }
+    func updateLikeRestaurant(restaurantID: String){
+        if let index = self.popularDataSource.firstIndex(where: { $0.restaurantID == restaurantID}) {
+            self.popularDataSource[index].isLiked.toggle()
+        }
+        if let index = self.topPicksDataSource.firstIndex(where: { $0.restaurantID == restaurantID}){
+            self.topPicksDataSource[index].isLiked.toggle()
+        }
+        if let index = self.dataSource.firstIndex(where: { $0.restaurantID == restaurantID}){
+            self.dataSource[index].isLiked.toggle()
+        }
+    }
+    //MARK: - Core data
     public func deselectAll(){
-        for index in 0...self.popularDataSource.count-1{ self.popularDataSource[index].isSelected = false }
-        for index in 0...self.topPicksDataSource.count-1{ self.topPicksDataSource[index].isSelected = false }
-        for index in 0...self.dataSource.count-1{ self.dataSource[index].isSelected = false }
+        let connect = CoredataConnect(context: context)
+        connect.deselectAllRestaurants()
     }
 }
 //MARK: -  UICollectionView Delegate/ DataSource
@@ -70,7 +83,6 @@ extension CategoriesViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: foodCardSection, for: indexPath)
             as! FilterResultSection
-        
         let source = indexPath.row == 0 ? popularDataSource : topPicksDataSource
         cell.restaurants = source
         cell.option = defaultOptions[indexPath.row]
@@ -83,7 +95,7 @@ extension CategoriesViewController {
             return header
         }else {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerCell, for: indexPath) as! AllRestaurantsSection
-            footer.restaurants = dataSource
+            footer.restaurants = dataSource          
             footer.delegate = self
             return footer
         }
@@ -108,12 +120,10 @@ extension CategoriesViewController : UICollectionViewDelegateFlowLayout {
 //MARK: - FilterResultSectionDelegate
 extension CategoriesViewController : FilterResultSectionDelegate {
     func didSelectRestaurant(_ restaurant: Restaurant, option: recommendOption) {
-        updateSelectStauts(restaurant: restaurant)
-        let tab = self.tabBarController as? HomeController
-        tab?.updateSelectedRestaurants(from: self, restaurant: restaurant)
+        delegate?.didSelectRestaurant(restaurant: restaurant)
     }
     func didLikeRestaurant(_ restaurant: Restaurant) {
-        delegate?.didLikeRestaurant(restaurant)
+        delegate?.didLikeRestaurant(restaurant: restaurant)
     }
     func didTappedRestaurant(_ restaurant: Restaurant) {
         self.delegate?.pushToDetailVC(restaurant)
@@ -132,25 +142,21 @@ extension CategoriesViewController: AllRestaurantsSectionDelegate {
         self.parent?.navigationController?.pushViewController(more, animated: true)
     }
     func didSelectRestaurant(restaurant: Restaurant){
-        print("DEBUG: Did select restaurant ... ")
-        updateSelectStauts(restaurant: restaurant)
-        let tab = self.tabBarController as? HomeController
-        tab?.updateSelectedRestaurants(from: self, restaurant: restaurant)
-        self.collectionView.reloadData()
+        delegate?.didSelectRestaurant(restaurant: restaurant)
     }
     func didTapRestaurant(restaurant: Restaurant) {
         self.delegate?.pushToDetailVC(restaurant)
     }
 }
-//MARK: - ListViewControllerDelegate
-extension CategoriesViewController: ListViewControllerDelegate{
+//MARK: - MoreRestaurantViewControllerDelegate
+extension CategoriesViewController: MoreRestaurantViewControllerDelegate{
     func willPopViewController(_ controller: MoreRestaurantViewController) {
-        for restaurant in controller.selectedRestaurants {
-            updateSelectStauts(restaurant: restaurant)
-            let tab = self.tabBarController as? HomeController
-            tab?.updateSelectedRestaurants(from: self, restaurant: restaurant)
-        }
         controller.navigationController?.popViewController(animated: true)
     }
+    func didSelectRestaurantFromMore(restaurant: Restaurant){
+        delegate?.didSelectRestaurant(restaurant: restaurant)
+    }
+    func didLikeRestaurantFromMore(restaurant: Restaurant) {
+        delegate?.didLikeRestaurant(restaurant: restaurant)
+    }
 }
-

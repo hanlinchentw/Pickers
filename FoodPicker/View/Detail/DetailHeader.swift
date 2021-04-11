@@ -123,7 +123,6 @@ class DetailHeader : UICollectionReusableView {
     }
     
     @objc func handleShareButtonTapped(){
-        
         delegate?.handleShareRestaurant()
     }
 }

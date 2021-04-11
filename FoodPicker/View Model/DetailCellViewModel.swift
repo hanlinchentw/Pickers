@@ -86,7 +86,7 @@ struct DetailCellViewModel {
     }
     //MARK: - Main
     var mainSub : NSAttributedString {
-        let attributedString = NSMutableAttributedString(string: "\(restaurant.price) ・ \(restaurant.categories[0].title)",
+        let attributedString = NSMutableAttributedString(string: "\(restaurant.price) ・ \(restaurant.categories)",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         return attributedString
     }
@@ -120,7 +120,11 @@ struct DetailCellViewModel {
             var interval = ""
             hours.open.forEach { (day) in
                 if day.day == numofDayfromYelp {
-                    interval = "\(day.start)-\(day.end)"
+                    var start = day.start
+                    start.insert(":", at: start.index(start.startIndex, offsetBy: 2))
+                    var end = day.end
+                    end.insert(":", at: end.index(end.startIndex, offsetBy: 2))
+                    interval = "\(start) - \(end)"
                 }
             }
             return interval

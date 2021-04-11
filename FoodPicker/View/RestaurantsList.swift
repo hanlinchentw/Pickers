@@ -10,12 +10,18 @@ import UIKit
 
 private let restaurantListCellIdentifier = "listCellIdentifier"
 private let loadingCellIdentifier = "LoadCell"
+
 protocol RestaurantsListDelegate: class {
     func didSelectRestaurant(_ restaurant : Restaurant)
+    func didLikeRestaurant(_ restaurant : Restaurant)
     func loadMoreData()
+    func didTapRestaurant(restaurant:Restaurant)
 }
+
 extension RestaurantsListDelegate{
     func loadMoreData(){}
+    func didTapRestaurant(restaurant:Restaurant){}
+    func didLikeRestaurant(_ restaurant : Restaurant){}
 }
 
 class RestaurantsList: UITableView{
@@ -24,6 +30,7 @@ class RestaurantsList: UITableView{
     var restaurants = [Restaurant]() { didSet { self.reloadData() }}
     var config: ListConfiguration? { didSet { self.reloadData() }}
     var isLoading: Bool? = false
+    var isScrolling: Bool = false
     //MARK: - Lifecycle
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: .plain)
@@ -53,6 +60,11 @@ class RestaurantsList: UITableView{
     }
 }
 extension RestaurantsList: UITableViewDelegate, UITableViewDataSource{
+    func visibleCellsShouldRasterize(_ aBool:Bool){
+        for cell in self.visibleCells as [UITableViewCell]{
+            cell.layer.shouldRasterize = aBool;
+        }
+    }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -85,6 +97,47 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource{
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 4
+    }
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        isScrolling = false
+        self.visibleCellsShouldRasterize(isScrolling)
+    }
+
+    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if velocity == CGPoint.zero{
+            isScrolling = false
+            self.visibleCellsShouldRasterize(isScrolling)
+        }
+    }
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        isScrolling = true
+        self.visibleCellsShouldRasterize(isScrolling)
+
+    }
+    private func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        cell.layer.shouldRasterize = isScrolling
+    }
+ 
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if config == .all, indexPath.section == 0{
+            let likeAction = UIContextualAction(style: .normal, title: "Like") { [weak self] (action, view, completionHandler) in
+                guard let _ = self else { return }
+            print("Liked")
+            completionHandler(true)
+            }
+            likeAction.backgroundColor = .butterscotch
+            likeAction.image = UIImage(named: "icnHeartSmallW")?.withRenderingMode(.alwaysOriginal)
+            let configuration = UISwipeActionsConfiguration(actions: [likeAction])
+            configuration.performsFirstActionWithFullSwipe = true
+            
+            return configuration
+        }
+        return nil
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if config == .all, indexPath.section == 0{
+            listDelegate?.didTapRestaurant(restaurant: restaurants[indexPath.row])
+        }
     }
 }
 //MARK: - UIScrollViewDelegate

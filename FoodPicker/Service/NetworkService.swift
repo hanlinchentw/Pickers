@@ -9,7 +9,7 @@
 import UIKit
 import Moya
 
-private let apiKey = "DyyMIBoLyI9DgtuPQOYD_-M0wKNIEacf3D6o_LV65RCximX8ugDwP4ssEUwZN8VUxruGDTmk9hiJ8hHFPlG3sD1dfy7F4rmJlM7gmrUntxmh-Y5Uddo_ud3fb5O0X3Yx"
+private let apiKey = "LNCIjxzEYOe3zEryXQ7x43FAlx10gPoDAaC8NtzhOu-LlZmsDggCT5ioqy1x3oP_hBDKaknwZeH8ZRo0Lt7n4m2vn0vBhVW3odkrdX7yVDXrXN2GPKK4hACFyXcnYHYx"
 
 private let clientID = "YuD9cka95Qb_g7WsdCA-rQ"
 

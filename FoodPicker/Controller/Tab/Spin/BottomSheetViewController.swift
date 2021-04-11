@@ -134,7 +134,7 @@ class BottomSheetViewController : UIViewController {
         notchView.centerX(inView: view)
         
         view.addSubview(titleLabel)
-        titleLabel.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 20, paddingLeft: 16)
+        titleLabel.anchor(top: notchView.bottomAnchor, left: view.leftAnchor, paddingTop: 24, paddingLeft: 16)
         
         let buttonStack = UIStackView(arrangedSubviews: [updateButton, saveButton])
         buttonStack.axis = .horizontal

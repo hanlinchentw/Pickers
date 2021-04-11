@@ -18,7 +18,7 @@ protocol ListTableViewControllerDelegate: class {
 class ListTableViewController: UITableViewController{
     //MARK: - Properties
     var lists = [List]() { didSet{ self.tableView.reloadData() }}
-    var expandListIndex: Int? { didSet{ self.tableView.reloadData() }}
+    var expandListIndex = [Int]() { didSet{ self.tableView.reloadData() }}
     weak var delegate: ListTableViewControllerDelegate?
     private lazy var backButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -114,7 +114,7 @@ extension ListTableViewController{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var selectList = self.lists[indexPath.section]
         self.view.isUserInteractionEnabled = false
-        fetchRestaurants(restaurantsID: selectList.restaurantsID) { (restaurants) in
+        self.fetchRestaurants(restaurantsID: selectList.restaurantsID) { (restaurants) in
             selectList.restaurants = restaurants
             guard restaurants.count == selectList.restaurantsID.count else { return }
             self.delegate?.didSelectList(self, list: selectList)
@@ -122,14 +122,10 @@ extension ListTableViewController{
         }
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if expandListIndex == nil{
-            return 116
+        if expandListIndex.contains(indexPath.section){
+            return CGFloat(lists[indexPath.section].restaurantsID.count * 117) + 116
         }else{
-            if indexPath.section == expandListIndex{
-                return CGFloat(lists[expandListIndex!].restaurantsID.count * 117) + 116
-            }else{
-                return 116
-            }
+            return 116
         }
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -145,16 +141,23 @@ extension ListTableViewController{
 extension ListTableViewController: ListInfoCellDelagete{
     func shouldExpandList(_ cell: ListInfoCell, _ shouldExpand: Bool, list: List) {
         print("DEBUG: expand button is tapped.")
-        if shouldExpand{
-            let index = self.lists.firstIndex { $0.id == list.id }
-            self.fetchRestaurants(restaurantsID: list.restaurantsID) { (restaurants) in
-                guard list.restaurantsID.count == restaurants.count else { return }
-                cell.list?.restaurants = restaurants
-                cell.configureTableView()
-                self.expandListIndex = index
+        if let index = self.lists.firstIndex(where: { $0.id == list.id }) {
+            print(index)
+            if shouldExpand{
+                if list.restaurants.isEmpty{
+                    self.fetchRestaurants(restaurantsID: list.restaurantsID) { (restaurants) in
+                        guard list.restaurantsID.count == restaurants.count else { return }
+                        cell.list?.restaurants = restaurants
+                        cell.configureTableView()
+                    }
+                }
+                self.expandListIndex.append(index)
+                
+            }else{
+                if let foldIndex = self.expandListIndex.firstIndex(where: {$0 == index}) {
+                    self.expandListIndex.remove(at: foldIndex)
+                }
             }
-        }else{
-            self.expandListIndex = nil
         }
     }
     func didTapMoreButton(list: List) {

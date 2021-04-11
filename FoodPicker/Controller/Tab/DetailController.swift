@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import CoreData
 import Alamofire
 import AlamofireImage
 
@@ -16,6 +17,8 @@ private let headerIdentifier = "DetailHeader"
 
 protocol DetailControllerDelegate:class {
     func willPopViewController(_ controller: DetailController)
+    func updateLikedRestaurant(restaurant:Restaurant)
+    func updateSelectedRestaurant(restaurant:Restaurant)
 }
 
 class DetailController : UICollectionViewController {
@@ -25,9 +28,18 @@ class DetailController : UICollectionViewController {
     private var isExpanded = false
     private lazy var addButton : UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "btnFloatingbtnAddToSpinL")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.layer.masksToBounds = false
+        button.layer.shadowColor = UIColor.customblack.cgColor
+        button.layer.shadowOpacity = 0.3
+        button.layer.shadowOffset = CGSize(width: 0, height: 1)
+        button.layer.shadowRadius = 3
+        
+        button.setImage(UIImage(named: "btnFloatingAddNoShadow")?
+                            .withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(handleSelectButtonTapped), for: .touchUpInside)
         return button
     }()
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     init(restaurant:Restaurant) {
         self.restaurant = restaurant
@@ -42,6 +54,10 @@ class DetailController : UICollectionViewController {
         configureUI()
         fetchNumOfLike()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configureCollectionView()
+    }
     //MARK: - API
     func fetchDetail(){
         NetworkService.shared.fetchDetail(id: restaurant.restaurantID) { [weak self](detail) in
@@ -54,19 +70,30 @@ class DetailController : UICollectionViewController {
             self.restaurant.numOfLike = count
         }
     }
+    //MARK: - Selectors
+    @objc func handleSelectButtonTapped(){
+        restaurant.isSelected.toggle()
+        delegate?.updateSelectedRestaurant(restaurant: restaurant)
+        let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
+        addButton.changeImageButtonWithBounceAnimation(changeTo: imageName)
+    }
     //MARK: - Helpers
-    func configureUI(){
+    func configureCollectionView(){
         collectionView.backgroundColor = .backgroundColor
-        tabBarController?.tabBar.isHidden = true
-        tabBarController?.tabBar.isTranslucent = true
         collectionView.register(DetailCell.self, forCellWithReuseIdentifier: detailCellIdentifier)
         collectionView.register(DetailHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.contentInset = UIEdgeInsets(top: -44, left: 0, bottom: 0, right: 0)
+        collectionView.bounces = false
+        let inset = UIApplication.shared.windows[0].safeAreaInsets.top
+        collectionView.contentInset = UIEdgeInsets(top: -inset, left: 0, bottom: 100, right: 0)
+    }
+    func configureUI(){
+        tabBarController?.tabBar.isHidden = true
+        tabBarController?.tabBar.isTranslucent = true
         view.addSubview(addButton)
         addButton.anchor(right:view.rightAnchor, bottom: view.bottomAnchor,
-                         paddingRight: 16, paddingBottom: 30)
+                         paddingRight: 16, paddingBottom: 30,width: 56, height: 56)
     }
     func openMapForPlace(name: String, coordinate: CLLocationCoordinate2D) {
         let regionDistance:CLLocationDistance = 3000
@@ -131,6 +158,7 @@ extension DetailController : DetailHeaderDelegate {
     }
     func handleLikeRestaurant() {
         restaurant.isLiked.toggle()
+        delegate?.updateLikedRestaurant(restaurant: restaurant)
         self.collectionView.reloadData()
     }
     func handleShareRestaurant() {

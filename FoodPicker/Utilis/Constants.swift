@@ -9,6 +9,8 @@
 import Foundation
 import Firebase
 
+let selectedEntityName = "SelectedRestaurant"
+let likedEntityName = "LikedRestaurant"
 let DID_SELECT_KEY = "restaurantDidSelect"
 let DID_LIKE_KEY = "restaurantDidLike"
 let categoryPreload = [ "NewInPicker", "Coffee", "BubbleTea", "Hamburger", "Pizza",

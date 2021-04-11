@@ -31,6 +31,7 @@ class MoreOptionAlertViewContrller: UIViewController {
     }()
     private lazy var shareButton : UIButton = {
         let button = self.createOptionButton(title: "Share List", imageName: "icnShareSmall")
+        button.addTarget(self, action: #selector(handleShareList), for: .touchUpInside)
         return button
     }()
     private lazy var deleteButton : UIButton = {
@@ -105,11 +106,22 @@ class MoreOptionAlertViewContrller: UIViewController {
     }
     @objc func handleDeleteList(){
         guard let listID = self.list.id else { return }
-        delegate?.deleteList(listID: listID)
-        self.navigationController?.dismiss(animated: false, completion: nil)
+        let alert = UIAlertController(title: "Are you sure you want to delete 「\(self.list.name)」?", message: nil, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+            self.delegate?.deleteList(listID: listID)
+            self.navigationController?.dismiss(animated: false, completion: nil)
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(deleteAction)
+        self.present(alert, animated: true, completion: nil)
     }
     @objc func handleEditList(){
         delegate?.editList(list: self.list)
         self.navigationController?.dismiss(animated: false, completion: nil)
+    }
+    @objc func handleShareList(){
+    let activityViewController = UIActivityViewController(activityItems: [self.list.name], applicationActivities: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
 }

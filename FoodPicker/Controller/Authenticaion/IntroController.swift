@@ -10,7 +10,6 @@ import UIKit
 
 class IntroController : UIViewController {
     //MARK: - Properties
-
     private var introView = IntroView()
     
     private let backButton : UIButton = {
@@ -24,6 +23,7 @@ class IntroController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
+        LocationHandler.shared.enableLocationServices()
         configureIntroView()
     }
     //MARK: - Seletors

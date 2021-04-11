@@ -7,18 +7,21 @@
 //
 
 import UIKit
+import CoreData
 
 private let listIdentifier = "ListIdentifier"
 
-protocol ListViewControllerDelegate:class {
+protocol MoreRestaurantViewControllerDelegate: class {
     func willPopViewController(_ controller: MoreRestaurantViewController)
+    func didSelectRestaurantFromMore(restaurant: Restaurant)
+    func didLikeRestaurantFromMore(restaurant:Restaurant)
 }
 
 class MoreRestaurantViewController: UIViewController {
     //MARK: - Properties
-    var restaurants: [Restaurant]
-    var selectedRestaurants = [Restaurant]()
-    weak var delegate: ListViewControllerDelegate?
+    weak var delegate: MoreRestaurantViewControllerDelegate?
+    private var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     private lazy var backButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "icnArrowBack")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -33,7 +36,6 @@ class MoreRestaurantViewController: UIViewController {
     private let tableView = RestaurantsList()
     //MARK: - Lifecycle
     init(restaurants: [Restaurant]) {
-        self.restaurants = restaurants
         self.tableView.restaurants = restaurants
         super.init(nibName: nil, bundle: nil)
     }
@@ -43,20 +45,19 @@ class MoreRestaurantViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        configureNavBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
-        configureNavBar()
     }
     //MARK: - Helpers
     func configureNavBar(){
         guard let navBar = navigationController?.navigationBar else { return }
-        navBar.isHidden = false
         navBar.shadowImage = UIImage()
         navBar.barTintColor = .backgroundColor
         navBar.isTranslucent = true
-        let division = self.restaurants[0].division
+        let division = self.tableView.restaurants[0].division
         navigationItem.title = division.description
     
         let backButtonView = UIView(frame: CGRect(x: 0, y: 0, width: 56, height: 40))
@@ -64,18 +65,18 @@ class MoreRestaurantViewController: UIViewController {
         backButtonView.addSubview(backButton)
         let leftBarItem = UIBarButtonItem(customView: backButtonView)
         navigationItem.leftBarButtonItem = leftBarItem
+        navBar.isHidden = false
     }
     func configureUI(){
         view.backgroundColor = .backgroundColor
         tableView.listDelegate = self
-        tableView.config = .sheet
+        tableView.config = .all
         tableView.isScrollEnabled = true
         tableView.register(RestaurantListCell.self, forCellReuseIdentifier: listIdentifier)
         view.addSubview(tableView)
         tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
                          right: view.rightAnchor,bottom: view.bottomAnchor,
                          paddingTop: 24)
-        
     }
     //MARK: - Selectors
     @objc func handleDismissal(){
@@ -84,9 +85,9 @@ class MoreRestaurantViewController: UIViewController {
     //MARK: - API
     func loadData(){
         guard let location = LocationHandler.shared.locationManager.location?.coordinate else { return }
-        let offset = self.restaurants.count
+        let offset = self.tableView.restaurants.count
         var option: recommendOption? {
-            switch self.restaurants[0].division {
+            switch self.tableView.restaurants[0].division {
             case "Top picks":
                 return recommendOption.topPick
             case "Popular":
@@ -102,7 +103,15 @@ class MoreRestaurantViewController: UIViewController {
                 print("DEBUG: Failed to get the restaurants ...")
                 return
             }
-            self.restaurants += res
+            let connect = CoredataConnect(context: self.context)
+            for (index, item) in res.enumerated(){
+                connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: item.restaurantID) { (isSelected) in
+                    var newRestaurant = res[index]
+                    newRestaurant.isSelected = isSelected
+                    self.tableView.restaurants.append(newRestaurant)
+                }
+            }
+            self.tableView.reloadData()
         }
     }
 }
@@ -110,15 +119,54 @@ class MoreRestaurantViewController: UIViewController {
 extension MoreRestaurantViewController: RestaurantsListDelegate{
     func loadMoreData() {
         self.loadData()
-        DispatchQueue.main.async {
-            self.tableView.restaurants = self.restaurants
-        }
     }
     func didSelectRestaurant(_ restaurant: Restaurant) {
-        if restaurant.isSelected{
-            self.selectedRestaurants.append(restaurant)
-        }else{
-            self.selectedRestaurants = self.selectedRestaurants.filter { $0.restaurantID != restaurant.restaurantID }
+        delegate?.didSelectRestaurantFromMore(restaurant: restaurant)
+        if let index  = self.tableView.restaurants.firstIndex(where: { ($0.restaurantID == restaurant.restaurantID)}){
+            self.tableView.restaurants[index].isSelected.toggle()
+        }
+    }
+    func didLikeRestaurant(_ restaurant: Restaurant) {
+        delegate?.didLikeRestaurantFromMore(restaurant: restaurant)
+        if let index  = self.tableView.restaurants.firstIndex(where: { ($0.restaurantID == restaurant.restaurantID)}){
+            self.tableView.restaurants[index].isLiked.toggle()
+        }
+    }
+    func didTapRestaurant(restaurant:Restaurant){
+        let detailVC = DetailController(restaurant: restaurant)
+        detailVC.fetchDetail()
+        detailVC.delegate = self
+        
+        self.tableView.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
+            self.navigationController?.pushViewController(detailVC, animated: true)
+            self.navigationController?.navigationBar.isHidden = true
+            self.navigationController?.navigationBar.barStyle = .black
+            self.tableView.isUserInteractionEnabled = true
+        }
+    }
+}
+//MARK: - DetailControllerDelegate
+extension MoreRestaurantViewController: DetailControllerDelegate{
+    func updateLikedRestaurant(restaurant: Restaurant) {
+        delegate?.didLikeRestaurantFromMore(restaurant: restaurant)
+        if let index  = self.tableView.restaurants.firstIndex(where: { ($0.restaurantID == restaurant.restaurantID)}){
+            self.tableView.restaurants[index].isLiked.toggle()
+        }
+    }
+    func updateSelectedRestaurant(restaurant: Restaurant) {
+        delegate?.didSelectRestaurantFromMore(restaurant: restaurant)
+        if let index  = self.tableView.restaurants.firstIndex(where: { ($0.restaurantID == restaurant.restaurantID)}){
+            self.tableView.restaurants[index].isSelected.toggle()
+        }
+    }
+    func willPopViewController(_ controller: DetailController) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
+            controller.navigationController?.popViewController(animated: true)
+        }
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.4) {
+            self.navigationController?.navigationBar.isHidden = false
+            self.navigationController?.navigationBar.barStyle = .default
         }
     }
 }

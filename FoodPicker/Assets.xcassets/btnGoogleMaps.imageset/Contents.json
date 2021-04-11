@@ -2,18 +2,18 @@
   "images" : [
     {
       "scale" : "1x",
-      "idiom" : "universal",
-      "filename" : "btnGoogleMaps.png"
-    },
-    {
-      "scale" : "2x",
-      "filename" : "btnGoogleMaps@2x.png",
+      "filename" : "btnGoogleMaps.png",
       "idiom" : "universal"
     },
     {
-      "scale" : "3x",
       "idiom" : "universal",
-      "filename" : "btnGoogleMaps@3x.png"
+      "scale" : "2x",
+      "filename" : "btnGoogleMaps@2x.png"
+    },
+    {
+      "filename" : "btnGoogleMaps@3x.png",
+      "scale" : "3x",
+      "idiom" : "universal"
     }
   ],
   "info" : {

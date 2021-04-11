@@ -12,7 +12,6 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
@@ -33,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 //MARK: -  Core data Stack
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "FoodPicker")
+        let container = NSPersistentContainer(name: "Picker")
         container.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Unable to load persistent stores: \(error)")
@@ -41,7 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         return container
     }()
-    
     func saveContext(){
         let context = persistentContainer.viewContext
         if context.hasChanges {

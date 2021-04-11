@@ -9,15 +9,20 @@ import UIKit
 import MapKit
 import CoreLocation
 import Firebase
+import CoreData
 
+// Some Collection view identifiers
 private let foodCardSection = "FoodCardCell"
 private let headerCell = "SortHeader"
 private let footerCell = "AllRestaurantsSection"
 
-class MainPageController: UIViewController {
+// This controller contains two view contrller, Category view controller and map view controller.
+class MainPageController: UIViewController, MapViewControllerDelegate {
     //MARK: - Properties
     private let navBarView = MainPageNavigationBar()
+    
     private let locationManager = LocationHandler.shared.locationManager
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     private let mapVC = MapViewController()
     private let categoryVC : CategoriesViewController = {
         let cv = CategoriesViewController(collectionViewLayout: UICollectionViewFlowLayout())
@@ -36,7 +41,6 @@ class MainPageController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        LocationHandler.shared.enableLocationServices()
         configureUI()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -66,11 +70,10 @@ class MainPageController: UIViewController {
             }
         }
         operation.addOperation {
-            self.fetchRestaurantsByOption(limit: 15) { (restaurants) in
+            self.fetchRestaurantsByOption(limit: 10) { (restaurants) in
                 self.dataSource = restaurants
             }
         }
-        
     }
     func restaurantCheckProcess(restaurants: [Restaurant], completion: @escaping([Restaurant])->Void) {
         var uncheckedRestaurants = restaurants
@@ -81,10 +84,10 @@ class MainPageController: UIViewController {
             }
         }
     }
-    func fetchRestaurantsByOption(option: recommendOption? = nil, limit: Int, completion: @escaping([Restaurant])-> Void) {
+    func fetchRestaurantsByOption(option: recommendOption? = nil, limit: Int, offset: Int = 0 ,completion: @escaping([Restaurant])-> Void) {
         guard let location = locationManager.location?.coordinate else { return  }
         NetworkService.shared
-            .fetchRestaurants(lat: location.latitude, lon: location.longitude, option: option, limit: limit)
+            .fetchRestaurants(lat: location.latitude, lon: location.longitude, withOffset: offset, option: option,limit: limit)
             { (restaurants) in
                 guard let res = restaurants, !res.isEmpty else {
                     print("DEBUG: Failed to get the restaurants ...")
@@ -92,22 +95,57 @@ class MainPageController: UIViewController {
                 }
                 print("DEBUG: Loading data ...")
                 completion(res)
-                
         }
     }
     func checkIfUserLiked(uncheckedRestaurant: Restaurant, completion: @escaping(Bool)->Void){
-        RestaurantService.shared
-            .checkIfUserLikeRestaurant(restaurantID: uncheckedRestaurant.restaurantID)
-            { isLiked in
-                completion(isLiked)
+        let connect = CoredataConnect(context: context)
+        connect.checkIfRestaurantIsIn(entity: likedEntityName, id: uncheckedRestaurant.restaurantID) { (isLiked) in
+            completion(isLiked)
         }
     }
-    func updateLikeRestaurant(restaurant: Restaurant, shouldLike:Bool){
-        RestaurantService.shared.updateLikedRestaurant(restaurant: restaurant, shouldLike: shouldLike)
+    func updateSelectedRestaurantsInCoredata(restaurant: Restaurant){
+        guard let tab = tabBarController as? HomeController else { return }
+        do{
+            try tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
+            self.categoryVC.updateSelectStatus(restaurantID: restaurant.restaurantID)
+            let connect = CoredataConnect(context: context)
+            connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: restaurant.restaurantID) { (isSelected) in
+                if isSelected{
+                    connect.deleteRestaurantIn(entityName: selectedEntityName, id: restaurant.restaurantID)
+                }else{
+                    connect.saveRestaurantInLocal(restaurant: restaurant, entityName: selectedEntityName,
+                                                  trueForSelectFalseForLike: true)
+                }
+            }
+        }catch SelectRestaurantResult.upToLimit{
+            let alert = UIAlertController(title: "Sorry! you can only select 8 restaurant. 😢", message: nil, preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .cancel) { (action) in
+                self.mapVC.collecionView.reloadData()
+                self.categoryVC.collectionView.reloadData()
+            }
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+        }catch{
+            print("DEBUG: Failed to select restaurant.")
+        }
+    }
+    func updateLikedRestaurantsInDataBase(restaurant:Restaurant){
+        RestaurantService.shared.updateLikedRestaurant(restaurant: restaurant, shouldLike: !restaurant.isLiked)
+        self.categoryVC.updateLikeRestaurant(restaurantID: restaurant.restaurantID)
+        let connect = CoredataConnect(context: context)
+        connect.checkIfRestaurantIsIn(entity: likedEntityName, id: restaurant.restaurantID) { (isLiked) in
+            if isLiked{
+                connect.deleteRestaurantIn(entityName: likedEntityName, id: restaurant.restaurantID)
+            }else{
+                connect.saveRestaurantInLocal(restaurant: restaurant, entityName: likedEntityName,
+                                              trueForSelectFalseForLike: false)
+            }
+        }
     }
     //MARK: - Helpers
     func configureUI(){
         guard let map = mapVC.view else { return }
+        mapVC.delegate = self
         self.addChild(mapVC)
         view.insertSubview(map, at: 1)
         map.isHidden = true
@@ -130,11 +168,12 @@ extension MainPageController : MainPageHeaderDelegate {
     func handleHeaderGotTapped() {
         mapVC.view.isHidden.toggle()
         categoryVC.view.isHidden.toggle()
+        mapVC.checkBeforeRestaurantLoaded(completion: nil)
     }
 }
+//MARK: - CategoriesViewControllerDelegate
 extension MainPageController: CategoriesViewControllerDelegate{
     func pushToDetailVC(_ restaurant: Restaurant) {
-        print(123)
         let detailVC = DetailController(restaurant: restaurant)
         detailVC.fetchDetail()
         detailVC.delegate = self
@@ -145,14 +184,23 @@ extension MainPageController: CategoriesViewControllerDelegate{
             self.categoryVC.collectionView.isUserInteractionEnabled = true
         }
     }
-    func didLikeRestaurant(_ restaurant: Restaurant){
-        self.updateLikeRestaurant(restaurant: restaurant, shouldLike: !restaurant.isLiked)
+    func didSelectRestaurant(restaurant: Restaurant) {
+        updateSelectedRestaurantsInCoredata(restaurant: restaurant)
+    }
+    func didLikeRestaurant(restaurant: Restaurant) {
+        updateLikedRestaurantsInDataBase(restaurant: restaurant)
     }
 }
+//MARK: - DetailControllerDelegate
 extension MainPageController: DetailControllerDelegate {
+    func updateLikedRestaurant(restaurant: Restaurant) {
+        updateLikedRestaurantsInDataBase(restaurant: restaurant)
+    }
+    
+    func updateSelectedRestaurant(restaurant: Restaurant) {
+        updateSelectedRestaurantsInCoredata(restaurant: restaurant)
+    }
     func willPopViewController(_ controller: DetailController) {
-        let restaurant = controller.restaurant
-        updateLikeRestaurant(restaurant: restaurant, shouldLike: restaurant.isLiked)
         controller.navigationController?.popViewController(animated: true)
     }
 }

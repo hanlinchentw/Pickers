@@ -17,7 +17,7 @@ class ListInfoCell: UITableViewCell{
     weak var delegate: ListInfoCellDelagete?
     var isExpand = false
     
-    private let restaurantTableView = RestaurantsList()
+    let restaurantTableView = RestaurantsList()
     private let containerView = UIView()
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -43,6 +43,7 @@ class ListInfoCell: UITableViewCell{
         button.setImage(UIImage(named: "icnMoreThreeDot")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.setDimension(width: 40, height: 40)
         button.addTarget(self, action: #selector(didTapMoreButton), for: .touchUpInside)
+        button.isUserInteractionEnabled = true
         return button
     }()
     private lazy var expandButton: UIButton = {
@@ -50,6 +51,7 @@ class ListInfoCell: UITableViewCell{
         button.setImage(UIImage(named: "icnArrowDown")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.setDimension(width: 40, height: 40)
         button.addTarget(self, action: #selector(didTapExpandButton), for: .touchUpInside)
+        button.isUserInteractionEnabled = true
         return button
     }()
     //MARK: - Lifecycle
@@ -65,17 +67,17 @@ class ListInfoCell: UITableViewCell{
         stack.axis = .vertical
         stack.distribution = .fillProportionally
         stack.spacing = 4
-        containerView.addSubview(stack)
+        addSubview(stack)
         stack.anchor(top:containerView.topAnchor, left: containerView.leftAnchor,
                          paddingTop: 16, paddingLeft: 16)
         
-        containerView.addSubview(restaurantsNumLabel)
+        addSubview(restaurantsNumLabel)
         restaurantsNumLabel.anchor(left: stack.leftAnchor, bottom: containerView.bottomAnchor,  paddingBottom: 16)
         
         let buttonStack = UIStackView(arrangedSubviews: [moreButton, expandButton])
         buttonStack.axis = .vertical
         buttonStack.spacing = 22
-        containerView.addSubview(buttonStack)
+        contentView.addSubview(buttonStack)
         buttonStack.anchor(top: containerView.topAnchor, right: containerView.rightAnchor,
                            paddingTop: 8, paddingRight: 8)
     }
@@ -95,7 +97,8 @@ class ListInfoCell: UITableViewCell{
     func configureTableView(){
         guard let list = list else { return }
         restaurantTableView.restaurants = list.restaurants
-        restaurantTableView.config = .table
+        restaurantTableView.config = .list
+        restaurantTableView.separatorStyle = .singleLine
         addSubview(restaurantTableView)
         restaurantTableView.anchor(top: containerView.bottomAnchor, left: leftAnchor,
                                    right: rightAnchor, bottom: bottomAnchor)
@@ -103,8 +106,13 @@ class ListInfoCell: UITableViewCell{
     //MARK: - Selectors
     @objc func didTapExpandButton(){
         guard let list = list else { return }
+        print("DEBUG: Should expand list info ... ")
         self.isExpand.toggle()
         delegate?.shouldExpandList(self, self.isExpand, list: list)
+        self.restaurantTableView.beginUpdates()
+        self.restaurantTableView.endUpdates()
+        let imageName = isExpand ? "icnArrowUp" : "icnArrowDown"
+        expandButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
     }
     @objc func didTapMoreButton(){
         guard let list = self.list else { return  }

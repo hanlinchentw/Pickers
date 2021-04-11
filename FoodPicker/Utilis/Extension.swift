@@ -140,6 +140,8 @@ extension UIView {
         view.layer.cornerRadius = 12
         return view
     }
+    
+
 }
 extension UIButton {
     func createViewWithRoundedCornerAndShadow(withText text: String? = nil, imageName : String? = nil) -> UIButton{
@@ -169,7 +171,23 @@ extension UIButton {
         
         return button
     }
-    
+    func changeImageButtonWithBounceAnimation(changeTo imageName: String){
+        let zoomAnimation = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve) {
+            self.setImage(UIImage(named: imageName)?
+                                .withRenderingMode(.alwaysOriginal), for: .normal)
+            self.transform = zoomAnimation
+        } completion: { (_) in
+            UIView.animate(withDuration: 0.4, delay: 0,
+                           usingSpringWithDamping: 0.5,
+                           initialSpringVelocity: 0.2,
+                           options: .curveEaseOut) {
+                self.transform = zoomAnimation.inverted()
+            }
+
+        }
+    }
 }
 
 extension UITextField {
@@ -204,6 +222,8 @@ extension UITextField {
         iv.anchor(left:tf.leftAnchor, paddingLeft: 8,width: 24 ,height: 24)
         return tf
     }
+    
+
 }
 
 extension UIFont {
@@ -277,5 +297,16 @@ extension MKMapView {
             zoomRect            = zoomRect.union(pointRect);
         }
         setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100), animated: true)
+    }
+}
+
+extension String {
+    var containsChineseCharacters: Bool {
+        return self.range(of: "\\p{Han}", options: .regularExpression) != nil
+    }
+}
+extension Collection where Indices.Iterator.Element == Index {
+    subscript (safe index: Index) -> Iterator.Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }
