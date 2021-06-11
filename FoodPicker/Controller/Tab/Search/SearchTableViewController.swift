@@ -52,14 +52,12 @@ class SearchTableViewController : UITableViewController{
     }()
     //MARK: - Lifecycle
     override func viewDidLoad() {
-        
+        super.viewDidLoad()
         searchBarTextField.becomeFirstResponder()
         configureTableView()
-        
     }
     override func didMove(toParent parent: UIViewController?) {
         searchBarTextField.text?.removeAll()
-        
         searchBarTextField.becomeFirstResponder()
     }
     //MARK: - Helpers
@@ -71,9 +69,6 @@ class SearchTableViewController : UITableViewController{
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(SearchCell.self, forCellReuseIdentifier: searchCellIdentifier)
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tap)
     }
     //MARK: -Selectors
     @objc func handleBackButtonTapped(){
@@ -83,9 +78,6 @@ class SearchTableViewController : UITableViewController{
     @objc func dismissKeyboard(){
         view.endEditing(true)
     }
-    
-    //MARK: - API
-    
 }
 
 //MARK: - UITableViewDelegate / DataSource
@@ -113,6 +105,7 @@ extension SearchTableViewController{
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: searchCellIdentifier, for: indexPath)
         as! SearchCell
+        cell.selectionStyle = .none
         if indexPath.section == 1{
             cell.term = historicalRecords[indexPath.row]
         }
@@ -127,7 +120,8 @@ extension SearchTableViewController{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1{
             let term = historicalRecords[indexPath.row]
-            delegate?.didSearchbyTerm(term: term)
+            searchBarTextField.text = term
+            print(term)
         }else if indexPath.section == 2{
             
         }

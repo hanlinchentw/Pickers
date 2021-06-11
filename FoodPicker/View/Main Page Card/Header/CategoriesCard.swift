@@ -8,8 +8,8 @@
 
 import UIKit
 
-protocol SortHeaderDelegate  : class {
-    func didTapFilterButton()
+protocol CategoryCardDelegate : AnyObject {
+    func didTapCategoryCard(keyword: String)
 }
 
 private let captionIdentifier = "CaptionCardCell"
@@ -23,7 +23,7 @@ class CategoriesCard : UICollectionReusableView {
         cv.backgroundColor = .backgroundColor
         return cv
     }()
-    
+    weak var delegate: CategoryCardDelegate?
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame:frame)
@@ -55,6 +55,10 @@ extension CategoriesCard: UICollectionViewDelegate, UICollectionViewDataSource {
         as! CategoryCardCell
         cell.category = categoryPreload[indexPath.row]
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let categoryString = categoryPreload[indexPath.row]
+        delegate?.didTapCategoryCard(keyword: categoryString)
     }
 }
 

@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:SelectedRestaurant+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:SelectedRestaurant+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
       location = "group:FoodPicker.xcodeproj">
    </FileRef>
    <FileRef

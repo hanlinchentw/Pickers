@@ -11,7 +11,7 @@ import UIKit
 private let restaurantListCellIdentifier = "listCellIdentifier"
 private let loadingCellIdentifier = "LoadCell"
 
-protocol RestaurantsListDelegate: class {
+protocol RestaurantsListDelegate: AnyObject {
     func didSelectRestaurant(_ restaurant : Restaurant)
     func didLikeRestaurant(_ restaurant : Restaurant)
     func loadMoreData()

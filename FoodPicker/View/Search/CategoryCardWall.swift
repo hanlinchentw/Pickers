@@ -7,7 +7,15 @@
 //
 
 import UIKit
+
+protocol CategoryCardWallDelegate: AnyObject {
+    func searchRestaurantByTappingCard(_ keyword: String)
+}
+
+
+
 private let categoryCardIdentifier = "categoryCard"
+
 class CategoryCardWall: UICollectionReusableView{
     //MARK: - Properites
     var titleLabel : UILabel = {
@@ -25,12 +33,13 @@ class CategoryCardWall: UICollectionReusableView{
         cv.isScrollEnabled = false
         return cv
     }()
+    
+    weak var delegate: CategoryCardWallDelegate?
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
         configureCollectionView()
-        
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -49,7 +58,8 @@ class CategoryCardWall: UICollectionReusableView{
         
         addSubview(collectionView)
         collectionView.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor,
-                              right: rightAnchor,  bottom: bottomAnchor, paddingTop: 4)
+                              right: rightAnchor,  bottom: bottomAnchor,
+                              paddingTop: 4, paddingLeft: -8,paddingRight: 8)
     }
 }
 //MARK: - UICollectionViewDelegate, UICollectionViewDataSource
@@ -58,9 +68,14 @@ extension CategoryCardWall: UICollectionViewDelegate, UICollectionViewDataSource
         return categoryPreload.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCardIdentifier, for: indexPath) as! CategoryCardCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCardIdentifier, for: indexPath)
+            as! CategoryCardCell
         cell.category = categoryPreload[indexPath.row]
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let keyword = categoryPreload[indexPath.row]
+        delegate?.searchRestaurantByTappingCard(keyword)
     }
 }
 
@@ -70,10 +85,10 @@ extension CategoryCardWall: UICollectionViewDelegateFlowLayout{
         let size = CGSize(width: 116, height: 80)
         return size
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 8
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 8
     }
 }

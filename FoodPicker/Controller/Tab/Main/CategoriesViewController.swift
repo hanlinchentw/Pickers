@@ -10,14 +10,17 @@ import CoreLocation
 import Firebase
 import CoreData
 
+
 private let foodCardSection = "FoodCardCell"
 private let headerCell = "SortHeader"
 private let footerCell = "AllRestaurantsSection"
 
-protocol CategoriesViewControllerDelegate: class {
+protocol CategoriesViewControllerDelegate: AnyObject {
     func pushToDetailVC(_ restaurant: Restaurant)
     func didSelectRestaurant(restaurant:Restaurant)
     func didLikeRestaurant(restaurant:Restaurant)
+    func didTapCategoryCard(textOnCard text: String)
+    func reloadData()
 }
 
 class CategoriesViewController: UICollectionViewController {
@@ -30,6 +33,8 @@ class CategoriesViewController: UICollectionViewController {
     var dataSource = [Restaurant]() { didSet{ self.collectionView.reloadData()}}
     var topPicksDataSource = [Restaurant]()  { didSet{ self.collectionView.reloadData()}}
     var popularDataSource = [Restaurant]()  { didSet{ self.collectionView.reloadData()}}
+    
+    var errorView : ErrorView?
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +44,8 @@ class CategoriesViewController: UICollectionViewController {
    
     //MARK: - Helpers
     func configureCollectionView(){
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
+        collectionView.isSkeletonable = true
+        collectionView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .backgroundColor
         collectionView.register(FilterResultSection.self, forCellWithReuseIdentifier: foodCardSection)
@@ -69,10 +75,16 @@ class CategoriesViewController: UICollectionViewController {
             self.dataSource[index].isLiked.toggle()
         }
     }
+    func configureErrorView(){
+        self.errorView = ErrorView()
+        errorView!.delegate = self
+        self.view.insertSubview(errorView!, belowSubview: collectionView)
+        errorView!.fit(inView: self.view)
+    }
     //MARK: - Core data
     public func deselectAll(){
         let connect = CoredataConnect(context: context)
-        connect.deselectAllRestaurants()
+        connect.deleteAllRestaurant(in: selectedEntityName)
     }
 }
 //MARK: -  UICollectionView Delegate/ DataSource
@@ -92,6 +104,7 @@ extension CategoriesViewController {
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerCell, for: indexPath) as! CategoriesCard
+            header.delegate = self
             return header
         }else {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerCell, for: indexPath) as! AllRestaurantsSection
@@ -117,6 +130,14 @@ extension CategoriesViewController : UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width - 32 , height: height)
     }
 }
+
+//MARK: - CategoryCardDelegate
+extension CategoriesViewController: CategoryCardDelegate {
+    func didTapCategoryCard(keyword: String) {
+        delegate?.didTapCategoryCard(textOnCard: keyword)
+    }
+}
+
 //MARK: - FilterResultSectionDelegate
 extension CategoriesViewController : FilterResultSectionDelegate {
     func didSelectRestaurant(_ restaurant: Restaurant, option: recommendOption) {
@@ -158,5 +179,11 @@ extension CategoriesViewController: MoreRestaurantViewControllerDelegate{
     }
     func didLikeRestaurantFromMore(restaurant: Restaurant) {
         delegate?.didLikeRestaurant(restaurant: restaurant)
+    }
+}
+
+extension CategoriesViewController : ErrorViewDelegate {
+    func didTapReloadButton() {
+        delegate?.reloadData()
     }
 }

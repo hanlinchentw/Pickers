@@ -15,9 +15,8 @@ enum SelectRestaurantResult: Error {
     case upToLimit
     case error
 }
-
 class HomeController : UITabBarController {
-
+    
     //MARK: - Properties
     var selectedRestaurants  = [Restaurant]()
     private let numOfSelectedLabel : UILabel = {
@@ -45,9 +44,8 @@ class HomeController : UITabBarController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        print("DEBUG:App folder: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))")
         authenticateUserAndConfigureUI()
-//        logUserOut()
     }
     //MARK: - API
     func authenticateUserAndConfigureUI(){
@@ -62,8 +60,13 @@ class HomeController : UITabBarController {
             configureTabBarController()
         }
     }
-    func logUserOut(){
-        do { try Auth.auth().signOut() }catch{ print("DEBUG: Failed to sign out with error ...\(error.localizedDescription)") } }
+    
+    func cleanUpLocalDatabase(){
+        let connect = CoredataConnect(context: context)
+        connect.deleteAllRestaurant(in: likedEntityName)
+        connect.deleteAllRestaurant(in: selectedEntityName)
+    }
+    
     //MARK: - Helpers
     func configureActionIcon(){
         if selectedRestaurants.count == 0 {
@@ -76,13 +79,14 @@ class HomeController : UITabBarController {
     }
     func configureTabBar(){
         view.backgroundColor = .backgroundColor
-        view.isOpaque = true
         tabBar.addSubview(actionIconView)
         actionIconView.center(inView: tabBar, yConstant: -8)
-        tabBar.backgroundColor = .white
+    
+        tabBar.backgroundImage = UIImage(named: "bar")?.withRenderingMode(.alwaysOriginal)
         tabBar.layer.cornerRadius = 36
         tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         tabBar.layer.masksToBounds = true
+        self.selectedIndex = 0
     }
     
     func configureTabBarController(){
@@ -91,7 +95,6 @@ class HomeController : UITabBarController {
         let nav1 = templateNavigationController(image: UIImage(named: "homeUnselectedS"),
                                                 rootViewController: main)
         nav1.tabBarItem.selectedImage = UIImage(named: "homeSelectedS")?.withRenderingMode(.alwaysOriginal)
-        main.preloadData()
         // Create searcg page view controller
         let search = SearchController(collectionViewLayout: UICollectionViewFlowLayout())
         let nav2 = templateNavigationController(image: UIImage(named: "searchUnselectedS"),
@@ -100,15 +103,18 @@ class HomeController : UITabBarController {
         // Create Spin page view controller
         let action = ActionViewController()
         let nav3 = templateNavigationController(image: UIImage(named: ""),
-                                            rootViewController: action)
+                                                rootViewController: action)
         // Create favorite View controller
         let favorite = FavoriteController()
         let nav4 = templateNavigationController(image: UIImage(named: "favoriteUnselectedS"),
                                                 rootViewController: favorite)
+        favorite.fetchLikedRestauants()
         nav4.tabBarItem.selectedImage = UIImage(named: "icnTabHeartSelected")?.withRenderingMode(.alwaysOriginal)
-
+        
         // Create profile view controller
-        let profile = ProfileController()
+        let email = Auth.auth().currentUser?.email ?? " User email can't find"
+        let profile = ProfileController(email: email)
+        profile.delegate = self
         let nav5 = templateNavigationController(image: UIImage(named: "profileUnselectedS"),
                                                 rootViewController: profile)
         
@@ -120,31 +126,45 @@ class HomeController : UITabBarController {
         nav.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
         return nav
     }
-    
-    //MARK: - SelectRestaurant Data flow
+}
+
+//MARK: -SelectRestaurant Data flow
+extension HomeController {
     func updateSelectedRestaurants(from controller: UIViewController, restaurant: Restaurant) throws {
         self.didSelect(restaurant: restaurant)
         guard self.selectedRestaurants.count <= 8  else { throw SelectRestaurantResult.upToLimit }
-            self.configureActionIcon()
-            if controller.isKind(of: MainPageController.self) || controller.isKind(of: FavoriteController.self){
-                guard let nav = viewControllers?[2] as? UINavigationController else { return }
-                guard let action = nav.viewControllers[0] as? ActionViewController else { return }
-                let vm = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
-                action.selectedRestaurants = self.selectedRestaurants
-                action.viewModel = vm
-                if action.state == .temp || action.state == nil{
-                    action.configureList(list: nil)
-                }else if action.state == .existed || action.state == .edited{
-                    action.configureList(list: nil, addRestaurant: restaurant)
-                }
-            }
-            if controller.isKind(of: ActionViewController.self) || controller.isKind(of: FavoriteController.self){
-                guard let nav = viewControllers?[0] as? UINavigationController else { return }
-                guard let main = nav.viewControllers[0] as? MainPageController else { return }
-                guard let cate = main.children[1] as? CategoriesViewController else { return }
-                cate.updateSelectStatus(restaurantID: restaurant.restaurantID)
-            }
+        self.configureActionIcon()
+        if controller.isKind(of: MainPageController.self)
+            || controller.isKind(of: FavoriteController.self)
+            || controller.isKind(of: SearchController.self) {
+            updateSelectedRestaurantsForSpinPage(restaurant: restaurant)
+        }
+        if controller.isKind(of: ActionViewController.self)
+            || controller.isKind(of: FavoriteController.self)
+            || controller.isKind(of: SearchController.self){
+            updateSelectedRestaurantsForMainPage(restaurant: restaurant)
+        }
     }
+    
+    private func updateSelectedRestaurantsForSpinPage(restaurant: Restaurant){
+        guard let nav = viewControllers?[2] as? UINavigationController else { return }
+        guard let action = nav.viewControllers[0] as? ActionViewController else { return }
+        let vm = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
+        action.selectedRestaurants = self.selectedRestaurants
+        action.viewModel = vm
+        if action.state == .temp || action.state == nil{
+            action.configureList(list: nil)
+        }else if action.state == .existed || action.state == .edited{
+            action.configureList(list: nil, addRestaurant: restaurant)
+        }
+    }
+    private func updateSelectedRestaurantsForMainPage(restaurant: Restaurant) {
+        guard let nav = viewControllers?[0] as? UINavigationController else { return }
+        guard let main = nav.viewControllers[0] as? MainPageController else { return }
+        guard let cate = main.children[1] as? CategoriesViewController else { return }
+        cate.updateSelectStatus(restaurantID: restaurant.restaurantID)
+    }
+    
     func didSelect(restaurant : Restaurant){
         if restaurant.isSelected {
             selectedRestaurants.append(restaurant)
@@ -156,6 +176,31 @@ class HomeController : UITabBarController {
         self.selectedRestaurants.forEach { try! updateSelectedRestaurants(from: actionVC, restaurant: $0)}
         selectedRestaurants.removeAll()
         let connect = CoredataConnect(context: context)
-        connect.deselectAllRestaurants()
+        connect.deleteAllRestaurant(in: selectedEntityName)
+    }
+    
+}
+//MARK: -  Search Restaurants from category cards
+extension HomeController {
+    func searchRestaurantsFromCategoryCard(textOnCard text: String) {
+        self.showSpinner()
+        UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve) {
+            self.selectedIndex = 1
+        } completion: { _ in
+            guard let nav = self.viewControllers?[1] as? UINavigationController else { return }
+            guard let searchVC = nav.viewControllers[0] as? SearchController else { return }
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                if searchVC.isViewLoaded {
+                    searchVC.searchRestaurants(withKeyword: text)
+                    timer.invalidate()
+                }
+            }
+        }
+    }
+}
+//MARK: - ProfileControllerDelegate
+extension HomeController : ProfileControllerDelegate {
+    func logOut() {
+        authenticateUserAndConfigureUI()
     }
 }

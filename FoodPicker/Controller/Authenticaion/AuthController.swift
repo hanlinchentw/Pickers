@@ -34,12 +34,14 @@ class AuthController : UIViewController{
     }
     
     private var introView = IntroView()
+    
     private let backButton : UIButton = {
         let button = UIButton(type:.system)
         button.setImage(UIImage(named: "btnCancelGreySmall")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleBackButtonTapped), for: .touchUpInside)
         return button
     }()
+    
     private let titleLabel : UILabel = {
         let label = UILabel()
         label.text = "What's your Email?"
@@ -58,11 +60,13 @@ class AuthController : UIViewController{
         label.font = UIFont(name: "ArialMT", size: 16)
         return label
     }()
+    
     private let emailTextField : UITextField = {
         let tf = UITextField().inputTextField(isSecured: false)
         
         return tf
     }()
+    
     private lazy var editButton : UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "icnEditSmall")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -70,6 +74,7 @@ class AuthController : UIViewController{
         button.setDimension(width: 24, height: 24)
         return button
     }()
+    
     private lazy var emailInputView : UIView = {
         let view = UIView().createInputView(withTitle: "Email", textField: emailTextField)
         view.addSubview(editButton)
@@ -86,13 +91,17 @@ class AuthController : UIViewController{
         label.text = "6 to 20 characters"
         return label
     }()
+    
     private let passwordRequirementLabel2 : UILabel = {
         let label = UILabel()
         label.text = "Texts and numbers only"
         return label
     }()
+    
     private lazy var passwordRequirementView1 = UIView().createPasswordRequirementView(imageView: passwordRequirementImageView1 , label: passwordRequirementLabel1)
+    
     private lazy var passwordRequirementView2 = UIView().createPasswordRequirementView(imageView: passwordRequirementImageView2 , label: passwordRequirementLabel2)
+    
     private let passwordTextField : UITextField = {
         let tf = UITextField().inputTextField(isSecured: true)
         tf.placeholder = "Enter Your password"
@@ -269,6 +278,7 @@ class AuthController : UIViewController{
             }
         }
     }
+
     func configureRegisterPage(){
         emailTextField.layer.borderColor = UIColor.white.cgColor
         emailTextField.isUserInteractionEnabled = false

@@ -21,7 +21,7 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
     //MARK: - Properties
     private let navBarView = MainPageNavigationBar()
     
-    private let locationManager = LocationHandler.shared.locationManager
+    private let location = LocationHandler.shared.locationManager.location?.coordinate
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     private let mapVC = MapViewController()
     private let categoryVC : CategoriesViewController = {
@@ -30,17 +30,13 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
     }()
     
     let defaultOptions : [recommendOption] = [.popular, .topPick]
-    private var dataSource = [Restaurant]() {
-        didSet{
-            self.categoryVC.dataSource = self.dataSource
-            self.mapVC.restaurants = self.dataSource
-        }
-    }
-    private var topPicksDataSource = [Restaurant]() { didSet{ self.categoryVC.topPicksDataSource = topPicksDataSource }}
-    private var popularDataSource = [Restaurant]() { didSet{ self.categoryVC.popularDataSource = popularDataSource }}
+    private var dataSource = [Restaurant]()
+    private var topPicksDataSource = [Restaurant]()
+    private var popularDataSource = [Restaurant]()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        preloadData()
         configureUI()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -53,70 +49,94 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
     }
     //MARK: -API
     func preloadData(){
-        let operation = OperationQueue()
-        operation.qualityOfService = .userInitiated
-        operation.addOperation {
-            self.fetchRestaurantsByOption(option: .topPick, limit: 6) { (result) in
-                self.restaurantCheckProcess(restaurants: result) { checkedRestaurants in
-                    self.topPicksDataSource = checkedRestaurants
-                }
-            }
+        let group = DispatchGroup()
+        self.categoryVC.showSpinner()
+        let concurrentQueue: DispatchQueue = DispatchQueue(label: "CorrentQueue", attributes: .concurrent)
+        group.enter()
+        concurrentQueue.async(group:group) {
+            self.preload(by: .topPick, numOfRestaurant: 6)
+            group.leave()
         }
-        operation.addOperation {
-            self.fetchRestaurantsByOption(option: .popular, limit: 6) { (result) in
-                self.restaurantCheckProcess(restaurants: result) { checkedRestaurants in
-                    self.popularDataSource = checkedRestaurants
-                }
-            }
+        group.enter()
+        concurrentQueue.async(group:group) {
+            self.preload(by: .popular, numOfRestaurant: 6)
+            group.leave()
         }
-        operation.addOperation {
-            self.fetchRestaurantsByOption(limit: 10) { (restaurants) in
-                self.dataSource = restaurants
+        group.enter()
+        concurrentQueue.async(group:group) {
+            self.preload(by: .all, numOfRestaurant: 20)
+            group.leave()
+
+        }
+        group.notify(queue: DispatchQueue.main) {
+            print("DEBUG: Already downloaded all the data ")
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                self.categoryVC.removeSpinner()
             }
         }
     }
+    fileprivate func preload(by option: recommendOption, numOfRestaurant: Int) {
+        print("DEBUG: Preload data ... Main page")
+        self.retry(5) { success, failure in
+            self.fetchRestaurants(by: option, limit: numOfRestaurant, success: success, failure: failure)
+        } success: {
+            print("DEBUG: Successfully load data ... main page  ")
+            switch option {
+            case .all:
+                self.categoryVC.dataSource = self.dataSource
+                self.mapVC.restaurants = self.dataSource
+                self.isDataLoadedSuccessfully(true)
+            case .topPick:
+                self.categoryVC.topPicksDataSource = self.topPicksDataSource
+                self.isDataLoadedSuccessfully(true)
+            case .popular:
+                self.categoryVC.popularDataSource = self.popularDataSource
+                self.isDataLoadedSuccessfully(true)
+            }
+        } failure: { error in
+            print("DEBUG: Failed to load \(option.description) category section.  \(error.localizedDescription)")
+            self.isDataLoadedSuccessfully(false)
+        }
+    }
+
+    fileprivate func fetchRestaurants(by option: recommendOption, limit: Int, success: @escaping () -> Void, failure: @escaping (Error) -> Void) {
+        guard let location = location else { return }
+        self.fetchRestaurantsByOption(location: location, option: option, limit: limit) { (result, error) in
+            print("DEBUG: Fetching data ... main VC ")
+            if let result = result {
+                self.restaurantCheckProcess(restaurants: result) { checkedRestaurants in
+                    switch option {
+                    case .all:
+                        self.dataSource = checkedRestaurants
+                    case .popular:
+                        self.popularDataSource = checkedRestaurants
+                    case .topPick:
+                        self.topPicksDataSource = checkedRestaurants
+                    }
+                }
+                success()
+            }else {
+                failure(error!)
+            }
+        }
+    }
+    
     func restaurantCheckProcess(restaurants: [Restaurant], completion: @escaping([Restaurant])->Void) {
         var uncheckedRestaurants = restaurants
         for (index, item) in uncheckedRestaurants.enumerated(){
-            self.checkIfUserLiked(uncheckedRestaurant: item) { (isLiked) in
+            self.checkIfUserLiked(context: self.context, uncheckedRestaurant: item) { (isLiked) in
                 uncheckedRestaurants[index].isLiked = isLiked
                 completion(uncheckedRestaurants)
             }
         }
     }
-    func fetchRestaurantsByOption(option: recommendOption? = nil, limit: Int, offset: Int = 0 ,completion: @escaping([Restaurant])-> Void) {
-        guard let location = locationManager.location?.coordinate else { return  }
-        NetworkService.shared
-            .fetchRestaurants(lat: location.latitude, lon: location.longitude, withOffset: offset, option: option,limit: limit)
-            { (restaurants) in
-                guard let res = restaurants, !res.isEmpty else {
-                    print("DEBUG: Failed to get the restaurants ...")
-                    return
-                }
-                print("DEBUG: Loading data ...")
-                completion(res)
-        }
-    }
-    func checkIfUserLiked(uncheckedRestaurant: Restaurant, completion: @escaping(Bool)->Void){
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: likedEntityName, id: uncheckedRestaurant.restaurantID) { (isLiked) in
-            completion(isLiked)
-        }
-    }
+
     func updateSelectedRestaurantsInCoredata(restaurant: Restaurant){
         guard let tab = tabBarController as? HomeController else { return }
         do{
             try tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
             self.categoryVC.updateSelectStatus(restaurantID: restaurant.restaurantID)
-            let connect = CoredataConnect(context: context)
-            connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: restaurant.restaurantID) { (isSelected) in
-                if isSelected{
-                    connect.deleteRestaurantIn(entityName: selectedEntityName, id: restaurant.restaurantID)
-                }else{
-                    connect.saveRestaurantInLocal(restaurant: restaurant, entityName: selectedEntityName,
-                                                  trueForSelectFalseForLike: true)
-                }
-            }
+            updateSelectedRestaurantsInCoredata(context: context, restaurant: restaurant)
         }catch SelectRestaurantResult.upToLimit{
             let alert = UIAlertController(title: "Sorry! you can only select 8 restaurant. 😢", message: nil, preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .cancel) { (action) in
@@ -129,19 +149,6 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
             print("DEBUG: Failed to select restaurant.")
         }
     }
-    func updateLikedRestaurantsInDataBase(restaurant:Restaurant){
-        RestaurantService.shared.updateLikedRestaurant(restaurant: restaurant, shouldLike: !restaurant.isLiked)
-        self.categoryVC.updateLikeRestaurant(restaurantID: restaurant.restaurantID)
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: likedEntityName, id: restaurant.restaurantID) { (isLiked) in
-            if isLiked{
-                connect.deleteRestaurantIn(entityName: likedEntityName, id: restaurant.restaurantID)
-            }else{
-                connect.saveRestaurantInLocal(restaurant: restaurant, entityName: likedEntityName,
-                                              trueForSelectFalseForLike: false)
-            }
-        }
-    }
     //MARK: - Helpers
     func configureUI(){
         guard let map = mapVC.view else { return }
@@ -149,18 +156,30 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
         self.addChild(mapVC)
         view.insertSubview(map, at: 1)
         map.isHidden = true
+         
         guard let categoryView = categoryVC.view else { return }
         categoryVC.delegate = self
         self.addChild(categoryVC)
         view.insertSubview(categoryView, at: 1)
         categoryView.isHidden = false
+        
         navBarView.delegate = self
         view.addSubview(navBarView)
+        
         navBarView.anchor(top: view.topAnchor, left: view.leftAnchor,
                           right: view.rightAnchor, height: 104)
         categoryView.anchor(top: navBarView.bottomAnchor,left: view.leftAnchor,
                             right: view.rightAnchor, bottom: view.bottomAnchor,
-                            paddingTop: 16, paddingBottom: 80)
+                            paddingTop: 0, paddingBottom: 80)
+    }
+    func isDataLoadedSuccessfully(_ isSuccess: Bool){
+        if isSuccess {
+            self.categoryVC.collectionView.isHidden = false
+            self.categoryVC.errorView?.removeFromSuperview()
+        }else{
+            self.categoryVC.configureErrorView()
+            self.categoryVC.collectionView.isHidden = true
+        }
     }
 }
 //MARK: - MainPageHeaderDelegate
@@ -173,28 +192,51 @@ extension MainPageController : MainPageHeaderDelegate {
 }
 //MARK: - CategoriesViewControllerDelegate
 extension MainPageController: CategoriesViewControllerDelegate{
+    func didTapCategoryCard(textOnCard text: String) {
+        guard let tab = tabBarController as? HomeController else { return }
+        tab.searchRestaurantsFromCategoryCard(textOnCard: text)
+    }
+    
     func pushToDetailVC(_ restaurant: Restaurant) {
-        let detailVC = DetailController(restaurant: restaurant)
-        detailVC.fetchDetail()
-        detailVC.delegate = self
         self.categoryVC.collectionView.isUserInteractionEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
-            self.navigationController?.navigationBar.barStyle = .black
-            self.navigationController?.pushViewController(detailVC, animated: true)
+        self.categoryVC.showSpinner()
+        let detailVC = DetailController(restaurant: restaurant)
+        self.retry(3) { success, failure in
+            detailVC.fetchDetail(success: success, failure: failure)
+        } success: {
+            detailVC.delegate = self
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
+                self.navigationController?.navigationBar.barStyle = .black
+                self.navigationController?.pushViewController(detailVC, animated: true)
+                self.categoryVC.collectionView.isUserInteractionEnabled = true
+                self.categoryVC.removeSpinner()
+            }
+        } failure: { error in
+            print("DEBUG: Failed to push to detail VC ... ")
+            let alert = UIAlertController(title: "Internet Error", message: "\(error.localizedDescription)", preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
             self.categoryVC.collectionView.isUserInteractionEnabled = true
+            self.categoryVC.removeSpinner()
         }
     }
     func didSelectRestaurant(restaurant: Restaurant) {
         updateSelectedRestaurantsInCoredata(restaurant: restaurant)
     }
     func didLikeRestaurant(restaurant: Restaurant) {
-        updateLikedRestaurantsInDataBase(restaurant: restaurant)
+        self.categoryVC.updateLikeRestaurant(restaurantID: restaurant.restaurantID)
+        updateLikedRestaurantsInDataBase(context: context, restaurant: restaurant)
+    }
+    func reloadData() {
+        self.preloadData()
     }
 }
 //MARK: - DetailControllerDelegate
 extension MainPageController: DetailControllerDelegate {
     func updateLikedRestaurant(restaurant: Restaurant) {
-        updateLikedRestaurantsInDataBase(restaurant: restaurant)
+        self.categoryVC.updateLikeRestaurant(restaurantID: restaurant.restaurantID)
+        updateLikedRestaurantsInDataBase(context: context, restaurant: restaurant)
     }
     
     func updateSelectedRestaurant(restaurant: Restaurant) {

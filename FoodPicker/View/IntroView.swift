@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol IntroViewDelegate : class {
+protocol IntroViewDelegate : AnyObject {
     func didTapCreateButton()
 }
 
@@ -28,15 +28,15 @@ class IntroView : UIView {
         label.textColor = .gray
         return label
     }()
-    private let facebookButton  :UIView = {
-        let view = UIView().createAccountButton(withText: "Start with facebook",
+    private lazy var facebookButton : UIView = {
+        let view = createAccountButton(withText: "Start with facebook",
                                                 backgroundColor: .denimBlue,
                                                 textColor : .white,
                                                 imageName : "icnFbXs")
         return view
     }()
     private lazy var emailButton  :UIView = {
-        let view = UIView().createAccountButton(withText: "Start with Email",
+        let view = createAccountButton(withText: "Start with Email",
                                                 backgroundColor: .white,
                                                 textColor : .customblack,
                                                 imageName:"icnMailXs")
@@ -71,6 +71,31 @@ class IntroView : UIView {
         fatalError("init(coder:) has not been implemented")
     }
     //MARK: - Helpers
+    func createAccountButton(withText text : String, backgroundColor : UIColor,textColor : UIColor,  imageName : String) -> UIView{
+        let view = UIView()
+        let imageView = UIImageView()
+        view.backgroundColor = backgroundColor
+        view.setDimension(width: 304, height: 48)
+        imageView.image = UIImage(named: imageName)
+        imageView.contentMode = .scaleAspectFit
+        view.addSubview(imageView)
+        imageView.anchor(left: view.leftAnchor, paddingLeft: 14, width: 24, height: 24)
+        imageView.centerY(inView: view)
+        
+        let textLabel = UILabel()
+        textLabel.text = text
+        textLabel.font = UIFont(name: "Arial-BoldMT", size: 16)
+        textLabel.textColor = textColor
+        textLabel.textAlignment = .center
+        view.addSubview(textLabel)
+        textLabel.anchor(top:view.topAnchor, left: imageView.rightAnchor,
+                         right: view.rightAnchor, bottom: view.bottomAnchor,
+                         paddingLeft: 10, paddingRight: 32)
+
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 12
+        return view
+    }
     
     //MARK: - Selectors
     @objc func startWithEmailAuth(){

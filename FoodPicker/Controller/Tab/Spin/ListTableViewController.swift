@@ -72,7 +72,7 @@ class ListTableViewController: UITableViewController{
     func fetchRestaurants(restaurantsID: [String], completion: @escaping([Restaurant])->Void){
         var restaurants = [Restaurant]()
         restaurantsID.forEach { (id) in
-            NetworkService.shared.fetchDetail(id: id) { (detail) in
+            NetworkService.shared.fetchDetail(id: id) { (detail, error) in
                 var restaurant = Restaurant(business: nil, detail: detail)
                 restaurant.isSelected = true
                 restaurants.append(restaurant)

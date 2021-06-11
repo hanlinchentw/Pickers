@@ -14,4 +14,5 @@ target 'FoodPicker' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'ImageSlideshow', '~> 1.9.0'
+  pod 'SkeletonView'
 end

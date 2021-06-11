@@ -30,6 +30,7 @@ class RestaurantCardCell: UICollectionViewCell{
     weak var delegate : RestaurantCardCellDelegate?
     let restaurantName : UILabel = {
         let label = UILabel()
+        label.isSkeletonable = true
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
         label.textAlignment = .left
         label.numberOfLines = 1
@@ -37,6 +38,7 @@ class RestaurantCardCell: UICollectionViewCell{
     }()
     let businessLabel : UILabel = {
         let label = UILabel()
+        label.isSkeletonable = true
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
         label.textColor = .freshGreen
@@ -49,7 +51,7 @@ class RestaurantCardCell: UICollectionViewCell{
         return button
     }()
     let ratedLabel = UILabel()
-    
+ 
     lazy var likeButton : UIButton = {
         let button = UIButton(type:.system)
         button.addTarget(self, action: #selector(handleLikeButtonTapped), for: .touchUpInside)
@@ -59,6 +61,7 @@ class RestaurantCardCell: UICollectionViewCell{
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame:frame)
+        self.isSkeletonable = true
         backgroundColor = .white
         layer.cornerRadius = 16
         layer.masksToBounds = true
@@ -77,7 +80,7 @@ class RestaurantCardCell: UICollectionViewCell{
     
         let captionStack = UIStackView(arrangedSubviews: [restaurantName, businessLabel, priceLabel, ratedLabel])
         captionStack.distribution = .fillProportionally
-        captionStack.spacing = 0
+        captionStack.spacing = 4
         captionStack.axis = .vertical
         addSubview(captionStack)
         captionStack.anchor(top: optionImageView.bottomAnchor, left: leftAnchor,bottom: bottomAnchor,

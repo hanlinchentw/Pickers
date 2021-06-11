@@ -19,11 +19,6 @@ class CategoryCardCell : UICollectionViewCell {
         iv.contentMode = .scaleAspectFill
         return iv
     }()
-    private let seeMoreView: UIView = {
-        let view = UIView()
-
-        return view
-    }()
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame:frame)

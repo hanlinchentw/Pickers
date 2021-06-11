@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreData
+import FirebaseAuth
+import SkeletonView
 
 private let favoriteIdentifier = "FavoriteCell"
 
@@ -60,16 +62,13 @@ class FavoriteController: UIViewController {
     }
     //MARK: - API
     func fetchLikedRestauants(){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         let connect = CoredataConnect(context: context)
-        connect.fetchLikedRestaurant { (restaurants) in
+        connect.fetchLikedRestaurant(uid: uid) { (restaurants) in
             self.mutableSource = restaurants
             self.likedRestaurants = restaurants
             self.checkBeforeRestaurantLoaded()
         }
-        //        RestaurantService.shared.fetchLikedRestaurants { (restaurants) in
-        //            self.mutableSource = restaurants
-        //            self.likedRestaurants = restaurants
-        //        }
     }
     func checkBeforeRestaurantLoaded(){
         for (index, item) in likedRestaurants.enumerated(){
@@ -85,7 +84,7 @@ class FavoriteController: UIViewController {
         guard let tab = self.tabBarController as? HomeController else { return }
         do{
             try tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
-            self.updateSelectedRestaurantsInCoredata(restaurant: restaurant)
+            self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: restaurant)
         }catch SelectRestaurantResult.upToLimit{
             let alert = UIAlertController(title: "Sorry! you can only select 8 restaurant. 😢", message: nil, preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .cancel) { (action) in
@@ -95,30 +94,6 @@ class FavoriteController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }catch{
             print("DEBUG: Failed to select restaurant.")
-        }
-    }
-    //MARK: - CoreData
-    private func updateSelectedRestaurantsInCoredata(restaurant: Restaurant){
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: restaurant.restaurantID) { (isSelected) in
-            if isSelected{
-                connect.deleteRestaurantIn(entityName: selectedEntityName, id: restaurant.restaurantID)
-            }else{
-                connect.saveRestaurantInLocal(restaurant: restaurant, entityName: selectedEntityName,
-                                              trueForSelectFalseForLike: true)
-            }
-        }
-    }
-    func updateLikedRestaurantsInDataBase(restaurant:Restaurant){
-        RestaurantService.shared.updateLikedRestaurant(restaurant: restaurant, shouldLike: !restaurant.isLiked)
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: likedEntityName, id: restaurant.restaurantID) { (isLiked) in
-            if isLiked{
-                connect.deleteRestaurantIn(entityName: likedEntityName, id: restaurant.restaurantID)
-            }else{
-                connect.saveRestaurantInLocal(restaurant: restaurant, entityName: likedEntityName,
-                                              trueForSelectFalseForLike: false)
-            }
         }
     }
     //MARK: - Helpers
@@ -148,6 +123,8 @@ class FavoriteController: UIViewController {
     }
     
     func configureTableView(){
+        tableView.isSkeletonable = true
+        tableView.showAnimatedSkeleton()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.showsVerticalScrollIndicator = false
@@ -231,6 +208,6 @@ extension FavoriteController: RestaurantListCellDelegate {
         self.mutableSource.remove(at: index)
         self.likedRestaurants.remove(at: index2)
         tableView.endUpdates()
-        self.updateLikedRestaurantsInDataBase(restaurant: restaurant)
+        self.updateLikedRestaurantsInDataBase(context: context, restaurant: restaurant)
     }
 }

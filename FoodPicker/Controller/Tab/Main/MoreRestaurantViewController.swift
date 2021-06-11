@@ -98,14 +98,14 @@ class MoreRestaurantViewController: UIViewController {
         }
         NetworkService.shared.fetchRestaurants(lat: location.latitude, lon: location.longitude,
                                                withOffset: offset, option: option, limit: 20)
-        { (restaurants) in
+        { (restaurants, error) in
             guard let res = restaurants, !res.isEmpty else {
                 print("DEBUG: Failed to get the restaurants ...")
                 return
             }
-            let connect = CoredataConnect(context: self.context)
+            
             for (index, item) in res.enumerated(){
-                connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: item.restaurantID) { (isSelected) in
+                self.checkIfRestaurantIsSelected(context: self.context, restaurant: item) { isSelected in
                     var newRestaurant = res[index]
                     newRestaurant.isSelected = isSelected
                     self.tableView.restaurants.append(newRestaurant)
@@ -114,6 +114,7 @@ class MoreRestaurantViewController: UIViewController {
             self.tableView.reloadData()
         }
     }
+    
 }
 //MARK: - RestaurantListCellDelegate
 extension MoreRestaurantViewController: RestaurantsListDelegate{
@@ -134,15 +135,23 @@ extension MoreRestaurantViewController: RestaurantsListDelegate{
     }
     func didTapRestaurant(restaurant:Restaurant){
         let detailVC = DetailController(restaurant: restaurant)
-        detailVC.fetchDetail()
-        detailVC.delegate = self
-        
-        self.tableView.isUserInteractionEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
-            self.navigationController?.pushViewController(detailVC, animated: true)
-            self.navigationController?.navigationBar.isHidden = true
-            self.navigationController?.navigationBar.barStyle = .black
-            self.tableView.isUserInteractionEnabled = true
+        self.retry(5) { success, failure in
+            detailVC.fetchDetail(success: success, failure: failure)
+        } success: {
+            detailVC.delegate = self
+            self.tableView.isUserInteractionEnabled = false
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
+                self.navigationController?.pushViewController(detailVC, animated: true)
+                self.navigationController?.navigationBar.isHidden = true
+                self.navigationController?.navigationBar.barStyle = .black
+                self.tableView.isUserInteractionEnabled = true
+            }
+        } failure: { error in
+            let alert = UIAlertController(title: "Internet Error", message: "Please check your internet connect.", preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }

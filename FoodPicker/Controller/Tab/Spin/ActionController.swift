@@ -142,7 +142,7 @@ class ActionViewController: UIViewController {
             tab.deselectAllFromActionViewController(actionVC: self)
             self.selectedRestaurants.forEach{
                 try! tab.updateSelectedRestaurants(from: self, restaurant: $0)
-                self.updateSelectedRestaurantsInCoredata(restaurant: $0)
+                self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: $0)
             }
         }
     }
@@ -170,20 +170,7 @@ class ActionViewController: UIViewController {
         stateLabel.text = "✔︎ \(restaurant.name) for TODAY !"
         self.resultView.alpha = 1
     }
-    private func updateSelectedRestaurantsInCoredata(restaurant: Restaurant){
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: restaurant.restaurantID) { (isSelected) in
-            if isSelected{
-                connect.deleteRestaurantIn(entityName: selectedEntityName, id: restaurant.restaurantID)
-            }else{
-                let entity = NSEntityDescription.entity(forEntityName: selectedEntityName, in: self.context)
-                let object = NSManagedObject(entity: entity!, insertInto: self.context) as! SelectedRestaurant
-                object.id = restaurant.restaurantID
-                object.name = restaurant.name
-                connect.saveData(entityName: selectedEntityName, NSManagedObject: object)
-            }
-        }
-    }
+    
     //MARK: - Selectors
     @objc func handleStartButtonTapped(){
         guard let viewModel = self.viewModel else { return }
@@ -239,7 +226,7 @@ extension ActionViewController{
         let viewModel = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
         self.viewModel = viewModel
         
-        self.updateSelectedRestaurantsInCoredata(restaurant: restaurant)
+        self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: restaurant)
         guard let tab = self.tabBarController as? HomeController else { return }
         try! tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
     }

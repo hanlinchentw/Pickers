@@ -19,13 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         window?.makeKeyAndVisible()
         window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-            let home = HomeController()
+        let home = HomeController()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
             self.window?.rootViewController = home
-            let image = UIImage(named: "bar")
-            let tabBarImage = self.resize(image: image!, newWidth: home.view.frame.width)
-            home.tabBar.backgroundImage = tabBarImage
         }
     }
     func resize(image: UIImage, newWidth: CGFloat) -> UIImage {

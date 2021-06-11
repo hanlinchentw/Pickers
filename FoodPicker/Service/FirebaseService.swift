@@ -57,7 +57,7 @@ struct RestaurantService {
         let lat = restaurant.coordinates.latitude
         let lon = restaurant.coordinates.longitude
         let name = restaurant.name
-
+        print("DEBUG: Update liked restaurant to firestore")
         if !shouldLike {
             REF_USER_LIKE.child(uid).child(restaurantID).removeValue()
             REF_RESTAURANT_LIKE.child(restaurantID).child(uid).removeValue()
@@ -70,8 +70,10 @@ struct RestaurantService {
     func fetchLikedRestaurants(completion: @escaping(([Restaurant])->Void)){
         var restaurants = [Restaurant]()
         guard let uid = Auth.auth().currentUser?.uid else { return }
+        print("DEBUG: UID: \(uid)")
+        
         REF_USER_LIKE.child(uid).observe(.childAdded) { (snapshot) in
-            NetworkService.shared.fetchDetail(id: snapshot.key) { (detail) in
+            NetworkService.shared.fetchDetail(id: snapshot.key) { (detail, error) in
                 print("DEBUG: Successfully fetch liked restaurants.")
                 let restaurant = Restaurant(business: nil, detail: detail)
                 restaurants.append(restaurant)

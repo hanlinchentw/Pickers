@@ -9,13 +9,13 @@
 import Foundation
 import Firebase
 
+let userEntityName = "User"
 let selectedEntityName = "SelectedRestaurant"
 let likedEntityName = "LikedRestaurant"
 let DID_SELECT_KEY = "restaurantDidSelect"
 let DID_LIKE_KEY = "restaurantDidLike"
-let categoryPreload = [ "NewInPicker", "Coffee", "BubbleTea", "Hamburger", "Pizza",
-                        "Korean", "Italian", "Chinese", "Taiwanese","Japanese", "Thai",
-                         "Health"]
+let categoryPreload = ["Coffee", "Bubble Tea", "Hamburger", "Pizza", "Korean", "Italian", "Chinese",
+                       "Taiwanese","Japanese", "Thai","Health"]
 
 let DB_REF = Database.database().reference()
 

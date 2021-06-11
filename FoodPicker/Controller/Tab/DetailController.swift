@@ -59,9 +59,14 @@ class DetailController : UICollectionViewController {
         configureCollectionView()
     }
     //MARK: - API
-    func fetchDetail(){
-        NetworkService.shared.fetchDetail(id: restaurant.restaurantID) { [weak self](detail) in
-            self?.restaurant.details = detail
+    func fetchDetail(success: @escaping()->Void, failure: @escaping(Error)->Void){
+        NetworkService.shared.fetchDetail(id: restaurant.restaurantID) { [weak self] (detail, error) in
+            if let detail = detail {
+                self?.restaurant.details = detail
+                success()
+            }else {
+                failure(error!)
+            }
         }
     }
     func fetchNumOfLike(){
@@ -112,6 +117,7 @@ extension DetailController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return RestaurantDetail.allCases.count
     }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellIdentifier, for: indexPath)
         as! DetailCell
@@ -125,6 +131,7 @@ extension DetailController {
         
         return cell
     }
+    
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: headerIdentifier, for: indexPath) as! DetailHeader
         header.delegate = self

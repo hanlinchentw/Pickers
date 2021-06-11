@@ -17,9 +17,9 @@ protocol MapViewControllerDelegate: CategoriesViewControllerDelegate{}
 class MapViewController: UIViewController{
     //MARK: - Properties
     public var restaurants = [Restaurant]() { didSet{
-            self.addAnnotations(restaurants: self.restaurants)
-            self.collecionView.reloadData()
-        }
+        self.addAnnotations(restaurants: self.restaurants)
+        self.collecionView.reloadData()
+    }
     }
     lazy var collecionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,7 +29,7 @@ class MapViewController: UIViewController{
         return cv
     }()
     
-    private var mapView : MKMapView!
+    private var mapView = MKMapView()
     private let locationManager = LocationHandler.shared.locationManager
     weak var delegate: MapViewControllerDelegate?
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -98,7 +98,7 @@ class MapViewController: UIViewController{
         stack.center(inView: view)
     }
     func configureMapView(){
-        mapView = MKMapView(frame: view.bounds)
+        mapView.frame = view.bounds
         view.addSubview(mapView)
         mapView.delegate = self
         mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 240+16, right: 0)
@@ -118,7 +118,7 @@ extension MapViewController: UICollectionViewDelegate, UICollectionViewDataSourc
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collecionView.dequeueReusableCell(withReuseIdentifier: mapCardCellIdentifier, for: indexPath)
-        as! RestaurantCardCell
+            as! RestaurantCardCell
         cell.restaurant = self.restaurants[indexPath.row]
         cell.delegate = self
         return cell
@@ -162,9 +162,15 @@ extension MapViewController: MKMapViewDelegate{
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let anno = view.annotation as? RestaurantAnnotation,
               let index = anno.index else { return }
-        view.image = #imageLiteral(resourceName: "btnLocationSelected").withRenderingMode(.alwaysOriginal)
+        
         self.collecionView.scrollToItem(at: IndexPath(row: index, section: 0),
                                         at: .centeredHorizontally, animated: true)
+        
+        let pinImage = #imageLiteral(resourceName: "btnLocationSelected").withRenderingMode(.alwaysOriginal)
+        view.image = pinImage
+    }
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        view.image = #imageLiteral(resourceName: "btnLocationUnselect").withRenderingMode(.alwaysOriginal)
     }
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? RestaurantAnnotation {
@@ -172,6 +178,7 @@ extension MapViewController: MKMapViewDelegate{
             view.image = #imageLiteral(resourceName: "btnLocationUnselect").withRenderingMode(.alwaysOriginal)
             view.contentMode = .scaleAspectFit
             view.canShowCallout = true
+            view.calloutOffset = CGPoint(x: 0, y: 5)
             return view
         }else{
             return nil

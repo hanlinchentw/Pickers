@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import SkeletonView
 
 private let cardIdentifier = "CardCell"
 private let footerIdentifier = "footerView"
+
 protocol FilterResultSectionDelegate: class {
     func didTappedRestaurant(_ restaurant: Restaurant)
     func didLikeRestaurant(_ restaurant: Restaurant)
@@ -18,17 +20,20 @@ protocol FilterResultSectionDelegate: class {
 }
 
 enum recommendOption: CaseIterable {
+    case all
     case topPick
     case popular
     
     var description: String {
         switch self {
+        case .all : return "All Restaurant"
         case .topPick: return "Top Picks"
         case .popular: return "Popular"
         }
     }
     var search: String {
         switch self {
+        case .all: return "distance"
         case .topPick: return "rating"
         case .popular: return "review_count"
         }
@@ -60,6 +65,9 @@ class FilterResultSection: UICollectionViewCell {
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
+        collectionView.prepareSkeleton(completion: { done in
+            self.showAnimatedSkeleton(usingColor: .gray, animation: nil, transition: .crossDissolve(0.3))
+        })
         addSubview(titleLabel)
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 16,
                           paddingLeft: 24, height: 36)
@@ -76,6 +84,8 @@ class FilterResultSection: UICollectionViewCell {
     
     //MARK: - Helpers
     func configureCollectionView(){
+        self.isSkeletonable = true
+        collectionView.isSkeletonable = true
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsHorizontalScrollIndicator  =  false
@@ -84,9 +94,12 @@ class FilterResultSection: UICollectionViewCell {
     }
 }
 //MARK: - UICollectionViewDelegate, UICollectionViewDataSource
-extension FilterResultSection : UICollectionViewDelegate, UICollectionViewDataSource {
+extension FilterResultSection : SkeletonCollectionViewDelegate, SkeletonCollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 6
+    }
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return cardIdentifier
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardIdentifier, for: indexPath)
