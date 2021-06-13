@@ -50,55 +50,51 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
     //MARK: -API
     func preloadData(){
         let group = DispatchGroup()
-        self.categoryVC.showSpinner()
+        self.categoryVC.showLoadingAnimation()
         let concurrentQueue: DispatchQueue = DispatchQueue(label: "CorrentQueue", attributes: .concurrent)
         group.enter()
         concurrentQueue.async(group:group) {
-            self.preload(by: .topPick, numOfRestaurant: 6)
+            self.fetchRestaurantsRetryWhenFailed(by: .all, numOfRestaurant: 20)
             group.leave()
         }
         group.enter()
         concurrentQueue.async(group:group) {
-            self.preload(by: .popular, numOfRestaurant: 6)
+            self.fetchRestaurantsRetryWhenFailed(by: .popular, numOfRestaurant: 6)
             group.leave()
         }
         group.enter()
         concurrentQueue.async(group:group) {
-            self.preload(by: .all, numOfRestaurant: 20)
+            self.fetchRestaurantsRetryWhenFailed(by: .topPick, numOfRestaurant: 6)
             group.leave()
-
         }
         group.notify(queue: DispatchQueue.main) {
             print("DEBUG: Already downloaded all the data ")
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.5) {
-                self.categoryVC.removeSpinner()
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.5) {
+                self.categoryVC.hideLoadingAnimation()
             }
         }
     }
-    fileprivate func preload(by option: recommendOption, numOfRestaurant: Int) {
+    fileprivate func fetchRestaurantsRetryWhenFailed(by option: recommendOption, numOfRestaurant: Int) {
         print("DEBUG: Preload data ... Main page")
         self.retry(5) { success, failure in
             self.fetchRestaurants(by: option, limit: numOfRestaurant, success: success, failure: failure)
         } success: {
             print("DEBUG: Successfully load data ... main page  ")
+            self.isDataLoadedSuccessfully(true)
             switch option {
             case .all:
                 self.categoryVC.dataSource = self.dataSource
                 self.mapVC.restaurants = self.dataSource
-                self.isDataLoadedSuccessfully(true)
             case .topPick:
                 self.categoryVC.topPicksDataSource = self.topPicksDataSource
-                self.isDataLoadedSuccessfully(true)
             case .popular:
                 self.categoryVC.popularDataSource = self.popularDataSource
-                self.isDataLoadedSuccessfully(true)
             }
         } failure: { error in
             print("DEBUG: Failed to load \(option.description) category section.  \(error.localizedDescription)")
             self.isDataLoadedSuccessfully(false)
         }
     }
-
     fileprivate func fetchRestaurants(by option: recommendOption, limit: Int, success: @escaping () -> Void, failure: @escaping (Error) -> Void) {
         guard let location = location else { return }
         self.fetchRestaurantsByOption(location: location, option: option, limit: limit) { (result, error) in
@@ -199,7 +195,7 @@ extension MainPageController: CategoriesViewControllerDelegate{
     
     func pushToDetailVC(_ restaurant: Restaurant) {
         self.categoryVC.collectionView.isUserInteractionEnabled = false
-        self.categoryVC.showSpinner()
+        self.categoryVC.showLoadingAnimation()
         let detailVC = DetailController(restaurant: restaurant)
         self.retry(3) { success, failure in
             detailVC.fetchDetail(success: success, failure: failure)
@@ -209,7 +205,7 @@ extension MainPageController: CategoriesViewControllerDelegate{
                 self.navigationController?.navigationBar.barStyle = .black
                 self.navigationController?.pushViewController(detailVC, animated: true)
                 self.categoryVC.collectionView.isUserInteractionEnabled = true
-                self.categoryVC.removeSpinner()
+                self.categoryVC.hideLoadingAnimation()
             }
         } failure: { error in
             print("DEBUG: Failed to push to detail VC ... ")
@@ -218,7 +214,7 @@ extension MainPageController: CategoriesViewControllerDelegate{
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
             self.categoryVC.collectionView.isUserInteractionEnabled = true
-            self.categoryVC.removeSpinner()
+            self.categoryVC.hideLoadingAnimation()
         }
     }
     func didSelectRestaurant(restaurant: Restaurant) {

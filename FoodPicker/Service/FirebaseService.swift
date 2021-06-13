@@ -9,38 +9,6 @@
 import UIKit
 import Firebase
 
-typealias DatabaseCompletion = ((Error?, DatabaseReference)->Void)
-
-struct UserService{
-    static var shared = UserService()
-    
-    func logUserIn(withEmail email: String, password: String, completion: AuthDataResultCallback?){
-        Auth.auth().signIn(withEmail: email, password: password, completion: completion)
-    }
-    
-    func checkIfUserIsExisted(withEmail email: String, completion: @escaping(Bool)->Void){
-        Auth.auth().fetchSignInMethods(forEmail: email) { (methods, err) in
-            if let err = err { print("DEUBG: This email ...\(err.localizedDescription)")}
-            guard let methods = methods else {  completion(false); return }
-            completion(true)
-        }
-    }
-    
-    func createUser(withEmail email:String, password : String, completion: @escaping (Error?,DatabaseReference)-> Void){
-        Auth.auth().createUser(withEmail: email, password: password) { (result, err) in
-            if let err = err {
-                print("Failed to create User...\(err.localizedDescription)")
-                return
-            }
-            
-            guard let uid = result?.user.uid else { return }
-            let values = ["email": email
-            ]
-            REF_USER.child(uid).updateChildValues(values, withCompletionBlock: completion)
-        }
-    }
-}
-
 struct RestaurantService {
     static let shared = RestaurantService()
 

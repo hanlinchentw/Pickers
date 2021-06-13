@@ -10,8 +10,7 @@ import UIKit
 
 class IntroController : UIViewController {
     //MARK: - Properties
-    private var introView = IntroView()
-    
+    private let introView = IntroView()
     private let backButton : UIButton = {
         let button = UIButton(type:.system)
         button.setImage(UIImage(named: "icnBack")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -19,12 +18,13 @@ class IntroController : UIViewController {
         return button
     }()
     //MARK: - Lifecycle
- 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.isHidden = true
-        LocationHandler.shared.enableLocationServices()
+        print("DEBUG: Loading Intro view controller ")
+        self.navigationController?.navigationBar.isHidden = true
         configureIntroView()
+        LocationHandler.shared.enableLocationServices()
+        
     }
     //MARK: - Seletors
     @objc func handleBackButtonTapped(){
@@ -39,12 +39,9 @@ class IntroController : UIViewController {
         introView.delegate = self
     }
 }
-extension IntroController : IntroViewDelegate {
+extension IntroController : IntroViewDelegate{
     func didTapCreateButton() {
         let auth = AuthController()
-        let nav = UINavigationController(rootViewController: auth)
-        nav.modalPresentationStyle = .fullScreen
-        self.present(nav, animated: true, completion: nil)
-        
+        self.navigationController?.pushViewController(auth, animated: true)
     }
 }

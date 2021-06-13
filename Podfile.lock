@@ -85,6 +85,7 @@ PODS:
     - ImageSlideshow/Core
   - ImageSlideshow/Core (1.9.1)
   - leveldb-library (1.22)
+  - MBProgressHUD (1.2.0)
   - Moya (14.0.0):
     - Moya/Core (= 14.0.0)
   - Moya/Core (14.0.0):
@@ -105,6 +106,7 @@ DEPENDENCIES:
   - Firebase/Database
   - ImageSlideshow (~> 1.9.0)
   - ImageSlideshow/Alamofire
+  - MBProgressHUD
   - Moya (~> 14.0)
   - SkeletonView
 
@@ -128,6 +130,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - ImageSlideshow
     - leveldb-library
+    - MBProgressHUD
     - Moya
     - nanopb
     - PromisesObjC
@@ -152,11 +155,12 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   ImageSlideshow: 67184be896a28472bd3b906c33ce4e0734aa3d22
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   SkeletonView: ba5370f41280b2f0a76918bb143c1294232bb4f4
 
-PODFILE CHECKSUM: 1e2827fd79ba290a33f6f45d27a967cb497281eb
+PODFILE CHECKSUM: c8a071261f3ee05bf723c6072d6f94c700cdac39
 
 COCOAPODS: 1.9.1

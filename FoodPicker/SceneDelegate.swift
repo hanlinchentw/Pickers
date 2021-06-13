@@ -18,10 +18,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         window?.makeKeyAndVisible()
-        window?.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
-        let home = HomeController()
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-            self.window?.rootViewController = home
+       
+        let isSignIn = Auth.auth().currentUser != nil
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+            if isSignIn{
+                let home = HomeController()
+                self.window?.rootViewController = home
+            }else{
+                let intro = IntroController()
+                let nav = UINavigationController(rootViewController: intro)
+                self.window?.rootViewController = nav
+            }
         }
     }
     func resize(image: UIImage, newWidth: CGFloat) -> UIImage {

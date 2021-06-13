@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import Combine
 
 enum AccountStatus : CaseIterable{
     case register
@@ -20,12 +22,11 @@ enum AccountStatus : CaseIterable{
     }
 }
 
-class AuthController : UIViewController{
+class AuthController : UIViewController, MBProgressHUDProtocol{
     //MARK: - Properties
     private var status : AccountStatus? {
         didSet{
             switch self.status {
-
             case .login: self.configureLoginPage()
             case .register: self.configureRegisterPage()
             case .none: self.configureVerifyPage()
@@ -60,7 +61,7 @@ class AuthController : UIViewController{
         label.font = UIFont(name: "ArialMT", size: 16)
         return label
     }()
-    
+    private let inValidLabel = UILabel()
     private let emailTextField : UITextField = {
         let tf = UITextField().inputTextField(isSecured: false)
         
@@ -97,9 +98,7 @@ class AuthController : UIViewController{
         label.text = "Texts and numbers only"
         return label
     }()
-    
     private lazy var passwordRequirementView1 = UIView().createPasswordRequirementView(imageView: passwordRequirementImageView1 , label: passwordRequirementLabel1)
-    
     private lazy var passwordRequirementView2 = UIView().createPasswordRequirementView(imageView: passwordRequirementImageView2 , label: passwordRequirementLabel2)
     
     private let passwordTextField : UITextField = {
@@ -142,81 +141,97 @@ class AuthController : UIViewController{
         super.viewDidLoad()
         configureUI()
     }
+    //MARK: - Observer
+    private func observeEmailTextField() {
+        
+    }
     //MARK: - Selectors
     @objc func handleBackButtonTapped(){
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
     @objc func handleActionButtonTapped(){
+        self.showLoadingAnimation()
         guard let email = emailTextField.text else { return }
-        let inValidLabel = UILabel()
-        
         inValidLabel.font = UIFont(name: "ArialMT", size: 14)
         inValidLabel.textColor = .errorRed
         inValidLabel.alpha = 0
         view.addSubview(inValidLabel)
         if status == nil {
             UserService.shared.checkIfUserIsExisted(withEmail: email, completion: { isExisted in
-                if isExisted {
-                    self.status = .login
-                }else {
-                    self.status = .register
-                }
+                self.status = isExisted ? .login : .register
+                self.hideLoadingAnimation()
             })
         }else if status == .login {
             guard let password = passwordTextField.text else { return }
-            inValidLabel.text = "Incorrect password"
-            inValidLabel.anchor(top:passwordInputView.bottomAnchor,
-                                left: passwordInputView.leftAnchor, paddingLeft: 8)
-            UserService.shared.logUserIn(withEmail: email, password: password) { (result, err) in
-                if err != nil{
-                    UIView.animate(withDuration: 2, animations: {
-                        inValidLabel.alpha = 1
-                        self.passwordTextField.layer.borderColor = UIColor.errorRed.cgColor
-                    }) { _ in
-                        UIView.animate(withDuration: 0.5) {
-                            inValidLabel.alpha = 0
-                            self.passwordTextField.layer.borderColor = UIColor.butterscotch.cgColor
-                        }
-                    }
-                }
-                guard let window  = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
-                guard let tab = window.rootViewController as? HomeController else { return }
-                
-                tab.authenticateUserAndConfigureUI()
-                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
-            }
+            logIn(withEmail: email, withPassword: password)
+            
         }else if status == .register {
             guard let password = passwordTextField.text else { return }
-            guard let confirm = confirmPasswordTextField.text else { return }
-            inValidLabel.text = "Password didn't match"
-            inValidLabel.anchor(top:confirmPasswordInputView.bottomAnchor,
-                                left: confirmPasswordInputView.leftAnchor, paddingLeft: 8)
-            
-            if password == confirm {
-                UserService.shared.createUser(withEmail: email, password: password) { (err, ref) in
-                    print("DEBUG: Success to register")
-                    guard let window  = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
-                    guard let tab = window.rootViewController as? HomeController else { return }
-                    
-                    tab.authenticateUserAndConfigureUI()
-                    
-                    self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+            guard let confirmPassword = confirmPasswordTextField.text else { return }
+            let isSame = password == confirmPassword
+            self.register(withEmail: email, withPassword: password, isChecked: isSame)
+        }
+    }
+    private func register(withEmail email : String, withPassword password: String, isChecked: Bool) {
+        inValidLabel.text = "Password didn't match"
+        inValidLabel.anchor(top:confirmPasswordInputView.bottomAnchor,
+                            left: confirmPasswordInputView.leftAnchor, paddingLeft: 8)
+        if isChecked {
+            UserService.shared.createUser(withEmail: email, password: password) { (err, ref) in
+                guard err == nil else { return }
+                self.presentHomeVC()
+            }
+        }else {
+            self.hideLoadingAnimation()
+            UIView.animate(withDuration: 0.5, animations: {
+                self.inValidLabel.alpha = 1
+                self.passwordTextField.layer.borderColor = UIColor.errorRed.cgColor
+                self.confirmPasswordTextField.layer.borderColor = UIColor.errorRed.cgColor
+            }) { _ in
+                UIView.animate(withDuration: 1) {
+                    self.inValidLabel.alpha = 0
+                    self.passwordTextField.layer.borderColor = UIColor.butterscotch.cgColor
+                    self.confirmPasswordTextField.layer.borderColor = UIColor.butterscotch.cgColor
                 }
-            }else {
-                UIView.animate(withDuration: 1.5, animations: {
-                    inValidLabel.alpha = 1
+            }
+        }
+    }
+    private func logIn(withEmail email:String, withPassword password: String) {
+        inValidLabel.text = "Incorrect password"
+        inValidLabel.anchor(top:passwordInputView.bottomAnchor,
+                            left: passwordInputView.leftAnchor, paddingLeft: 8)
+        UserService.shared.logUserIn(withEmail: email, password: password) { result in
+            switch result {
+            case .success(_):
+                self.presentHomeVC()
+                return
+            case .failure(let error):
+                self.hideLoadingAnimation()
+                if error == .invalidEmailOrPassword{
+                    self.inValidLabel.text = "Incorrect password"
+                }else if error == .noInternet {
+                    self.inValidLabel.text = "No Internet Connected"
+                }else if error == .serverError {
+                    self.inValidLabel.text = "Server Error, Please try again"
+                }
+                UIView.animate(withDuration: 2, animations: {
+                    self.inValidLabel.alpha = 1
                     self.passwordTextField.layer.borderColor = UIColor.errorRed.cgColor
-                    self.confirmPasswordTextField.layer.borderColor = UIColor.errorRed.cgColor
                 }) { _ in
-                    UIView.animate(withDuration: 1.5) {
-                        inValidLabel.alpha = 0
+                    UIView.animate(withDuration: 0.5) {
+                        self.inValidLabel.alpha = 0
                         self.passwordTextField.layer.borderColor = UIColor.butterscotch.cgColor
-                        self.confirmPasswordTextField.layer.borderColor = UIColor.butterscotch.cgColor
-
                     }
                 }
             }
         }
+    }
+    private func presentHomeVC(){
+        let homeVC = HomeController()
+        homeVC.modalPresentationStyle = .fullScreen
+        homeVC.modalTransitionStyle = .crossDissolve
+        self.present(homeVC, animated: true, completion: nil)
+        self.hideLoadingAnimation()
     }
     @objc func handleEditButtonTapped(){
         self.status = nil
@@ -249,7 +264,6 @@ class AuthController : UIViewController{
                           width: 36, height:36)
     }
     func configureVerifyPage(){
-        
         emailTextField.layer.borderColor = UIColor.butterscotch.cgColor
         emailTextField.isUserInteractionEnabled = true
         editButton.isHidden = true
@@ -354,24 +368,17 @@ class AuthController : UIViewController{
         }
     }
 }
-//MARK: - Email format check
+//MARK: -  Email/Password Format check
 extension AuthController {
     func isValidEmail(_ email: String) -> Bool {
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{1,10}"
-        let emailRegEx2 = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]+\\.[A-Za-z]{1,10}"
-        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        let emailPred2 = NSPredicate(format:"SELF MATCHES %@", emailRegEx2)
-        return emailPred.evaluate(with: email) || emailPred2.evaluate(with: email)
+        return Validators.email.validate(email)
     }
     func isValidPassword(_ password: String) ->Bool{
-        let passwordRegEx = "[A-Z0-9a-z]{6,20}"
-        let passwordPred = NSPredicate(format: "SELF MATCHES %@", passwordRegEx)
-        return passwordPred.evaluate(with: password)
+        return Validators.password.validate(password)
     }
 }
 //MARK: - UITextFieldDelegate
 extension AuthController: UITextFieldDelegate {
-    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == emailTextField {
             guard let email = textField.text else { return true}
@@ -407,7 +414,6 @@ extension AuthController: UITextFieldDelegate {
                 }
                 return true
             }
-            
         }else if textField == confirmPasswordTextField, let text = textField.text {
             guard let password = passwordTextField.text else { return true }
 

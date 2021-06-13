@@ -13,7 +13,7 @@ private let searchHeaderIdentifier = "searchBar"
 private let searchShortcutIdentifier = "searchShortcut"
 private let searchFooterIdentifier = "categoryWall"
 
-class SearchController: UICollectionViewController {
+class SearchController: UICollectionViewController, MBProgressHUDProtocol {
     //MARK: - Properties
     var restaurants = [Restaurant]() { didSet{ self.resultVC.searchResult = self.restaurants }}
     private let tableView = UITableView()
@@ -91,7 +91,7 @@ class SearchController: UICollectionViewController {
             self.showResultView(shouldShow: true)
             self.showSearchTable(shouldShow: false)
             self.resultVC.checkIfSearchSuccess()
-            self.tabBarController!.removeSpinner()
+            self.hideLoadingAnimation()
         }
     }
     
@@ -166,7 +166,7 @@ extension SearchController: UICollectionViewDelegateFlowLayout {
 //MARK: -
 extension SearchController: CategoryCardWallDelegate {
     func searchRestaurantByTappingCard(_ keyword: String) {
-        self.tabBarController!.showSpinner()
+        self.showLoadingAnimation()
         self.searchRestaurants(withKeyword: keyword)
     }
 }
@@ -238,7 +238,7 @@ extension SearchController: SearchTableViewControllerDelegate{
         shouldCloseKeyboard(should: true, term: nil)
     }
     func didSearchbyTerm(term: String) {
-        self.tabBarController!.showSpinner()
+        self.showLoadingAnimation()
         self.searchRestaurants(withKeyword: term)
     }
 }

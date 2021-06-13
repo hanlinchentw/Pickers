@@ -44,7 +44,6 @@
 		B689A7A72564DFE4009D270B /* ListInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A62564DFE4009D270B /* ListInfoCell.swift */; };
 		B689A7A9256B84EF009D270B /* MoreOptionAlertViewContrller.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */; };
 		B689A7AB2574EDB4009D270B /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7AA2574EDB4009D270B /* EditViewController.swift */; };
-		B69D3821266765FF00287954 /* Retrier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D3820266765FF00287954 /* Retrier.swift */; };
 		B69D3823266882D000287954 /* YelpService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D3822266882D000287954 /* YelpService.swift */; };
 		B6A2FA8B25304A48005CB171 /* CategoryCardWall.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2FA8A25304A48005CB171 /* CategoryCardWall.swift */; };
 		B6AE009924D7F94F00423D72 /* CategoriesCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AE009824D7F94F00423D72 /* CategoriesCard.swift */; };
@@ -58,7 +57,7 @@
 		B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D4C2665D4DE002E418D /* UIButton+ Extension.swift */; };
 		B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D4E2665D50D002E418D /* UITextField +Extension.swift */; };
 		B6B84D512665D52F002E418D /* UIFont+UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D502665D52F002E418D /* UIFont+UIColor+Extension.swift */; };
-		B6B84D532665D579002E418D /* UIViewController_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D522665D579002E418D /* UIViewController_Extension.swift */; };
+		B6B84D532665D579002E418D /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D522665D579002E418D /* UIViewController+Extension.swift */; };
 		B6B84D562665EBD5002E418D /* Picker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D542665EBD5002E418D /* Picker.xcdatamodeld */; };
 		B6B84D58266633C4002E418D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D57266633C4002E418D /* ErrorView.swift */; };
 		B6C7D5AA2554E510005D2AA0 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5A92554E510005D2AA0 /* MapViewController.swift */; };
@@ -82,6 +81,9 @@
 		B6D1307E24CEE80C00040F85 /* FilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1307D24CEE80C00040F85 /* FilterViewModel.swift */; };
 		B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F7618B24D3EE2300318AB1 /* DetailHeader.swift */; };
 		B6F7618E24D3F6E100318AB1 /* DetailCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F7618D24D3F6E100318AB1 /* DetailCellViewModel.swift */; };
+		B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */; };
+		B6F789A72675D4EF0003ED5C /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A62675D4EF0003ED5C /* UserService.swift */; };
+		B6F789A92675DC440003ED5C /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A82675DC440003ED5C /* Validators.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,7 +127,6 @@
 		B689A7A62564DFE4009D270B /* ListInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInfoCell.swift; sourceTree = "<group>"; };
 		B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreOptionAlertViewContrller.swift; sourceTree = "<group>"; };
 		B689A7AA2574EDB4009D270B /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
-		B69D3820266765FF00287954 /* Retrier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Retrier.swift; sourceTree = "<group>"; };
 		B69D3822266882D000287954 /* YelpService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpService.swift; sourceTree = "<group>"; };
 		B6A2FA8A25304A48005CB171 /* CategoryCardWall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCardWall.swift; sourceTree = "<group>"; };
 		B6AE009824D7F94F00423D72 /* CategoriesCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesCard.swift; sourceTree = "<group>"; };
@@ -139,7 +140,7 @@
 		B6B84D4C2665D4DE002E418D /* UIButton+ Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+ Extension.swift"; sourceTree = "<group>"; };
 		B6B84D4E2665D50D002E418D /* UITextField +Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField +Extension.swift"; sourceTree = "<group>"; };
 		B6B84D502665D52F002E418D /* UIFont+UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+UIColor+Extension.swift"; sourceTree = "<group>"; };
-		B6B84D522665D579002E418D /* UIViewController_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController_Extension.swift; sourceTree = "<group>"; };
+		B6B84D522665D579002E418D /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		B6B84D552665EBD5002E418D /* Picker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Picker.xcdatamodel; sourceTree = "<group>"; };
 		B6B84D57266633C4002E418D /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		B6C7D5A92554E510005D2AA0 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -163,6 +164,9 @@
 		B6D1307D24CEE80C00040F85 /* FilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewModel.swift; sourceTree = "<group>"; };
 		B6F7618B24D3EE2300318AB1 /* DetailHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeader.swift; sourceTree = "<group>"; };
 		B6F7618D24D3F6E100318AB1 /* DetailCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCellViewModel.swift; sourceTree = "<group>"; };
+		B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBProgressHUDProtocol.swift; sourceTree = "<group>"; };
+		B6F789A62675D4EF0003ED5C /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		B6F789A82675DC440003ED5C /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
 		D61EE2D2E1BC175C52587D8F /* Pods_FoodPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FoodPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -301,7 +305,6 @@
 				B685484B24B6D390009BC800 /* Constants.swift */,
 				B6B84D492665D4A5002E418D /* Extension */,
 				B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */,
-				B69D3820266765FF00287954 /* Retrier.swift */,
 			);
 			path = Utilis;
 			sourceTree = "<group>";
@@ -333,10 +336,12 @@
 			isa = PBXGroup;
 			children = (
 				B685484324B44938009BC800 /* LocaionHandler.swift */,
-				B69D3822266882D000287954 /* YelpService.swift */,
+				B6F789A62675D4EF0003ED5C /* UserService.swift */,
 				B685485024BD8631009BC800 /* NetworkService.swift */,
 				B6D1306624C16DA100040F85 /* FirebaseService.swift */,
 				B6C90FC625E4F913008B492F /* CoredataService.swift */,
+				B69D3822266882D000287954 /* YelpService.swift */,
+				B6F789A82675DC440003ED5C /* Validators.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -412,11 +417,12 @@
 			isa = PBXGroup;
 			children = (
 				B647A4E624B2039D0098B7A2 /* Extension.swift */,
-				B6B84D522665D579002E418D /* UIViewController_Extension.swift */,
+				B6B84D522665D579002E418D /* UIViewController+Extension.swift */,
 				B6B84D502665D52F002E418D /* UIFont+UIColor+Extension.swift */,
 				B6B84D4E2665D50D002E418D /* UITextField +Extension.swift */,
 				B6B84D4A2665D4BD002E418D /* UIView+Extension.swift */,
 				B6B84D4C2665D4DE002E418D /* UIButton+ Extension.swift */,
+				B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -610,6 +616,7 @@
 				B685484C24B6D390009BC800 /* Constants.swift in Sources */,
 				B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */,
 				B685484424B44938009BC800 /* LocaionHandler.swift in Sources */,
+				B6F789A72675D4EF0003ED5C /* UserService.swift in Sources */,
 				B647A4CD24B1F7BA0098B7A2 /* AppDelegate.swift in Sources */,
 				B647A4EF24B22A720098B7A2 /* SearchController.swift in Sources */,
 				B6C7D5AA2554E510005D2AA0 /* MapViewController.swift in Sources */,
@@ -619,12 +626,11 @@
 				B689A7A72564DFE4009D270B /* ListInfoCell.swift in Sources */,
 				B63C19A325179B090012CC4A /* SearchShortcutSection.swift in Sources */,
 				B6D1307E24CEE80C00040F85 /* FilterViewModel.swift in Sources */,
-				B69D3821266765FF00287954 /* Retrier.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B6C7D5AE255824B7005D2AA0 /* MoreRestaurantViewController.swift in Sources */,
 				B647A4FF24B3007A0098B7A2 /* CategoryCardCell.swift in Sources */,
 				B647A50124B3145B0098B7A2 /* CardCellViewModel.swift in Sources */,
-				B6B84D532665D579002E418D /* UIViewController_Extension.swift in Sources */,
+				B6B84D532665D579002E418D /* UIViewController+Extension.swift in Sources */,
 				B6A2FA8B25304A48005CB171 /* CategoryCardWall.swift in Sources */,
 				B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */,
 				B6AE009D24DD188400423D72 /* BottomSheetViewController.swift in Sources */,
@@ -647,6 +653,7 @@
 				B650ECD7257F2655004A4049 /* LuckyWheel.swift in Sources */,
 				B6C90FC725E4F913008B492F /* CoredataService.swift in Sources */,
 				B647A4F924B22D530098B7A2 /* FilterResultSection.swift in Sources */,
+				B6F789A92675DC440003ED5C /* Validators.swift in Sources */,
 				B6B84D562665EBD5002E418D /* Picker.xcdatamodeld in Sources */,
 				B6D1306324C02BFA00040F85 /* IntroView.swift in Sources */,
 				B6C7D5BD2563F65A005D2AA0 /* List.swift in Sources */,
@@ -658,6 +665,7 @@
 				B685484624B4511A009BC800 /* RestaurantListCell.swift in Sources */,
 				B6C7D5B0255843C1005D2AA0 /* MoreRestaurantsFooterView.swift in Sources */,
 				B6B84C84265212D1002E418D /* SearchHeader.swift in Sources */,
+				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6D1306724C16DA100040F85 /* FirebaseService.swift in Sources */,
 				B647A4F524B22B200098B7A2 /* ProfileController.swift in Sources */,
 				B6B84D58266633C4002E418D /* ErrorView.swift in Sources */,

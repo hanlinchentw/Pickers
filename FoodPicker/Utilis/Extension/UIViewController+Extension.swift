@@ -9,26 +9,9 @@
 import UIKit
 import CoreData
 
-fileprivate var aView: UIView?
 
 extension UIViewController{
-    func showSpinner(){
-        aView = UIView(frame: self.view.bounds)
-        aView?.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.color = .white
-        activityIndicator.center = aView!.center
-        activityIndicator.startAnimating()
-        aView?.addSubview(activityIndicator)
-        self.view.addSubview(aView!)
-    }
-    
-    func removeSpinner(){
-        aView?.removeFromSuperview()
-        aView = nil
-        
-    }
+
     
     func updateSelectedRestaurantsInCoredata(context: NSManagedObjectContext ,restaurant: Restaurant){
         let connect = CoredataConnect(context: context)
@@ -70,9 +53,10 @@ extension UIViewController{
         }
     }
     
-    func fetchRestaurantsByOption(location: CLLocationCoordinate2D , option: recommendOption? = nil, limit: Int, offset: Int = 0 ,completion: @escaping(restaurantResponse)) {
-        NetworkService.shared
-            .fetchRestaurants(lat: location.latitude, lon: location.longitude, withOffset: offset, option: option,limit: limit)
+    func fetchRestaurantsByOption(location: CLLocationCoordinate2D , option: recommendOption? = nil,
+                                  limit: Int, offset: Int = 0 ,completion: @escaping(restaurantResponse)) {
+        NetworkService.shared.fetchRestaurants(lat: location.latitude, lon: location.longitude,
+                                               withOffset: offset, option: option, limit: limit)
             { restaurants, error in
                 guard let res = restaurants, !res.isEmpty else {
                     print("DEBUG: Failed to get the restaurants ...")

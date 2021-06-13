@@ -54,7 +54,6 @@ class CoredataConnect{
     }
     
     func deleteRestaurantIn(entityName: String, id: String){
-        
         let request = NSFetchRequest<NSManagedObject>(entityName: entityName)
         request.returnsObjectsAsFaults = false
         request.predicate = NSPredicate(format: "id == %@", id)
@@ -77,7 +76,7 @@ class CoredataConnect{
         if let id = id{
             let userIDPredicate = NSPredicate(format: "uid == %@", uid)
             let restaurantIDPredicate = NSPredicate(format: "id == %@", id)
-            let andPredicate = NSCompoundPredicate(type: .and, subpredicates: [restaurantIDPredicate])
+            let andPredicate = NSCompoundPredicate(type: .and, subpredicates: [restaurantIDPredicate,userIDPredicate])
             request.predicate = restaurantIDPredicate
             if name == likedEntityName {
                 request.predicate = andPredicate
@@ -86,7 +85,6 @@ class CoredataConnect{
         do{
             let object = try context.fetch(request)
             let isSelected = (object.count >= 1)
-            
             completion(isSelected)
         }catch{
             print("Debug: Failed to read data in core data model ... \(error.localizedDescription)")

@@ -23,7 +23,7 @@ protocol CategoriesViewControllerDelegate: AnyObject {
     func reloadData()
 }
 
-class CategoriesViewController: UICollectionViewController {
+class CategoriesViewController: UICollectionViewController, MBProgressHUDProtocol {
     //MARK: - Properties
     private let locationManager = LocationHandler.shared.locationManager
     weak var delegate: CategoriesViewControllerDelegate?

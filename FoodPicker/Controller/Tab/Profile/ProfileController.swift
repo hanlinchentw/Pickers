@@ -12,7 +12,7 @@ import Firebase
 private let profileCellIndentifier = "profileRowCell"
 
 protocol ProfileControllerDelegate : class {
-    func logOut()
+    func logOutButtonTapped()
 }
 
 class ProfileController: UITableViewController {
@@ -41,7 +41,7 @@ class ProfileController: UITableViewController {
     @objc func logUserOut(){
         do {
             try Auth.auth().signOut()
-            delegate?.logOut()
+            delegate?.logOutButtonTapped()
         }
         catch{ print("DEBUG: Failed to sign out with error ...\(error.localizedDescription)") }
     }

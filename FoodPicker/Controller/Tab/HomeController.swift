@@ -15,7 +15,7 @@ enum SelectRestaurantResult: Error {
     case upToLimit
     case error
 }
-class HomeController : UITabBarController {
+class HomeController : UITabBarController, MBProgressHUDProtocol {
     
     //MARK: - Properties
     var selectedRestaurants  = [Restaurant]()
@@ -46,10 +46,13 @@ class HomeController : UITabBarController {
         super.viewDidLoad()
         print("DEBUG:App folder: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))")
         authenticateUserAndConfigureUI()
+        try? Auth.auth().signOut()
     }
     //MARK: - API
     func authenticateUserAndConfigureUI(){
+        print("DEBUG: Authenticate ...  ")
         if Auth.auth().currentUser == nil {
+            print("DEBUG: User has not logged in yet.")
             DispatchQueue.main.async {
                 let nav = UINavigationController(rootViewController: IntroController())
                 nav.modalPresentationStyle = .fullScreen
@@ -60,7 +63,6 @@ class HomeController : UITabBarController {
             configureTabBarController()
         }
     }
-    
     func cleanUpLocalDatabase(){
         let connect = CoredataConnect(context: context)
         connect.deleteAllRestaurant(in: likedEntityName)
@@ -183,7 +185,7 @@ extension HomeController {
 //MARK: -  Search Restaurants from category cards
 extension HomeController {
     func searchRestaurantsFromCategoryCard(textOnCard text: String) {
-        self.showSpinner()
+        self.showLoadingAnimation()
         UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve) {
             self.selectedIndex = 1
         } completion: { _ in
@@ -200,7 +202,7 @@ extension HomeController {
 }
 //MARK: - ProfileControllerDelegate
 extension HomeController : ProfileControllerDelegate {
-    func logOut() {
+    func logOutButtonTapped() {
         authenticateUserAndConfigureUI()
     }
 }
