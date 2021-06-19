@@ -8,11 +8,9 @@
 
 import UIKit
 import CoreData
-
+import Combine
 
 extension UIViewController{
-
-    
     func updateSelectedRestaurantsInCoredata(context: NSManagedObjectContext ,restaurant: Restaurant){
         let connect = CoredataConnect(context: context)
 
@@ -67,7 +65,20 @@ extension UIViewController{
                 completion(res,nil)
         }
     }
-    
+    func presentIntrernetErrorPopViewAndProvidePublisher() -> AnyCancellable {
+        let popup = PopupView(title: "No Internet", subtitle: "Please Check your Internet connection", withButton: true, buttonTitle: "Setting")
+        guard let window = UIApplication.shared.windows.first else { fatalError("DEBUG: Keywindow isn't existed.") }
+        window.addSubview(popup)
+        return popup.actionButton
+            .publisher(for: .touchUpInside)
+            .sink { button in
+                guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(settingURL, options: [:]) { _ in
+                    popup.removeFromSuperview()
+                    print("Button is pressed")
+                }
+            }
+    }
     func retry(_ times: Int, task: @escaping(@escaping () -> Void, @escaping (Error) -> Void) -> Void, success: @escaping () -> Void, failure: @escaping (Error) -> Void) {
         task(success,
             { error in

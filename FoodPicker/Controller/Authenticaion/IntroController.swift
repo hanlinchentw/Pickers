@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 class IntroController : UIViewController {
     //MARK: - Properties
@@ -17,6 +18,7 @@ class IntroController : UIViewController {
         button.addTarget(self, action: #selector(handleBackButtonTapped), for: .touchUpInside)
         return button
     }()
+    private var subscriber = Set<AnyCancellable>()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +43,12 @@ class IntroController : UIViewController {
 }
 extension IntroController : IntroViewDelegate{
     func didTapCreateButton() {
-        let auth = AuthController()
-        self.navigationController?.pushViewController(auth, animated: true)
+        if !NetworkMonitor.shared.isConnected {
+            self.presentIntrernetErrorPopViewAndProvidePublisher().store(in: &subscriber)
+        }else{
+            let auth = AuthController()
+            self.navigationController?.pushViewController(auth, animated: true)
+        }
     }
+        
 }

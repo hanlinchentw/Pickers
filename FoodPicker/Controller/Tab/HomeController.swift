@@ -46,7 +46,7 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
         super.viewDidLoad()
         print("DEBUG:App folder: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))")
         authenticateUserAndConfigureUI()
-        try? Auth.auth().signOut()
+//        try? Auth.auth().signOut()
     }
     //MARK: - API
     func authenticateUserAndConfigureUI(){

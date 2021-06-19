@@ -11,7 +11,7 @@ import Firebase
 
 private let profileCellIndentifier = "profileRowCell"
 
-protocol ProfileControllerDelegate : class {
+protocol ProfileControllerDelegate: AnyObject {
     func logOutButtonTapped()
 }
 
@@ -24,7 +24,6 @@ class ProfileController: UITableViewController {
         self.email = email
         super.init(nibName: nil, bundle: nil)
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -124,8 +123,6 @@ extension ProfileController{
         textLabel.font = UIFont(name: "Arial-BoldMT", size: 16)
         
         textLabel.layer.masksToBounds = true
-        textLabel.layer.borderWidth = 0.75
-        textLabel.layer.borderColor = UIColor.lightGray.cgColor
         textLabel.layer.cornerRadius = 24
 
         view.addSubview(textLabel)

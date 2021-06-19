@@ -63,20 +63,14 @@ extension UIView {
     func fit(inView view: UIView){
         anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
     }
-    func createPasswordRequirementView(imageView : UIImageView, label: UILabel) -> UIView{
-        let view = UIView()
-        view.setDimension(width: 300, height: 16)
-        imageView.image = UIImage(named: "icnDotXs")?.withRenderingMode(.alwaysOriginal)
-        imageView.contentMode = .scaleAspectFit
-        view.addSubview(imageView)
-        imageView.anchor(top:view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
-                         width: 16, height: 16)
-        label.font = UIFont(name: "ArialMT", size: 14)
-        label.textColor = .gray
-        view.addSubview(label)
-        label.anchor(top:view.topAnchor, left: imageView.rightAnchor,
-                     right: view.rightAnchor, bottom: view.bottomAnchor, paddingLeft: 8)
-        return view
+    func widthMutiplier(widthAnchor: NSLayoutDimension, widthMultiplier: CGFloat = 0) {
+        translatesAutoresizingMaskIntoConstraints = false
+        self.widthAnchor.constraint(equalTo: widthAnchor, multiplier: widthMultiplier).isActive = true
+
+    }
+    func heightMultiplier(heightAnchor: NSLayoutDimension, heightMultiplier: CGFloat = 0 ) {
+        translatesAutoresizingMaskIntoConstraints = false
+        self.heightAnchor.constraint(equalTo: heightAnchor, multiplier: heightMultiplier).isActive = true
     }
     
     func createInputView(withTitle title: String, textField : UITextField) -> UIView {
@@ -89,7 +83,8 @@ extension UIView {
         label.anchor(top: view.topAnchor, left: view.leftAnchor, paddingLeft: 8,height: 20)
         view.addSubview(textField)
         textField.layer.borderColor = UIColor.butterscotch.cgColor
-        textField.anchor(top: label.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,bottom: view.bottomAnchor, paddingTop: 4, height: 48)
+        textField.anchor(top: label.bottomAnchor, left: view.leftAnchor,
+                         right: view.rightAnchor,bottom: view.bottomAnchor, paddingTop: 4, height: 48)
         return view
     }
     

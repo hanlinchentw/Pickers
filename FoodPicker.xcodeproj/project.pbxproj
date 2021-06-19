@@ -84,6 +84,14 @@
 		B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */; };
 		B6F789A72675D4EF0003ED5C /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A62675D4EF0003ED5C /* UserService.swift */; };
 		B6F789A92675DC440003ED5C /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A82675DC440003ED5C /* Validators.swift */; };
+		B6F789AE267610950003ED5C /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789AD267610950003ED5C /* NetworkMonitor.swift */; };
+		B6F789B62676DAE40003ED5C /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789B52676DAE40003ED5C /* RegisterViewController.swift */; };
+		B6F789B826774D9B0003ED5C /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789B726774D9A0003ED5C /* String+Extensions.swift */; };
+		B6F789BA267789910003ED5C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789B9267789910003ED5C /* LoginViewController.swift */; };
+		B6F789BC2678B8BB0003ED5C /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789BB2678B8BB0003ED5C /* PopupView.swift */; };
+		B6F789BE2678F5720003ED5C /* UIControl+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789BD2678F5720003ED5C /* UIControl+Extensions.swift */; };
+		B6F789C0267B8E200003ED5C /* UIControlSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789BF267B8E200003ED5C /* UIControlSubscription.swift */; };
+		B6F789C3267B90400003ED5C /* UIControlpublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789C2267B90400003ED5C /* UIControlpublisher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -167,6 +175,14 @@
 		B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBProgressHUDProtocol.swift; sourceTree = "<group>"; };
 		B6F789A62675D4EF0003ED5C /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		B6F789A82675DC440003ED5C /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
+		B6F789AD267610950003ED5C /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		B6F789B52676DAE40003ED5C /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		B6F789B726774D9A0003ED5C /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		B6F789B9267789910003ED5C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		B6F789BB2678B8BB0003ED5C /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
+		B6F789BD2678F5720003ED5C /* UIControl+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+Extensions.swift"; sourceTree = "<group>"; };
+		B6F789BF267B8E200003ED5C /* UIControlSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControlSubscription.swift; sourceTree = "<group>"; };
+		B6F789C2267B90400003ED5C /* UIControlpublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControlpublisher.swift; sourceTree = "<group>"; };
 		D61EE2D2E1BC175C52587D8F /* Pods_FoodPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FoodPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -277,7 +293,7 @@
 		B647A4E324B203620098B7A2 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				B6D1306224C02BFA00040F85 /* IntroView.swift */,
+				B6F789AA26760DFB0003ED5C /* Auth */,
 				B63C19AA251C656A0012CC4A /* RestaurantsList.swift */,
 				B685484524B4511A009BC800 /* RestaurantListCell.swift */,
 				B6C7D5B1255992E0005D2AA0 /* LoadingCell.swift */,
@@ -286,6 +302,7 @@
 				B6AE009724D53AD200423D72 /* Detail */,
 				B63C19A125179AC00012CC4A /* Search */,
 				B689A7A52564DF95009D270B /* Spin */,
+				B6F789BB2678B8BB0003ED5C /* PopupView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -302,8 +319,10 @@
 		B647A4E524B203650098B7A2 /* Utilis */ = {
 			isa = PBXGroup;
 			children = (
-				B685484B24B6D390009BC800 /* Constants.swift */,
 				B6B84D492665D4A5002E418D /* Extension */,
+				B6F789C6267B912E0003ED5C /* UIControl+Extensions */,
+				B685484B24B6D390009BC800 /* Constants.swift */,
+				B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */,
 				B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */,
 			);
 			path = Utilis;
@@ -342,6 +361,7 @@
 				B6C90FC625E4F913008B492F /* CoredataService.swift */,
 				B69D3822266882D000287954 /* YelpService.swift */,
 				B6F789A82675DC440003ED5C /* Validators.swift */,
+				B6F789AD267610950003ED5C /* NetworkMonitor.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -417,12 +437,12 @@
 			isa = PBXGroup;
 			children = (
 				B647A4E624B2039D0098B7A2 /* Extension.swift */,
+				B6F789B726774D9A0003ED5C /* String+Extensions.swift */,
 				B6B84D522665D579002E418D /* UIViewController+Extension.swift */,
 				B6B84D502665D52F002E418D /* UIFont+UIColor+Extension.swift */,
 				B6B84D4E2665D50D002E418D /* UITextField +Extension.swift */,
 				B6B84D4A2665D4BD002E418D /* UIView+Extension.swift */,
 				B6B84D4C2665D4DE002E418D /* UIButton+ Extension.swift */,
-				B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -467,6 +487,8 @@
 			children = (
 				B6D1306424C040BC00040F85 /* IntroController.swift */,
 				B6D1305D24C01B3600040F85 /* AuthController.swift */,
+				B6F789B52676DAE40003ED5C /* RegisterViewController.swift */,
+				B6F789B9267789910003ED5C /* LoginViewController.swift */,
 			);
 			path = Authenticaion;
 			sourceTree = "<group>";
@@ -483,6 +505,24 @@
 				B6C7D5A72550FB9D005D2AA0 /* Profile */,
 			);
 			path = Tab;
+			sourceTree = "<group>";
+		};
+		B6F789AA26760DFB0003ED5C /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				B6D1306224C02BFA00040F85 /* IntroView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		B6F789C6267B912E0003ED5C /* UIControl+Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B6F789BF267B8E200003ED5C /* UIControlSubscription.swift */,
+				B6F789C2267B90400003ED5C /* UIControlpublisher.swift */,
+				B6F789BD2678F5720003ED5C /* UIControl+Extensions.swift */,
+			);
+			path = "UIControl+Extensions";
 			sourceTree = "<group>";
 		};
 		DF92DEA34AFE2BD2A906A753 /* Frameworks */ = {
@@ -610,6 +650,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B685484E24BB0090009BC800 /* Restaurant.swift in Sources */,
+				B6F789AE267610950003ED5C /* NetworkMonitor.swift in Sources */,
 				B650ECD5257F2655004A4049 /* LuckyWheelText.swift in Sources */,
 				B6B41AC6251316F300A5ACBE /* PriceRangeCell.swift in Sources */,
 				B647A4F724B22B4D0098B7A2 /* MainPageController.swift in Sources */,
@@ -617,6 +658,7 @@
 				B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */,
 				B685484424B44938009BC800 /* LocaionHandler.swift in Sources */,
 				B6F789A72675D4EF0003ED5C /* UserService.swift in Sources */,
+				B6F789BE2678F5720003ED5C /* UIControl+Extensions.swift in Sources */,
 				B647A4CD24B1F7BA0098B7A2 /* AppDelegate.swift in Sources */,
 				B647A4EF24B22A720098B7A2 /* SearchController.swift in Sources */,
 				B6C7D5AA2554E510005D2AA0 /* MapViewController.swift in Sources */,
@@ -629,7 +671,9 @@
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B6C7D5AE255824B7005D2AA0 /* MoreRestaurantViewController.swift in Sources */,
 				B647A4FF24B3007A0098B7A2 /* CategoryCardCell.swift in Sources */,
+				B6F789BA267789910003ED5C /* LoginViewController.swift in Sources */,
 				B647A50124B3145B0098B7A2 /* CardCellViewModel.swift in Sources */,
+				B6F789B62676DAE40003ED5C /* RegisterViewController.swift in Sources */,
 				B6B84D532665D579002E418D /* UIViewController+Extension.swift in Sources */,
 				B6A2FA8B25304A48005CB171 /* CategoryCardWall.swift in Sources */,
 				B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */,
@@ -645,6 +689,7 @@
 				B647A4F124B22B010098B7A2 /* ActionController.swift in Sources */,
 				B647A4E124B1FA640098B7A2 /* HomeController.swift in Sources */,
 				B647A4E724B2039D0098B7A2 /* Extension.swift in Sources */,
+				B6F789B826774D9B0003ED5C /* String+Extensions.swift in Sources */,
 				B6B84D512665D52F002E418D /* UIFont+UIColor+Extension.swift in Sources */,
 				B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */,
 				B6AE009924D7F94F00423D72 /* CategoriesCard.swift in Sources */,
@@ -652,9 +697,11 @@
 				B685485124BD8631009BC800 /* NetworkService.swift in Sources */,
 				B650ECD7257F2655004A4049 /* LuckyWheel.swift in Sources */,
 				B6C90FC725E4F913008B492F /* CoredataService.swift in Sources */,
+				B6F789C3267B90400003ED5C /* UIControlpublisher.swift in Sources */,
 				B647A4F924B22D530098B7A2 /* FilterResultSection.swift in Sources */,
 				B6F789A92675DC440003ED5C /* Validators.swift in Sources */,
 				B6B84D562665EBD5002E418D /* Picker.xcdatamodeld in Sources */,
+				B6F789BC2678B8BB0003ED5C /* PopupView.swift in Sources */,
 				B6D1306324C02BFA00040F85 /* IntroView.swift in Sources */,
 				B6C7D5BD2563F65A005D2AA0 /* List.swift in Sources */,
 				B63C19A9251B97EA0012CC4A /* SearchCell.swift in Sources */,
@@ -669,6 +716,7 @@
 				B6D1306724C16DA100040F85 /* FirebaseService.swift in Sources */,
 				B647A4F524B22B200098B7A2 /* ProfileController.swift in Sources */,
 				B6B84D58266633C4002E418D /* ErrorView.swift in Sources */,
+				B6F789C0267B8E200003ED5C /* UIControlSubscription.swift in Sources */,
 				B63C19AB251C656A0012CC4A /* RestaurantsList.swift in Sources */,
 				B647A4FD24B2F4A70098B7A2 /* RestaurantCardCell.swift in Sources */,
 				B6C7D5B82563F4F3005D2AA0 /* RestaurantAnnotation.swift in Sources */,

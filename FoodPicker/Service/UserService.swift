@@ -14,6 +14,7 @@ import FirebaseDatabase
 //protocol LoginProvider {
 //    func login(completion: (LoginResult) -> Void)
 //}
+
 enum LoginResult {
     case success(User)
     case failure(LoginError)
@@ -21,50 +22,66 @@ enum LoginResult {
 
 enum LoginError: Error {
     case noInternet
-    case invalidEmailOrPassword
+    case incorrectPassword
     case serverError
 }
-typealias DatabaseCompletion = ((Error?, DatabaseReference)->Void)
+enum RegisterResult {
+    case success(User)
+    case failure(RegisterError)
+}
+enum RegisterError: Error {
+    case noInternet
+    case invaildPassword
+    case serverError
+}
+
 
 struct UserService{
     static var shared = UserService()
     
     func logUserIn(withEmail email: String, password: String, completion: @escaping(LoginResult) -> Void){
-        let count = password.count
-        guard count >= 6, count <= 20 else {
-            completion(.failure(.invalidEmailOrPassword) )
-            return
-        }
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
-            if error != nil {
-                completion(.failure(.serverError))
-            }else {
-                guard let user = result?.user else {
-                    completion(.failure(.serverError))
-                    return 
+        if !NetworkMonitor.shared.isConnected {completion(.failure(.noInternet))}
+        else{
+            let count = password.count
+            guard count >= 6, count <= 20 else {
+                completion(.failure(.incorrectPassword))
+                return
+            }
+            
+            Auth.auth().signIn(withEmail: email, password: password) { result, error in
+                if error != nil {
+                    completion(.failure(.incorrectPassword))
+                }else {
+                    guard let user = result?.user else {
+                        completion(.failure(.serverError))
+                        return
+                    }
+                    completion(.success(user))
                 }
-                completion(.success(user))
             }
         }
     }
     
-    func checkIfUserIsExisted(withEmail email: String, completion: @escaping(Bool)->Void){
+    func checkIfUserIsExisted(withEmail email: String, completion: @escaping(Bool?, LoginError?)->Void){
         Auth.auth().fetchSignInMethods(forEmail: email) { (methods, err) in
-            if let err = err { print("DEUBG: This email ...\(err.localizedDescription)")}
-            guard let methods = methods else {  completion(false); return }
-            completion(true)
+            if !NetworkMonitor.shared.isConnected {completion(nil, LoginError.noInternet)}
+            if let _ = err { completion(nil, LoginError.serverError)}
+            guard let _ = methods else {  completion(false, nil); return }
+            completion(true, nil)
         }
     }
-    func createUser(withEmail email:String, password : String, completion: @escaping(DatabaseCompletion)){
+    func createUser(withEmail email:String, password : String, completion: @escaping(RegisterResult) -> Void){
         Auth.auth().createUser(withEmail: email, password: password) { (result, err) in
+            if !NetworkMonitor.shared.isConnected {completion(.failure(.noInternet))}
             if let err = err {
-                print("Failed to create User...\(err.localizedDescription)")
+                completion(.failure(.invaildPassword))
                 return
             }
-            guard let uid = result?.user.uid else { return }
-            let values = ["email": email
-            ]
-            REF_USER.child(uid).updateChildValues(values, withCompletionBlock: completion)
+            guard let user = result?.user else {
+                completion(.failure(.serverError))
+                return
+            }
+            completion(.success(user))
         }
     }
 }

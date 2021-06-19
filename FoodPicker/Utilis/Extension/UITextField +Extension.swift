@@ -7,9 +7,20 @@
 //
 
 import UIKit
-
+import Combine
 
 extension UITextField {
+    
+    var textPublisher: AnyPublisher<String?, Never> {
+        let publisher = NotificationCenter.default
+            .publisher(for: UITextField.textDidChangeNotification, object: self)
+            .compactMap { ($0.object as? UITextField)}
+            .filter {$0 == self}
+            .map {$0.text}
+            .eraseToAnyPublisher()
+        return publisher
+    }
+    
     func inputTextField(isSecured : Bool) -> UITextField {
         let tf = UITextField()
         tf.textColor = .customblack
