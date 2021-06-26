@@ -8,13 +8,8 @@
 
 import UIKit
 
-protocol ErrorViewDelegate : class {
-    func didTapReloadButton()
-}
-
 class ErrorView: UIView {
     //MARK: - Properties
-    weak var delegate : ErrorViewDelegate?
     let titleLabel : UILabel = {
         let label = UILabel()
         label.text = "Sorry..."
@@ -37,7 +32,7 @@ class ErrorView: UIView {
         return iv
     }()
     
-    let reloadButton : UIButton = {
+    lazy var reloadButton : UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Reload", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -46,17 +41,18 @@ class ErrorView: UIView {
         button.setDimension(width: 144, height: 48)
         button.backgroundColor = .butterscotch
         button.tintColor = .white
-        button.addTarget(self, action: #selector(handleReloadButtonTapped), for: .touchUpInside)
         return button
     }()
     //MARK: - Initializer
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init() {
+        super.init(frame: .zero)
+        self.frame = UIScreen.main.bounds
         
         let stack = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel, errorImageView, reloadButton])
         stack.axis = .vertical
         stack.distribution = .fillProportionally
         stack.alignment = .center
+        stack.spacing = 8
         
         self.addSubview(stack)
         stack.center(inView: self)
@@ -64,10 +60,5 @@ class ErrorView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    //MARK: - Selectors
-    @objc func handleReloadButtonTapped(){
-        delegate?.didTapReloadButton()
     }
 }

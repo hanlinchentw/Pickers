@@ -58,7 +58,8 @@ class RestaurantListCell : UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(optionImageView)
-        optionImageView.anchor(left: leftAnchor, paddingLeft: 16, width: 93, height: 93)
+        let imageHeight = 93 * widthMultiplier
+        optionImageView.anchor(left: leftAnchor, paddingLeft: 16, width: imageHeight, height: imageHeight)
         optionImageView.centerY(inView: self)
         contentView.addSubview(actionButton)
         actionButton.anchor(right: rightAnchor, paddingRight: 16,width: 48, height: 48)

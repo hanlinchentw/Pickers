@@ -15,12 +15,7 @@ class ActionViewController: UIViewController {
     var selectedRestaurants = [Restaurant]()
     var viewModel: LuckyWheelViewModel? { didSet{ configureWheel() } }
     
-    private let resultView: RestaurantCardCell = {
-        let result = RestaurantCardCell()
-        result.selectButton.isHidden = true
-        result.alpha = 0
-        return result
-    }()
+    private var resultView: SpinResultView?
     private var startButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "btnSpin")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -82,23 +77,27 @@ class ActionViewController: UIViewController {
         bottomSheetVC.view.frame = CGRect(x: 0, y: self.wheel!.frame.maxY + 24, width: width, height: height)
     }
     func configureWheel(){
-        wheel = LuckyWheel(frame: CGRect(x: 0, y: 0, width: 330 , height: 330))
+        let wheelWidthAndHeight = 330 * view.widthMultiplier
+        wheel = LuckyWheel(frame: CGRect(x: 0, y: 0, width: wheelWidthAndHeight , height: wheelWidthAndHeight))
         wheel?.delegate = self
         wheel?.dataSource = self
         wheel?.isUserInteractionEnabled = false
-        
-        self.view.addSubview(wheel!)
-        wheel?.center = view.center
-        wheel?.frame.origin.y = view.frame.origin.y + 48 + 24
-        wheel?.animateLanding = false
-        
-        view.addSubview(startButton)
-        startButton.center(inView: wheel!)
-        startButton.setDimension(width: 85, height: 85)
-        startButton.layer.cornerRadius = 40 / 2
-        startButton.isUserInteractionEnabled = !(viewModel == nil)
-        
-        self.view.bringSubviewToFront(self.bottomSheetVC.view)
+        if wheel != nil {
+            wheel?.removeFromSuperview()
+            self.view.addSubview(wheel!)
+            wheel?.center = view.center
+            let wheelInset = 72 * view.widthMultiplier
+            wheel?.frame.origin.y = view.frame.origin.y + wheelInset
+            wheel?.animateLanding = false
+            
+            view.addSubview(startButton)
+            startButton.center(inView: wheel!)
+            startButton.setDimension(width: 85, height: 85)
+            startButton.layer.cornerRadius = 40 / 2
+            startButton.isUserInteractionEnabled = !(viewModel == nil)
+            
+            self.view.bringSubviewToFront(self.bottomSheetVC.view)
+        }
     }
     
     func configureList(list: List?, addRestaurant: Restaurant? = nil){
@@ -158,17 +157,22 @@ class ActionViewController: UIViewController {
         stateLabel.anchor(top: wheel?.bottomAnchor, paddingTop: 32)
         
         view.addSubview(iv)
-        iv.anchor(top: stateLabel.bottomAnchor, paddingTop: 16, width: 200, height: 200)
+        let imageWidthAndHeight = 200 * view.heightMultiplier
+        iv.anchor(top: stateLabel.bottomAnchor, paddingTop: 16, width: imageWidthAndHeight, height: imageWidthAndHeight)
         iv.centerX(inView: view)
     }
     func configureResultView(valueRelateToResult value: Int){
         guard let restaurant = self.viewModel?.restaurants[value-1] else { return }
-        view.addSubview(resultView)
-        resultView.centerX(inView: self.view)
-        resultView.anchor(top: stateLabel.bottomAnchor, paddingTop: 16, width: 382, height: 279)
-        resultView.restaurant = restaurant
-        stateLabel.text = "✔︎ \(restaurant.name) for TODAY !"
-        self.resultView.alpha = 1
+        self.resultView = SpinResultView(restaurant: restaurant)
+        if let resultView = resultView {
+            view.addSubview(resultView)
+            resultView.centerX(inView: self.view)
+            resultView.anchor(top: stateLabel.bottomAnchor, paddingTop: 16)
+            let resultViewWidth = self.view.restaurantCardCGSize.width
+            let resultViewHeight = self.view.restaurantCardCGSize.height
+            resultView.anchor(width: resultViewWidth, height: resultViewHeight)
+            stateLabel.text = "✔︎ \(restaurant.name) for TODAY !"
+        }
     }
     
     //MARK: - Selectors
@@ -183,9 +187,9 @@ class ActionViewController: UIViewController {
         bottomSheetVC.view.isHidden = true
         wheel?.manualRotation(aCircleTime: 0.3)
         configureSpiningUI()
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
             self.wheel?.manualRotation(aCircleTime: 0.7)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1.5) {
                 self.wheel?.stop()
             }
         }

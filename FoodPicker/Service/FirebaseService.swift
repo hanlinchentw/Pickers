@@ -77,18 +77,21 @@ struct RestaurantService {
             }
         }
     }
-    func fetchHistoricalRecord(completion: @escaping(([String])->Void)){
+    func fetchHistoricalRecord(completion: @escaping(([String], Error?)->Void)){
         var historicalRecord = [String]()
+        if !NetworkMonitor.shared.isConnected { completion([],  URLRequestFailureResult.noInternet) }
         guard let uid = Auth.auth().currentUser?.uid else { return }
         REF_USER_SEARCH.child(uid).observe(.childAdded) { (snapshot) in
+            
             guard let record = snapshot.value as? String else { return }
             historicalRecord.insert(record, at: 0)
             historicalRecord = Array(historicalRecord.prefix(3))
-            completion(historicalRecord)
+            completion(historicalRecord, nil)
         }
     }
     
-    func fetchTopSearches(completion: @escaping(([String])->Void)){
+    func fetchTopSearches(completion: @escaping(([String], Error?)->Void)){
+        if !NetworkMonitor.shared.isConnected { completion([],  URLRequestFailureResult.noInternet) }
         REF_SEARCH.queryOrderedByValue().observeSingleEvent(of: .value) { (snapshot) in
             print(snapshot)
         }

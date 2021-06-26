@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import Combine
 
 private let searchHeaderIdentifier = "searchBar"
 private let searchShortcutIdentifier = "searchShortcut"
@@ -17,40 +18,101 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
     //MARK: - Properties
     var restaurants = [Restaurant]() { didSet{ self.resultVC.searchResult = self.restaurants }}
     private let tableView = UITableView()
+    private var errorView : ErrorView?
     private var historicalRecords = [String]()
     { didSet{ self.collectionView.reloadData() }}
     private let searchVC = SearchTableViewController(style: .grouped)
     private let resultVC = SearchResultController()
-    
     private let context = ((UIApplication.shared.delegate) as! AppDelegate).persistentContainer.viewContext
+    private var subscriber = Set<AnyCancellable>()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.fetchHistoricalRecord()
-        self.fetchTopSearches()
-        configureCollectionView()
+        self.fetchShortCutWord()
+        self.configureCollectionView()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        configureUI()
-    }
-    //MARK: - Helpers
-    func configureUI(){
+        collectionView.backgroundColor = .backgroundColor
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.isTranslucent = true
-        collectionView.backgroundColor = .backgroundColor
     }
-    
+    //MARK: - Helpers
     func configureCollectionView(){
         collectionView.register(SearchShortcutSection.self, forCellWithReuseIdentifier: searchShortcutIdentifier)
         collectionView.register(SearchHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: searchHeaderIdentifier)
         collectionView.register(CategoryCardWall.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: searchFooterIdentifier)
     }
-  
+    func isDataLoadedSuccessfully(_ isSuccess: Bool){
+        self.hideLoadingAnimation()
+        if isSuccess {
+            if errorView != nil {
+                self.errorView?.removeFromSuperview()
+                self.errorView = nil
+            }
+            self.collectionView.isHidden = false
+        }else{
+            self.errorView?.removeFromSuperview()
+            errorView = ErrorView()
+            if errorView != nil {
+                self.view.addSubview(errorView!)
+                self.observeErrorView()
+            }
+            self.collectionView.isHidden = true
+        }
+    }
+    fileprivate func observeErrorView() {
+        if errorView != nil {
+            errorView?.reloadButton
+                .publisher(for: .touchUpInside)
+                .sink { [weak self]_ in
+                    self?.fetchShortCutWord()
+            }.store(in: &subscriber)
+        }
+    }
     //MARK: - API
+    fileprivate func fetchShortCutWord() {
+        self.showLoadingAnimation()
+        self.retry(3, task: { success, failure in
+            self.fetchHistoricalRecord(success: success, failure: failure)
+            self.fetchTopSearches(success: success, failure: failure)
+        }, success: {
+            self.isDataLoadedSuccessfully(true)
+        }, failure: { error in
+            self.isDataLoadedSuccessfully(false)
+        })
+    }
+    func addHistoricalRecordByTerm(term:String){
+        RestaurantService.shared.addHistoricalRecordbyTerm(term: term)
+    }
+    
+    func fetchHistoricalRecord(success:@escaping() -> Void, failure: @escaping(Error) -> Void){
+        RestaurantService.shared.fetchHistoricalRecord { (records, error) in
+            if error != nil {
+                failure(error!)
+            }else{
+                success()
+                self.historicalRecords = records
+            }
+        }
+    }
+    func fetchTopSearches(success:@escaping() -> Void, failure: @escaping(Error) -> Void){
+        RestaurantService.shared.fetchTopSearches { (topSearch, error) in
+            if error != nil {
+                failure(error!)
+            }else{
+                success()
+            }
+        }
+    }
     func fetchRestautantsByterms(term: String){
+        self.showLoadingAnimation()
         guard let location = LocationHandler.shared.locationManager.location?.coordinate else { return }
-        NetworkService.shared.fetchRestaurantsByTerm(lat: location.latitude, lon: location.longitude, terms: term) { (restaurants) in
+        NetworkService.shared.fetchRestaurantsByTerm(lat: location.latitude, lon: location.longitude, terms: term) { (restaurants, error) in
+            if error == .noInternet {
+                self.isDataLoadedSuccessfully(false)
+                return
+            }
             if let restaurants = restaurants{
                 self.resultVC.searchTerm = term
                 self.restaurants = restaurants
@@ -61,22 +123,12 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
                             self.restaurants[index].isSelected = isSelected
                         }
                     }
+                    self.isDataLoadedSuccessfully(true)
                     self.resultVC.searchResult = self.restaurants
-                }}}}
-    func addHistoricalRecordByTerm(term:String){
-        RestaurantService.shared.addHistoricalRecordbyTerm(term: term)
-    }
-    
-    func fetchHistoricalRecord(){
-        RestaurantService.shared.fetchHistoricalRecord { (records) in
-            self.historicalRecords = records
-        }
-    }
-    func fetchTopSearches(){
-        RestaurantService.shared.fetchTopSearches { (topSearch) in
-        }
-    }
-
+                }else{
+                    self.hideLoadingAnimation()
+                }
+            }}}
     func searchRestaurants(withKeyword keyword: String) {
         self.fetchRestautantsByterms(term: keyword)
         self.addChild(self.resultVC)
@@ -102,12 +154,8 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
             updateSelectedRestaurantsInCoredata(context: context, restaurant: restaurant)
             updateSelectStatus(restaurantID: restaurant.restaurantID)
         }catch  SelectRestaurantResult.upToLimit{
-            let alert = UIAlertController(title: "Sorry! you can only select 8 restaurant. 😢", message: nil, preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .cancel) { (action) in
-                self.resultVC.searchResult = self.restaurants
-            }
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
+            self.presentPopupViewWithoutButton(title: "Sorry..", subtitle: "You can only select 8 restaurant. 😢")
+            self.resultVC.searchResult = self.restaurants
         }catch{
             print("DEBUG: Failed to select restaurant.")
         }
@@ -156,9 +204,7 @@ extension SearchController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width, height: 40 + 24*2)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        let height = CGFloat(categoryPreload.count/3 * 116)
-
-        return CGSize(width: view.frame.width, height: height)
+        return CGSize(width: view.frame.width, height: view.frame.height)
     }
 
 }

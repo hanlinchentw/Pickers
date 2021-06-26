@@ -36,10 +36,9 @@ class SearchShortcutSection : UICollectionViewCell {
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingLeft: 24)
         
         addSubview(collectionView)
-        collectionView.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor,
-                              right: rightAnchor,  bottom: bottomAnchor, paddingTop: 4)
+        collectionView.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor, right: rightAnchor,bottom: bottomAnchor,
+                              paddingTop: 4)
         configureCollectionView()
-        
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -47,7 +46,7 @@ class SearchShortcutSection : UICollectionViewCell {
     func configureCollectionView(){
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.showsHorizontalScrollIndicator  =  false
+        collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(KeywordCardCell.self, forCellWithReuseIdentifier: keywordCardCellIdentifier)
     }
 }
@@ -66,12 +65,6 @@ extension SearchShortcutSection : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let size = CGSize(width: 100, height: 32)
         return size
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
     }
 }
 class KeywordCardCell : UICollectionViewCell {

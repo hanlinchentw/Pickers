@@ -65,13 +65,9 @@ class FilterResultSection: UICollectionViewCell {
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        collectionView.prepareSkeleton(completion: { done in
-            self.showAnimatedSkeleton(usingColor: .gray, animation: nil, transition: .crossDissolve(0.3))
-        })
         addSubview(titleLabel)
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 16,
-                          paddingLeft: 24, height: 36)
-        
+                          paddingLeft: 24, height: 36/(self.iPhoneSEMutiplier))
         addSubview(collectionView)
         collectionView.anchor(top: titleLabel.bottomAnchor, left:leftAnchor,right: rightAnchor, bottom: bottomAnchor,
                               paddingTop: 4, paddingLeft: 16)
@@ -124,13 +120,15 @@ extension FilterResultSection : SkeletonCollectionViewDelegate, SkeletonCollecti
 
 extension FilterResultSection : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 280, height: 240)
+        return self.restaurantCardCGSize
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 8
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: 112, height: 240)
+        let width = 0.25 * UIScreen.main.bounds.width
+        let height = 0.25 * UIScreen.main.bounds.height
+        return CGSize(width: width, height: height)
     }
 }
 extension FilterResultSection : RestaurantCardCellDelegate {

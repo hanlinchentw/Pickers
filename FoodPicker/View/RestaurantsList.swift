@@ -71,7 +71,7 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
             return restaurants.count
-        }else if section == 1{
+        }else if section == 1, restaurants.count > 1{
             return 1
         }else{
             return 0

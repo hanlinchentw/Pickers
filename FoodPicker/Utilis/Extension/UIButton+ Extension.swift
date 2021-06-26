@@ -50,7 +50,6 @@ extension UIButton {
                            options: .curveEaseOut) {
                 self.transform = zoomAnimation.inverted()
             }
-
         }
     }
 }

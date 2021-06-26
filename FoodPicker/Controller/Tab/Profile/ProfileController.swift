@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import Combine
 
 private let profileCellIndentifier = "profileRowCell"
 
@@ -19,6 +20,7 @@ class ProfileController: UITableViewController {
     //MARK: - Properties
     var email : String
     weak var delegate : ProfileControllerDelegate?
+    private var subscriber = Set<AnyCancellable>()
     //MARK: - Controller Lifecycle
     init(email: String) {
         self.email = email
@@ -38,11 +40,14 @@ class ProfileController: UITableViewController {
     }
     //MARK: - Firebase API
     @objc func logUserOut(){
-        do {
-            try Auth.auth().signOut()
-            delegate?.logOutButtonTapped()
-        }
-        catch{ print("DEBUG: Failed to sign out with error ...\(error.localizedDescription)") }
+        self.presentPopupViewWithButtonAndProvidePublisher(title: "", subtitle: "Do you want to Log out?", buttonTitle: "Log Out")
+            .sink { [weak self] _ in
+                do {
+                    try Auth.auth().signOut()
+                    self?.delegate?.logOutButtonTapped()
+                }
+                catch{ print("DEBUG: Failed to sign out with error ...\(error.localizedDescription)") }
+            }.store(in: &subscriber)
     }
     //MARK: -  UI Configure Method
     private func configureTableView(){
@@ -76,7 +81,6 @@ extension ProfileController{
         cell.backgroundColor = .white
         cell.imageView?.image = UIImage(named: "icon24Lock")?.withRenderingMode(.alwaysOriginal)
         cell.textLabel?.text = "Reset Password"
-        
         return cell
     }
     

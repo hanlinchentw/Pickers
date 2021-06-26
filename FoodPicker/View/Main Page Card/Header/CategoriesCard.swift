@@ -64,6 +64,6 @@ extension CategoriesCard: UICollectionViewDelegate, UICollectionViewDataSource {
 
 extension CategoriesCard: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 116, height: 80)
+        return categoryCardCGSize
     }
 }

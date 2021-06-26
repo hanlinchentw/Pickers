@@ -53,7 +53,6 @@ class SearchTableViewController : UITableViewController{
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBarTextField.becomeFirstResponder()
         configureTableView()
     }
     override func didMove(toParent parent: UIViewController?) {

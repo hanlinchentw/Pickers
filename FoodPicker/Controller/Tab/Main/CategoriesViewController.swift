@@ -9,7 +9,7 @@ import UIKit
 import CoreLocation
 import Firebase
 import CoreData
-
+import Combine
 
 private let foodCardSection = "FoodCardCell"
 private let headerCell = "SortHeader"
@@ -20,7 +20,6 @@ protocol CategoriesViewControllerDelegate: AnyObject {
     func didSelectRestaurant(restaurant:Restaurant)
     func didLikeRestaurant(restaurant:Restaurant)
     func didTapCategoryCard(textOnCard text: String)
-    func reloadData()
 }
 
 class CategoriesViewController: UICollectionViewController, MBProgressHUDProtocol {
@@ -34,7 +33,7 @@ class CategoriesViewController: UICollectionViewController, MBProgressHUDProtoco
     var topPicksDataSource = [Restaurant]()  { didSet{ self.collectionView.reloadData()}}
     var popularDataSource = [Restaurant]()  { didSet{ self.collectionView.reloadData()}}
     
-    var errorView : ErrorView?
+    private var subscriber = Set<AnyCancellable>()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,12 +74,7 @@ class CategoriesViewController: UICollectionViewController, MBProgressHUDProtoco
             self.dataSource[index].isLiked.toggle()
         }
     }
-    func configureErrorView(){
-        self.errorView = ErrorView()
-        errorView!.delegate = self
-        self.view.insertSubview(errorView!, belowSubview: collectionView)
-        errorView!.fit(inView: self.view)
-    }
+    
     //MARK: - Core data
     public func deselectAll(){
         let connect = CoredataConnect(context: context)
@@ -117,7 +111,8 @@ extension CategoriesViewController {
 //MARK: - UICollectionViewDelegateFlowLayout
 extension CategoriesViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 304)
+        let height = 304 * view.heightMultiplier * view.iPhoneSEMutiplier
+        return CGSize(width: view.frame.width, height: height)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
@@ -179,11 +174,5 @@ extension CategoriesViewController: MoreRestaurantViewControllerDelegate{
     }
     func didLikeRestaurantFromMore(restaurant: Restaurant) {
         delegate?.didLikeRestaurant(restaurant: restaurant)
-    }
-}
-
-extension CategoriesViewController : ErrorViewDelegate {
-    func didTapReloadButton() {
-        delegate?.reloadData()
     }
 }

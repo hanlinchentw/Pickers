@@ -66,8 +66,9 @@ class RestaurantCardCell: UICollectionViewCell{
         layer.cornerRadius = 16
         layer.masksToBounds = true
         addSubview(optionImageView)
+        let imageHeight = 130 * heightMultiplier
         optionImageView.anchor(top:topAnchor, left: leftAnchor, right: rightAnchor,
-                               paddingTop: 8, paddingLeft:8, paddingRight: 8, height: 130)
+                               paddingTop: 8, paddingLeft:8, paddingRight: 8, height: imageHeight)
         
         addSubview(selectButton)
         selectButton.anchor(top:optionImageView.topAnchor, right: optionImageView.rightAnchor,

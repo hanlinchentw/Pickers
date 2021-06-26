@@ -15,7 +15,7 @@ protocol ListTableViewControllerDelegate: class {
     func didSelectList(_ controller: ListTableViewController, list: List)
 }
 
-class ListTableViewController: UITableViewController{
+class ListTableViewController: UITableViewController, MBProgressHUDProtocol{
     //MARK: - Properties
     var lists = [List]() { didSet{ self.tableView.reloadData() }}
     var expandListIndex = [Int]() { didSet{ self.tableView.reloadData() }}
@@ -56,13 +56,14 @@ class ListTableViewController: UITableViewController{
         tableView.backgroundColor = .backgroundColor
         tableView.delegate = self
         tableView.dataSource = self
-        
         tableView.separatorStyle = .none
         tableView.register(ListInfoCell.self, forCellReuseIdentifier: listCellIdentifier)
     }
     //MARK: - API
     func fetchSavedLists(completion: (()-> Void)? = nil){
+        self.showLoadingAnimation()
         RestaurantService.shared.fetchSavedLists { (lists) in
+            self.hideLoadingAnimation()
             self.lists = lists
             if let completion = completion{
                 completion()
@@ -140,19 +141,19 @@ extension ListTableViewController{
 //MARK: - ListInfoCellDelagete
 extension ListTableViewController: ListInfoCellDelagete{
     func shouldExpandList(_ cell: ListInfoCell, _ shouldExpand: Bool, list: List) {
-        print("DEBUG: expand button is tapped.")
         if let index = self.lists.firstIndex(where: { $0.id == list.id }) {
             print(index)
             if shouldExpand{
+                self.showLoadingAnimation()
                 if list.restaurants.isEmpty{
                     self.fetchRestaurants(restaurantsID: list.restaurantsID) { (restaurants) in
                         guard list.restaurantsID.count == restaurants.count else { return }
                         cell.list?.restaurants = restaurants
                         cell.configureTableView()
+                        self.hideLoadingAnimation()
                     }
                 }
                 self.expandListIndex.append(index)
-                
             }else{
                 if let foldIndex = self.expandListIndex.firstIndex(where: {$0 == index}) {
                     self.expandListIndex.remove(at: foldIndex)

@@ -9,13 +9,13 @@
 import UIKit
 import Moya
 
-
 typealias restaurantResponse = ([Restaurant]?,URLRequestFailureResult?) -> Void
 typealias detailResponse = (Details?,URLRequestFailureResult?) -> Void
 
 
 enum URLRequestFailureResult : Int ,Error {
-    case internetFailure
+    case noInternet
+    case serverFailure
     case clientFailure
 }
 
@@ -46,15 +46,15 @@ class  NetworkService {
                     completion(nil, URLRequestFailureResult(rawValue: 1))
                 }
             case .failure(let error):
-                completion(nil, URLRequestFailureResult(rawValue: 0))
-                print("DEBUG:\(error.localizedDescription)")
+                if !NetworkMonitor.shared.isConnected {completion(nil, URLRequestFailureResult.noInternet) }
+                else { completion(nil, URLRequestFailureResult.serverFailure)}
             }
         }
     }
-    func fetchRestaurantsByTerm(lat: Double, lon: Double,terms:String, completion: @escaping([Restaurant]?)->Void){
+    func fetchRestaurantsByTerm(lat: Double, lon: Double,terms:String, completion: @escaping(restaurantResponse) ){
         var restaurants = [Restaurant]()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        
+        if !NetworkMonitor.shared.isConnected {completion(nil, URLRequestFailureResult.noInternet) }
         service.request(.searchByTerm(lat: lat, lon: lon, term: terms)) { (result) in
             switch result {
             case .success(let response):
@@ -64,12 +64,12 @@ class  NetworkService {
                         let restaurant = Restaurant(business: business)
                         restaurants.append(restaurant)
                     }
-                completion(restaurants)
+                completion(restaurants, nil)
                 }catch{
                     print("DEBUG: JsonDecode error with ..\(error)")
                 }
             case .failure(let error):
-                print("DEBUG:\(error.localizedDescription)")
+                completion(nil, URLRequestFailureResult.serverFailure)
             }
         }
     }

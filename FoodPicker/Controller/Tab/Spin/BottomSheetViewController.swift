@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 private let selectedIdentifier = "RestaurantListCell"
 
@@ -61,6 +62,7 @@ class BottomSheetViewController : UIViewController {
         return button
     }()
     let tableView = RestaurantsList()
+    private var subscriber = Set<AnyCancellable>()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,10 +81,7 @@ class BottomSheetViewController : UIViewController {
     }
     @objc func handleSaveButtonTapped(){
         if self.list?.restaurantsID.isEmpty ?? true {
-            let alertVC = UIAlertController(title: "Empty List", message: "Select at least one restaurant.", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertVC.addAction(action)
-            present(alertVC, animated: true)
+            self.presentPopupViewWithoutButton(title: "Empty", subtitle: "Select at least one restaurant.")
         }else{
             let alertVC = UIAlertController(title: "Save list", message: nil, preferredStyle: .alert)
             alertVC.addTextField { (tf) in
@@ -103,15 +102,11 @@ class BottomSheetViewController : UIViewController {
     @objc func handleUpdateButtonTapped(){
         guard let list = self.list else { return }
         if list.restaurantsID.isEmpty{
-            let alertVC = UIAlertController(title: "Empty List", message: "Empty list will be removed.", preferredStyle: .alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-            let okAction = UIAlertAction(title: "OK", style: .default){ _ in
-                RestaurantService.shared.updateSavedList(list: list)
-                self.state = .temp
-            }
-            alertVC.addAction(cancelAction)
-            alertVC.addAction(okAction)
-            present(alertVC, animated: true)
+            self.presentPopupViewWithButtonAndProvidePublisher(title: "Empty List", subtitle: "Empty List will be DELETED", buttonTitle: "Delete")
+                .sink {[weak self] _ in
+                    RestaurantService.shared.updateSavedList(list: list)
+                    self?.state = .temp
+                }.store(in: &subscriber)
         }else{
             self.cleanUnselectRestaurants {
                 guard self.tableView.restaurants.count == self.list?.restaurantsID.count else { return }
@@ -218,7 +213,6 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         let gesture = (gestureRecognizer as! UIPanGestureRecognizer)
 //        let direction = gesture.velocity(in: view).y
-        
         let y = view.frame.minY
         if y == view.frame.height - 50 {
             gesture.isEnabled = false

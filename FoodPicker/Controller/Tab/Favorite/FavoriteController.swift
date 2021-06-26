@@ -86,12 +86,8 @@ class FavoriteController: UIViewController {
             try tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
             self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: restaurant)
         }catch SelectRestaurantResult.upToLimit{
-            let alert = UIAlertController(title: "Sorry! you can only select 8 restaurant. 😢", message: nil, preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .cancel) { (action) in
-                self.fetchLikedRestauants()
-            }
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
+            self.presentPopupViewWithoutButton(title: "Sorry!", subtitle: "You can only select 8 restaurant. 😢")
+            self.fetchLikedRestauants()
         }catch{
             print("DEBUG: Failed to select restaurant.")
         }

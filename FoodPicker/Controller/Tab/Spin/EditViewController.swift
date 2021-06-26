@@ -7,10 +7,9 @@
 //
 
 import UIKit
+import Combine
 
 private let editIdentifier = "EditCell"
-
-
 
 protocol EditViewControllerDelegate: class {
     func didEditList(_ controller: EditViewController)
@@ -87,6 +86,7 @@ class EditViewController: UITableViewController{
         button.addTarget(self, action: #selector(handleCancelAction), for: .touchUpInside)
         return button
     }()
+    private var subscriber = Set<AnyCancellable>()
     //MARK: - Lifecycle
     init(list:List) {
         self.list = list
@@ -125,24 +125,14 @@ class EditViewController: UITableViewController{
     }
     func saveList(){
         if list.restaurantsID.isEmpty{
-            let alertVC = UIAlertController(title: "Empty List", message: "Empty list will be removed.", preferredStyle: .alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-            let okAction = UIAlertAction(title: "OK", style: .default){ _ in
-                RestaurantService.shared.updateSavedList(list: self.list){
-                    self.delegate?.didEditList(self)
-                }
-            }
-            alertVC.addAction(cancelAction)
-            alertVC.addAction(okAction)
-            present(alertVC, animated: true)
-            return
-        }
-        if (self.listNameTextField.text == nil) || (self.listNameTextField.text == "") {
-            let alert = UIAlertController(title: "Invalid name", message: "Please name your list in 20 chars.", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Cancel", style: .cancel)
-            alert.addAction(action)
-            present(alert, animated: true)
-            return
+            self.presentPopupViewWithButtonAndProvidePublisher(title: "Empty List", subtitle: "Empty List will be DELETED 😲", buttonTitle: "DELETE")
+                .sink { [unowned self] _ in
+                    RestaurantService.shared.updateSavedList(list: self.list){
+                        self.delegate?.didEditList(self)
+                    }
+                }.store(in: &subscriber)
+        }else if (self.listNameTextField.text == nil) || (self.listNameTextField.text == "") {
+            self.presentPopupViewWithoutButton(title: "Invalid name", subtitle:  "Please name your list in 20 chars." )
         }else{
             self.list.name = self.listNameTextField.text!
             RestaurantService.shared.updateSavedList(list: list){
@@ -159,16 +149,10 @@ class EditViewController: UITableViewController{
     }
     @objc func handleCancelAction(){
         if isEdited{
-            let alert = UIAlertController(title: "Are you sure you want to leave?",
-                                          message: "all the edits won't be saved. are you sure to leave?",
-                                          preferredStyle: .alert)
-            let leaveAction = UIAlertAction(title: "Leave", style: .default){ _ in
-                self.navigationController?.popViewController(animated: true)
-            }
-            let keepEditingAction = UIAlertAction(title: "Keep editing", style: .cancel)
-            alert.addAction(keepEditingAction)
-            alert.addAction(leaveAction)
-            present(alert, animated: true)
+            self.presentPopupViewWithButtonAndProvidePublisher(title: "List Edited", subtitle: "Are you sure you want to leave?", buttonTitle: "Leave")
+                .sink { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }.store(in: &subscriber)
         }else{
             self.navigationController?.popViewController(animated: true)
         }

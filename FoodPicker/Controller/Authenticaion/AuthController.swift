@@ -198,13 +198,11 @@ class AuthController : UIViewController, MBProgressHUDProtocol{
         view.addSubview(emailInputView)
         emailInputView.anchor(top: titleStack.bottomAnchor, left: titleStack.leftAnchor, right: titleStack.rightAnchor,
                               paddingTop: 36)
-        emailInputView.heightMultiplier(heightAnchor: self.view.heightAnchor, heightMultiplier: 0.08)
         emailInputView.centerX(inView: view)
         
         view.addSubview(actionButton)
         actionButton.anchor(top: emailInputView.bottomAnchor, left: titleStack.leftAnchor,
-                            right: titleStack.rightAnchor, paddingTop: 88)
-        actionButton.heightMultiplier(heightAnchor: self.view.heightAnchor, heightMultiplier: 0.06)
+                            right: titleStack.rightAnchor, paddingTop: 88, height: 48)
         actionButton.centerX(inView: emailInputView)
         
         view.addSubview(backButton)
@@ -296,7 +294,11 @@ class AuthController : UIViewController, MBProgressHUDProtocol{
         observeLoginResult()
     }
     private func presentPopView() {
-        self.presentIntrernetErrorPopViewAndProvidePublisher().store(in: &subscriber)
+        self.presentPopupViewWithButtonAndProvidePublisher(title: "No Internet", subtitle: "Please Check your Internet Connection", buttonTitle: "Go Setting")
+            .sink { _ in
+                guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(settingURL, options: [:])
+            }.store(in: &subscriber)
     }
 }
 

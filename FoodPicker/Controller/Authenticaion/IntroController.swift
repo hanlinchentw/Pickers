@@ -44,7 +44,11 @@ class IntroController : UIViewController {
 extension IntroController : IntroViewDelegate{
     func didTapCreateButton() {
         if !NetworkMonitor.shared.isConnected {
-            self.presentIntrernetErrorPopViewAndProvidePublisher().store(in: &subscriber)
+            self.presentPopupViewWithButtonAndProvidePublisher(title: "No Internet", subtitle: "Please Check your Internet Connection", buttonTitle: "Go Setting")
+                .sink { _ in
+                    guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
+                    UIApplication.shared.open(settingURL, options: [:])
+                }.store(in: &subscriber)
         }else{
             let auth = AuthController()
             self.navigationController?.pushViewController(auth, animated: true)

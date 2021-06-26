@@ -70,8 +70,7 @@ class LoginViewController: UIViewController, MBProgressHUDProtocol {
                                  paddingTop: 37)
         view.addSubview(loginButton)
         loginButton.anchor(top: passwordInputView.bottomAnchor, left: self.view.leftAnchor,
-                           right: self.view.rightAnchor, paddingTop: 76)
-        loginButton.heightMultiplier(heightAnchor: self.view.heightAnchor, heightMultiplier: 0.08)
+                           right: self.view.rightAnchor, paddingTop: 76, height: 48)
         UIView.animate(withDuration: 0.3, animations: {
             self.passwordInputView.alpha = 1
         })
@@ -80,7 +79,11 @@ class LoginViewController: UIViewController, MBProgressHUDProtocol {
                             left: passwordInputView.leftAnchor, paddingLeft: 8)
     }
     private func presentPopViewAndSubscibeIt() {
-        self.presentIntrernetErrorPopViewAndProvidePublisher().store(in: &subscriber)
+        self.presentPopupViewWithButtonAndProvidePublisher(title: "No Internet", subtitle: "Please Check your Internet Connection", buttonTitle: "Go Setting")
+            .sink { _ in
+                guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(settingURL, options: [:])
+            }.store(in: &subscriber)
     }
     //MARK: - Selectors
     @objc func handleLoginButtonTapped(){

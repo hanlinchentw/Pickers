@@ -48,6 +48,14 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
         authenticateUserAndConfigureUI()
 //        try? Auth.auth().signOut()
     }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let height = 100 * view.heightMultiplier
+        var frame = tabBar.frame
+        frame.size.height = height
+        frame.origin.y = self.view.frame.size.height - height
+        tabBar.frame = frame
+    }
     //MARK: - API
     func authenticateUserAndConfigureUI(){
         print("DEBUG: Authenticate ...  ")
@@ -76,15 +84,17 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
             actionIconView.image = UIImage(named: "spinActive")
         }else {
             actionIconView.image = nil
-            numOfSelectedLabel.text = "\(selectedRestaurants.count)"
+            numOfSelectedLabel.changeLabelWithBounceAnimation(changeTo: "\(selectedRestaurants.count)")
         }
     }
     func configureTabBar(){
         view.backgroundColor = .backgroundColor
         tabBar.addSubview(actionIconView)
-        actionIconView.center(inView: tabBar, yConstant: -8)
-    
-        tabBar.backgroundImage = UIImage(named: "bar")?.withRenderingMode(.alwaysOriginal)
+        print(UIScreen.main.bounds.height)
+        let offset = UIScreen.main.bounds.height < 700 ? 0 : -10 * view.heightMultiplier
+        actionIconView.center(inView: tabBar, yConstant: offset)
+        
+        tabBar.backgroundColor = .white
         tabBar.layer.cornerRadius = 36
         tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         tabBar.layer.masksToBounds = true
@@ -125,7 +135,8 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
     func templateNavigationController(image: UIImage?, rootViewController:UIViewController) -> UINavigationController{
         let nav = UINavigationController(rootViewController: rootViewController)
         nav.tabBarItem.image = image?.withRenderingMode(.alwaysOriginal)
-        nav.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
+        let offset = view.heightMultiplier * 12
+        nav.tabBarItem.imageInsets = UIEdgeInsets(top: offset, left: 0, bottom: -offset, right: 0)
         return nav
     }
 }
@@ -133,8 +144,8 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
 //MARK: -SelectRestaurant Data flow
 extension HomeController {
     func updateSelectedRestaurants(from controller: UIViewController, restaurant: Restaurant) throws {
+        if selectedRestaurants.count == 8, restaurant.isSelected { throw SelectRestaurantResult.upToLimit }
         self.didSelect(restaurant: restaurant)
-        guard self.selectedRestaurants.count <= 8  else { throw SelectRestaurantResult.upToLimit }
         self.configureActionIcon()
         if controller.isKind(of: MainPageController.self)
             || controller.isKind(of: FavoriteController.self)
@@ -168,7 +179,7 @@ extension HomeController {
     }
     
     func didSelect(restaurant : Restaurant){
-        if restaurant.isSelected {
+        if restaurant.isSelected, selectedRestaurants.count < 8 {
             selectedRestaurants.append(restaurant)
         }else {
             selectedRestaurants = selectedRestaurants.filter{($0.restaurantID != restaurant.restaurantID)}

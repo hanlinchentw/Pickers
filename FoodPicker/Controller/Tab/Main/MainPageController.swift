@@ -10,6 +10,7 @@ import MapKit
 import CoreLocation
 import Firebase
 import CoreData
+import Combine
 
 // Some Collection view identifiers
 private let foodCardSection = "FoodCardCell"
@@ -17,7 +18,7 @@ private let headerCell = "SortHeader"
 private let footerCell = "AllRestaurantsSection"
 
 // This controller contains two view contrller, Category view controller and map view controller.
-class MainPageController: UIViewController, MapViewControllerDelegate {
+class MainPageController: UIViewController, MapViewControllerDelegate, MBProgressHUDProtocol {
     //MARK: - Properties
     private let navBarView = MainPageNavigationBar()
     
@@ -33,6 +34,10 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
     private var dataSource = [Restaurant]()
     private var topPicksDataSource = [Restaurant]()
     private var popularDataSource = [Restaurant]()
+    
+    private var errorView: ErrorView?
+    
+    private var subscriber = Set<AnyCancellable>()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +55,7 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
     //MARK: -API
     func preloadData(){
         let group = DispatchGroup()
-        self.categoryVC.showLoadingAnimation()
+        self.showLoadingAnimation()
         let concurrentQueue: DispatchQueue = DispatchQueue(label: "CorrentQueue", attributes: .concurrent)
         group.enter()
         concurrentQueue.async(group:group) {
@@ -67,16 +72,10 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
             self.fetchRestaurantsRetryWhenFailed(by: .topPick, numOfRestaurant: 6)
             group.leave()
         }
-        group.notify(queue: DispatchQueue.main) {
-            print("DEBUG: Already downloaded all the data ")
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.5) {
-                self.categoryVC.hideLoadingAnimation()
-            }
-        }
     }
     fileprivate func fetchRestaurantsRetryWhenFailed(by option: recommendOption, numOfRestaurant: Int) {
         print("DEBUG: Preload data ... Main page")
-        self.retry(5) { success, failure in
+        self.retry(3) { success, failure in
             self.fetchRestaurants(by: option, limit: numOfRestaurant, success: success, failure: failure)
         } success: {
             print("DEBUG: Successfully load data ... main page  ")
@@ -132,15 +131,12 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
         do{
             try tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
             self.categoryVC.updateSelectStatus(restaurantID: restaurant.restaurantID)
+            self.mapVC.updateSelectStatus(restaurantID: restaurant.restaurantID)
             updateSelectedRestaurantsInCoredata(context: context, restaurant: restaurant)
         }catch SelectRestaurantResult.upToLimit{
-            let alert = UIAlertController(title: "Sorry! you can only select 8 restaurant. 😢", message: nil, preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .cancel) { (action) in
-                self.mapVC.collecionView.reloadData()
-                self.categoryVC.collectionView.reloadData()
-            }
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
+            self.presentPopupViewWithoutButton(title: "Sorry!", subtitle: "You can only select 8 restaurant. 😢")
+            self.mapVC.collecionView.reloadData()
+            self.categoryVC.collectionView.reloadData()
         }catch{
             print("DEBUG: Failed to select restaurant.")
         }
@@ -161,20 +157,35 @@ class MainPageController: UIViewController, MapViewControllerDelegate {
         
         navBarView.delegate = self
         view.addSubview(navBarView)
-        
+        let heightMultiplier = UIScreen.main.bounds.height / CGFloat(896)
+        let height = heightMultiplier * 104
         navBarView.anchor(top: view.topAnchor, left: view.leftAnchor,
-                          right: view.rightAnchor, height: 104)
+                          right: view.rightAnchor, height: height)
+        
         categoryView.anchor(top: navBarView.bottomAnchor,left: view.leftAnchor,
                             right: view.rightAnchor, bottom: view.bottomAnchor,
-                            paddingTop: 0, paddingBottom: 80)
+                            paddingTop: 0)
     }
     func isDataLoadedSuccessfully(_ isSuccess: Bool){
+        self.hideLoadingAnimation()
         if isSuccess {
+            if errorView != nil {
+                self.errorView?.removeFromSuperview()
+                self.errorView = nil
+            }
             self.categoryVC.collectionView.isHidden = false
-            self.categoryVC.errorView?.removeFromSuperview()
         }else{
-            self.categoryVC.configureErrorView()
-            self.categoryVC.collectionView.isHidden = true
+            self.errorView?.removeFromSuperview()
+            errorView = ErrorView()
+            if errorView != nil {
+                self.view.addSubview(errorView!)
+                errorView?.reloadButton
+                    .publisher(for: .touchUpInside)
+                    .sink { [weak self]_ in
+                    self?.preloadData()
+                }.store(in: &subscriber)
+                self.categoryVC.collectionView.isHidden = true
+            }
         }
     }
 }
@@ -207,12 +218,8 @@ extension MainPageController: CategoriesViewControllerDelegate{
                 self.categoryVC.collectionView.isUserInteractionEnabled = true
                 self.categoryVC.hideLoadingAnimation()
             }
-        } failure: { error in
-            print("DEBUG: Failed to push to detail VC ... ")
-            let alert = UIAlertController(title: "Internet Error", message: "\(error.localizedDescription)", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
+        } failure: { _ in
+            self.presentPopupViewWithoutButton(title: "Sorry..", subtitle: "Please check you internet connection")
             self.categoryVC.collectionView.isUserInteractionEnabled = true
             self.categoryVC.hideLoadingAnimation()
         }
@@ -223,9 +230,6 @@ extension MainPageController: CategoriesViewControllerDelegate{
     func didLikeRestaurant(restaurant: Restaurant) {
         self.categoryVC.updateLikeRestaurant(restaurantID: restaurant.restaurantID)
         updateLikedRestaurantsInDataBase(context: context, restaurant: restaurant)
-    }
-    func reloadData() {
-        self.preloadData()
     }
 }
 //MARK: - DetailControllerDelegate

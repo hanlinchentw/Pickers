@@ -135,7 +135,7 @@ extension MoreRestaurantViewController: RestaurantsListDelegate{
     }
     func didTapRestaurant(restaurant:Restaurant){
         let detailVC = DetailController(restaurant: restaurant)
-        self.retry(5) { success, failure in
+        self.retry(3) { success, failure in
             detailVC.fetchDetail(success: success, failure: failure)
         } success: {
             detailVC.delegate = self
@@ -146,12 +146,8 @@ extension MoreRestaurantViewController: RestaurantsListDelegate{
                 self.navigationController?.navigationBar.barStyle = .black
                 self.tableView.isUserInteractionEnabled = true
             }
-        } failure: { error in
-            let alert = UIAlertController(title: "Internet Error", message: "Please check your internet connect.", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
+        } failure: { [weak self] error in
+            self?.presentPopupViewWithoutButton(title: "Internet Error", subtitle: "Please check your internet connect.")
         }
     }
 }

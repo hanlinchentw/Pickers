@@ -44,6 +44,9 @@
 		B689A7A72564DFE4009D270B /* ListInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A62564DFE4009D270B /* ListInfoCell.swift */; };
 		B689A7A9256B84EF009D270B /* MoreOptionAlertViewContrller.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */; };
 		B689A7AB2574EDB4009D270B /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7AA2574EDB4009D270B /* EditViewController.swift */; };
+		B68DD02A268032CA008E1FDE /* SpinResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD029268032CA008E1FDE /* SpinResultView.swift */; };
+		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
+		B68DD0522687523C008E1FDE /* ZoomAndSnapFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD0512687523C008E1FDE /* ZoomAndSnapFlowLayout.swift */; };
 		B69D3823266882D000287954 /* YelpService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D3822266882D000287954 /* YelpService.swift */; };
 		B6A2FA8B25304A48005CB171 /* CategoryCardWall.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A2FA8A25304A48005CB171 /* CategoryCardWall.swift */; };
 		B6AE009924D7F94F00423D72 /* CategoriesCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AE009824D7F94F00423D72 /* CategoriesCard.swift */; };
@@ -135,6 +138,9 @@
 		B689A7A62564DFE4009D270B /* ListInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInfoCell.swift; sourceTree = "<group>"; };
 		B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreOptionAlertViewContrller.swift; sourceTree = "<group>"; };
 		B689A7AA2574EDB4009D270B /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		B68DD029268032CA008E1FDE /* SpinResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinResultView.swift; sourceTree = "<group>"; };
+		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
+		B68DD0512687523C008E1FDE /* ZoomAndSnapFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomAndSnapFlowLayout.swift; sourceTree = "<group>"; };
 		B69D3822266882D000287954 /* YelpService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpService.swift; sourceTree = "<group>"; };
 		B6A2FA8A25304A48005CB171 /* CategoryCardWall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCardWall.swift; sourceTree = "<group>"; };
 		B6AE009824D7F94F00423D72 /* CategoriesCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesCard.swift; sourceTree = "<group>"; };
@@ -224,7 +230,6 @@
 				B6C7D5AF255843C1005D2AA0 /* MoreRestaurantsFooterView.swift */,
 				B647A4FC24B2F4A70098B7A2 /* RestaurantCardCell.swift */,
 				B6B41ABF24FE3C3F00A5ACBE /* AllRestaurantsSection.swift */,
-				B6B84D57266633C4002E418D /* ErrorView.swift */,
 			);
 			path = RestaurantContent;
 			sourceTree = "<group>";
@@ -232,6 +237,7 @@
 		B63C19A125179AC00012CC4A /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				B6AE009624D53AA200423D72 /* Filter */,
 				B63C19A225179B090012CC4A /* SearchShortcutSection.swift */,
 				B6B84C83265212D1002E418D /* SearchHeader.swift */,
 				B6A2FA8A25304A48005CB171 /* CategoryCardWall.swift */,
@@ -298,11 +304,11 @@
 				B685484524B4511A009BC800 /* RestaurantListCell.swift */,
 				B6C7D5B1255992E0005D2AA0 /* LoadingCell.swift */,
 				B6AE009524D53A7700423D72 /* Main Page Card */,
-				B6AE009624D53AA200423D72 /* Filter */,
 				B6AE009724D53AD200423D72 /* Detail */,
 				B63C19A125179AC00012CC4A /* Search */,
 				B689A7A52564DF95009D270B /* Spin */,
 				B6F789BB2678B8BB0003ED5C /* PopupView.swift */,
+				B6B84D57266633C4002E418D /* ErrorView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -324,6 +330,9 @@
 				B685484B24B6D390009BC800 /* Constants.swift */,
 				B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */,
 				B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */,
+				B6F789A82675DC440003ED5C /* Validators.swift */,
+				B6F789AD267610950003ED5C /* NetworkMonitor.swift */,
+				B68DD0512687523C008E1FDE /* ZoomAndSnapFlowLayout.swift */,
 			);
 			path = Utilis;
 			sourceTree = "<group>";
@@ -356,12 +365,10 @@
 			children = (
 				B685484324B44938009BC800 /* LocaionHandler.swift */,
 				B6F789A62675D4EF0003ED5C /* UserService.swift */,
+				B69D3822266882D000287954 /* YelpService.swift */,
 				B685485024BD8631009BC800 /* NetworkService.swift */,
 				B6D1306624C16DA100040F85 /* FirebaseService.swift */,
 				B6C90FC625E4F913008B492F /* CoredataService.swift */,
-				B69D3822266882D000287954 /* YelpService.swift */,
-				B6F789A82675DC440003ED5C /* Validators.swift */,
-				B6F789AD267610950003ED5C /* NetworkMonitor.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -371,6 +378,7 @@
 			children = (
 				B650ECCF257F2648004A4049 /* LuckyWheel */,
 				B689A7A62564DFE4009D270B /* ListInfoCell.swift */,
+				B68DD029268032CA008E1FDE /* SpinResultView.swift */,
 			);
 			path = Spin;
 			sourceTree = "<group>";
@@ -437,6 +445,7 @@
 			isa = PBXGroup;
 			children = (
 				B647A4E624B2039D0098B7A2 /* Extension.swift */,
+				B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */,
 				B6F789B726774D9A0003ED5C /* String+Extensions.swift */,
 				B6B84D522665D579002E418D /* UIViewController+Extension.swift */,
 				B6B84D502665D52F002E418D /* UIFont+UIColor+Extension.swift */,
@@ -660,6 +669,7 @@
 				B6F789A72675D4EF0003ED5C /* UserService.swift in Sources */,
 				B6F789BE2678F5720003ED5C /* UIControl+Extensions.swift in Sources */,
 				B647A4CD24B1F7BA0098B7A2 /* AppDelegate.swift in Sources */,
+				B68DD02A268032CA008E1FDE /* SpinResultView.swift in Sources */,
 				B647A4EF24B22A720098B7A2 /* SearchController.swift in Sources */,
 				B6C7D5AA2554E510005D2AA0 /* MapViewController.swift in Sources */,
 				B6D1307024CBC16200040F85 /* DetailCell.swift in Sources */,
@@ -714,10 +724,12 @@
 				B6B84C84265212D1002E418D /* SearchHeader.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6D1306724C16DA100040F85 /* FirebaseService.swift in Sources */,
+				B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */,
 				B647A4F524B22B200098B7A2 /* ProfileController.swift in Sources */,
 				B6B84D58266633C4002E418D /* ErrorView.swift in Sources */,
 				B6F789C0267B8E200003ED5C /* UIControlSubscription.swift in Sources */,
 				B63C19AB251C656A0012CC4A /* RestaurantsList.swift in Sources */,
+				B68DD0522687523C008E1FDE /* ZoomAndSnapFlowLayout.swift in Sources */,
 				B647A4FD24B2F4A70098B7A2 /* RestaurantCardCell.swift in Sources */,
 				B6C7D5B82563F4F3005D2AA0 /* RestaurantAnnotation.swift in Sources */,
 				B6C90FC325E2560A008B492F /* TextLayer.swift in Sources */,

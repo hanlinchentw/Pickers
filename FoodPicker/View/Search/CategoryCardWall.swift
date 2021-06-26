@@ -27,7 +27,7 @@ class CategoryCardWall: UICollectionReusableView{
     
     private lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .backgroundColor
         cv.isScrollEnabled = false
@@ -82,13 +82,11 @@ extension CategoryCardWall: UICollectionViewDelegate, UICollectionViewDataSource
 //MARK: - UICollectionViewDelegateFlowLayout
 extension CategoryCardWall: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: 116, height: 80)
-        return size
+        return categoryCardCGSize
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
+        let screenWidth = UIScreen.main.bounds.width
+        let spacing = CGFloat(screenWidth - categoryCardCGSize.width*3 - 24)/2
+        return spacing
     }
 }

@@ -10,6 +10,32 @@ import UIKit
 
 
 extension UIView {
+    // FOR 11 Pro max : 414 x 896
+    var heightMultiplier : CGFloat {
+        let screenHeight = UIScreen.main.bounds.height
+        let height = screenHeight / CGFloat(896)
+        return height
+    }
+    var widthMultiplier : CGFloat {
+        let screenWidth = UIScreen.main.bounds.width
+        let width = screenWidth / CGFloat(414)
+        return width
+    }
+    var iPhoneSEMutiplier : CGFloat {
+        return UIScreen.main.bounds.height < 700 ? 1.15 : 1
+    }
+    var restaurantCardCGSize : CGSize {
+        // Card should be : 280 * 242
+        let width = widthMultiplier * CGFloat(280)
+        let height = heightMultiplier * CGFloat(242) * self.iPhoneSEMutiplier
+        return CGSize(width: width, height: height)
+    }
+    var categoryCardCGSize : CGSize {
+        // Card should be : 116 * 80 for 11 pro max
+        let width = widthMultiplier * CGFloat(116)
+        let height = heightMultiplier * CGFloat(80) * self.iPhoneSEMutiplier
+        return CGSize(width: width, height: height)
+    }
     func anchor(top: NSLayoutYAxisAnchor? = nil,
                 left: NSLayoutXAxisAnchor? = nil,
                 right: NSLayoutXAxisAnchor? = nil,
@@ -80,7 +106,7 @@ extension UIView {
         label.text = title
         
         view.addSubview(label)
-        label.anchor(top: view.topAnchor, left: view.leftAnchor, paddingLeft: 8,height: 20)
+        label.anchor(top: view.topAnchor, left: view.leftAnchor, paddingLeft: 8, height: 20)
         view.addSubview(textField)
         textField.layer.borderColor = UIColor.butterscotch.cgColor
         textField.anchor(top: label.bottomAnchor, left: view.leftAnchor,
@@ -109,6 +135,6 @@ extension UIView {
         
         return view
     }
-
+    
 
 }

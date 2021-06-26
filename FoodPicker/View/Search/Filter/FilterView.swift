@@ -75,13 +75,17 @@ class FilterView : UIView {
     //MARK: - Helpers
     func configure(){
         addSubview(sortButton)
-        sortButton.anchor(left: leftAnchor, paddingLeft: 16,  width: 155, height: 40)
+        let sortButtonWidth = 155 * widthMultiplier
+        sortButton.anchor(left: leftAnchor, paddingLeft: 16,  width: sortButtonWidth, height: 40)
         sortButton.centerY(inView: self)
         addSubview(priceRangeButton)
-        priceRangeButton.anchor(left: sortButton.rightAnchor, paddingLeft: 8,width: 147, height: 40)
+        let priceRangeButtonWidth = 147 * widthMultiplier
+        priceRangeButton.anchor(left: sortButton.rightAnchor, paddingLeft: 8,width: priceRangeButtonWidth, height: 40)
         priceRangeButton.centerY(inView: self)
+        
         addSubview(openFilterButton)
-        openFilterButton.anchor(left: priceRangeButton.rightAnchor, paddingLeft: 8,width: 70, height: 40)
+        let openFilterButtonWidth = 70 * widthMultiplier
+        openFilterButton.anchor(left: priceRangeButton.rightAnchor, paddingLeft: 8, width: openFilterButtonWidth, height: 40)
         openFilterButton.centerY(inView: self)
     }
     //MARK: - Selectors

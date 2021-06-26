@@ -20,7 +20,6 @@ final class NetworkMonitor {
     private init() {
         monitor = NWPathMonitor()
     }
-    
     public func startMonitoring(){
         monitor.start(queue: queue)
         monitor.pathUpdateHandler = { [weak self] path in

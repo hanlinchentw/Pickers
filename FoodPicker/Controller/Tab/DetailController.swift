@@ -57,6 +57,7 @@ class DetailController : UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         configureCollectionView()
+        self.tabBarController?.tabBar.isHidden = true
     }
     //MARK: - API
     func fetchDetail(success: @escaping()->Void, failure: @escaping(Error)->Void){
@@ -90,6 +91,7 @@ class DetailController : UICollectionViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.bounces = false
+
         let inset = UIApplication.shared.windows[0].safeAreaInsets.top
         collectionView.contentInset = UIEdgeInsets(top: -inset, left: 0, bottom: 100, right: 0)
     }
@@ -152,7 +154,8 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
         
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 300)
+        let height = 300 * view.heightMultiplier * view.iPhoneSEMutiplier
+        return CGSize(width: collectionView.frame.width, height: height)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 4

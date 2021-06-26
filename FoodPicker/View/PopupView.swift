@@ -12,23 +12,26 @@ import Combine
 class PopupView : UIView {
     //MARK: - Properties
     var title: String
+    var titleFont: CGFloat
     var subtitle: String
+    var subtitleFont: CGFloat
     var withButton : Bool
     var buttonTitle: String?
     
     fileprivate lazy var titleLabel : UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Arial-BoldMT", size: 28)
+        label.font = UIFont(name: "Arial-BoldMT", size: titleFont)
         label.textColor = .butterscotch
         label.text = title
         label.textAlignment = .center
+        label.numberOfLines = 0
         label.sizeToFit()
         return label
     }()
     
     fileprivate lazy var subtitleLabel:UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "ArialMT", size: 14)
+        label.font = UIFont(name: "ArialMT", size: subtitleFont)
         label.text = subtitle
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -37,10 +40,11 @@ class PopupView : UIView {
     public lazy var actionButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(buttonTitle, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Arial-BoldMT", size: 18)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .butterscotch
         button.layer.cornerRadius = 20
-        
+        button.addTarget(self, action: #selector(handleActionButtonTapped), for: .touchUpInside)
         return button
     }()
     fileprivate lazy var stackView : UIStackView = {
@@ -62,33 +66,18 @@ class PopupView : UIView {
         return button
     }()
     //MARK: - Lifecycle
-    init(title: String, subtitle: String, withButton: Bool, buttonTitle: String? = nil) {
+    init(title: String, titleFont:CGFloat, subtitle: String, subtitleFont: CGFloat,
+         withButton: Bool, buttonTitle: String? = nil) {
         self.title = title
+        self.titleFont = titleFont
         self.subtitle = subtitle
+        self.subtitleFont = subtitleFont
+        
         self.withButton = withButton
         self.buttonTitle = buttonTitle
         
         super.init(frame: .zero)
-        
-        self.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
-        self.frame = UIScreen.main.bounds
-        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(animateOut)))
-        
-        self.addSubview(containerView)
-        containerView.center(inView: self)
-        containerView.heightMultiplier(heightAnchor: self.heightAnchor, heightMultiplier: 0.25)
-        containerView.widthMutiplier(widthAnchor: self.widthAnchor, widthMultiplier: 0.75)
-        
-        
-        self.containerView.addSubview(stackView)
-        stackView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, right: containerView.rightAnchor,
-                         paddingTop: 16, paddingLeft: 8, paddingRight: 8)
-        stackView.heightMultiplier(heightAnchor: containerView.heightAnchor, heightMultiplier: 0.5)
-        
-        self.containerView.addSubview(cancelButton)
-        cancelButton.anchor(top: containerView.topAnchor, right: containerView.rightAnchor,
-                            paddingTop: 8, paddingRight: 8)
-        if withButton {addingButtonIntoStackview()}
+        configureUI(shouldContainButton: self.withButton)
         animateIn()
     }
 
@@ -96,6 +85,34 @@ class PopupView : UIView {
         fatalError("init(coder:) has not been implemented")
     }
     //MARK: - Configure
+    func configureUI(shouldContainButton: Bool) {
+        self.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
+        self.frame = UIScreen.main.bounds
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(animateOut)))
+        
+        self.addSubview(containerView)
+        self.containerView.addSubview(stackView)
+        containerView.center(inView: self)
+        containerView.widthMutiplier(widthAnchor: self.widthAnchor, widthMultiplier: 0.75)
+        
+        
+        
+        if !shouldContainButton {
+            containerView.heightMultiplier(heightAnchor: self.heightAnchor, heightMultiplier: 0.15)
+            stackView.centerY(inView: containerView)
+            stackView.centerX(inView: containerView)
+        }else {
+            containerView.heightMultiplier(heightAnchor: self.heightAnchor, heightMultiplier: 0.25)
+            stackView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, right: containerView.rightAnchor,
+                             paddingTop: 16, paddingLeft: 8, paddingRight: 8)
+            addingButtonIntoStackview()
+        }
+        stackView.heightMultiplier(heightAnchor: containerView.heightAnchor, heightMultiplier: 0.5)
+        
+        self.containerView.addSubview(cancelButton)
+        cancelButton.anchor(top: containerView.topAnchor, right: containerView.rightAnchor,
+                            paddingTop: 8, paddingRight: 8)
+    }
     func addingButtonIntoStackview() {
         self.containerView.addSubview(actionButton)
         actionButton.anchor(top: stackView.bottomAnchor, paddingTop: 16)
@@ -106,7 +123,6 @@ class PopupView : UIView {
     //MARK: - Animation
     @objc func animateOut() {
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn) {
-            self.containerView.transform = CGAffineTransform(translationX: 0, y: -self.frame.height)
             self.alpha = 0
         } completion: { complete in
             if complete {
@@ -115,14 +131,17 @@ class PopupView : UIView {
         }
     }
     @objc fileprivate func animateIn() {
-        self.containerView.transform = CGAffineTransform(translationX: 0, y: self.frame.height)
+        
         self.alpha = 0
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn) {
-            self.containerView.transform = .identity
+            
             self.alpha = 1
         }
     }
     @objc func handleCancelButtonTapped() {
+        self.animateOut()
+    }
+    @objc func handleActionButtonTapped() {
         self.animateOut()
     }
 }

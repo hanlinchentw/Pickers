@@ -146,8 +146,8 @@ class RegisterViewController : UIViewController, MBProgressHUDProtocol {
         registerButton.anchor(top: passwordStack.bottomAnchor,
                               left: self.view.leftAnchor,
                               right: self.view.rightAnchor,
-                              paddingTop: 32)
-        registerButton.heightMultiplier(heightAnchor: self.view.heightAnchor, heightMultiplier: 0.08)
+                              paddingTop: 32, height: 48)
+        
         
         UIView.animate(withDuration: 0.3, animations: {
             self.passwordInputView.alpha = 1

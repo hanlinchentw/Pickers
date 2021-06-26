@@ -22,10 +22,11 @@ class MapViewController: UIViewController{
     }
     }
     lazy var collecionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
+        let layout = ZoomAndSnapFlowLayout()
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .clear
+        cv.alwaysBounceHorizontal = true
         return cv
     }()
     
@@ -53,6 +54,16 @@ class MapViewController: UIViewController{
             }
         }
     }
+    func updateSelectStatus(restaurantID: String){
+        if let index = self.restaurants.firstIndex(where: { $0.restaurantID == restaurantID}) {
+            self.restaurants[index].isSelected.toggle()
+        }
+    }
+    func updateLikeRestaurant(restaurantID: String){
+        if let index = self.restaurants.firstIndex(where: { $0.restaurantID == restaurantID}) {
+            self.restaurants[index].isLiked.toggle()
+        }
+    }
     //MARK: - Helpers
     func configureCollectionView(){
         collecionView.delegate = self
@@ -61,9 +72,13 @@ class MapViewController: UIViewController{
         collecionView.register(RestaurantCardCell.self, forCellWithReuseIdentifier: mapCardCellIdentifier)
         
         view.addSubview(collecionView)
+        let bottomPadding = 104 * view.heightMultiplier
         collecionView.anchor(left: view.leftAnchor,right: view.rightAnchor,
                              bottom: mapView.bottomAnchor,
-                             paddingLeft: 16,paddingBottom: 88+16, height: 240)
+                             paddingBottom: bottomPadding, height: view.restaurantCardCGSize.height * 1.25)
+        
+        self.collecionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        
     }
     func checkIfUserAuthorize(){
         switch CLLocationManager.authorizationStatus() {
@@ -127,9 +142,15 @@ extension MapViewController: UICollectionViewDelegate, UICollectionViewDataSourc
         self.delegate?.pushToDetailVC(restaurants[indexPath.row])
     }
 }
+//MARK: - UICollectionViewDelegateFlowLayout
 extension MapViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 280, height: 240)
+        let height  = view.restaurantCardCGSize.height
+        let width = view.restaurantCardCGSize.width
+        return CGSize(width: width, height: height)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 40
     }
 }
 //MARK: - CardCellDelegate
@@ -154,7 +175,11 @@ private extension MapViewController {
             anno.index = index
             self.mapView.addAnnotation(anno)
         }
-        self.mapView.showAnnotations(self.mapView.annotations, animated: true)
+        DispatchQueue.main.async {
+            self.mapView.showAnnotations(self.mapView.annotations, animated: true)
+            print("DEBUG: add annotations")
+            self.collecionView.scrollToItem(at: IndexPath(row: restaurants.count/2, section: 0), at: .centeredHorizontally, animated: false)
+        }
     }
 }
 //MARK: -  Map Delegate
