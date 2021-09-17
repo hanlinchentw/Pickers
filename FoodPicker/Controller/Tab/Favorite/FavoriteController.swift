@@ -30,6 +30,7 @@ class FavoriteController: UIViewController {
         
         let titleLabel = UILabel()
         titleLabel.text = "My Favorite"
+        titleLabel.textColor = .black
         titleLabel.font = UIFont(name: "Avenir-Heavy", size: 16)
         view.addSubview(titleLabel)
         titleLabel.centerX(inView: view)
@@ -119,8 +120,6 @@ class FavoriteController: UIViewController {
     }
     
     func configureTableView(){
-        tableView.isSkeletonable = true
-        tableView.showAnimatedSkeleton()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.showsVerticalScrollIndicator = false
@@ -191,7 +190,6 @@ extension FavoriteController: RestaurantListCellDelegate {
     func didSelectRestaurant(_ restaurant:Restaurant) {
         guard let index = self.likedRestaurants.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
         self.likedRestaurants[index].isSelected.toggle()
-        
         self.updateSelectedRestaurant(restaurant: restaurant)
     }
     func shouldDeleteCell(_ restaurant: Restaurant) {

@@ -35,6 +35,7 @@ class BottomSheetViewController : UIViewController {
         let label = UILabel()
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
         label.text = "My selected list"
+        label.textColor = .black
         return label
     }()
     private lazy var saveButton: UIButton = {

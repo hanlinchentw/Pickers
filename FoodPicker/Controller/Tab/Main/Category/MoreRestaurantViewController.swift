@@ -59,7 +59,7 @@ class MoreRestaurantViewController: UIViewController {
         navBar.isTranslucent = true
         let division = self.tableView.restaurants[0].division
         navigationItem.title = division.description
-    
+        
         let backButtonView = UIView(frame: CGRect(x: 0, y: 0, width: 56, height: 40))
         backButtonView.bounds = backButtonView.bounds.offsetBy(dx: 18, dy: 0)
         backButtonView.addSubview(backButton)

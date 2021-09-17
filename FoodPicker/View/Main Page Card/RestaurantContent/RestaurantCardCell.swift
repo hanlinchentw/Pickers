@@ -34,6 +34,7 @@ class RestaurantCardCell: UICollectionViewCell{
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
         label.textAlignment = .left
         label.numberOfLines = 1
+        label.textColor = .black
         return label
     }()
     let businessLabel : UILabel = {

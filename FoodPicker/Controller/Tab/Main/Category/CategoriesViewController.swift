@@ -15,7 +15,7 @@ private let foodCardSection = "FoodCardCell"
 private let headerCell = "SortHeader"
 private let footerCell = "AllRestaurantsSection"
 
-protocol CategoriesViewControllerDelegate: AnyObject {
+protocol MainPageChildControllersDelegate: AnyObject {
     func pushToDetailVC(_ restaurant: Restaurant)
     func didSelectRestaurant(restaurant:Restaurant)
     func didLikeRestaurant(restaurant:Restaurant)
@@ -25,7 +25,7 @@ protocol CategoriesViewControllerDelegate: AnyObject {
 class CategoriesViewController: UICollectionViewController, MBProgressHUDProtocol {
     //MARK: - Properties
     private let locationManager = LocationHandler.shared.locationManager
-    weak var delegate: CategoriesViewControllerDelegate?
+    weak var delegate: MainPageChildControllersDelegate?
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     let defaultOptions : [recommendOption] = [.popular, .topPick]

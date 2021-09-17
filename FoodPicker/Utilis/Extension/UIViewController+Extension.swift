@@ -17,8 +17,7 @@ extension UIViewController{
             if isSelected{
                 connect.deleteRestaurantIn(entityName: selectedEntityName, id: restaurant.restaurantID)
             }else{
-                connect.saveRestaurantInLocal(restaurant: restaurant, entityName: selectedEntityName,
-                                              trueForSelectFalseForLike: true)
+                connect.saveSelectedRestaurant(restaurant: restaurant)
             }
         }
     }
@@ -37,8 +36,7 @@ extension UIViewController{
             if isLiked{
                 connect.deleteRestaurantIn(entityName: likedEntityName, id: restaurant.restaurantID)
             }else{
-                connect.saveRestaurantInLocal(restaurant: restaurant, entityName: likedEntityName,
-                                              trueForSelectFalseForLike: false)
+                connect.saveLikedRestaurant(restaurant: restaurant)
             }
         }
     }
@@ -50,8 +48,19 @@ extension UIViewController{
         }
     }
     
+    func restaurantsCheckProcess(restaurants: [Restaurant], completion: @escaping([Restaurant])->Void) {
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        var uncheckedRestaurants = restaurants
+        for (index, item) in uncheckedRestaurants.enumerated(){
+            self.checkIfUserLiked(context: context, uncheckedRestaurant: item) { (isLiked) in
+                uncheckedRestaurants[index].isLiked = isLiked
+                completion(uncheckedRestaurants)
+            }
+        }
+    }
+    
     func fetchRestaurantsByOption(location: CLLocationCoordinate2D , option: recommendOption? = nil,
-                                  limit: Int, offset: Int = 0 ,completion: @escaping(restaurantResponse)) {
+                                  limit: Int = 20, offset: Int = 0 ,completion: @escaping(restaurantResponse)) {
         
         NetworkService.shared.fetchRestaurants(lat: location.latitude, lon: location.longitude,
                                                withOffset: offset, option: option, limit: limit)

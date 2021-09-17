@@ -3,17 +3,17 @@
     {
       "scale" : "1x",
       "idiom" : "universal",
-      "filename" : "btnLocationUnselect.png"
+      "filename" : "icon24Lock.png"
     },
     {
       "idiom" : "universal",
-      "filename" : "btnLocationUnselect@2x.png",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "icon24Lock@2x.png"
     },
     {
       "scale" : "3x",
       "idiom" : "universal",
-      "filename" : "btnLocationUnselect@3x.png"
+      "filename" : "icon24Lock@3x.png"
     }
   ],
   "info" : {

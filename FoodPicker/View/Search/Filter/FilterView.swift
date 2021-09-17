@@ -21,7 +21,7 @@ class FilterView : UIView {
         let label = UILabel()
         label.text = "Sort: Nearby"
         label.font = UIFont(name: "Arial-BoldMT", size: 14)
-        label.textColor = .customblack
+        label.textColor = .black
         label.textAlignment = .center
         return label
     }()

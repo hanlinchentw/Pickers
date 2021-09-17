@@ -10,7 +10,6 @@ import UIKit
 
 private let keywordCardCellIdentifier = "keywordCard"
 
-
 class SearchShortcutSection : UICollectionViewCell {
     //MARK: - Properties
     var keywords = [String]() { didSet{ self.collectionView.reloadData() }}
@@ -18,6 +17,7 @@ class SearchShortcutSection : UICollectionViewCell {
     var titleLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Arial-BoldMT", size: 14)
+        label.textColor = .black
         return label
     }()
     
@@ -36,8 +36,9 @@ class SearchShortcutSection : UICollectionViewCell {
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingLeft: 24)
         
         addSubview(collectionView)
-        collectionView.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor, right: rightAnchor,bottom: bottomAnchor,
-                              paddingTop: 4)
+        collectionView.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor,
+                              right: rightAnchor,bottom: bottomAnchor,
+                              paddingTop: 4, paddingLeft: -8, paddingRight: 8)
         configureCollectionView()
     }
     required init?(coder: NSCoder) {
@@ -63,8 +64,14 @@ extension SearchShortcutSection : UICollectionViewDelegate, UICollectionViewData
 }
 extension SearchShortcutSection : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: 100, height: 32)
+        let width = self.categoryCardCGSize.width
+        let size = CGSize(width: width, height: 32)
         return size
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        let screenWidth = UIScreen.main.bounds.width
+        let spacing = CGFloat(screenWidth - categoryCardCGSize.width*3 - 24)/2
+        return spacing
     }
 }
 class KeywordCardCell : UICollectionViewCell {
@@ -77,6 +84,7 @@ class KeywordCardCell : UICollectionViewCell {
         label.backgroundColor = .white
         label.layer.cornerRadius = 12
         label.layer.masksToBounds = true
+        label.textColor = .black
         return label
     }()
    

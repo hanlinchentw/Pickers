@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SearchHeaderDelegate: class {
+protocol SearchHeaderDelegate: AnyObject {
     func didTapSearchHeader()
     func didClearSearchHeader()
 }

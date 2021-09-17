@@ -9,7 +9,7 @@
 import Foundation
 import Firebase
 
-let userEntityName = "User"
+let searchHistoryEntityName = "SearchHistory"
 let selectedEntityName = "SelectedRestaurant"
 let likedEntityName = "LikedRestaurant"
 let DID_SELECT_KEY = "restaurantDidSelect"

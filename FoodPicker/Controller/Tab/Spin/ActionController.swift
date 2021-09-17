@@ -33,6 +33,7 @@ class ActionViewController: UIViewController {
     private let stateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Arial-BoldMT", size: 16)
+        label.textColor = .black
         return label
     }()
     private var wheel : LuckyWheel?
@@ -168,8 +169,8 @@ class ActionViewController: UIViewController {
             view.addSubview(resultView)
             resultView.centerX(inView: self.view)
             resultView.anchor(top: stateLabel.bottomAnchor, paddingTop: 16)
-            let resultViewWidth = self.view.restaurantCardCGSize.width
-            let resultViewHeight = self.view.restaurantCardCGSize.height
+            let resultViewWidth = self.view.restaurantCardCGSize.width * 1.2
+            let resultViewHeight = self.view.restaurantCardCGSize.height * 1.1
             resultView.anchor(width: resultViewWidth, height: resultViewHeight)
             stateLabel.text = "✔︎ \(restaurant.name) for TODAY !"
         }

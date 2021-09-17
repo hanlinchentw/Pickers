@@ -33,6 +33,8 @@
 		B650ECD4257F2655004A4049 /* LuckyWheelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD0257F2655004A4049 /* LuckyWheelItem.swift */; };
 		B650ECD5257F2655004A4049 /* LuckyWheelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD1257F2655004A4049 /* LuckyWheelText.swift */; };
 		B650ECD7257F2655004A4049 /* LuckyWheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD3257F2655004A4049 /* LuckyWheel.swift */; };
+		B6597042268859C700E8C88D /* RestaurantCarouselCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6597041268859C700E8C88D /* RestaurantCarouselCollectionView.swift */; };
+		B65970472688668700E8C88D /* BottomSwipableCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65970462688668700E8C88D /* BottomSwipableCollectionViewController.swift */; };
 		B685484424B44938009BC800 /* LocaionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484324B44938009BC800 /* LocaionHandler.swift */; };
 		B685484624B4511A009BC800 /* RestaurantListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484524B4511A009BC800 /* RestaurantListCell.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
@@ -127,6 +129,8 @@
 		B650ECD0257F2655004A4049 /* LuckyWheelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheelItem.swift; sourceTree = "<group>"; };
 		B650ECD1257F2655004A4049 /* LuckyWheelText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheelText.swift; sourceTree = "<group>"; };
 		B650ECD3257F2655004A4049 /* LuckyWheel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheel.swift; sourceTree = "<group>"; };
+		B6597041268859C700E8C88D /* RestaurantCarouselCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCarouselCollectionView.swift; sourceTree = "<group>"; };
+		B65970462688668700E8C88D /* BottomSwipableCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSwipableCollectionViewController.swift; sourceTree = "<group>"; };
 		B685484324B44938009BC800 /* LocaionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaionHandler.swift; sourceTree = "<group>"; };
 		B685484524B4511A009BC800 /* RestaurantListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantListCell.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -290,8 +294,8 @@
 			children = (
 				B6C7D5BB2563F63D005D2AA0 /* JsonDecode */,
 				B685484D24BB0090009BC800 /* Restaurant.swift */,
-				B6C7D5B72563F4F3005D2AA0 /* RestaurantAnnotation.swift */,
 				B6C7D5BC2563F65A005D2AA0 /* List.swift */,
+				B6C7D5B72563F4F3005D2AA0 /* RestaurantAnnotation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -332,7 +336,6 @@
 				B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */,
 				B6F789A82675DC440003ED5C /* Validators.swift */,
 				B6F789AD267610950003ED5C /* NetworkMonitor.swift */,
-				B68DD0512687523C008E1FDE /* ZoomAndSnapFlowLayout.swift */,
 			);
 			path = Utilis;
 			sourceTree = "<group>";
@@ -343,8 +346,8 @@
 				B647A50024B3145B0098B7A2 /* CardCellViewModel.swift */,
 				B685485224BECC7F009BC800 /* LuckyWheelViewModel.swift */,
 				B6D1307D24CEE80C00040F85 /* FilterViewModel.swift */,
-				B6F7618D24D3F6E100318AB1 /* DetailCellViewModel.swift */,
 				B6C7D5B3255BA967005D2AA0 /* DetailHeaderViewModel.swift */,
+				B6F7618D24D3F6E100318AB1 /* DetailCellViewModel.swift */,
 			);
 			path = "View Model";
 			sourceTree = "<group>";
@@ -358,6 +361,33 @@
 				B6C90FC225E2560A008B492F /* TextLayer.swift */,
 			);
 			path = LuckyWheel;
+			sourceTree = "<group>";
+		};
+		B6597043268859CA00E8C88D /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				B6597041268859C700E8C88D /* RestaurantCarouselCollectionView.swift */,
+				B68DD0512687523C008E1FDE /* ZoomAndSnapFlowLayout.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		B65970442688665700E8C88D /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				B6C7D5A92554E510005D2AA0 /* MapViewController.swift */,
+				B65970462688668700E8C88D /* BottomSwipableCollectionViewController.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		B65970452688666600E8C88D /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				B689A7A12564CBDF009D270B /* CategoriesViewController.swift */,
+				B6C7D5AD255824B7005D2AA0 /* MoreRestaurantViewController.swift */,
+			);
+			path = Category;
 			sourceTree = "<group>";
 		};
 		B685484F24BD8605009BC800 /* Service */ = {
@@ -408,6 +438,7 @@
 		B6AE009524D53A7700423D72 /* Main Page Card */ = {
 			isa = PBXGroup;
 			children = (
+				B6597043268859CA00E8C88D /* Map */,
 				B626F57126156F9400F17F7F /* Header */,
 				B626F57226156FB100F17F7F /* RestaurantContent */,
 			);
@@ -468,9 +499,8 @@
 			isa = PBXGroup;
 			children = (
 				B647A4F624B22B4D0098B7A2 /* MainPageController.swift */,
-				B689A7A12564CBDF009D270B /* CategoriesViewController.swift */,
-				B6C7D5A92554E510005D2AA0 /* MapViewController.swift */,
-				B6C7D5AD255824B7005D2AA0 /* MoreRestaurantViewController.swift */,
+				B65970452688666600E8C88D /* Category */,
+				B65970442688665700E8C88D /* Map */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -701,6 +731,7 @@
 				B647A4E724B2039D0098B7A2 /* Extension.swift in Sources */,
 				B6F789B826774D9B0003ED5C /* String+Extensions.swift in Sources */,
 				B6B84D512665D52F002E418D /* UIFont+UIColor+Extension.swift in Sources */,
+				B6597042268859C700E8C88D /* RestaurantCarouselCollectionView.swift in Sources */,
 				B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */,
 				B6AE009924D7F94F00423D72 /* CategoriesCard.swift in Sources */,
 				B6B41AC4251316E800A5ACBE /* SortOptionCell.swift in Sources */,
@@ -723,6 +754,7 @@
 				B6C7D5B0255843C1005D2AA0 /* MoreRestaurantsFooterView.swift in Sources */,
 				B6B84C84265212D1002E418D /* SearchHeader.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
+				B65970472688668700E8C88D /* BottomSwipableCollectionViewController.swift in Sources */,
 				B6D1306724C16DA100040F85 /* FirebaseService.swift in Sources */,
 				B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */,
 				B647A4F524B22B200098B7A2 /* ProfileController.swift in Sources */,
@@ -816,7 +848,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -870,7 +902,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

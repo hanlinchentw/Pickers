@@ -81,6 +81,7 @@ extension ProfileController{
         cell.backgroundColor = .white
         cell.imageView?.image = UIImage(named: "icon24Lock")?.withRenderingMode(.alwaysOriginal)
         cell.textLabel?.text = "Reset Password"
+        cell.textLabel?.textColor = . black
         return cell
     }
     
@@ -99,6 +100,7 @@ extension ProfileController{
         let emailLabel = UILabel()
         emailLabel.font = UIFont(name: "Arial-MT", size: 16)
         emailLabel.text = email
+        emailLabel.textColor = .black
         
         view.addSubview(emailLabel)
         emailLabel.centerX(inView: view)

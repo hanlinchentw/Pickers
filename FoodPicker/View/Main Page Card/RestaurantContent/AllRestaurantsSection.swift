@@ -22,6 +22,7 @@ class AllRestaurantsSection: UICollectionReusableView{
     private let titleLabel : UILabel = {
         let label = UILabel()
         label.text = "All Restaurants"
+        label.textColor = .black
         label.font = UIFont(name: "Avenir-Heavy", size: 24)
         return label
     }()

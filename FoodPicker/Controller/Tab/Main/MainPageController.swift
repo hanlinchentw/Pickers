@@ -18,7 +18,7 @@ private let headerCell = "SortHeader"
 private let footerCell = "AllRestaurantsSection"
 
 // This controller contains two view contrller, Category view controller and map view controller.
-class MainPageController: UIViewController, MapViewControllerDelegate, MBProgressHUDProtocol {
+class MainPageController: UIViewController, MBProgressHUDProtocol {
     //MARK: - Properties
     private let navBarView = MainPageNavigationBar()
     
@@ -83,7 +83,6 @@ class MainPageController: UIViewController, MapViewControllerDelegate, MBProgres
             switch option {
             case .all:
                 self.categoryVC.dataSource = self.dataSource
-                self.mapVC.restaurants = self.dataSource
             case .topPick:
                 self.categoryVC.topPicksDataSource = self.topPicksDataSource
             case .popular:
@@ -99,7 +98,7 @@ class MainPageController: UIViewController, MapViewControllerDelegate, MBProgres
         self.fetchRestaurantsByOption(location: location, option: option, limit: limit) { (result, error) in
             print("DEBUG: Fetching data ... main VC ")
             if let result = result {
-                self.restaurantCheckProcess(restaurants: result) { checkedRestaurants in
+                self.restaurantsCheckProcess(restaurants: result) { checkedRestaurants in
                     switch option {
                     case .all:
                         self.dataSource = checkedRestaurants
@@ -115,17 +114,6 @@ class MainPageController: UIViewController, MapViewControllerDelegate, MBProgres
             }
         }
     }
-    
-    func restaurantCheckProcess(restaurants: [Restaurant], completion: @escaping([Restaurant])->Void) {
-        var uncheckedRestaurants = restaurants
-        for (index, item) in uncheckedRestaurants.enumerated(){
-            self.checkIfUserLiked(context: self.context, uncheckedRestaurant: item) { (isLiked) in
-                uncheckedRestaurants[index].isLiked = isLiked
-                completion(uncheckedRestaurants)
-            }
-        }
-    }
-
     func updateSelectedRestaurantsInCoredata(restaurant: Restaurant){
         guard let tab = tabBarController as? HomeController else { return }
         do{
@@ -135,7 +123,7 @@ class MainPageController: UIViewController, MapViewControllerDelegate, MBProgres
             updateSelectedRestaurantsInCoredata(context: context, restaurant: restaurant)
         }catch SelectRestaurantResult.upToLimit{
             self.presentPopupViewWithoutButton(title: "Sorry!", subtitle: "You can only select 8 restaurant. 😢")
-            self.mapVC.collecionView.reloadData()
+            self.mapVC.bottomViewController.restaurantCardCollectionView.reloadData()
             self.categoryVC.collectionView.reloadData()
         }catch{
             print("DEBUG: Failed to select restaurant.")
@@ -198,7 +186,7 @@ extension MainPageController : MainPageHeaderDelegate {
     }
 }
 //MARK: - CategoriesViewControllerDelegate
-extension MainPageController: CategoriesViewControllerDelegate{
+extension MainPageController: MainPageChildControllersDelegate{
     func didTapCategoryCard(textOnCard text: String) {
         guard let tab = tabBarController as? HomeController else { return }
         tab.searchRestaurantsFromCategoryCard(textOnCard: text)
@@ -232,6 +220,7 @@ extension MainPageController: CategoriesViewControllerDelegate{
         updateLikedRestaurantsInDataBase(context: context, restaurant: restaurant)
     }
 }
+
 //MARK: - DetailControllerDelegate
 extension MainPageController: DetailControllerDelegate {
     func updateLikedRestaurant(restaurant: Restaurant) {

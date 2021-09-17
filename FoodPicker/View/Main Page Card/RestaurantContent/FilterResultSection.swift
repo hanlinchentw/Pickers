@@ -51,7 +51,8 @@ class FilterResultSection: UICollectionViewCell {
     }
     private lazy var titleLabel : UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Avenir-Heavy", size: 24)
+        label.font = UIFont(name: "Arial-BoldMT", size: 24)
+        label.textColor = .black
         return label
     }()
     

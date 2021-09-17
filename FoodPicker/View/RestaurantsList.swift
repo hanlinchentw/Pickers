@@ -36,7 +36,7 @@ class RestaurantsList: UITableView{
         super.init(frame: frame, style: .plain)
         layer.cornerRadius = 16
         rowHeight = 93 + 24
-        backgroundColor = .clear
+        backgroundColor = .white
         separatorStyle = .none
         delegate = self
         dataSource = self

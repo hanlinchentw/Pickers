@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
 class LocationHandler : NSObject {
     public static let shared = LocationHandler()

@@ -33,6 +33,7 @@ class PopupView : UIView {
         let label = UILabel()
         label.font = UIFont(name: "ArialMT", size: subtitleFont)
         label.text = subtitle
+        label.textColor = .black
         label.textAlignment = .center
         label.numberOfLines = 0
         return label

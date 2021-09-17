@@ -25,6 +25,7 @@ class SpinResultView : UIView {
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
         label.textAlignment = .left
         label.numberOfLines = 1
+        label.textColor = .black
         return label
     }()
     private lazy var  businessLabel : UILabel = {

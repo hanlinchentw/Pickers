@@ -19,8 +19,14 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
     var restaurants = [Restaurant]() { didSet{ self.resultVC.searchResult = self.restaurants }}
     private let tableView = UITableView()
     private var errorView : ErrorView?
-    private var historicalRecords = [String]()
-    { didSet{ self.collectionView.reloadData() }}
+    private var historicalRecords = [String]() {
+        didSet{
+            DispatchQueue.main.async {
+                print(self.historicalRecords)
+                self.collectionView.reloadData()
+            }
+        }
+    }
     private let searchVC = SearchTableViewController(style: .grouped)
     private let resultVC = SearchResultController()
     private let context = ((UIApplication.shared.delegate) as! AppDelegate).persistentContainer.viewContext
@@ -28,11 +34,11 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.fetchShortCutWord()
         self.configureCollectionView()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.fetchHistoricalRecord()
         collectionView.backgroundColor = .backgroundColor
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.isTranslucent = true
@@ -66,43 +72,20 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
             errorView?.reloadButton
                 .publisher(for: .touchUpInside)
                 .sink { [weak self]_ in
-                    self?.fetchShortCutWord()
-            }.store(in: &subscriber)
+                    self?.fetchHistoricalRecord()
+                }.store(in: &subscriber)
         }
     }
     //MARK: - API
-    fileprivate func fetchShortCutWord() {
-        self.showLoadingAnimation()
-        self.retry(3, task: { success, failure in
-            self.fetchHistoricalRecord(success: success, failure: failure)
-            self.fetchTopSearches(success: success, failure: failure)
-        }, success: {
-            self.isDataLoadedSuccessfully(true)
-        }, failure: { error in
-            self.isDataLoadedSuccessfully(false)
-        })
-    }
     func addHistoricalRecordByTerm(term:String){
-        RestaurantService.shared.addHistoricalRecordbyTerm(term: term)
+        let connect = CoredataConnect(context: self.context)
+        connect.saveSearchHistoryInEntity(term: term)
     }
     
-    func fetchHistoricalRecord(success:@escaping() -> Void, failure: @escaping(Error) -> Void){
-        RestaurantService.shared.fetchHistoricalRecord { (records, error) in
-            if error != nil {
-                failure(error!)
-            }else{
-                success()
-                self.historicalRecords = records
-            }
-        }
-    }
-    func fetchTopSearches(success:@escaping() -> Void, failure: @escaping(Error) -> Void){
-        RestaurantService.shared.fetchTopSearches { (topSearch, error) in
-            if error != nil {
-                failure(error!)
-            }else{
-                success()
-            }
+    func fetchHistoricalRecord(){
+        let connect = CoredataConnect(context: self.context)
+        connect.fetchSearchHistory { terms in
+            self.historicalRecords = terms
         }
     }
     func fetchRestautantsByterms(term: String){
@@ -170,16 +153,13 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
 //MARK: - UICollectionviewDelegate / Datasoruce
 extension SearchController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        return 1
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchShortcutIdentifier, for: indexPath)
-        as! SearchShortcutSection
-        let title = ["Recent Searches","Top Searches"]
-        cell.titleLabel.text = title[indexPath.row]
-        if indexPath.row == 0 {
-            cell.keywords = historicalRecords
-        }
+            as! SearchShortcutSection
+        cell.titleLabel.text = "Recent Searches"
+        cell.keywords = historicalRecords
         return cell
     }
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -206,9 +186,7 @@ extension SearchController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.width, height: view.frame.height)
     }
-
 }
-
 //MARK: -
 extension SearchController: CategoryCardWallDelegate {
     func searchRestaurantByTappingCard(_ keyword: String) {
@@ -220,57 +198,60 @@ extension SearchController: CategoryCardWallDelegate {
 //MARK: - Page switch
 extension SearchController{
     func showSearchTable(shouldShow: Bool){
-          if shouldShow{
-              self.searchVC.view.isHidden = false
-              UIView.animate(withDuration: 0.3) {
-                  self.searchVC.view.alpha = 1
-              }
-          }else{
-              UIView.animate(withDuration: 0.3, animations: {
-                  self.searchVC.view.alpha = 0
-              }) { (_) in
-                  self.searchVC.view.isHidden = true
-              }
-          }
-      }
-      func showResultView(shouldShow: Bool){
-          if shouldShow{
-              self.resultVC.view.isHidden = false
-              UIView.animate(withDuration: 0.2) {
-                  self.resultVC.view.alpha = 1
-              }
-          }else{
-              UIView.animate(withDuration: 0.2, animations: {
-                  self.resultVC.view.alpha = 0
-              }) { (_) in
-                  self.resultVC.view.isHidden = true
-              }
-          }
-      }
-      func shouldCloseKeyboard(should: Bool, term: String? = nil){
-          guard let header = collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader)[0] as? SearchHeader else { return }
-          if should{
-              header.searchBar.text?.removeAll()
-              header.searchBar.clearButtonMode = .whileEditing
-          }else{
-              header.searchBar.text = term
-              header.searchBar.clearButtonMode = .always
-          }
-      }
+        if shouldShow{
+            self.searchVC.closeTheKeyBoardAndCleanTextField()
+            self.searchVC.view.isHidden = false
+            UIView.animate(withDuration: 0.3) {
+                self.searchVC.view.alpha = 1
+            }
+        }else{
+            UIView.animate(withDuration: 0.3, animations: {
+                self.searchVC.view.alpha = 0
+            }) { (_) in
+                self.searchVC.view.isHidden = true
+                self.searchVC.removeFromParent()
+            }
+        }
+    }
+    func showResultView(shouldShow: Bool){
+        if shouldShow{
+            self.resultVC.view.isHidden = false
+            UIView.animate(withDuration: 0.2) {
+                self.resultVC.view.alpha = 1
+            }
+        }else{
+            UIView.animate(withDuration: 0.2, animations: {
+                self.resultVC.view.alpha = 0
+            }) { (_) in
+                self.resultVC.view.isHidden = true
+            }
+        }
+    }
+    func shouldCloseKeyboard(should: Bool, term: String? = nil){
+        guard let header = collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader)[0] as? SearchHeader else { return }
+        if should{
+            header.searchBar.text?.removeAll()
+            header.searchBar.clearButtonMode = .whileEditing
+        }else{
+            header.searchBar.text = term
+            header.searchBar.clearButtonMode = .always
+        }
+    }
 }
 //MARK: - SearchHeaderDelegate
 extension SearchController: SearchHeaderDelegate{
     func didTapSearchHeader() {
+        self.fetchHistoricalRecord()
         searchVC.historicalRecords = self.historicalRecords
         addChild(searchVC)
         searchVC.delegate = self
         view.addSubview(searchVC.view)
         searchVC.view.alpha = 0
         searchVC.view.frame = self.view.frame
-        
         self.showSearchTable(shouldShow: true)
     }
     func didClearSearchHeader() {
+        self.fetchHistoricalRecord()
         self.showResultView(shouldShow: false)
         self.showSearchTable(shouldShow: false)
         shouldCloseKeyboard(should: true, term: nil)

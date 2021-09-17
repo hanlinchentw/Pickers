@@ -11,7 +11,7 @@ import UIKit
 
 class ZoomAndSnapFlowLayout : UICollectionViewFlowLayout {
     let activeDistance: CGFloat = 200
-    let zoomFactor: CGFloat = 0.2
+    let zoomFactor: CGFloat = 0.15
     
     override func prepare() {
         guard let collectionView = collectionView else { fatalError() }

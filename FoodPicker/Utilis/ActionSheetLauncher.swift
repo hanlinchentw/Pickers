@@ -13,7 +13,7 @@ private let tableViewCellID = "sortIdentifier"
 private let priceRangeHeader = "headerIdentifier"
 private let priceRangeFooter = "footerIdentifier"
 
-protocol ActionSheetLauncherDelegate: class {
+protocol ActionSheetLauncherDelegate: AnyObject{
     func didSelectSortOption(option: SortOption)
 }
 

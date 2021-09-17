@@ -44,6 +44,7 @@ class RestaurantListCell : UITableViewCell {
         let label = UILabel()
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
         label.textAlignment = .left
+        label.textColor = .black
         return label
     }()
     private let priceLabel = UILabel()
@@ -56,7 +57,7 @@ class RestaurantListCell : UITableViewCell {
     //MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        backgroundColor = .white
         addSubview(optionImageView)
         let imageHeight = 93 * widthMultiplier
         optionImageView.anchor(left: leftAnchor, paddingLeft: 16, width: imageHeight, height: imageHeight)

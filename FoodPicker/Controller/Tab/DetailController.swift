@@ -34,8 +34,8 @@ class DetailController : UICollectionViewController {
         button.layer.shadowOffset = CGSize(width: 0, height: 1)
         button.layer.shadowRadius = 3
         
-        button.setImage(UIImage(named: "btnFloatingAddNoShadow")?
-                            .withRenderingMode(.alwaysOriginal), for: .normal)
+        let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
+        button.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleSelectButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -76,6 +76,7 @@ class DetailController : UICollectionViewController {
             self.restaurant.numOfLike = count
         }
     }
+    
     //MARK: - Selectors
     @objc func handleSelectButtonTapped(){
         restaurant.isSelected.toggle()

@@ -12,6 +12,10 @@
         <attribute name="reviewCount" optional="YES" attributeType="Integer 16" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="uid" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="SearchHistory" representedClassName="SearchHistory" syncable="YES" codeGenerationType="class">
+        <attribute name="term" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
     <entity name="SelectedRestaurant" representedClassName="SelectedRestaurant" syncable="YES" codeGenerationType="class">
         <attribute name="category" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
@@ -25,6 +29,7 @@
     </entity>
     <elements>
         <element name="LikedRestaurant" positionX="-11.94500732421875" positionY="234.2387390136719" width="128" height="193"/>
+        <element name="SearchHistory" positionX="171" positionY="315" width="128" height="59"/>
         <element name="SelectedRestaurant" positionX="355.0128784179688" positionY="251.0650024414062" width="128" height="178"/>
     </elements>
 </model>

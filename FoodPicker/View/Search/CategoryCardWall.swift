@@ -22,6 +22,7 @@ class CategoryCardWall: UICollectionReusableView{
         let label = UILabel()
         label.text = "Top Categories"
         label.font = UIFont(name: "Arial-BoldMT", size: 14)
+        label.textColor = .black
         return label
     }()
     

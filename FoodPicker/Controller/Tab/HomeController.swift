@@ -46,6 +46,7 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
         super.viewDidLoad()
         print("DEBUG:App folder: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))")
         authenticateUserAndConfigureUI()
+        overrideUserInterfaceStyle = .light
 //        try? Auth.auth().signOut()
     }
     override func viewDidLayoutSubviews() {
@@ -95,6 +96,7 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
         actionIconView.center(inView: tabBar, yConstant: offset)
         
         tabBar.backgroundColor = .white
+        tabBar.backgroundImage = UIImage(named: "bar")?.withRenderingMode(.alwaysOriginal)
         tabBar.layer.cornerRadius = 36
         tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         tabBar.layer.masksToBounds = true
@@ -191,7 +193,6 @@ extension HomeController {
         let connect = CoredataConnect(context: context)
         connect.deleteAllRestaurant(in: selectedEntityName)
     }
-    
 }
 //MARK: -  Search Restaurants from category cards
 extension HomeController {

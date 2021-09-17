@@ -28,6 +28,8 @@ class SearchTableViewController : UITableViewController{
     private let searchBarTextField : UITextField = {
         let tf = UITextField()
         tf.backgroundColor = .white
+        tf.textColor = .black
+        tf.tintColor = .darkGray
         tf.layer.cornerRadius = 12
         tf.layer.masksToBounds = true
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
@@ -55,10 +57,6 @@ class SearchTableViewController : UITableViewController{
         super.viewDidLoad()
         configureTableView()
     }
-    override func didMove(toParent parent: UIViewController?) {
-        searchBarTextField.text?.removeAll()
-        searchBarTextField.becomeFirstResponder()
-    }
     //MARK: - Helpers
     func configureTableView(){
         searchBarTextField.delegate = self
@@ -68,6 +66,10 @@ class SearchTableViewController : UITableViewController{
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(SearchCell.self, forCellReuseIdentifier: searchCellIdentifier)
+    }
+    func closeTheKeyBoardAndCleanTextField() {
+        searchBarTextField.text?.removeAll()
+        searchBarTextField.becomeFirstResponder()
     }
     //MARK: -Selectors
     @objc func handleBackButtonTapped(){
@@ -82,14 +84,12 @@ class SearchTableViewController : UITableViewController{
 //MARK: - UITableViewDelegate / DataSource
 extension SearchTableViewController{
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 2
     }
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 1:
             return "History"
-        case 2:
-            return "Top Categories"
         default:
             return nil
         }
@@ -97,7 +97,6 @@ extension SearchTableViewController{
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 1: return historicalRecords.count
-        case 2: return 5
         default: return 0
         }
     }
@@ -120,9 +119,6 @@ extension SearchTableViewController{
         if indexPath.section == 1{
             let term = historicalRecords[indexPath.row]
             searchBarTextField.text = term
-            print(term)
-        }else if indexPath.section == 2{
-            
         }
     }
 }

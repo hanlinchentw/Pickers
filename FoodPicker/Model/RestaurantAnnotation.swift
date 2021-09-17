@@ -12,8 +12,9 @@ import MapKit
 class RestaurantAnnotation: MKPointAnnotation{
     let id : String
     var index: Int?
-    
-    init(id: String) {
+    let imageURL : URL
+    init(id: String, url: URL) {
         self.id = id
+        self.imageURL = url
     }
 }

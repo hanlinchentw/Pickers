@@ -33,6 +33,7 @@ struct Restaurant {
         let restaurantLocation = CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)
         return loacation.distance(from: restaurantLocation)
     }
+    
     init(business:Business?, detail: Details? = nil, dictionary: [String : Any]? = nil ) {
         if let detail = detail {
             self.details = detail

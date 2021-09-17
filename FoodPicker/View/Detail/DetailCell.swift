@@ -32,16 +32,18 @@ class DetailCell : UICollectionViewCell {
         return iv
     }()
     private let titleLabel : UILabel = {
-           let label = UILabel()
-           label.font = UIFont.arialBoldMT
-           return label
+        let label = UILabel()
+        label.font = UIFont.arialBoldMT
+        label.textColor = .black
+        return label
     }()
-   
+    
     private let subtitleLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.arialMT
         label.text = "No Providing"
         label.numberOfLines = 0
+        label.textColor = .black
         return label
     }()
     
@@ -61,8 +63,8 @@ class DetailCell : UICollectionViewCell {
         numOfPeopleLikeLabel.textColor = .gray
         view.addSubview(numOfPeopleLikeLabel)
         numOfPeopleLikeLabel.anchor(top:view.topAnchor, left: likeImageView.rightAnchor,
-                     right: view.rightAnchor, bottom: view.bottomAnchor,
-                     paddingLeft: 4)
+                                    right: view.rightAnchor, bottom: view.bottomAnchor,
+                                    paddingLeft: 4)
         
         return view
     }()
@@ -145,7 +147,7 @@ class DetailCell : UICollectionViewCell {
         subtitleStack.spacing = 8
         addSubview(subtitleStack)
         subtitleStack.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, right:rightAnchor,
-                            paddingTop: 4, paddingLeft: 16, paddingRight: 100)
+                             paddingTop: 4, paddingLeft: 16, paddingRight: 100)
         
         addSubview(menuButton)
         menuButton.anchor(left:leftAnchor, bottom: bottomAnchor,

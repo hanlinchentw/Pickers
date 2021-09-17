@@ -36,20 +36,19 @@ extension UITextField {
     }
     
     func createSearchBar(withPlaceholder placeholder: String) -> UITextField {
+        let iv = UIImageView()
+        iv.image = UIImage(named: "icnSearchSmall")
+        iv.contentMode = .scaleAspectFill
+        
         let tf = UITextField()
         tf.backgroundColor = .white
         tf.layer.cornerRadius = 12
         tf.layer.masksToBounds = true
-        tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        tf.leftView = iv
         tf.leftViewMode = .always
+        tf.attributedPlaceholder = NSAttributedString(string: placeholder,
+                                                      attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
         tf.placeholder = placeholder
-
-        let iv = UIImageView()
-        iv.image = UIImage(named: "icnSearchSmall")
-        iv.contentMode = .scaleAspectFill
-        tf.addSubview(iv)
-        iv.centerY(inView:tf)
-        iv.anchor(left:tf.leftAnchor, paddingLeft: 8,width: 24 ,height: 24)
         return tf
     }
     

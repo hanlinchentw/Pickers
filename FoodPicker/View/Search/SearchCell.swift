@@ -23,6 +23,7 @@ class SearchCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont(name: "ArialMT", size: 16)
         label.text = "Test"
+        label.textColor = . black
         return label
     }()
 
