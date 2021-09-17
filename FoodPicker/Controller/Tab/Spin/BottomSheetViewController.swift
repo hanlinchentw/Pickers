@@ -22,8 +22,6 @@ class BottomSheetViewController : UIViewController {
     //MARK: - Properties
     var list: List?
     var state: ListState = .temp { didSet{ didChangeState() }}
-    
-    var gesture : UIPanGestureRecognizer?
     private let notchView : UIView = {
         let view = UIView()
         view.backgroundColor = .lightlightGray
@@ -69,16 +67,39 @@ class BottomSheetViewController : UIViewController {
         super.viewDidLoad()
         configurePanGesture()
         configureUI()
+        configureButton()
+        configureTableView()
     }
     //MARK: - Selectors
     @objc func panGesture(recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self.view)
         let y = self.view.frame.minY
-        if y + translation.y > 600 || y + translation.y <= 50 {
-            return
+        let newHeight = y + translation.y
+        switch recognizer.state {
+        case .changed:
+            self.view.frame = CGRect(x: 0, y: newHeight, width: view.frame.width, height: view.frame.height)
+            recognizer.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
+        case .ended:
+            if newHeight > UIScreen.main.bounds.height/3 {
+                animateOut()
+            }else{
+                animateIn()
+            }
+        default:
+            break
         }
-        self.view.frame = CGRect(x: 0, y: y + translation.y, width: view.frame.width, height: view.frame.height)
-        recognizer.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
+    }
+    func animateIn(){
+        UIView.animate(withDuration: 0.3) {
+            self.view.frame = CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height)
+        }
+    }
+    func animateOut(){
+        let wheelHeight = 330 * view.widthMultiplier
+        
+        UIView.animate(withDuration: 0.3) {
+            self.view.frame = CGRect(x: 0, y: 100+wheelHeight, width: self.view.frame.width, height: self.view.frame.height)
+        }
     }
     @objc func handleSaveButtonTapped(){
         if self.list?.restaurantsID.isEmpty ?? true {
@@ -118,9 +139,9 @@ class BottomSheetViewController : UIViewController {
     }
     //MARK: - Helpers
     func configurePanGesture(){
-        gesture = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
-        gesture?.delegate = self
-        view.addGestureRecognizer(gesture!)
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(panGesture(recognizer:)))
+        gesture.delegate = self
+        view.addGestureRecognizer(gesture)
     }
     func configureUI(){
         view.layer.cornerRadius = 24
@@ -131,7 +152,17 @@ class BottomSheetViewController : UIViewController {
         
         view.addSubview(titleLabel)
         titleLabel.anchor(top: notchView.bottomAnchor, left: view.leftAnchor, paddingTop: 24, paddingLeft: 16)
-        
+    }
+    func configureTableView() {
+        view.addSubview(tableView)
+        tableView.anchor(top: titleLabel.bottomAnchor, left:view.leftAnchor,
+                         right: view.rightAnchor,bottom: view.bottomAnchor,
+                         paddingTop: 16, paddingBottom: 200)
+        tableView.listDelegate = self
+        tableView.config = .sheet
+        tableView.isLoading = nil
+    }
+    func configureButton() {
         let buttonStack = UIStackView(arrangedSubviews: [updateButton, saveButton])
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
@@ -140,14 +171,6 @@ class BottomSheetViewController : UIViewController {
         view.addSubview(buttonStack)
         buttonStack.anchor(right: view.rightAnchor, paddingRight: 16)
         buttonStack.centerY(inView: titleLabel)
-        
-        view.addSubview(tableView)
-        tableView.anchor(top: titleLabel.bottomAnchor, left:view.leftAnchor,
-                         right: view.rightAnchor,bottom: view.bottomAnchor,
-                         paddingTop: 16, paddingBottom: 200)
-        tableView.listDelegate = self
-        tableView.config = .sheet
-        tableView.isLoading = nil
     }
     
     func didChangeState(){
@@ -212,15 +235,8 @@ extension BottomSheetViewController: RestaurantsListDelegate{
 //MARK: - UIGestureRecognizerDelegate
 extension BottomSheetViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        let gesture = (gestureRecognizer as! UIPanGestureRecognizer)
-//        let direction = gesture.velocity(in: view).y
         let y = view.frame.minY
-        if y == view.frame.height - 50 {
-            gesture.isEnabled = false
-        }else {
-            gesture.isEnabled = true
-        }
-        if y <= 150{
+        if y <= 100{
             tableView.isScrollEnabled = true
         } else {
             tableView.isScrollEnabled = false

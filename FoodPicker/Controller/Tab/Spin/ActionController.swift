@@ -38,7 +38,6 @@ class ActionViewController: UIViewController {
     }()
     private var wheel : LuckyWheel?
     private let bottomSheetVC = BottomSheetViewController()
-    
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -83,67 +82,35 @@ class ActionViewController: UIViewController {
         wheel?.delegate = self
         wheel?.dataSource = self
         wheel?.isUserInteractionEnabled = false
-        if wheel != nil {
-            wheel?.removeFromSuperview()
-            self.view.addSubview(wheel!)
-            wheel?.center = view.center
-            let wheelInset = 72 * view.widthMultiplier
-            wheel?.frame.origin.y = view.frame.origin.y + wheelInset
-            wheel?.animateLanding = false
-            
-            view.addSubview(startButton)
-            startButton.center(inView: wheel!)
-            startButton.setDimension(width: 85, height: 85)
-            startButton.layer.cornerRadius = 40 / 2
-            startButton.isUserInteractionEnabled = !(viewModel == nil)
-            
-            self.view.bringSubviewToFront(self.bottomSheetVC.view)
-        }
+        wheel?.removeFromSuperview()
+        self.view.addSubview(wheel!)
+        wheel?.center = view.center
+        let wheelInset = 72 * view.widthMultiplier
+        wheel?.frame.origin.y = view.frame.origin.y + wheelInset
+        wheel?.animateLanding = false
+        
+        view.addSubview(startButton)
+        startButton.center(inView: wheel!)
+        startButton.setDimension(width: 85, height: 85)
+        startButton.layer.cornerRadius = 40 / 2
+        startButton.isUserInteractionEnabled = !(viewModel == nil)
+        self.view.bringSubviewToFront(self.bottomSheetVC.view)
     }
-    
+
     func configureList(list: List?, addRestaurant: Restaurant? = nil){
         if list == nil{
-            bottomSheetVC.state = (bottomSheetVC.state == .temp) ? .temp : .edited
-            self.state = bottomSheetVC.state
+            let currentListState: ListState = (bottomSheetVC.state == .temp) ? .temp : .edited
+            bottomSheetVC.state = currentListState
+            self.state = currentListState
             guard let viewModel = viewModel else { return }
             if self.state == .temp{
-                let resID = viewModel.restaurants.map {$0.restaurantID}
-                let timestamp = NSDate().timeIntervalSince1970
-                let list = List(name: "My selected list", restaurantsID: resID, timestamp: timestamp)
-                bottomSheetVC.list = list
-                bottomSheetVC.tableView.restaurants = viewModel.restaurants
+                self.configureTempList(viewModel: viewModel)
             }else{
                 guard let restaurant = addRestaurant else { return }
-                if restaurant.isSelected{
-                    bottomSheetVC.list?.restaurantsID.append(restaurant.restaurantID)
-                    if let index = bottomSheetVC.tableView.restaurants
-                        .firstIndex(where: { $0.restaurantID == restaurant.restaurantID}){
-                        bottomSheetVC.tableView.restaurants[index].isSelected.toggle()
-                    }else{
-                        bottomSheetVC.tableView.restaurants.append(restaurant)
-                    }
-                }else{
-                    guard let newlistID =
-                        (bottomSheetVC.list?.restaurantsID.filter({ $0 != restaurant.restaurantID })) else { return }
-                    bottomSheetVC.list?.restaurantsID = newlistID
-                    bottomSheetVC.tableView.restaurants = bottomSheetVC.tableView.restaurants.filter({ $0.restaurantID != restaurant.restaurantID })
-                }
+                self.configureEditedList(restaurant: restaurant)
             }
         }else if let list = list{
-            self.state = .existed
-            self.selectedRestaurants = list.restaurants
-            bottomSheetVC.list = list
-            bottomSheetVC.tableView.restaurants = list.restaurants
-            bottomSheetVC.state = .existed
-            let viewModel = LuckyWheelViewModel(restaurants: list.restaurants)
-            self.viewModel = viewModel
-            
-            guard let tab = self.tabBarController as? HomeController else { return }
-            tab.deselectAllFromActionViewController(actionVC: self)
-            self.selectedRestaurants.forEach{
-                try! tab.updateSelectedRestaurants(from: self, restaurant: $0)
-                self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: $0)
-            }
+            self.configureExistedList(list:list)
         }
     }
     func configureSpiningUI(){
@@ -218,6 +185,48 @@ extension ActionViewController : LuckyWheelDelegate, LuckyWheelDataSource {
         
         guard let viewModel = viewModel, !selectedRestaurants.isEmpty else { return [item1, item2, item3, item4]}
         return viewModel.itemForSection
+    }
+}
+//MARK: - list method
+private extension ActionViewController {
+    func configureTempList(viewModel: LuckyWheelViewModel) {
+        let resIDs = viewModel.restaurants.map {$0.restaurantID}
+        let timestamp = NSDate().timeIntervalSince1970
+        let list = List(name: "My selected list", restaurantsID: resIDs, timestamp: timestamp)
+        bottomSheetVC.list = list
+        bottomSheetVC.tableView.restaurants = viewModel.restaurants
+    }
+    func configureEditedList(restaurant:Restaurant) {
+        if restaurant.isSelected{
+            bottomSheetVC.list?.restaurantsID.append(restaurant.restaurantID)
+            if let index = bottomSheetVC.tableView.restaurants
+                .firstIndex(where: { $0.restaurantID == restaurant.restaurantID}){
+                bottomSheetVC.tableView.restaurants[index].isSelected.toggle()
+            }else{
+                bottomSheetVC.tableView.restaurants.append(restaurant)
+            }
+        }else{
+            guard let newlistID =
+                (bottomSheetVC.list?.restaurantsID.filter({ $0 != restaurant.restaurantID })) else { return }
+            bottomSheetVC.list?.restaurantsID = newlistID
+            bottomSheetVC.tableView.restaurants = bottomSheetVC.tableView.restaurants.filter({ $0.restaurantID != restaurant.restaurantID })
+        }
+    }
+    func configureExistedList(list: List){
+        self.state = .existed
+        self.selectedRestaurants = list.restaurants
+        bottomSheetVC.list = list
+        bottomSheetVC.tableView.restaurants = list.restaurants
+        bottomSheetVC.state = .existed
+        let viewModel = LuckyWheelViewModel(restaurants: list.restaurants)
+        self.viewModel = viewModel
+        
+        guard let tab = self.tabBarController as? HomeController else { return }
+        tab.deselectAllFromActionViewController(actionVC: self)
+        self.selectedRestaurants.forEach{
+            try! tab.updateSelectedRestaurants(from: self, restaurant: $0)
+            self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: $0)
+        }
     }
 }
 //MARK: -  BottomSheetDelegate
