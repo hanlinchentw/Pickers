@@ -69,20 +69,19 @@ POP (Protocol oriented Programming)
 
 2. . 餐廳選取後可以透過轉盤取出今天的餐點！
 
-![image](https://github.com/hanlinchentw/Pickers/tree/main/picker%20demo%20gif%26image) 
+![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/spin.gif) 
 
-4. 轉盤上的餐廳們可以用儲存起來，下次不用再選一次
+3. 轉盤上的餐廳們可以用儲存起來，下次不用再選一次
 
-![image](https://github.com/hanlinchentw/Picker/blob/master/list.png)
+![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/savedList.gif)
 
-5. 附近沒有的餐廳，也可以使用搜尋功能
+4. 附近沒有的餐廳，也可以使用搜尋功能
 
-![image](https://github.com/hanlinchentw/Picker/blob/master/search.png)
-![image](https://github.com/hanlinchentw/Picker/blob/master/search_result.png)
+![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Search.gif)
 
-6. 儲存最愛的餐廳
+5. 儲存最愛的餐廳
 
-![image](https://github.com/hanlinchentw/Picker/blob/master/favorite.png)
+![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Favorite.gif)
 
 <!-- CONTACT -->
 ## Contact
