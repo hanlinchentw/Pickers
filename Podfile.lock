@@ -96,7 +96,6 @@ PODS:
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
   - PromisesObjC (1.2.8)
-  - SkeletonView (1.8.7)
 
 DEPENDENCIES:
   - Alamofire (~> 5.2)
@@ -108,7 +107,6 @@ DEPENDENCIES:
   - ImageSlideshow/Alamofire
   - MBProgressHUD
   - Moya (~> 14.0)
-  - SkeletonView
 
 SPEC REPOS:
   trunk:
@@ -134,7 +132,6 @@ SPEC REPOS:
     - Moya
     - nanopb
     - PromisesObjC
-    - SkeletonView
 
 SPEC CHECKSUMS:
   Alamofire: e911732990610fe89af59ac0077f923d72dc3dfd
@@ -159,8 +156,7 @@ SPEC CHECKSUMS:
   Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
-  SkeletonView: ba5370f41280b2f0a76918bb143c1294232bb4f4
 
-PODFILE CHECKSUM: c8a071261f3ee05bf723c6072d6f94c700cdac39
+PODFILE CHECKSUM: 66739e183683c56d9c410fe64c10e2e9434c90aa
 
 COCOAPODS: 1.9.1

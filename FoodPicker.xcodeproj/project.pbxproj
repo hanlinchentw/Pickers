@@ -90,7 +90,7 @@
 		B6D1307024CBC16200040F85 /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1306F24CBC16200040F85 /* DetailCell.swift */; };
 		B6D1307C24CEE1AF00040F85 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1307B24CEE1AF00040F85 /* FilterView.swift */; };
 		B6D1307E24CEE80C00040F85 /* FilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1307D24CEE80C00040F85 /* FilterViewModel.swift */; };
-		B6DE4FC5271584D30065728D /* CoredataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DE4FC4271584D30065728D /* CoredataOperation.swift */; };
+		B6DE4FC727158D8A0065728D /* CoredataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DE4FC627158D8A0065728D /* CoredataOperation.swift */; };
 		B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F7618B24D3EE2300318AB1 /* DetailHeader.swift */; };
 		B6F7618E24D3F6E100318AB1 /* DetailCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F7618D24D3F6E100318AB1 /* DetailCellViewModel.swift */; };
 		B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */; };
@@ -193,7 +193,7 @@
 		B6D1306F24CBC16200040F85 /* DetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
 		B6D1307B24CEE1AF00040F85 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		B6D1307D24CEE80C00040F85 /* FilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewModel.swift; sourceTree = "<group>"; };
-		B6DE4FC4271584D30065728D /* CoredataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoredataOperation.swift; path = "/Users/chenhanlin/Desktop/iOS Development/My own project/FoodPicker/FoodPicker/Controller/Tab/CoredataOperation.swift"; sourceTree = "<absolute>"; };
+		B6DE4FC627158D8A0065728D /* CoredataOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoredataOperation.swift; sourceTree = "<group>"; };
 		B6F7618B24D3EE2300318AB1 /* DetailHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeader.swift; sourceTree = "<group>"; };
 		B6F7618D24D3F6E100318AB1 /* DetailCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCellViewModel.swift; sourceTree = "<group>"; };
 		B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBProgressHUDProtocol.swift; sourceTree = "<group>"; };
@@ -294,7 +294,6 @@
 				B68623CF270DFADF009C6EFD /* Protocol */,
 				B647A4E524B203650098B7A2 /* Utilis */,
 				B685484F24BD8605009BC800 /* Service */,
-				B6AE00A024DE48D000423D72 /* Core data entity */,
 				B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
@@ -423,7 +422,7 @@
 			isa = PBXGroup;
 			children = (
 				B68623D0270DFAF9009C6EFD /* RestaurantAPI.swift */,
-				B6DE4FC4271584D30065728D /* CoredataOperation.swift */,
+				B6DE4FC627158D8A0065728D /* CoredataOperation.swift */,
 				B68623D2270DFB1A009C6EFD /* MainPageChildDelegate.swift */,
 				B68623D4270DFCD8009C6EFD /* DetailDelegate.swift */,
 			);
@@ -500,13 +499,6 @@
 				B6D1306F24CBC16200040F85 /* DetailCell.swift */,
 			);
 			path = Detail;
-			sourceTree = "<group>";
-		};
-		B6AE00A024DE48D000423D72 /* Core data entity */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Core data entity";
 			sourceTree = "<group>";
 		};
 		B6B84D492665D4A5002E418D /* Extension */ = {
@@ -747,7 +739,6 @@
 				B63C19A325179B090012CC4A /* SearchShortcutSection.swift in Sources */,
 				B6D1307E24CEE80C00040F85 /* FilterViewModel.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
-				B6DE4FC5271584D30065728D /* CoredataOperation.swift in Sources */,
 				B6C7D5AE255824B7005D2AA0 /* MoreRestaurantViewController.swift in Sources */,
 				B647A4FF24B3007A0098B7A2 /* CategoryCardCell.swift in Sources */,
 				B6F789BA267789910003ED5C /* LoginViewController.swift in Sources */,
@@ -812,6 +803,7 @@
 				B6B41AC024FE3C3F00A5ACBE /* AllRestaurantsSection.swift in Sources */,
 				B689A7AB2574EDB4009D270B /* EditViewController.swift in Sources */,
 				B6B84D4B2665D4BD002E418D /* UIView+Extension.swift in Sources */,
+				B6DE4FC727158D8A0065728D /* CoredataOperation.swift in Sources */,
 				B685485324BECC7F009BC800 /* LuckyWheelViewModel.swift in Sources */,
 				B6D1307C24CEE1AF00040F85 /* FilterView.swift in Sources */,
 				B6D1306524C040BC00040F85 /* IntroController.swift in Sources */,

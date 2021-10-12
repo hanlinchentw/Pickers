@@ -25,7 +25,6 @@ class RestaurantCardCell: UICollectionViewCell{
     weak var delegate : RestaurantAPI?
     let restaurantName : UILabel = {
         let label = UILabel()
-        label.isSkeletonable = true
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
         label.textAlignment = .left
         label.numberOfLines = 1
@@ -34,7 +33,6 @@ class RestaurantCardCell: UICollectionViewCell{
     }()
     let businessLabel : UILabel = {
         let label = UILabel()
-        label.isSkeletonable = true
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
         label.textColor = .freshGreen

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SkeletonView
 
 private let cardIdentifier = "CardCell"
 private let footerIdentifier = "footerView"

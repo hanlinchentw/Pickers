@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/chenhanlin/Desktop/iOS Development/My own project/FoodPicker/FoodPicker/Controller/Tab/CoredataOperation.swift">
-   </FileRef>
-   <FileRef
       location = "group:SearchHistory+CoreDataClass.swift">
    </FileRef>
    <FileRef

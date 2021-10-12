@@ -9,7 +9,6 @@
 import UIKit
 import CoreData
 import FirebaseAuth
-import SkeletonView
 
 private let favoriteIdentifier = "FavoriteCell"
 

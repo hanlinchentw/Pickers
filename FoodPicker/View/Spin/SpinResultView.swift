@@ -38,7 +38,6 @@ class SpinResultView : UIView {
     }()
     private lazy var  restaurantName : UILabel = {
         let label = UILabel()
-        label.isSkeletonable = true
         label.font = UIFont(name: "Avenir-Heavy", size: 16)
         label.textAlignment = .left
         label.numberOfLines = 1
@@ -47,7 +46,6 @@ class SpinResultView : UIView {
     }()
     private lazy var  businessLabel : UILabel = {
         let label = UILabel()
-        label.isSkeletonable = true
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
         label.textColor = .freshGreen
