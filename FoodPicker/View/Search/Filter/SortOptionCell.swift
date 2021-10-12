@@ -28,12 +28,12 @@ enum SortOption: Int, CaseIterable {
         }
     }
 }
-class SortOptionCell: UITableViewCell {
+class SortOptionCell: UICollectionViewCell {
     //MARK: - Properties
     var option : SortOption? { didSet{ configure()}}
     private let selectImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = UIImage(named: "icnRadio")?.withRenderingMode(.alwaysOriginal)
+        iv.image = UIImage(named: "icnRadio")
         iv.setDimension(width: 48, height: 48)
         return iv
     }()
@@ -52,16 +52,9 @@ class SortOptionCell: UITableViewCell {
         }
     }
     //MARK: - Lifecycle
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        let stack = UIStackView(arrangedSubviews: [selectImageView, optionLabel])
-        stack.axis = .horizontal
-        stack.distribution = .fillProportionally
-        stack.spacing = 8
-        
-        addSubview(stack)
-        stack.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureUI()
     }
     
     required init?(coder: NSCoder) {
@@ -70,5 +63,14 @@ class SortOptionCell: UITableViewCell {
     //MARK: - Helpers
     func configure(){
         optionLabel.text = option?.description
+    }
+    func configureUI(){
+        let stack = UIStackView(arrangedSubviews: [selectImageView, optionLabel])
+        stack.axis = .horizontal
+        stack.distribution = .fillProportionally
+        stack.spacing = 8
+        
+        addSubview(stack)
+        stack.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor)
     }
 }

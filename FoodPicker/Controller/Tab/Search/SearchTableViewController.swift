@@ -7,10 +7,12 @@
 //
 
 import UIKit
-protocol SearchTableViewControllerDelegate: class {
+
+protocol SearchTableViewControllerDelegate: AnyObject {
     func didTapBackButton()
     func didSearchbyTerm(term: String)
 }
+
 private let searchCellIdentifier = "searchCell"
 
 class SearchTableViewController : UITableViewController{
@@ -28,29 +30,22 @@ class SearchTableViewController : UITableViewController{
     private let searchBarTextField : UITextField = {
         let tf = UITextField()
         tf.backgroundColor = .white
-        tf.textColor = .black
-        tf.tintColor = .darkGray
         tf.layer.cornerRadius = 12
         tf.layer.masksToBounds = true
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
         tf.leftViewMode = .always
         tf.clearButtonMode = .whileEditing
         tf.returnKeyType = .search
-        tf.enablesReturnKeyAutomatically = true
         tf.keyboardType = .asciiCapable
         return tf
     }()
-    private lazy var searchBarContainerView : UIView = {
-        let view = UIView()
+    private lazy var searchBarContainerView : UIStackView = {
         let stack = UIStackView(arrangedSubviews: [backButton, searchBarTextField])
         stack.spacing = 8
         stack.distribution = .fillProportionally
         stack.axis = .horizontal
-        view.addSubview(stack)
-        stack.anchor(left: view.leftAnchor, right: view.rightAnchor,
-                                  paddingLeft: 16, paddingRight: 16, height: 40)
-        stack.centerY(inView: view)
-        return view
+        stack.frame = CGRect(x: 0, y: 0, width: self.view.frame.width*0.8, height: 20)
+        return stack
     }()
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -67,7 +62,7 @@ class SearchTableViewController : UITableViewController{
         tableView.delegate = self
         tableView.register(SearchCell.self, forCellReuseIdentifier: searchCellIdentifier)
     }
-    func closeTheKeyBoardAndCleanTextField() {
+    func cleanSearchBarAndShowTheKeyboard() {
         searchBarTextField.text?.removeAll()
         searchBarTextField.becomeFirstResponder()
     }
@@ -87,47 +82,41 @@ extension SearchTableViewController{
         return 2
     }
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 1:
+        if section == 1{
             return "History"
-        default:
-            return nil
         }
+        return nil
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 1: return historicalRecords.count
-        default: return 0
-        }
+        return section == 1 ? historicalRecords.count : 0
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: searchCellIdentifier, for: indexPath)
         as! SearchCell
         cell.selectionStyle = .none
-        if indexPath.section == 1{
-            cell.term = historicalRecords[indexPath.row]
-        }
+        if indexPath.section == 1{ cell.term = historicalRecords[indexPath.row] }
         return cell
     }
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return section == 0 ? searchBarContainerView : nil
+        if section == 1{
+             return nil
+        }
+        return searchBarContainerView
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? 40 + 24*2 : 20
+        return 40
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1{
-            let term = historicalRecords[indexPath.row]
-            searchBarTextField.text = term
-        }
+        let term = historicalRecords[indexPath.row]
+        searchBarTextField.text = term
     }
 }
 //MARK: - UITextFieldDelegate
 extension SearchTableViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let term = searchBarTextField.text else { return false }
-        searchBarTextField.resignFirstResponder()
         delegate?.didSearchbyTerm(term: term)
+        self.cleanSearchBarAndShowTheKeyboard()
         return true
     }
 }

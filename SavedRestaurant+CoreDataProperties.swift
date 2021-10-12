@@ -1,5 +1,5 @@
 //
-//  SelectedRestaurant+CoreDataProperties.swift
+//  SavedRestaurant+CoreDataProperties.swift
 //  
 //
 //  Created by 陳翰霖 on 2021/10/10.
@@ -10,10 +10,10 @@ import Foundation
 import CoreData
 
 
-extension SelectedRestaurant {
+extension SavedRestaurant {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<SelectedRestaurant> {
-        return NSFetchRequest<SelectedRestaurant>(entityName: "SelectedRestaurant")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<SavedRestaurant> {
+        return NSFetchRequest<SavedRestaurant>(entityName: "SavedRestaurant")
     }
 
     @NSManaged public var category: String?
@@ -26,5 +26,6 @@ extension SelectedRestaurant {
     @NSManaged public var rating: Double
     @NSManaged public var reviewCount: Int16
     @NSManaged public var uid: String?
+    @NSManaged public var belongList: ListEntity?
 
 }

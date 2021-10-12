@@ -21,7 +21,7 @@ class LocationHandler : NSObject {
     
     func enableLocationServices(){
         locationManager.delegate = self
-        switch CLLocationManager.authorizationStatus() {
+        switch locationManager.authorizationStatus {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .restricted, .denied:
@@ -30,13 +30,15 @@ class LocationHandler : NSObject {
             locationManager.startUpdatingLocation()
         case .authorizedWhenInUse:
             locationManager.requestAlwaysAuthorization()
+        @unknown default:
+            break
         }
     }
 }
 //MARK: - CLLocationManagerDelegate
 extension LocationHandler : CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .authorizedWhenInUse {
             locationManager.requestAlwaysAuthorization()
         }
     }

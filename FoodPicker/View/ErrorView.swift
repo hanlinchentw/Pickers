@@ -8,8 +8,13 @@
 
 import UIKit
 
+protocol ErrorViewDelegate: AnyObject{
+    func didTapReloadButton()
+}
+
 class ErrorView: UIView {
     //MARK: - Properties
+    weak var delegate: ErrorViewDelegate?
     let titleLabel : UILabel = {
         let label = UILabel()
         label.text = "Sorry..."
@@ -41,6 +46,7 @@ class ErrorView: UIView {
         button.setDimension(width: 144, height: 48)
         button.backgroundColor = .butterscotch
         button.tintColor = .white
+        button.addTarget(self, action: #selector(handleReloadButtonTapped), for: .touchUpInside)
         return button
     }()
     //MARK: - Initializer
@@ -60,5 +66,12 @@ class ErrorView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+//MARK: - Seletors
+extension ErrorView{
+    @objc func handleReloadButtonTapped(){
+        delegate?.didTapReloadButton()
     }
 }

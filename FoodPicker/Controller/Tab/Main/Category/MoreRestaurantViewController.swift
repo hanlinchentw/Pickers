@@ -11,16 +11,16 @@ import CoreData
 
 private let listIdentifier = "ListIdentifier"
 
-protocol MoreRestaurantViewControllerDelegate: class {
+protocol MoreRestaurantViewControllerDelegate: AnyObject {
     func willPopViewController(_ controller: MoreRestaurantViewController)
     func didSelectRestaurantFromMore(restaurant: Restaurant)
     func didLikeRestaurantFromMore(restaurant:Restaurant)
 }
 
-class MoreRestaurantViewController: UIViewController {
+class MoreRestaurantViewController: UIViewController, CoredataOperation {
     //MARK: - Properties
     weak var delegate: MoreRestaurantViewControllerDelegate?
-    private var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    internal var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private lazy var backButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -71,7 +71,6 @@ class MoreRestaurantViewController: UIViewController {
         view.backgroundColor = .backgroundColor
         tableView.listDelegate = self
         tableView.config = .all
-        tableView.isScrollEnabled = true
         tableView.register(RestaurantListCell.self, forCellReuseIdentifier: listIdentifier)
         view.addSubview(tableView)
         tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
@@ -98,14 +97,15 @@ class MoreRestaurantViewController: UIViewController {
         }
         NetworkService.shared.fetchRestaurants(lat: location.latitude, lon: location.longitude,
                                                withOffset: offset, option: option, limit: 20)
-        { (restaurants, error) in
-            guard let res = restaurants, !res.isEmpty else {
+        { [weak self] (restaurants, error) in
+            guard let self = self,
+                let res = restaurants, !res.isEmpty else {
                 print("DEBUG: Failed to get the restaurants ...")
                 return
             }
             
             for (index, item) in res.enumerated(){
-                self.checkIfRestaurantIsSelected(context: self.context, restaurant: item) { isSelected in
+                self.checkIfRestaurantIsSelected(restaurant: item) { isSelected in
                     var newRestaurant = res[index]
                     newRestaurant.isSelected = isSelected
                     self.tableView.restaurants.append(newRestaurant)
@@ -137,14 +137,14 @@ extension MoreRestaurantViewController: RestaurantsListDelegate{
         let detailVC = DetailController(restaurant: restaurant)
         self.retry(3) { success, failure in
             detailVC.fetchDetail(success: success, failure: failure)
-        } success: {
+        } success: { [weak self] in
             detailVC.delegate = self
-            self.tableView.isUserInteractionEnabled = false
+            self?.tableView.isUserInteractionEnabled = false
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
-                self.navigationController?.pushViewController(detailVC, animated: true)
-                self.navigationController?.navigationBar.isHidden = true
-                self.navigationController?.navigationBar.barStyle = .black
-                self.tableView.isUserInteractionEnabled = true
+                self?.navigationController?.pushViewController(detailVC, animated: true)
+                self?.navigationController?.navigationBar.isHidden = true
+                self?.navigationController?.navigationBar.barStyle = .black
+                self?.tableView.isUserInteractionEnabled = true
             }
         } failure: { [weak self] error in
             self?.presentPopupViewWithoutButton(title: "Internet Error", subtitle: "Please check your internet connect.")
@@ -153,13 +153,13 @@ extension MoreRestaurantViewController: RestaurantsListDelegate{
 }
 //MARK: - DetailControllerDelegate
 extension MoreRestaurantViewController: DetailControllerDelegate{
-    func updateLikedRestaurant(restaurant: Restaurant) {
+    func didLikeRestaurant(restaurant: Restaurant) {
         delegate?.didLikeRestaurantFromMore(restaurant: restaurant)
         if let index  = self.tableView.restaurants.firstIndex(where: { ($0.restaurantID == restaurant.restaurantID)}){
             self.tableView.restaurants[index].isLiked.toggle()
         }
     }
-    func updateSelectedRestaurant(restaurant: Restaurant) {
+    func didSelectRestaurant(restaurant: Restaurant) {
         delegate?.didSelectRestaurantFromMore(restaurant: restaurant)
         if let index  = self.tableView.restaurants.firstIndex(where: { ($0.restaurantID == restaurant.restaurantID)}){
             self.tableView.restaurants[index].isSelected.toggle()

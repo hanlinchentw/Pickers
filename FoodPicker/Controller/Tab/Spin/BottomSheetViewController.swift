@@ -15,13 +15,17 @@ enum ListState{
     case temp
     case existed
     case edited
-    
 }
 
+protocol BottomSheetViewControllerDelegate: AnyObject {
+    func shouldHideResultView(shouldHide: Bool)
+    func didSelectFromSheet(restaurant: Restaurant)
+}
 class BottomSheetViewController : UIViewController {
     //MARK: - Properties
     var list: List?
     var state: ListState = .temp { didSet{ didChangeState() }}
+    weak var delegate: BottomSheetViewControllerDelegate?
     private let notchView : UIView = {
         let view = UIView()
         view.backgroundColor = .lightlightGray
@@ -62,6 +66,7 @@ class BottomSheetViewController : UIViewController {
     }()
     let tableView = RestaurantsList()
     private var subscriber = Set<AnyCancellable>()
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,31 +79,25 @@ class BottomSheetViewController : UIViewController {
     @objc func panGesture(recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self.view)
         let y = self.view.frame.minY
-        let newHeight = y + translation.y
+        let newYPosition = y + translation.y
         switch recognizer.state {
         case .changed:
-            self.view.frame = CGRect(x: 0, y: newHeight, width: view.frame.width, height: view.frame.height)
+            if newYPosition == 100 { return }
+            self.view.frame = CGRect(x: 0, y: newYPosition, width: view.frame.width, height: view.frame.height)
             recognizer.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
+            delegate?.shouldHideResultView(shouldHide:newYPosition < UIScreen.main.bounds.height/1.5)
         case .ended:
-            if newHeight > UIScreen.main.bounds.height/3 {
+            if newYPosition < UIScreen.main.bounds.height/1.5, newYPosition > UIScreen.main.bounds.height/3{
                 animateOut()
+                delegate?.shouldHideResultView(shouldHide: true)
+            }else if newYPosition > UIScreen.main.bounds.height/1.5{
+                fold()
+                delegate?.shouldHideResultView(shouldHide: false)
             }else{
                 animateIn()
             }
         default:
             break
-        }
-    }
-    func animateIn(){
-        UIView.animate(withDuration: 0.3) {
-            self.view.frame = CGRect(x: 0, y: 100, width: self.view.frame.width, height: self.view.frame.height)
-        }
-    }
-    func animateOut(){
-        let wheelHeight = 330 * view.widthMultiplier
-        
-        UIView.animate(withDuration: 0.3) {
-            self.view.frame = CGRect(x: 0, y: 100+wheelHeight, width: self.view.frame.width, height: self.view.frame.height)
         }
     }
     @objc func handleSaveButtonTapped(){
@@ -123,21 +122,157 @@ class BottomSheetViewController : UIViewController {
     }
     @objc func handleUpdateButtonTapped(){
         guard let list = self.list else { return }
+        let coreConnect = CoredataConnect(context: context)
         if list.restaurantsID.isEmpty{
             self.presentPopupViewWithButtonAndProvidePublisher(title: "Empty List", subtitle: "Empty List will be DELETED", buttonTitle: "Delete")
                 .sink {[weak self] _ in
-                    RestaurantService.shared.updateSavedList(list: list)
-                    self?.state = .temp
+                    coreConnect.deleteList(list: list, success: {
+                        self?.state = .temp
+                    }, failure: { _ in
+                        
+                    })
                 }.store(in: &subscriber)
         }else{
-            self.cleanUnselectRestaurants {
-                guard self.tableView.restaurants.count == self.list?.restaurantsID.count else { return }
-                RestaurantService.shared.updateSavedList(list: list)
-                self.state = .existed
-            }
+            self.tableView.restaurants = self.tableView.restaurants.filter { $0.isSelected }
+            coreConnect.updateList(list: list)
+            self.state = .existed
         }
     }
-    //MARK: - Helpers
+    //MARK: - Core Data API
+    func saveList(){
+        guard let list = self.list else { return }
+        let coreConnect = CoredataConnect(context:  context)
+        coreConnect.saveList(list: list) { listID in
+            self.list?.id = listID
+            self.state = .existed
+        } failure: { error in
+            
+        }
+    }
+}
+//MARK: -  List's Restaurant update method
+extension BottomSheetViewController {
+    func configureList(list: List?, restaurants: [Restaurant] = [], addRestaurant: Restaurant? = nil){
+        if list == nil{
+          
+            let currentListState: ListState = (self.state == .temp) ? .temp : .edited
+            print(currentListState)
+            self.state = currentListState
+            if self.state == .temp{
+                self.configureTempList(restaurants: restaurants)
+            }else{
+                guard let restaurant = addRestaurant else { return }
+                self.configureEditedList(restaurant: restaurant)
+            }
+        }else if let list = list{
+            self.configureExistedList(list: list)
+        }
+    }
+    private func configureTempList(restaurants: [Restaurant]) {
+        let list = List(name: "My selected list", restaurants: restaurants, date: Date())
+        self.list = list
+        self.tableView.restaurants = restaurants
+        self.tableView.reloadData()
+    }
+    private func configureEditedList(restaurant:Restaurant) {
+        print("DEBUG: Restaurant is selected \(restaurant.isSelected)")
+        if let index = tableView.restaurants
+            .firstIndex(where: { $0.restaurantID == restaurant.restaurantID}){
+            tableView.restaurants[index].isSelected = restaurant.isSelected
+        }else{
+            if restaurant.isSelected{
+                list?.restaurants.append(restaurant)
+                self.tableView.restaurants.append(restaurant)
+            }else{
+                guard let newlistRestaurants =
+                        (list?.restaurants.filter({ $0.restaurantID != restaurant.restaurantID })) else { return }
+                list?.restaurants = newlistRestaurants
+                tableView.restaurants = tableView.restaurants.filter({ $0.restaurantID != restaurant.restaurantID })
+            }
+        }
+        self.tableView.reloadData()
+    }
+    private func configureExistedList(list: List){
+        self.list = list
+        self.state = .existed
+        tableView.restaurants = list.restaurants
+        print(list.restaurants)
+        self.tableView.reloadData()
+    }
+}
+//MARK: -  List State change animation
+extension BottomSheetViewController{
+    func didChangeState(){
+        print("DEBUG: Current state is \(state) ")
+        guard let list = self.list else { return }
+        switch state {
+        case .temp:
+            self.titleLabel.text = "My selected list"
+            self.saveButton.setTitle("Save list", for: .normal)
+            self.saveButton.alpha = 1
+            self.saveButton.isHidden = false
+            self.updateButton.isHidden = true
+        case .existed:
+            UIView.animate(withDuration: 0.3, animations: {
+                self.titleLabel.alpha = 0
+                self.saveButton.alpha = 0
+                self.updateButton.alpha = 0
+                self.saveButton.isHidden = true
+                self.updateButton.isHidden = true
+            }) { _ in
+                self.titleLabel.alpha = 1
+                self.titleLabel.text = list.name
+            }
+        case .edited:
+            let ns = NSMutableAttributedString(string: list.name,
+                                               attributes: [NSAttributedString.Key.font : UIFont(name: "Arial-BoldMT", size: 16)!,
+                                                            NSAttributedString.Key.foregroundColor : UIColor.black])
+            ns.append(NSAttributedString(string: "*", attributes: [NSAttributedString.Key.foregroundColor : UIColor.butterscotch]))
+            self.titleLabel.attributedText = ns
+            self.saveButton.setTitle("Save as new", for: .normal)
+            self.saveButton.isHidden = false
+            self.updateButton.isHidden = false
+            self.saveButton.alpha = 1
+            self.updateButton.alpha = 1
+        }
+        self.view.layoutIfNeeded()
+    }
+}
+//MARK: - RestaurantsListDelegate
+extension BottomSheetViewController: RestaurantsListDelegate{
+    func didSelectRestaurant(_ restaurant: Restaurant) {
+        self.state = self.state == .temp ? .temp : .edited
+
+        guard let index = self.tableView.restaurants
+            .firstIndex(where: {$0.restaurantID == restaurant.restaurantID}) else { return }
+        self.tableView.restaurants[index].isSelected.toggle()
+        self.tableView.reloadData()
+        
+        if restaurant.isSelected{
+            self.list?.restaurants.append(restaurant)
+        }else{
+            guard let newListRestaurants = (self.list?.restaurants.filter{ $0.restaurantID != restaurant.restaurantID })
+                else { return }
+            self.list?.restaurants = newListRestaurants
+        }
+        delegate?.didSelectFromSheet(restaurant:restaurant)
+    }
+}
+//MARK: - UIGestureRecognizerDelegate
+extension BottomSheetViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        let y = view.frame.minY
+        if y < 200{
+            tableView.isScrollEnabled = true
+        } else {
+            tableView.isScrollEnabled = false
+        }
+        return false
+    }
+}
+
+//MARK: - Auto layout and view set up method
+extension BottomSheetViewController {
     func configurePanGesture(){
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(panGesture(recognizer:)))
         gesture.delegate = self
@@ -169,78 +304,37 @@ class BottomSheetViewController : UIViewController {
         buttonStack.distribution = .fillProportionally
         
         view.addSubview(buttonStack)
-        buttonStack.anchor(right: view.rightAnchor, paddingRight: 16)
-        buttonStack.centerY(inView: titleLabel)
+        buttonStack.anchor(top: titleLabel.topAnchor, right: view.rightAnchor, paddingRight: 16)
     }
     
-    func didChangeState(){
-        print("DEBUG: Current state is \(state) ")
-        guard let list = self.list else { return }
-        switch state {
-        case .temp:
-            self.titleLabel.text = "My selected list"
-            self.saveButton.setTitle("Save list", for: .normal)
-            self.updateButton.alpha = 0
-        case .existed:
-            UIView.animate(withDuration: 0.3, animations: {
-                self.titleLabel.alpha = 0
-                self.saveButton.alpha = 0
-                self.updateButton.alpha = 0
-            }) { _ in
-                self.titleLabel.alpha = 1
-                self.titleLabel.text = list.name
-            }
-        case .edited:
-            let ns = NSMutableAttributedString(string: list.name, attributes: [NSAttributedString.Key.font : UIFont(name: "Arial-BoldMT", size: 16)!, NSAttributedString.Key.foregroundColor : UIColor.black])
-            ns.append(NSAttributedString(string: "*", attributes: [NSAttributedString.Key.foregroundColor : UIColor.butterscotch]))
-            
-            self.titleLabel.attributedText = ns
-            self.updateButton.alpha = 1
-            self.saveButton.setTitle("Save as new", for: .normal)
+    func animateIn(){
+        UIView.animate(withDuration: 0.3) {
+            self.view.frame = CGRect(x: 0, y: 100,
+                                     width: self.view.frame.width, height: self.view.frame.height)
             self.saveButton.alpha = 1
+            self.updateButton.alpha = 1
         }
-        self.view.layoutIfNeeded()
     }
-    func cleanUnselectRestaurants(completion: ()-> Void){
-        self.tableView.restaurants = self.tableView.restaurants.filter { $0.isSelected }
-        completion()
-    }
-    //MARK: - API
-    func saveList(){
-        guard let list = self.list else { return }
-        self.list?.id = RestaurantService.shared.saveList(list: list)
-        self.state = .existed
-    }
-}
-extension BottomSheetViewController: RestaurantsListDelegate{
-    func didSelectRestaurant(_ restaurant: Restaurant) {
-        self.state = self.state == .temp ? .temp : .edited
+    func animateOut(){
+        let wheelHeight = 330 * view.widthMultiplier
         
-        guard let index = self.tableView.restaurants
-            .firstIndex(where: {$0.restaurantID == restaurant.restaurantID}) else { return }
-        self.tableView.restaurants[index].isSelected.toggle()
-        self.tableView.reloadData()
-        
-        if restaurant.isSelected{
-            self.list?.restaurantsID.append(restaurant.restaurantID)
-        }else{
-            guard let newListID = (self.list?.restaurantsID.filter{ $0 != restaurant.restaurantID })
-                else { return }
-            self.list?.restaurantsID = newListID
+        UIView.animate(withDuration: 0.3) {
+            self.view.frame = CGRect(x: 0, y: 100 + wheelHeight,
+                                     width: self.view.frame.width, height: self.view.frame.height)
+            
+            self.saveButton.alpha = 1
+            self.updateButton.alpha = 1
         }
-        guard let parent = self.parent as? ActionViewController else { return }
-        parent.didSelectFromSheet(restaurant:restaurant)
     }
-}
-//MARK: - UIGestureRecognizerDelegate
-extension BottomSheetViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        let y = view.frame.minY
-        if y <= 100{
-            tableView.isScrollEnabled = true
-        } else {
-            tableView.isScrollEnabled = false
+    func fold(){
+        UIView.animate(withDuration: 0.3) {
+            let wheelHeight = 330 * self.view.widthMultiplier
+            let cardHeight = self.view.restaurantCardCGSize.height * 1.2
+            let offset = 100 + wheelHeight + cardHeight
+            self.view.frame = CGRect(x: 0, y: offset,
+                                     width: self.view.frame.width, height: self.view.frame.height)
+            self.saveButton.alpha = 0
+            self.updateButton.alpha = 0
         }
-        return false
     }
 }

@@ -18,6 +18,7 @@ class SearchShortcutSection : UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: "Arial-BoldMT", size: 14)
         label.textColor = .black
+        label.text = "Recent Searches"
         return label
     }()
     

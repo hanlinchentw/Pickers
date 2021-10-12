@@ -15,11 +15,7 @@ import AlamofireImage
 private let detailCellIdentifier = "DetailCell"
 private let headerIdentifier = "DetailHeader"
 
-protocol DetailControllerDelegate:class {
-    func willPopViewController(_ controller: DetailController)
-    func updateLikedRestaurant(restaurant:Restaurant)
-    func updateSelectedRestaurant(restaurant:Restaurant)
-}
+
 
 class DetailController : UICollectionViewController {
     //MARK: - Prorperties
@@ -44,7 +40,6 @@ class DetailController : UICollectionViewController {
     init(restaurant:Restaurant) {
         self.restaurant = restaurant
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
-        
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -52,7 +47,6 @@ class DetailController : UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        fetchNumOfLike()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -64,23 +58,17 @@ class DetailController : UICollectionViewController {
         NetworkService.shared.fetchDetail(id: restaurant.restaurantID) { [weak self] (detail, error) in
             if let detail = detail {
                 self?.restaurant.details = detail
+                self?.collectionView.reloadData()
                 success()
             }else {
                 failure(error!)
             }
         }
     }
-    func fetchNumOfLike(){
-        RestaurantService.shared.fetchRestaurantNumOfLike(restaurantID: self.restaurant.restaurantID)
-        { count in
-            self.restaurant.numOfLike = count
-        }
-    }
-    
     //MARK: - Selectors
     @objc func handleSelectButtonTapped(){
         restaurant.isSelected.toggle()
-        delegate?.updateSelectedRestaurant(restaurant: restaurant)
+        delegate?.didSelectRestaurant(restaurant: restaurant)
         let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
         addButton.changeImageButtonWithBounceAnimation(changeTo: imageName)
     }
@@ -103,6 +91,9 @@ class DetailController : UICollectionViewController {
         addButton.anchor(right:view.rightAnchor, bottom: view.bottomAnchor,
                          paddingRight: 16, paddingBottom: 30,width: 56, height: 56)
     }
+    func configureUIForResult(){
+        self.addButton.isHidden = true
+    }
     func openMapForPlace(name: String, coordinate: CLLocationCoordinate2D) {
         let regionDistance:CLLocationDistance = 3000
         let regionSpan = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
@@ -124,14 +115,12 @@ extension DetailController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellIdentifier, for: indexPath)
         as! DetailCell
-        
         let config = RestaurantDetail(rawValue: indexPath.row)
         let viewModel = DetailCellViewModel(restaurant: restaurant, config: config, isExpanded: isExpanded)
         cell.config = config
         cell.viewModel = viewModel
         cell.delegate = self
         cell.isExpanded = self.isExpanded
-        
         return cell
     }
     
@@ -169,7 +158,7 @@ extension DetailController : DetailHeaderDelegate {
     }
     func handleLikeRestaurant() {
         restaurant.isLiked.toggle()
-        delegate?.updateLikedRestaurant(restaurant: restaurant)
+        delegate?.didLikeRestaurant(restaurant: restaurant)
         self.collectionView.reloadData()
     }
     func handleShareRestaurant() {

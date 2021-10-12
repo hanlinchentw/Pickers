@@ -12,13 +12,9 @@ import SkeletonView
 private let cardIdentifier = "CardCell"
 private let footerIdentifier = "footerView"
 
-protocol FilterResultSectionDelegate: class {
-    func didTappedRestaurant(_ restaurant: Restaurant)
-    func didLikeRestaurant(_ restaurant: Restaurant)
-    func didSelectRestaurant(_ restaurant: Restaurant, option: recommendOption)
+protocol FilterResultSectionDelegate: RestaurantAPI {
     func shouldShowMoreRestaurants(_ restaurants: [Restaurant])
 }
-
 enum recommendOption: CaseIterable {
     case all
     case topPick
@@ -26,7 +22,7 @@ enum recommendOption: CaseIterable {
     
     var description: String {
         switch self {
-        case .all : return "All Restaurant"
+        case .all : return "All Restaurant Nearby"
         case .topPick: return "Top Picks"
         case .popular: return "Popular"
         }
@@ -66,37 +62,17 @@ class FilterResultSection: UICollectionViewCell {
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 16,
-                          paddingLeft: 24, height: 36/(self.iPhoneSEMutiplier))
-        addSubview(collectionView)
-        collectionView.anchor(top: titleLabel.bottomAnchor, left:leftAnchor,right: rightAnchor, bottom: bottomAnchor,
-                              paddingTop: 4, paddingLeft: 16)
-        
+        configureUI()
         configureCollectionView()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    //MARK: - Helpers
-    func configureCollectionView(){
-        self.isSkeletonable = true
-        collectionView.isSkeletonable = true
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.showsHorizontalScrollIndicator  =  false
-        collectionView.register(RestaurantCardCell.self, forCellWithReuseIdentifier: cardIdentifier)
-        collectionView.register(MoreRestaurantsFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footerIdentifier)
-    }
 }
 //MARK: - UICollectionViewDelegate, UICollectionViewDataSource
-extension FilterResultSection : SkeletonCollectionViewDelegate, SkeletonCollectionViewDataSource {
+extension FilterResultSection : UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 6
-    }
-    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return cardIdentifier
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardIdentifier, for: indexPath)
@@ -109,16 +85,15 @@ extension FilterResultSection : SkeletonCollectionViewDelegate, SkeletonCollecti
         
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if !self.restaurants.isEmpty{ delegate?.didTappedRestaurant(restaurants[indexPath.row]) }
+        delegate?.pushToDetailVC(restaurants[indexPath.row])
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerIdentifier, for: indexPath) as! MoreRestaurantsFooterView
         footer.delegate = self
         return footer
     }
-    
 }
-
+//MARK: - UICollectionViewDelegateFlowLayout
 extension FilterResultSection : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return self.restaurantCardCGSize
@@ -132,22 +107,39 @@ extension FilterResultSection : UICollectionViewDelegateFlowLayout {
         return CGSize(width: width, height: height)
     }
 }
-extension FilterResultSection : RestaurantCardCellDelegate {
-    func didLikeRestaurant(_ restaurant: Restaurant) {
-        delegate?.didLikeRestaurant(restaurant)
+//MARK: - RestaurantAPI
+extension FilterResultSection : RestaurantAPI {
+    func didLikeRestaurant(restaurant: Restaurant) {
+        delegate?.didLikeRestaurant(restaurant: restaurant)
     }
-    func didSelectRestaurant(_ restaurant:Restaurant) {
-        for (index, res) in restaurants.enumerated() {
-            if res.restaurantID == restaurant.restaurantID {
-                self.restaurants[index].isSelected = restaurant.isSelected
-            }
-        }
-        guard let option = option else { return }
-        delegate?.didSelectRestaurant(restaurant, option: option)
+    func didSelectRestaurant(restaurant: Restaurant) {
+        delegate?.didSelectRestaurant(restaurant: restaurant)
     }
 }
+//MARK: - MoreRestaurantsFooterViewDelegate
 extension FilterResultSection: MoreRestaurantsFooterViewDelegate{
     func shouldShowMoreRestaurants() {
         delegate?.shouldShowMoreRestaurants(self.restaurants)
+    }
+}
+//MARK: - Autolayout
+extension FilterResultSection {
+    func configureUI(){
+        addSubview(titleLabel)
+        titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 16,
+                          paddingLeft: 24, height: 36/(self.iPhoneSEMutiplier))
+        addSubview(collectionView)
+        collectionView.anchor(top: titleLabel.bottomAnchor, left:leftAnchor,right: rightAnchor, bottom: bottomAnchor,
+                              paddingTop: 4, paddingLeft: 16)
+    }
+}
+//MARK: - Collectionview setup
+extension FilterResultSection {
+    func configureCollectionView(){
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.showsHorizontalScrollIndicator  =  false
+        collectionView.register(RestaurantCardCell.self, forCellWithReuseIdentifier: cardIdentifier)
+        collectionView.register(MoreRestaurantsFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footerIdentifier)
     }
 }

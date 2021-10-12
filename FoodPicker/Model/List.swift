@@ -11,15 +11,17 @@ import Foundation
 struct List{
     var id: String?
     var name: String
-    var restaurantsID: [String]
-    var restaurants = [Restaurant]()
-    let timeStamp: Double
+    var restaurantsID: [String] {
+        return self.restaurants.map { $0.restaurantID }
+    }
+    var restaurants: [Restaurant]
+    let date: Date
 
     var isEdited : Bool = false
-    init(name:String, restaurantsID: [String], timestamp: Double) {
+    init(name:String, restaurants: [Restaurant], date: Date) {
         self.name = name
-        self.restaurantsID = restaurantsID
-        self.timeStamp = timestamp
+        self.restaurants = restaurants
+        self.date = date
     }
     
 }

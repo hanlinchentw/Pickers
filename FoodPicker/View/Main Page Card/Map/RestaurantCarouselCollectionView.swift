@@ -10,21 +10,14 @@ import UIKit
 
 private let mapCardCellIdentifier = "mapCellIdentifier"
 
-protocol RestaurantCarouselCollectionViewDelegate: AnyObject{
-    func didLikeRestaurant(_ restaurant: Restaurant)
-    func didSelectRestaurant(_ restaurant: Restaurant)
-    func didTapCard(at indexPath: IndexPath)
+protocol RestaurantCarouselCollectionViewDelegate: RestaurantAPI{
     func didScrollToItem(restaurantID: String)
 }
 
 class RestaurantCarouselCollectionView: UICollectionView {
     //MARK: - Properties
     weak var cardDelegate: RestaurantCarouselCollectionViewDelegate?
-    var restaurants = [Restaurant]() {
-        didSet{
-            self.reloadData()
-        }
-    }
+    var restaurants = [Restaurant]() { didSet{ self.reloadData()} }
     //MARK: - Lifecycle
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -53,7 +46,7 @@ extension RestaurantCarouselCollectionView: UICollectionViewDelegate, UICollecti
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.cardDelegate?.didTapCard(at: indexPath)
+        self.cardDelegate?.pushToDetailVC(self.restaurants[indexPath.row])
     }
 }
 //MARK: - UICollectionViewDelegateFlowLayout
@@ -76,12 +69,13 @@ extension RestaurantCarouselCollectionView: UICollectionViewDelegateFlowLayout{
     }
 }
 //MARK: - CardCellDelegate
-extension RestaurantCarouselCollectionView : RestaurantCardCellDelegate{
-    func didLikeRestaurant(_ restaurant: Restaurant) {
-        cardDelegate?.didLikeRestaurant(restaurant)
+extension RestaurantCarouselCollectionView : RestaurantAPI{
+    func didLikeRestaurant(restaurant: Restaurant) {
+        cardDelegate?.didLikeRestaurant(restaurant: restaurant)
         
     }
-    func didSelectRestaurant(_ restaurant: Restaurant) {
-        cardDelegate?.didSelectRestaurant(restaurant)
+    func didSelectRestaurant(restaurant: Restaurant) {
+        print(restaurant.isSelected)
+        cardDelegate?.didSelectRestaurant(restaurant: restaurant)
     }
 }

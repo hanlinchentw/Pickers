@@ -28,7 +28,12 @@ class RestaurantsList: UITableView{
     //MARK: - Properties
     weak var listDelegate : RestaurantsListDelegate?
     var restaurants = [Restaurant]() { didSet { self.reloadData() }}
-    var config: ListConfiguration? { didSet { self.reloadData() }}
+    var config: ListConfiguration? {
+        didSet {
+            self.reloadData()
+        setScrollEnabled()
+        }
+    }
     var isLoading: Bool? = false
     var isScrolling: Bool = false
     //MARK: - Lifecycle
@@ -40,7 +45,7 @@ class RestaurantsList: UITableView{
         separatorStyle = .none
         delegate = self
         dataSource = self
-        isScrollEnabled = false
+
         register(RestaurantListCell.self, forCellReuseIdentifier: restaurantListCellIdentifier)
         register(LoadingCell.self, forCellReuseIdentifier: loadingCellIdentifier)
     }
@@ -49,13 +54,21 @@ class RestaurantsList: UITableView{
     }
     //MARK: - API
     func loadMoreData(){
-        if let isLoading = self.isLoading, !isLoading{
+        if let isLoading = self.isLoading, !isLoading, self.config == .all{
             self.isLoading = true
             DispatchQueue.global().async {
                 sleep(1)
                 self.listDelegate?.loadMoreData()
                 self.isLoading = false
             }
+        }
+    }
+    func setScrollEnabled(){
+        switch config {
+        case .all, .edit:
+            self.isScrollEnabled = true
+        default:
+            self.isScrollEnabled = false
         }
     }
 }

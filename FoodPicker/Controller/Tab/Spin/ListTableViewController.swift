@@ -10,7 +10,7 @@ import UIKit
 
 private let listCellIdentifier = "ListTableCell"
 
-protocol ListTableViewControllerDelegate: class {
+protocol ListTableViewControllerDelegate: AnyObject {
     func willPopViewController(_ controller: ListTableViewController)
     func didSelectList(_ controller: ListTableViewController, list: List)
 }
@@ -30,65 +30,27 @@ class ListTableViewController: UITableViewController, MBProgressHUDProtocol{
         button.frame = CGRect(x: 0, y: 0, width: 56, height: 40)
         return button
     }()
+    
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchSavedLists()
         configureNavBar()
         configureTableView()
-        fetchSavedLists()
     }
-    //MARK: - Helpers
-    func configureNavBar(){
-        guard let navBar = navigationController?.navigationBar else { return }
-        navBar.isHidden = false
-        navBar.shadowImage = UIImage()
-        navBar.barTintColor = .backgroundColor
-        navBar.isTranslucent = true
-        navigationItem.title = "Saved Lists"
-        
-        let backButtonView = UIView(frame: CGRect(x: 0, y: 0, width: 56, height: 40))
-        backButtonView.bounds = backButtonView.bounds.offsetBy(dx: 18, dy: 0)
-        backButtonView.addSubview(backButton)
-        let leftBarItem = UIBarButtonItem(customView: backButtonView)
-        navigationItem.leftBarButtonItem = leftBarItem
-    }
-    func configureTableView(){
-        tableView.backgroundColor = .backgroundColor
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorStyle = .none
-        tableView.register(ListInfoCell.self, forCellReuseIdentifier: listCellIdentifier)
-    }
-    //MARK: - API
+    //MARK: -  Core Data API
     func fetchSavedLists(completion: (()-> Void)? = nil){
-        self.showLoadingAnimation()
-        RestaurantService.shared.fetchSavedLists { (lists) in
-            self.hideLoadingAnimation()
-            self.lists = lists
-            if let completion = completion{
-                completion()
+        let coreDataService = CoredataConnect(context: context)
+        coreDataService.fetchLists { lists, error in
+            if !lists.isEmpty{
+                self.lists = lists
+                if let completion = completion{
+                    completion()
+                }
+            }else if let _ = error {
+                
             }
-        }
-    }
-    func fetchRestaurants(restaurantsID: [String], completion: @escaping([Restaurant])->Void){
-        var restaurants = [Restaurant]()
-        restaurantsID.forEach { (id) in
-            NetworkService.shared.fetchDetail(id: id) { (detail, error) in
-                var restaurant = Restaurant(business: nil, detail: detail)
-                restaurant.isSelected = true
-                restaurants.append(restaurant)
-                completion(restaurants)
-            }
-        }
-    }
-    func checkIfListEdited(listID: String){
-        RestaurantService.shared.updateListAfterEditing(listID: listID) { list in
-            if let list = list, let index = self.lists.firstIndex(where: {$0.id == listID}){
-                self.lists[index] = list
-            }else{
-                self.lists = self.lists.filter { $0.id != listID }
-            }
-            self.tableView.reloadData()
         }
     }
     //MARK: - Selectors
@@ -113,14 +75,10 @@ extension ListTableViewController{
         return cell
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var selectList = self.lists[indexPath.section]
+        let selectList = self.lists[indexPath.section]
         self.view.isUserInteractionEnabled = false
-        self.fetchRestaurants(restaurantsID: selectList.restaurantsID) { (restaurants) in
-            selectList.restaurants = restaurants
-            guard restaurants.count == selectList.restaurantsID.count else { return }
-            self.delegate?.didSelectList(self, list: selectList)
-            self.view.isUserInteractionEnabled = true
-        }
+        self.delegate?.didSelectList(self, list: selectList)
+        self.view.isUserInteractionEnabled = true
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if expandListIndex.contains(indexPath.section){
@@ -141,18 +99,10 @@ extension ListTableViewController{
 //MARK: - ListInfoCellDelagete
 extension ListTableViewController: ListInfoCellDelagete{
     func shouldExpandList(_ cell: ListInfoCell, _ shouldExpand: Bool, list: List) {
-        if let index = self.lists.firstIndex(where: { $0.id == list.id }) {
-            print(index)
+        if let index = self.lists.firstIndex(where: { $0.name == list.name }) {
             if shouldExpand{
-                self.showLoadingAnimation()
-                if list.restaurants.isEmpty{
-                    self.fetchRestaurants(restaurantsID: list.restaurantsID) { (restaurants) in
-                        guard list.restaurantsID.count == restaurants.count else { return }
-                        cell.list?.restaurants = restaurants
-                        cell.configureTableView()
-                        self.hideLoadingAnimation()
-                    }
-                }
+                cell.configureTableView()
+                cell.animateIn(height: CGFloat(list.restaurants.count*117))
                 self.expandListIndex.append(index)
             }else{
                 if let foldIndex = self.expandListIndex.firstIndex(where: {$0 == index}) {
@@ -171,26 +121,31 @@ extension ListTableViewController: ListInfoCellDelagete{
 }
 //MARK: - MoreOptionAlertViewContrllerDelegate
 extension ListTableViewController: MoreOptionAlertViewContrllerDelegate{
-    func deleteList(listID: String){
-        RestaurantService.shared.deleteList(listID: listID)
-        guard let index = self.lists.firstIndex(where: {$0.id == listID}) else { return }
-        self.lists.remove(at: index)
+    func deleteList(list: List){
+        let coreConnect = CoredataConnect(context: context)
+        coreConnect.deleteList(list: list) {
+            guard let index = self.lists.firstIndex(where: {$0.name == list.name}) else { return }
+            self.lists.remove(at: index)
+        } failure: { error in
+            
+        }
     }
     func editList(list: List) {
-        self.fetchRestaurants(restaurantsID: list.restaurantsID) { (restaurants) in
-            let edit = EditViewController(list: list)
-            edit.list.restaurants = restaurants
-            edit.delegate = self
-            guard list.restaurantsID.count == restaurants.count else { return }
-            self.navigationController?.pushViewController(edit, animated: true)
-        }
+        let edit = EditViewController(list: list)
+        self.navigationController?.pushViewController(edit, animated: true)
+        edit.delegate = self
     }
 }
 //MARK: - EditViewControllerDelegate
 extension ListTableViewController: EditViewControllerDelegate{
-    func didEditList(_ controller:EditViewController) {
-        guard let id = controller.list.id else { return }
-        checkIfListEdited(listID: id)
+    func didEditList(_ controller: EditViewController, editList: List?) {
+        if let editList = editList, let index = self.lists.firstIndex(where: { $0.id == editList.id }){
+            self.lists[index] = editList
+            self.lists[index].isEdited = true
+        }else{
+            self.lists = self.lists.filter { $0.name != editList?.name }
+        }
+        self.tableView.reloadData()
         controller.navigationController?.popViewController(animated: true)
         createSuccessfullySavedMessage()
     }
@@ -218,5 +173,29 @@ extension ListTableViewController: EditViewControllerDelegate{
                 label.alpha = 0
             }
         }
+    }
+}
+//MARK: - Autolayout and View set up method
+extension ListTableViewController{
+    func configureNavBar(){
+        guard let navBar = navigationController?.navigationBar else { return }
+        navBar.isHidden = false
+        navBar.shadowImage = UIImage()
+        navBar.barTintColor = .backgroundColor
+        navBar.isTranslucent = true
+        navigationItem.title = "Saved Lists"
+        
+        let backButtonView = UIView(frame: CGRect(x: 0, y: 0, width: 56, height: 40))
+        backButtonView.bounds = backButtonView.bounds.offsetBy(dx: 18, dy: 0)
+        backButtonView.addSubview(backButton)
+        let leftBarItem = UIBarButtonItem(customView: backButtonView)
+        navigationItem.leftBarButtonItem = leftBarItem
+    }
+    func configureTableView(){
+        tableView.backgroundColor = .backgroundColor
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.register(ListInfoCell.self, forCellReuseIdentifier: listCellIdentifier)
     }
 }

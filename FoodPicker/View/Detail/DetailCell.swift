@@ -16,15 +16,11 @@ enum RestaurantDetail : Int, CaseIterable {
     case phone
 }
 
-protocol DetailCellDelegate : class {
-    func shouldCellExpand(_ isExpanded: Bool, config: RestaurantDetail)
-    func didTapMapOption(name: String, coordinate: CLLocationCoordinate2D)
-}
 class DetailCell : UICollectionViewCell {
     //MARK: - Properties
     weak var delegate : DetailCellDelegate?
     var config : RestaurantDetail?
-    var viewModel : DetailCellViewModel? { didSet{ configure()}}
+    var viewModel : DetailCellViewModel? { didSet{ configureCellInformation()}}
     
     private let iconImageView : UIImageView = {
         let iv = UIImageView()
@@ -45,28 +41,6 @@ class DetailCell : UICollectionViewCell {
         label.numberOfLines = 0
         label.textColor = .black
         return label
-    }()
-    
-    private let numOfPeopleLikeLabel = UILabel()
-    private lazy var likeView : UIView = {
-        let view = UIView()
-        view.isHidden = true
-        let likeImageView = UIImageView()
-        likeImageView.image = UIImage(named: "icnHeartXs")
-        likeImageView.contentMode = .scaleAspectFit
-        view.addSubview(likeImageView)
-        likeImageView.anchor(top:view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
-                             width: 16, height: 16)
-        
-        
-        numOfPeopleLikeLabel.font = UIFont.arialMT
-        numOfPeopleLikeLabel.textColor = .gray
-        view.addSubview(numOfPeopleLikeLabel)
-        numOfPeopleLikeLabel.anchor(top:view.topAnchor, left: likeImageView.rightAnchor,
-                                    right: view.rightAnchor, bottom: view.bottomAnchor,
-                                    paddingLeft: 4)
-        
-        return view
     }()
     private let ratingLabel = UILabel()
     private let reviewCountLabel = UILabel()
@@ -98,12 +72,7 @@ class DetailCell : UICollectionViewCell {
                                 paddingLeft: 29)
         return view
     }()
-    
-    private lazy var menuButton : UIButton = {
-        let button = UIButton(type: .system).createViewWithRoundedCornerAndShadow(withText: "Menu")
-        return button
-    }()
-    
+
     private lazy var actionButton : UIImageView = {
         let view = UIImageView()
         view.layer.masksToBounds = false
@@ -125,38 +94,11 @@ class DetailCell : UICollectionViewCell {
         return view
     }()
     
-    
     var isExpanded = false
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
-        let titleStack = UIStackView(arrangedSubviews: [iconImageView, titleLabel])
-        titleStack.axis = .horizontal
-        titleStack.spacing = 8
-        
-        addSubview(titleStack)
-        titleStack.anchor(top:topAnchor, left: leftAnchor,
-                          paddingTop: 16, paddingLeft: 16)
-        
-        addSubview(actionButton)
-        actionButton.anchor(top:topAnchor, right: rightAnchor, paddingTop: 12, paddingRight: 16)
-        
-        let subtitleStack = UIStackView(arrangedSubviews: [likeView, subtitleLabel])
-        subtitleStack.axis = .vertical
-        subtitleStack.spacing = 8
-        addSubview(subtitleStack)
-        subtitleStack.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, right:rightAnchor,
-                             paddingTop: 4, paddingLeft: 16, paddingRight: 100)
-        
-        addSubview(menuButton)
-        menuButton.anchor(left:leftAnchor, bottom: bottomAnchor,
-                          paddingLeft: 16, paddingBottom: 16,
-                          width: 77, height: 44 )
-        
-        addSubview(ratingAndReviewView)
-        ratingAndReviewView.anchor(right: rightAnchor, paddingRight: 12)
-        ratingAndReviewView.centerY(inView: titleLabel)
+        configureUI()
         
     }
     required init?(coder: NSCoder) {
@@ -182,10 +124,8 @@ class DetailCell : UICollectionViewCell {
         }
     }
     //MARK: - Helpers
-    func configure(){
+    func configureCellInformation(){
         guard let viewModel = viewModel else { return }
-        
-        numOfPeopleLikeLabel.text = "\(viewModel.numOfLike) people’s favorite"
         ratingLabel.text = "\(viewModel.rating)"
         reviewCountLabel.text = "(\(viewModel.reviewCount))"
         titleLabel.text = viewModel.titleText
@@ -193,13 +133,33 @@ class DetailCell : UICollectionViewCell {
         iconImageView.image = UIImage(named: viewModel.iconImageName)
         actionButton.image = UIImage(named: viewModel.actionButtonImageName)?.withRenderingMode(.alwaysOriginal)
         
-        iconImageView.isHidden = viewModel.isMenu
-        actionButton.isHidden = viewModel.isMenu
-        likeView.isHidden = !viewModel.isMenu
-        menuButton.isHidden = !viewModel.isMenu
-        ratingAndReviewView.isHidden = !viewModel.isMenu
+        iconImageView.isHidden = (viewModel.config == .main)
+        actionButton.isHidden = (viewModel.config == .main)
+        ratingAndReviewView.isHidden = !(viewModel.config == .main)
         actionButton.layer.shadowOpacity = viewModel.shouldShadowTurnOff ?  0 : 0.2
     }
 }
-
-
+//MARK: - Auto layout
+extension DetailCell {
+    fileprivate func configureUI() {
+        backgroundColor = .white
+        let titleStack = UIStackView(arrangedSubviews: [iconImageView, titleLabel])
+        titleStack.axis = .horizontal
+        titleStack.spacing = 8
+        
+        addSubview(titleStack)
+        titleStack.anchor(top:topAnchor, left: leftAnchor,
+                          paddingTop: 16, paddingLeft: 16)
+        
+        addSubview(actionButton)
+        actionButton.anchor(top:topAnchor, right: rightAnchor, paddingTop: 12, paddingRight: 16)
+        
+        addSubview(subtitleLabel)
+        subtitleLabel.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, right:rightAnchor,
+                             paddingTop: 4, paddingLeft: 16, paddingRight: 100)
+        
+        addSubview(ratingAndReviewView)
+        ratingAndReviewView.anchor(right: rightAnchor, paddingRight: 12)
+        ratingAndReviewView.centerY(inView: titleLabel)
+    }
+}

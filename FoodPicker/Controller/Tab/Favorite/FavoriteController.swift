@@ -13,14 +13,13 @@ import SkeletonView
 
 private let favoriteIdentifier = "FavoriteCell"
 
-class FavoriteController: UIViewController {
+class FavoriteController: UIViewController, CoredataOperation {
     //MARK: - Properties
     var isEditingMode = false { didSet{ self.tableView.reloadData()}}
     var likedRestaurants = [Restaurant]()
     var mutableSource = [Restaurant]() { didSet{ self.tableView.reloadData() }}
     
     private let tableView = UITableView()
-    
     private let navBarView : UIView = {
         let view = UIView()
         view.layer.cornerRadius = 36
@@ -49,7 +48,7 @@ class FavoriteController: UIViewController {
         return button
     }()
     private let searchBarTextField = UITextField().createSearchBar(withPlaceholder: "Search in my favorite")
-    private let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContainer.viewContext
+    internal let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,35 +64,100 @@ class FavoriteController: UIViewController {
     func fetchLikedRestauants(){
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let connect = CoredataConnect(context: context)
-        connect.fetchLikedRestaurant(uid: uid) { (restaurants) in
-            self.mutableSource = restaurants
+        connect.fetchLikedRestaurant(uid: uid) { restaurants in
             self.likedRestaurants = restaurants
-            self.checkBeforeRestaurantLoaded()
+            self.mutableSource = restaurants
+            self.checkIfRestaurantsSelected()
         }
     }
-    func checkBeforeRestaurantLoaded(){
-        for (index, item) in likedRestaurants.enumerated(){
-            let connect = CoredataConnect(context: context)
-            connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: item.restaurantID) { (isSelected) in
-                guard isSelected else { return }
-                self.likedRestaurants[index].isSelected = true
-                self.mutableSource[index].isSelected = true
+    func checkIfRestaurantsSelected(){
+        for (index, item) in likedRestaurants.enumerated() {
+            self.checkIfRestaurantIsSelected(restaurant: item) { isSelected in
+                self.likedRestaurants[index].isSelected = isSelected
+                self.mutableSource[index].isSelected = isSelected
+                self.tableView.reloadData()
             }
         }
     }
     func updateSelectedRestaurant(restaurant: Restaurant){
-        guard let tab = self.tabBarController as? HomeController else { return }
-        do{
-            try tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
-            self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: restaurant)
-        }catch SelectRestaurantResult.upToLimit{
-            self.presentPopupViewWithoutButton(title: "Sorry!", subtitle: "You can only select 8 restaurant. 😢")
-            self.fetchLikedRestauants()
-        }catch{
-            print("DEBUG: Failed to select restaurant.")
+        self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: restaurant)
+    }
+    //MARK: - Selectors
+    @objc func handleEditButtonTapped(){
+        print("DEBUG: edit...")
+        self.isEditingMode.toggle()
+        self.editButton.alpha = 0
+        UIView.animate(withDuration: 1) {
+            let buttonImageName : String =  self.isEditingMode ? "icnSuccessS":"icnEditSmall"
+            self.editButton.setImage(UIImage(named: buttonImageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
+            
+            let buttonTitle = self.isEditingMode ? "Finish" : "Edit"
+            self.editButton.setTitle(buttonTitle, for: .normal)
+            
+            let tintColor : UIColor = self.isEditingMode ? UIColor.freshGreen : UIColor.black
+            self.editButton.setTitleColor( tintColor, for: .normal)
+        } completion: { (_) in
+            UIView.animate(withDuration: 1) {
+                self.editButton.alpha = 1
+            }
         }
     }
-    //MARK: - Helpers
+}
+//MARK: - RestaurantListCellDelegate
+extension FavoriteController: RestaurantListCellDelegate {
+    func didSelectRestaurant(_ restaurant:Restaurant) {
+        guard let index = self.likedRestaurants.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
+        self.likedRestaurants[index].isSelected.toggle()
+        self.updateSelectedRestaurant(restaurant: restaurant)
+    }
+    func deleteFavoriteRestaurant(_ restaurant: Restaurant) {
+        guard let index = self.mutableSource.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
+        guard let index2 = self.likedRestaurants.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
+        tableView.beginUpdates()
+        UIView.animate(withDuration: 0.1) {
+            self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+        }
+        self.mutableSource.remove(at: index)
+        self.likedRestaurants.remove(at: index2)
+        tableView.endUpdates()
+        self.deleteLikedRestaurant(restaurant)
+    }
+}
+//MARK: - UITableViewDelegate UITableViewDataSource
+extension FavoriteController : UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return mutableSource.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: favoriteIdentifier, for: indexPath)
+            as! RestaurantListCell
+        let viewModel = CardCellViewModel(restaurant: self.mutableSource[indexPath.row])
+        cell.viewModel = viewModel
+        cell.backgroundColor = .backgroundColor
+        cell.delegate = self
+        cell.config = isEditingMode ? .edit : .table
+        cell.selectionStyle = .none
+        return cell
+    }
+}
+//MARK: - UITextFieldDelegate
+extension FavoriteController : UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text?.lowercased() else { return true }
+        if string == "" , text.count == 1{
+            mutableSource = likedRestaurants
+        }else if string == "" {
+            let pred = NSPredicate(format: "SELF CONTAINS %@", String(text.dropLast()))
+            self.mutableSource = likedRestaurants.filter { pred.evaluate(with: $0.name.lowercased()) }
+        }else {
+            let pred = NSPredicate(format: "SELF CONTAINS %@", text + string.lowercased())
+            self.mutableSource = likedRestaurants.filter { pred.evaluate(with: $0.name.lowercased()) }
+        }
+        return true
+    }
+}
+//MARK: -  Autolayout and configure UI method
+extension FavoriteController {
     func configureNavBar(){
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.isTranslucent = true
@@ -132,76 +196,5 @@ class FavoriteController: UIViewController {
                          right: view.rightAnchor, bottom: view.bottomAnchor, paddingBottom: 16)
         tableView.register(RestaurantListCell.self, forCellReuseIdentifier: favoriteIdentifier)
         tableView.contentInset = UIEdgeInsets(top: 40+16+56-8, left: 0, bottom: 0, right: 0)
-    }
-    //MARK: - Selectors
-    @objc func handleEditButtonTapped(){
-        print("DEBUG: edit...")
-        self.isEditingMode.toggle()
-        self.editButton.alpha = 0
-        UIView.animate(withDuration: 1) {
-            let buttonImageName : String =  self.isEditingMode ? "icnSuccessS":"icnEditSmall"
-            self.editButton.setImage(UIImage(named: buttonImageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
-            
-            let buttonTitle = self.isEditingMode ? "Finish" : "Edit"
-            self.editButton.setTitle(buttonTitle, for: .normal)
-            
-            let tintColor : UIColor = self.isEditingMode ? UIColor.freshGreen : UIColor.black
-            self.editButton.setTitleColor( tintColor, for: .normal)
-        } completion: { (_) in
-            UIView.animate(withDuration: 1) {
-                self.editButton.alpha = 1
-            }
-        }
-    }
-}
-extension FavoriteController : UITableViewDelegate, UITableViewDataSource{
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return mutableSource.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: favoriteIdentifier, for: indexPath)
-            as! RestaurantListCell
-        let viewModel = CardCellViewModel(restaurant: self.mutableSource[indexPath.row])
-        cell.viewModel = viewModel
-        cell.backgroundColor = .backgroundColor
-        cell.delegate = self
-        cell.config = isEditingMode ? .edit : .table
-        cell.selectionStyle = .none
-        return cell
-    }
-}
-extension FavoriteController : UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let text = textField.text?.lowercased() else { return true }
-        if string == "" , text.count == 1{
-            mutableSource = likedRestaurants
-        }else if string == "" {
-            let pred = NSPredicate(format: "SELF CONTAINS %@", String(text.dropLast()))
-            self.mutableSource = likedRestaurants.filter { pred.evaluate(with: $0.name.lowercased()) }
-        }else {
-            let pred = NSPredicate(format: "SELF CONTAINS %@", text + string.lowercased())
-            self.mutableSource = likedRestaurants.filter { pred.evaluate(with: $0.name.lowercased()) }
-        }
-        return true
-    }
-}
-
-extension FavoriteController: RestaurantListCellDelegate {
-    func didSelectRestaurant(_ restaurant:Restaurant) {
-        guard let index = self.likedRestaurants.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
-        self.likedRestaurants[index].isSelected.toggle()
-        self.updateSelectedRestaurant(restaurant: restaurant)
-    }
-    func shouldDeleteCell(_ restaurant: Restaurant) {
-        guard let index = self.mutableSource.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
-        guard let index2 = self.likedRestaurants.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
-        tableView.beginUpdates()
-        UIView.animate(withDuration: 0.1) {
-            self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
-        }
-        self.mutableSource.remove(at: index)
-        self.likedRestaurants.remove(at: index2)
-        tableView.endUpdates()
-        self.updateLikedRestaurantsInDataBase(context: context, restaurant: restaurant)
     }
 }

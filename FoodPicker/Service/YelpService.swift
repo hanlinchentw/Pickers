@@ -8,7 +8,7 @@
 
 import Moya
 
-private let apiKey = "LNCIjxzEYOe3zEryXQ7x43FAlx10gPoDAaC8NtzhOu-LlZmsDggCT5ioqy1x3oP_hBDKaknwZeH8ZRo0Lt7n4m2vn0vBhVW3odkrdX7yVDXrXN2GPKK4hACFyXcnYHYx"
+private let apiKey = "CNNtPCSsR7M5JCys6gb2hz26a5VSBVPbl481lVegZlPWc9KwWenyWZ2Gjx9lxA56O1m1DxNmffUUNq7ktcUrNVmf61qJUlgAXqhzukvlW6xwa7EA8sDt61DS6fhGYXYx"
 
 private let clientID = "YuD9cka95Qb_g7WsdCA-rQ"
 

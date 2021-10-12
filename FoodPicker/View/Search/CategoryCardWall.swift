@@ -11,9 +11,6 @@ import UIKit
 protocol CategoryCardWallDelegate: AnyObject {
     func searchRestaurantByTappingCard(_ keyword: String)
 }
-
-
-
 private let categoryCardIdentifier = "categoryCard"
 
 class CategoryCardWall: UICollectionReusableView{

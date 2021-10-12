@@ -8,29 +8,20 @@
 
 import UIKit
 import CoreLocation
-import Combine
 
 private let searchHeaderIdentifier = "searchBar"
 private let searchShortcutIdentifier = "searchShortcut"
 private let searchFooterIdentifier = "categoryWall"
 
-class SearchController: UICollectionViewController, MBProgressHUDProtocol {
+class SearchController: UICollectionViewController, MBProgressHUDProtocol, CoredataOperation {
     //MARK: - Properties
     var restaurants = [Restaurant]() { didSet{ self.resultVC.searchResult = self.restaurants }}
     private let tableView = UITableView()
     private var errorView : ErrorView?
-    private var historicalRecords = [String]() {
-        didSet{
-            DispatchQueue.main.async {
-                print(self.historicalRecords)
-                self.collectionView.reloadData()
-            }
-        }
-    }
+    private var historicalRecords = [String]()
     private let searchVC = SearchTableViewController(style: .grouped)
     private let resultVC = SearchResultController()
-    private let context = ((UIApplication.shared.delegate) as! AppDelegate).persistentContainer.viewContext
-    private var subscriber = Set<AnyCancellable>()
+    internal let context = ((UIApplication.shared.delegate) as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,32 +53,26 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
             errorView = ErrorView()
             if errorView != nil {
                 self.view.addSubview(errorView!)
-                self.observeErrorView()
+                errorView?.delegate = self
             }
             self.collectionView.isHidden = true
         }
     }
-    fileprivate func observeErrorView() {
-        if errorView != nil {
-            errorView?.reloadButton
-                .publisher(for: .touchUpInside)
-                .sink { [weak self]_ in
-                    self?.fetchHistoricalRecord()
-                }.store(in: &subscriber)
-        }
-    }
-    //MARK: - API
-    func addHistoricalRecordByTerm(term:String){
-        let connect = CoredataConnect(context: self.context)
-        connect.saveSearchHistoryInEntity(term: term)
+    //MARK: - Update select Status
+    func didSelectRestaurant(restaurant: Restaurant) {
+        updateSelectedRestaurantsInCoredata(context: context, restaurant: restaurant)
+        updateSelectStatus(restaurantID: restaurant.restaurantID)
     }
     
-    func fetchHistoricalRecord(){
-        let connect = CoredataConnect(context: self.context)
-        connect.fetchSearchHistory { terms in
-            self.historicalRecords = terms
+    func updateSelectStatus(restaurantID: String){
+        if let index = self.restaurants.firstIndex(where: { $0.restaurantID == restaurantID}) {
+            self.restaurants[index].isSelected.toggle()
         }
     }
+}
+
+//MARK: - Yelp API
+extension SearchController {
     func fetchRestautantsByterms(term: String){
         self.showLoadingAnimation()
         guard let location = LocationHandler.shared.locationManager.location?.coordinate else { return }
@@ -102,7 +87,7 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
                 if !restaurants.isEmpty{
                     self.addHistoricalRecordByTerm(term: term)
                     for (index, item) in self.restaurants.enumerated() {
-                        self.checkIfRestaurantIsSelected(context: self.context, restaurant: item) { isSelected in
+                        self.checkIfRestaurantIsSelected(restaurant: item) { isSelected in
                             self.restaurants[index].isSelected = isSelected
                         }
                     }
@@ -130,111 +115,18 @@ class SearchController: UICollectionViewController, MBProgressHUDProtocol {
         }
     }
     
-    func didSelectRestaurant(restaurant: Restaurant) {
-        guard let tab = self.tabBarController as? HomeController else { return }
-        do {
-            try tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
-            updateSelectedRestaurantsInCoredata(context: context, restaurant: restaurant)
-            updateSelectStatus(restaurantID: restaurant.restaurantID)
-        }catch  SelectRestaurantResult.upToLimit{
-            self.presentPopupViewWithoutButton(title: "Sorry..", subtitle: "You can only select 8 restaurant. 😢")
-            self.resultVC.searchResult = self.restaurants
-        }catch{
-            print("DEBUG: Failed to select restaurant.")
-        }
-    }
-    
-    func updateSelectStatus(restaurantID: String){
-        if let index = self.restaurants.firstIndex(where: { $0.restaurantID == restaurantID}) {
-            self.restaurants[index].isSelected.toggle()
-        }
-    }
 }
-//MARK: - UICollectionviewDelegate / Datasoruce
+//MARK: - Core data
 extension SearchController {
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+    func addHistoricalRecordByTerm(term:String){
+        let connect = CoredataConnect(context: self.context)
+        connect.saveSearchHistoryInEntity(term: term)
     }
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchShortcutIdentifier, for: indexPath)
-            as! SearchShortcutSection
-        cell.titleLabel.text = "Recent Searches"
-        cell.keywords = historicalRecords
-        return cell
-    }
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionHeader{
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: searchHeaderIdentifier, for: indexPath) as! SearchHeader
-            header.delegate = self
-            return header
-        }else{
-            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: searchFooterIdentifier, for: indexPath) as! CategoryCardWall
-            footer.delegate = self
-            return footer
-        }
-    }
-}
-//MARK: - UICollectionViewDelegateFlowLayout
-extension SearchController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height : CGFloat = historicalRecords.isEmpty ? 0 : 56
-        return CGSize(width: view.frame.width, height: height)
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 40 + 24*2)
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: view.frame.height)
-    }
-}
-//MARK: -
-extension SearchController: CategoryCardWallDelegate {
-    func searchRestaurantByTappingCard(_ keyword: String) {
-        self.showLoadingAnimation()
-        self.searchRestaurants(withKeyword: keyword)
-    }
-}
-
-//MARK: - Page switch
-extension SearchController{
-    func showSearchTable(shouldShow: Bool){
-        if shouldShow{
-            self.searchVC.closeTheKeyBoardAndCleanTextField()
-            self.searchVC.view.isHidden = false
-            UIView.animate(withDuration: 0.3) {
-                self.searchVC.view.alpha = 1
-            }
-        }else{
-            UIView.animate(withDuration: 0.3, animations: {
-                self.searchVC.view.alpha = 0
-            }) { (_) in
-                self.searchVC.view.isHidden = true
-                self.searchVC.removeFromParent()
-            }
-        }
-    }
-    func showResultView(shouldShow: Bool){
-        if shouldShow{
-            self.resultVC.view.isHidden = false
-            UIView.animate(withDuration: 0.2) {
-                self.resultVC.view.alpha = 1
-            }
-        }else{
-            UIView.animate(withDuration: 0.2, animations: {
-                self.resultVC.view.alpha = 0
-            }) { (_) in
-                self.resultVC.view.isHidden = true
-            }
-        }
-    }
-    func shouldCloseKeyboard(should: Bool, term: String? = nil){
-        guard let header = collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader)[0] as? SearchHeader else { return }
-        if should{
-            header.searchBar.text?.removeAll()
-            header.searchBar.clearButtonMode = .whileEditing
-        }else{
-            header.searchBar.text = term
-            header.searchBar.clearButtonMode = .always
+    func fetchHistoricalRecord(){
+        let connect = CoredataConnect(context: self.context)
+        connect.fetchSearchHistory { terms in
+            self.historicalRecords = terms
+            DispatchQueue.main.async { self.collectionView.reloadData() }
         }
     }
 }
@@ -267,5 +159,97 @@ extension SearchController: SearchTableViewControllerDelegate{
     func didSearchbyTerm(term: String) {
         self.showLoadingAnimation()
         self.searchRestaurants(withKeyword: term)
+    }
+}
+//MARK: - ErrorViewDelegate
+extension SearchController: ErrorViewDelegate {
+    func didTapReloadButton() {
+        self.fetchHistoricalRecord()
+    }
+}
+//MARK: - UICollectionviewDelegate / Datasoruce
+extension SearchController {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchShortcutIdentifier, for: indexPath)
+            as! SearchShortcutSection
+        cell.keywords = historicalRecords
+        return cell
+    }
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader{
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: searchHeaderIdentifier, for: indexPath) as! SearchHeader
+            header.delegate = self
+            return header
+        }else{
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: searchFooterIdentifier, for: indexPath) as! CategoryCardWall
+            footer.delegate = self
+            return footer
+        }
+    }
+}
+//MARK: - UICollectionViewDelegateFlowLayout
+extension SearchController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let height : CGFloat = historicalRecords.isEmpty ? 0 : 56
+        return CGSize(width: view.frame.width, height: height)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: view.frame.width, height: 40 + 24*2)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: view.frame.width, height: view.frame.height)
+    }
+}
+//MARK: - CategoryCardWallDelegate
+extension SearchController: CategoryCardWallDelegate {
+    func searchRestaurantByTappingCard(_ keyword: String) {
+        self.showLoadingAnimation()
+        self.searchRestaurants(withKeyword: keyword)
+    }
+}
+//MARK: - Page switch
+extension SearchController{
+    func showSearchTable(shouldShow: Bool){
+        if shouldShow{
+            self.searchVC.cleanSearchBarAndShowTheKeyboard()
+            self.searchVC.view.isHidden = false
+            UIView.animate(withDuration: 0.3) {
+                self.searchVC.view.alpha = 1
+            }
+        }else{
+            UIView.animate(withDuration: 0.3, animations: {
+                self.searchVC.view.alpha = 0
+            }) { (_) in
+                self.searchVC.view.isHidden = true
+                self.searchVC.removeFromParent()
+            }
+        }
+    }
+    func showResultView(shouldShow: Bool){
+        if shouldShow{
+            self.resultVC.view.isHidden = false
+            UIView.animate(withDuration: 0.3) {
+                self.resultVC.view.alpha = 1
+            }
+        }else{
+            UIView.animate(withDuration: 0.3, animations: {
+                self.resultVC.view.alpha = 0
+            }) { (_) in
+                self.resultVC.view.isHidden = true
+            }
+        }
+    }
+    func shouldCloseKeyboard(should: Bool, term: String? = nil){
+        guard let header = collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader)[0] as? SearchHeader else { return }
+        if should{
+            header.searchBar.text?.removeAll()
+            header.searchBar.clearButtonMode = .whileEditing
+        }else{
+            header.searchBar.text = term
+            header.searchBar.clearButtonMode = .always
+        }
     }
 }

@@ -10,14 +10,9 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
-protocol RestaurantCardCellDelegate : class {
-    func didSelectRestaurant(_ restaurant : Restaurant)
-    func didLikeRestaurant(_ restaurant : Restaurant)
-}
-
 class RestaurantCardCell: UICollectionViewCell{
     //MARK: - Properties
-    var restaurant : Restaurant? { didSet{configure() }}
+    var restaurant : Restaurant? { didSet{ configure() }}
     
     let optionImageView : UIImageView = {
         let iv = UIImageView()
@@ -27,7 +22,7 @@ class RestaurantCardCell: UICollectionViewCell{
         iv.contentMode = .scaleAspectFill
         return iv
     }()
-    weak var delegate : RestaurantCardCellDelegate?
+    weak var delegate : RestaurantAPI?
     let restaurantName : UILabel = {
         let label = UILabel()
         label.isSkeletonable = true
@@ -62,7 +57,6 @@ class RestaurantCardCell: UICollectionViewCell{
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame:frame)
-        self.isSkeletonable = true
         backgroundColor = .white
         layer.cornerRadius = 16
         layer.masksToBounds = true
@@ -113,12 +107,10 @@ class RestaurantCardCell: UICollectionViewCell{
     //MARK: - Selectors
     @objc func handleLikeButtonTapped(){
         guard self.restaurant != nil else { return }
-        self.restaurant!.isLiked.toggle()
-        self.delegate?.didLikeRestaurant(self.restaurant!)
+        self.delegate?.didLikeRestaurant(restaurant: self.restaurant!)
     }
     @objc func handleSelectButtonTapped(){
         guard self.restaurant != nil else { return }
-        self.restaurant!.isSelected.toggle()
-        self.delegate?.didSelectRestaurant(self.restaurant!)
+        self.delegate?.didSelectRestaurant(restaurant: self.restaurant!)
     }
 }

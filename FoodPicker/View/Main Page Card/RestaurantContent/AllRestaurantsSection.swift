@@ -9,7 +9,7 @@
 import UIKit
 private let restaurantsListIdentifier = "ListCell"
 
-protocol AllRestaurantsSectionDelegate: class {
+protocol AllRestaurantsSectionDelegate: AnyObject {
     func didSelectRestaurant(restaurant:Restaurant)
     func didTapRestaurant(restaurant:Restaurant)
     func shouldSeeAllRestaurants(restaurants:[Restaurant])
@@ -55,6 +55,9 @@ class AllRestaurantsSection: UICollectionReusableView{
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    deinit {
+        print("DEBUG: Release")
     }
     //MARK: - Helpers
     func configureUI(){

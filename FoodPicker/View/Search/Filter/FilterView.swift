@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol FilterViewDelegate : class  {
+protocol FilterViewDelegate : AnyObject  {
     func didTapSortButton()
     func didTapPriceButton()
 }
@@ -36,11 +36,9 @@ class FilterView : UIView {
         
         let stack = UIStackView(arrangedSubviews: [sortOptionLabel, imageView])
         stack.axis = .horizontal
-        stack.spacing = 4
+        stack.spacing = 2
         view.addSubview(stack)
         stack.fit(inView: view)
-        
-        
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleSortButtonTapped))
         view.addGestureRecognizer(tap)
         view.isUserInteractionEnabled = true
@@ -52,15 +50,6 @@ class FilterView : UIView {
         view.addGestureRecognizer(tap)
         view.isUserInteractionEnabled = true
         return view
-    }()
-    private let openFilterButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Open", for: .normal)
-        button.titleLabel?.font = UIFont(name: "Arial-BoldMT", size: 14)
-        button.layer.cornerRadius = 20
-        button.tintColor = .customblack
-        button.backgroundColor = UIColor(white: 220 / 255, alpha: 1)
-        return button
     }()
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -75,18 +64,16 @@ class FilterView : UIView {
     //MARK: - Helpers
     func configure(){
         addSubview(sortButton)
-        let sortButtonWidth = 155 * widthMultiplier
+        let sortButtonWidth = 147 * widthMultiplier
         sortButton.anchor(left: leftAnchor, paddingLeft: 16,  width: sortButtonWidth, height: 40)
         sortButton.centerY(inView: self)
         addSubview(priceRangeButton)
         let priceRangeButtonWidth = 147 * widthMultiplier
         priceRangeButton.anchor(left: sortButton.rightAnchor, paddingLeft: 8,width: priceRangeButtonWidth, height: 40)
         priceRangeButton.centerY(inView: self)
-        
-        addSubview(openFilterButton)
-        let openFilterButtonWidth = 70 * widthMultiplier
-        openFilterButton.anchor(left: priceRangeButton.rightAnchor, paddingLeft: 8, width: openFilterButtonWidth, height: 40)
-        openFilterButton.centerY(inView: self)
+    }
+    func configureSortOptionText(text: String){
+        self.sortOptionLabel.text = "Sort: \(text)"
     }
     //MARK: - Selectors
     @objc func handleSortButtonTapped(){

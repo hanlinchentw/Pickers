@@ -15,6 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         NetworkMonitor.shared.startMonitoring()
+        let context = self.persistentContainer.viewContext
+        let connect = CoredataConnect(context: context)
+        connect.deleteAll(entity: selectedEntityName)
         return true
     }
 
@@ -32,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 //MARK: -  Core data Stack
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Picker")
+        let container = NSPersistentContainer(name: "Pickers")
         container.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Unable to load persistent stores: \(error)")
@@ -52,6 +55,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
 }
     

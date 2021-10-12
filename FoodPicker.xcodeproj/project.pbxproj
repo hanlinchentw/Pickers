@@ -41,6 +41,13 @@
 		B685484E24BB0090009BC800 /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484D24BB0090009BC800 /* Restaurant.swift */; };
 		B685485124BD8631009BC800 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685485024BD8631009BC800 /* NetworkService.swift */; };
 		B685485324BECC7F009BC800 /* LuckyWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685485224BECC7F009BC800 /* LuckyWheelViewModel.swift */; };
+		B68623CE270DAD8B009C6EFD /* RestaurantsFiltered.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68623CD270DAD8B009C6EFD /* RestaurantsFiltered.swift */; };
+		B68623D1270DFAF9009C6EFD /* RestaurantAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68623D0270DFAF9009C6EFD /* RestaurantAPI.swift */; };
+		B68623D3270DFB1A009C6EFD /* MainPageChildDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68623D2270DFB1A009C6EFD /* MainPageChildDelegate.swift */; };
+		B68623D5270DFCD8009C6EFD /* DetailDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68623D4270DFCD8009C6EFD /* DetailDelegate.swift */; };
+		B68623D7270E8CB5009C6EFD /* CoredataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68623D6270E8CB5009C6EFD /* CoredataOperation.swift */; };
+		B68623DA270EE5B3009C6EFD /* ActionSheetHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68623D9270EE5B3009C6EFD /* ActionSheetHeader.swift */; };
+		B68623DC270EE5BE009C6EFD /* ActionSheetFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68623DB270EE5BE009C6EFD /* ActionSheetFooter.swift */; };
 		B689A7A22564CBDF009D270B /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A12564CBDF009D270B /* CategoriesViewController.swift */; };
 		B689A7A42564DBBE009D270B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A32564DBBE009D270B /* ListTableViewController.swift */; };
 		B689A7A72564DFE4009D270B /* ListInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A62564DFE4009D270B /* ListInfoCell.swift */; };
@@ -57,13 +64,13 @@
 		B6B41AC22512068100A5ACBE /* ActionSheetLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */; };
 		B6B41AC4251316E800A5ACBE /* SortOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B41AC3251316E800A5ACBE /* SortOptionCell.swift */; };
 		B6B41AC6251316F300A5ACBE /* PriceRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B41AC5251316F300A5ACBE /* PriceRangeCell.swift */; };
+		B6B6705927132FCE00715A18 /* Pickers.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */; };
 		B6B84C84265212D1002E418D /* SearchHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84C83265212D1002E418D /* SearchHeader.swift */; };
 		B6B84D4B2665D4BD002E418D /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D4A2665D4BD002E418D /* UIView+Extension.swift */; };
 		B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D4C2665D4DE002E418D /* UIButton+ Extension.swift */; };
 		B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D4E2665D50D002E418D /* UITextField +Extension.swift */; };
 		B6B84D512665D52F002E418D /* UIFont+UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D502665D52F002E418D /* UIFont+UIColor+Extension.swift */; };
 		B6B84D532665D579002E418D /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D522665D579002E418D /* UIViewController+Extension.swift */; };
-		B6B84D562665EBD5002E418D /* Picker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D542665EBD5002E418D /* Picker.xcdatamodeld */; };
 		B6B84D58266633C4002E418D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D57266633C4002E418D /* ErrorView.swift */; };
 		B6C7D5AA2554E510005D2AA0 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5A92554E510005D2AA0 /* MapViewController.swift */; };
 		B6C7D5AE255824B7005D2AA0 /* MoreRestaurantViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5AD255824B7005D2AA0 /* MoreRestaurantViewController.swift */; };
@@ -137,6 +144,13 @@
 		B685484D24BB0090009BC800 /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
 		B685485024BD8631009BC800 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B685485224BECC7F009BC800 /* LuckyWheelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuckyWheelViewModel.swift; sourceTree = "<group>"; };
+		B68623CD270DAD8B009C6EFD /* RestaurantsFiltered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantsFiltered.swift; sourceTree = "<group>"; };
+		B68623D0270DFAF9009C6EFD /* RestaurantAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantAPI.swift; sourceTree = "<group>"; };
+		B68623D2270DFB1A009C6EFD /* MainPageChildDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageChildDelegate.swift; sourceTree = "<group>"; };
+		B68623D4270DFCD8009C6EFD /* DetailDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailDelegate.swift; sourceTree = "<group>"; };
+		B68623D6270E8CB5009C6EFD /* CoredataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoredataOperation.swift; sourceTree = "<group>"; };
+		B68623D9270EE5B3009C6EFD /* ActionSheetHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSheetHeader.swift; sourceTree = "<group>"; };
+		B68623DB270EE5BE009C6EFD /* ActionSheetFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSheetFooter.swift; sourceTree = "<group>"; };
 		B689A7A12564CBDF009D270B /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
 		B689A7A32564DBBE009D270B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		B689A7A62564DFE4009D270B /* ListInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInfoCell.swift; sourceTree = "<group>"; };
@@ -153,13 +167,13 @@
 		B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSheetLauncher.swift; sourceTree = "<group>"; };
 		B6B41AC3251316E800A5ACBE /* SortOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptionCell.swift; sourceTree = "<group>"; };
 		B6B41AC5251316F300A5ACBE /* PriceRangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceRangeCell.swift; sourceTree = "<group>"; };
+		B6B6705827132FCE00715A18 /* Pickers.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Pickers.xcdatamodel; sourceTree = "<group>"; };
 		B6B84C83265212D1002E418D /* SearchHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHeader.swift; sourceTree = "<group>"; };
 		B6B84D4A2665D4BD002E418D /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		B6B84D4C2665D4DE002E418D /* UIButton+ Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+ Extension.swift"; sourceTree = "<group>"; };
 		B6B84D4E2665D50D002E418D /* UITextField +Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField +Extension.swift"; sourceTree = "<group>"; };
 		B6B84D502665D52F002E418D /* UIFont+UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+UIColor+Extension.swift"; sourceTree = "<group>"; };
 		B6B84D522665D579002E418D /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
-		B6B84D552665EBD5002E418D /* Picker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Picker.xcdatamodel; sourceTree = "<group>"; };
 		B6B84D57266633C4002E418D /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		B6C7D5A92554E510005D2AA0 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B6C7D5AD255824B7005D2AA0 /* MoreRestaurantViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreRestaurantViewController.swift; sourceTree = "<group>"; };
@@ -277,9 +291,11 @@
 				B647A4E324B203620098B7A2 /* View */,
 				B647A50224B3146B0098B7A2 /* View Model */,
 				B647A4E424B203630098B7A2 /* Controller */,
+				B68623CF270DFADF009C6EFD /* Protocol */,
 				B647A4E524B203650098B7A2 /* Utilis */,
 				B685484F24BD8605009BC800 /* Service */,
 				B6AE00A024DE48D000423D72 /* Core data entity */,
+				B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
 				B647A4DA24B1F7BE0098B7A2 /* Info.plist */,
@@ -296,6 +312,7 @@
 				B685484D24BB0090009BC800 /* Restaurant.swift */,
 				B6C7D5BC2563F65A005D2AA0 /* List.swift */,
 				B6C7D5B72563F4F3005D2AA0 /* RestaurantAnnotation.swift */,
+				B68623CD270DAD8B009C6EFD /* RestaurantsFiltered.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -333,7 +350,6 @@
 				B6F789C6267B912E0003ED5C /* UIControl+Extensions */,
 				B685484B24B6D390009BC800 /* Constants.swift */,
 				B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */,
-				B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */,
 				B6F789A82675DC440003ED5C /* Validators.swift */,
 				B6F789AD267610950003ED5C /* NetworkMonitor.swift */,
 			);
@@ -403,6 +419,27 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
+		B68623CF270DFADF009C6EFD /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				B68623D0270DFAF9009C6EFD /* RestaurantAPI.swift */,
+				B68623D6270E8CB5009C6EFD /* CoredataOperation.swift */,
+				B68623D2270DFB1A009C6EFD /* MainPageChildDelegate.swift */,
+				B68623D4270DFCD8009C6EFD /* DetailDelegate.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		B68623D8270EE5A2009C6EFD /* ActionSheet */ = {
+			isa = PBXGroup;
+			children = (
+				B6B41AC12512068100A5ACBE /* ActionSheetLauncher.swift */,
+				B68623D9270EE5B3009C6EFD /* ActionSheetHeader.swift */,
+				B68623DB270EE5BE009C6EFD /* ActionSheetFooter.swift */,
+			);
+			path = ActionSheet;
+			sourceTree = "<group>";
+		};
 		B689A7A52564DF95009D270B /* Spin */ = {
 			isa = PBXGroup;
 			children = (
@@ -451,6 +488,7 @@
 				B6D1307B24CEE1AF00040F85 /* FilterView.swift */,
 				B6B41AC3251316E800A5ACBE /* SortOptionCell.swift */,
 				B6B41AC5251316F300A5ACBE /* PriceRangeCell.swift */,
+				B68623D8270EE5A2009C6EFD /* ActionSheet */,
 			);
 			path = Filter;
 			sourceTree = "<group>";
@@ -467,7 +505,6 @@
 		B6AE00A024DE48D000423D72 /* Core data entity */ = {
 			isa = PBXGroup;
 			children = (
-				B6B84D542665EBD5002E418D /* Picker.xcdatamodeld */,
 			);
 			path = "Core data entity";
 			sourceTree = "<group>";
@@ -695,6 +732,7 @@
 				B647A4F724B22B4D0098B7A2 /* MainPageController.swift in Sources */,
 				B685484C24B6D390009BC800 /* Constants.swift in Sources */,
 				B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */,
+				B68623D5270DFCD8009C6EFD /* DetailDelegate.swift in Sources */,
 				B685484424B44938009BC800 /* LocaionHandler.swift in Sources */,
 				B6F789A72675D4EF0003ED5C /* UserService.swift in Sources */,
 				B6F789BE2678F5720003ED5C /* UIControl+Extensions.swift in Sources */,
@@ -715,6 +753,7 @@
 				B647A50124B3145B0098B7A2 /* CardCellViewModel.swift in Sources */,
 				B6F789B62676DAE40003ED5C /* RegisterViewController.swift in Sources */,
 				B6B84D532665D579002E418D /* UIViewController+Extension.swift in Sources */,
+				B68623CE270DAD8B009C6EFD /* RestaurantsFiltered.swift in Sources */,
 				B6A2FA8B25304A48005CB171 /* CategoryCardWall.swift in Sources */,
 				B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */,
 				B6AE009D24DD188400423D72 /* BottomSheetViewController.swift in Sources */,
@@ -741,7 +780,8 @@
 				B6F789C3267B90400003ED5C /* UIControlpublisher.swift in Sources */,
 				B647A4F924B22D530098B7A2 /* FilterResultSection.swift in Sources */,
 				B6F789A92675DC440003ED5C /* Validators.swift in Sources */,
-				B6B84D562665EBD5002E418D /* Picker.xcdatamodeld in Sources */,
+				B68623D3270DFB1A009C6EFD /* MainPageChildDelegate.swift in Sources */,
+				B68623DA270EE5B3009C6EFD /* ActionSheetHeader.swift in Sources */,
 				B6F789BC2678B8BB0003ED5C /* PopupView.swift in Sources */,
 				B6D1306324C02BFA00040F85 /* IntroView.swift in Sources */,
 				B6C7D5BD2563F65A005D2AA0 /* List.swift in Sources */,
@@ -760,8 +800,12 @@
 				B647A4F524B22B200098B7A2 /* ProfileController.swift in Sources */,
 				B6B84D58266633C4002E418D /* ErrorView.swift in Sources */,
 				B6F789C0267B8E200003ED5C /* UIControlSubscription.swift in Sources */,
+				B68623DC270EE5BE009C6EFD /* ActionSheetFooter.swift in Sources */,
 				B63C19AB251C656A0012CC4A /* RestaurantsList.swift in Sources */,
+				B6B6705927132FCE00715A18 /* Pickers.xcdatamodeld in Sources */,
+				B68623D1270DFAF9009C6EFD /* RestaurantAPI.swift in Sources */,
 				B68DD0522687523C008E1FDE /* ZoomAndSnapFlowLayout.swift in Sources */,
+				B68623D7270E8CB5009C6EFD /* CoredataOperation.swift in Sources */,
 				B647A4FD24B2F4A70098B7A2 /* RestaurantCardCell.swift in Sources */,
 				B6C7D5B82563F4F3005D2AA0 /* RestaurantAnnotation.swift in Sources */,
 				B6C90FC325E2560A008B492F /* TextLayer.swift in Sources */,
@@ -848,7 +892,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -902,7 +946,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -974,13 +1018,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		B6B84D542665EBD5002E418D /* Picker.xcdatamodeld */ = {
+		B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				B6B84D552665EBD5002E418D /* Picker.xcdatamodel */,
+				B6B6705827132FCE00715A18 /* Pickers.xcdatamodel */,
 			);
-			currentVersion = B6B84D552665EBD5002E418D /* Picker.xcdatamodel */;
-			path = Picker.xcdatamodeld;
+			currentVersion = B6B6705827132FCE00715A18 /* Pickers.xcdatamodel */;
+			path = Pickers.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

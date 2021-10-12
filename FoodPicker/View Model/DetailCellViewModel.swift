@@ -36,9 +36,9 @@ struct DetailCellViewModel {
     
     var heightForEachCell : CGFloat  {
         switch config {
-        case .main: return 148
+        case .main: return 72
         case .businessHour: return 72
-        case .address: return 88
+        case .address: return 72
         case .phone: return 72
         case .none: return 0
         }
@@ -72,12 +72,6 @@ struct DetailCellViewModel {
         case .none: return ""
         }
     }
-    var isMenu : Bool {
-        switch config {
-        case .main: return true
-        default: return false
-        }
-    }
     var shouldShadowTurnOff : Bool{
         switch config {
         case .address, .phone: return false
@@ -96,9 +90,6 @@ struct DetailCellViewModel {
     
     var reviewCount : Int {
         return restaurant.reviewCount
-    }
-    var numOfLike : Int {
-        return restaurant.numOfLike
     }
     //MARK: - Business Hour
     let date = Calendar.current.dateComponents(in: TimeZone.current, from: Date())
@@ -129,7 +120,6 @@ struct DetailCellViewModel {
             }
             return interval
         }
-        
         let weekArray = ["Monday            ",
                          "            Tuesday           ",
                          "            Wednesday      ",

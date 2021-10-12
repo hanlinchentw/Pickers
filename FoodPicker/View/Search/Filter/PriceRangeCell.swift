@@ -8,20 +8,36 @@
 
 import UIKit
 
+enum PriceRange: Int{
+    case oneSign
+    case twoSign
+    case threeSign
+    case fourSign
+    
+    var description: String {
+        switch self {
+        case .oneSign: return "$"
+        case .twoSign: return "$$"
+        case .threeSign: return "$$$"
+        case .fourSign: return "$$$$"
+        }
+    }
+}
 
 class PriceRangeCell: UICollectionViewCell {
     //MARK: - Proerties
-    var numOfPrice: Int? { didSet{ configure()}}
+    var priceRange: PriceRange? { didSet{ configure()}}
     private let priceLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Arial-BoldMT", size: 16)
         return label
     }()
+    var isChosen: Bool = false  { didSet { configureCellStatus(isSelect: isChosen)}}
     //MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame:frame)
         layer.cornerRadius = 72 / 2
-        layer.borderColor = UIColor.backgroundColor.cgColor
+        layer.borderColor = UIColor.lightGray.cgColor
         layer.borderWidth = 0.7
         
         addSubview(priceLabel)
@@ -33,9 +49,13 @@ class PriceRangeCell: UICollectionViewCell {
     
     //MARK: - Helpers
     func configure(){
-        guard let num = numOfPrice else { return }
-        let price = String(repeating: "$", count: num)
+        priceLabel.text = priceRange?.description
+    }
     
-        priceLabel.text = price
+    func configureCellStatus(isSelect: Bool){
+        let backgroudColor : UIColor = isSelect ? .black : .white
+        let textColor : UIColor = !isSelect ? .black : .white
+        self.backgroundColor = backgroudColor
+        self.priceLabel.textColor = textColor
     }
 }

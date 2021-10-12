@@ -21,20 +21,20 @@ class ListInfoCell: UITableViewCell{
     private let containerView = UIView()
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name:"Arial-BoldMT", size:16)
+        label.font = UIFont(name:"Arial-BoldMT", size: 18)
         label.textColor = .black
         return label
     }()
     private let timestampLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name:"ArialMT", size:14)
+        label.font = UIFont(name:"ArialMT", size: 14)
         label.textColor = .gray
         return label
     }()
     
     private let restaurantsNumLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name:"ArialMT", size:14)
+        label.font = UIFont(name:"ArialMT", size: 14)
         label.textColor = .black
         return label
     }()
@@ -57,55 +57,13 @@ class ListInfoCell: UITableViewCell{
     //MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .backgroundColor
-        containerView.backgroundColor = .white
-        
-        addSubview(containerView)
-        containerView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, width: self.frame.width, height:  116)
-        
-        let stack = UIStackView(arrangedSubviews: [nameLabel, timestampLabel])
-        stack.axis = .vertical
-        stack.distribution = .fillProportionally
-        stack.spacing = 4
-        addSubview(stack)
-        stack.anchor(top:containerView.topAnchor, left: containerView.leftAnchor,
-                         paddingTop: 16, paddingLeft: 16)
-        
-        addSubview(restaurantsNumLabel)
-        restaurantsNumLabel.anchor(left: stack.leftAnchor, bottom: containerView.bottomAnchor,  paddingBottom: 16)
-        
-        let buttonStack = UIStackView(arrangedSubviews: [moreButton, expandButton])
-        buttonStack.axis = .vertical
-        buttonStack.spacing = 22
-        contentView.addSubview(buttonStack)
-        buttonStack.anchor(top: containerView.topAnchor, right: containerView.rightAnchor,
-                           paddingTop: 8, paddingRight: 8)
+        configureCell()
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    //MARK: - Helpers
-    func configure(){
-        guard let list = list else { return }
-        nameLabel.text = list.name
-        restaurantsNumLabel.text = "\(list.restaurantsID.count) restaurants"
-        
-        let date = Date(timeIntervalSince1970: list.timeStamp)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd"
-        let day = dateFormatter.string(from: date)
-        timestampLabel.text = day
-    }
-    func configureTableView(){
-        guard let list = list else { return }
-        restaurantTableView.restaurants = list.restaurants
-        restaurantTableView.config = .list
-        restaurantTableView.separatorStyle = .singleLine
-        addSubview(restaurantTableView)
-        restaurantTableView.anchor(top: containerView.bottomAnchor, left: leftAnchor,
-                                   right: rightAnchor, bottom: bottomAnchor)
-    }
     //MARK: - Selectors
     @objc func didTapExpandButton(){
         guard let list = list else { return }
+        
         print("DEBUG: Should expand list info ... ")
         self.isExpand.toggle()
         delegate?.shouldExpandList(self, self.isExpand, list: list)
@@ -114,8 +72,64 @@ class ListInfoCell: UITableViewCell{
         let imageName = isExpand ? "icnArrowUp" : "icnArrowDown"
         expandButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
     }
+
     @objc func didTapMoreButton(){
         guard let list = self.list else { return  }
         delegate?.didTapMoreButton(list: list)
+    }
+}
+//MARK: - List animation
+extension ListInfoCell {
+    func animateIn(height: CGFloat){
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            self.restaurantTableView.transform = CGAffineTransform(translationX: 0, y: -height)
+        } completion: { _ in
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+                self.restaurantTableView.transform = .identity
+            }
+        }
+    }
+}
+//MARK: - Auto layout and view set up Method
+extension ListInfoCell {
+    func configure(){
+        guard let list = list else { return }
+        nameLabel.text = list.name
+        restaurantsNumLabel.text = "\(list.restaurantsID.count) restaurants"
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        let day = formatter.string(from: list.date)
+        timestampLabel.text = day
+    }
+    func configureCell(){
+        backgroundColor = .backgroundColor
+        containerView.backgroundColor = .white
+        
+        addSubview(containerView)
+        containerView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, width: self.frame.width, height:  116)
+        
+        let stack = UIStackView(arrangedSubviews: [nameLabel, timestampLabel, restaurantsNumLabel])
+        stack.axis = .vertical
+        stack.distribution = .fillProportionally
+        contentView.addSubview(stack)
+        stack.anchor(top:containerView.topAnchor, left: containerView.leftAnchor,
+                     bottom: containerView.bottomAnchor,
+                     paddingTop: 8, paddingLeft: 16, paddingBottom: 8)
+        
+        let buttonStack = UIStackView(arrangedSubviews: [moreButton, expandButton])
+        buttonStack.axis = .vertical
+        contentView.addSubview(buttonStack)
+        buttonStack.anchor(top: containerView.topAnchor, right: containerView.rightAnchor,
+                           bottom: containerView.bottomAnchor,
+                           paddingTop: 4, paddingRight: 16, paddingBottom: 4)
+    }
+    func configureTableView(){
+        guard let list = list else { return }
+        restaurantTableView.restaurants = list.restaurants
+        restaurantTableView.config = .list
+        restaurantTableView.separatorStyle = .singleLine
+        self.insertSubview(restaurantTableView, belowSubview: containerView)
+        restaurantTableView.anchor(top: containerView.bottomAnchor, left: leftAnchor,
+                                   right: rightAnchor, bottom: bottomAnchor)
     }
 }

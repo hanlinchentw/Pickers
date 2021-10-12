@@ -11,7 +11,7 @@ import CoreLocation
 
 let defaultImageURL =  "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3150&q=80)"
 
-struct Restaurant {
+public struct Restaurant {
     let restaurantID : String
     let name: String
     let rating : Double
@@ -34,7 +34,7 @@ struct Restaurant {
         return loacation.distance(from: restaurantLocation)
     }
     
-    init(business:Business?, detail: Details? = nil, dictionary: [String : Any]? = nil ) {
+    init(business:Business? = nil, detail: Details? = nil, dictionary: [String : Any]? = nil ) {
         if let detail = detail {
             self.details = detail
             self.restaurantID = detail.id ?? ""

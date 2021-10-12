@@ -36,6 +36,9 @@ extension UIView {
         let height = heightMultiplier * CGFloat(80) * self.iPhoneSEMutiplier
         return CGSize(width: width, height: height)
     }
+    var wheelHeightAndWidth: CGFloat {
+        return 330 * heightMultiplier
+    }
     var tabBarHeight : CGFloat {
         return 108 * heightMultiplier
     }

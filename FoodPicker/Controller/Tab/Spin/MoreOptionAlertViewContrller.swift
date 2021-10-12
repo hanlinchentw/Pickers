@@ -8,8 +8,8 @@
 
 import UIKit
 
-protocol MoreOptionAlertViewContrllerDelegate:class {
-    func deleteList(listID:String)
+protocol MoreOptionAlertViewContrllerDelegate: AnyObject {
+    func deleteList(list: List)
     func editList(list: List)
 }
 
@@ -58,7 +58,34 @@ class MoreOptionAlertViewContrller: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
     }
-    //MARK: - Helpers
+    //MARK: - Selectors
+    @objc func handleDismissal(){
+        self.navigationController?.dismiss(animated: false, completion: nil)
+    }
+    @objc func handleDeleteList(){
+        let alert = UIAlertController(title: "Are you sure you want to delete 「\(self.list.name)」?", message: nil, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+            self.delegate?.deleteList(list: self.list)
+            self.navigationController?.dismiss(animated: false, completion: nil)
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(deleteAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    @objc func handleEditList(){
+        delegate?.editList(list: self.list)
+        self.navigationController?.dismiss(animated: false, completion: nil)
+    }
+    @objc func handleShareList(){
+        let activityViewController = UIActivityViewController(activityItems: [self.list.name], applicationActivities: nil)
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+}
+
+
+//MARK: - Autolayout method
+extension MoreOptionAlertViewContrller {
     func configureView(){
         view.backgroundColor = UIColor(white: 0, alpha: 0.4)
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleDismissal))
@@ -100,28 +127,5 @@ class MoreOptionAlertViewContrller: UIViewController {
         button.setDimension(width: 192, height: 48)
         return button
     }
-    //MARK: - Selectors
-    @objc func handleDismissal(){
-        self.navigationController?.dismiss(animated: false, completion: nil)
-    }
-    @objc func handleDeleteList(){
-        guard let listID = self.list.id else { return }
-        let alert = UIAlertController(title: "Are you sure you want to delete 「\(self.list.name)」?", message: nil, preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
-            self.delegate?.deleteList(listID: listID)
-            self.navigationController?.dismiss(animated: false, completion: nil)
-        }
-        alert.addAction(cancelAction)
-        alert.addAction(deleteAction)
-        self.present(alert, animated: true, completion: nil)
-    }
-    @objc func handleEditList(){
-        delegate?.editList(list: self.list)
-        self.navigationController?.dismiss(animated: false, completion: nil)
-    }
-    @objc func handleShareList(){
-    let activityViewController = UIActivityViewController(activityItems: [self.list.name], applicationActivities: nil)
-        self.present(activityViewController, animated: true, completion: nil)
-    }
+    
 }

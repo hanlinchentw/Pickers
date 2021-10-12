@@ -15,70 +15,60 @@ private let foodCardSection = "FoodCardCell"
 private let headerCell = "SortHeader"
 private let footerCell = "AllRestaurantsSection"
 
-protocol MainPageChildControllersDelegate: AnyObject {
-    func pushToDetailVC(_ restaurant: Restaurant)
-    func didSelectRestaurant(restaurant:Restaurant)
-    func didLikeRestaurant(restaurant:Restaurant)
-    func didTapCategoryCard(textOnCard text: String)
-}
-
 class CategoriesViewController: UICollectionViewController, MBProgressHUDProtocol {
     //MARK: - Properties
-    private let locationManager = LocationHandler.shared.locationManager
     weak var delegate: MainPageChildControllersDelegate?
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    let defaultOptions : [recommendOption] = [.popular, .topPick]
-    var dataSource = [Restaurant]() { didSet{ self.collectionView.reloadData()}}
-    var topPicksDataSource = [Restaurant]()  { didSet{ self.collectionView.reloadData()}}
-    var popularDataSource = [Restaurant]()  { didSet{ self.collectionView.reloadData()}}
+    var defaultOptions : Set<recommendOption> = [.popular, .topPick] { didSet{ self.collectionView.reloadData() }}
+    var dataSource = RestaurantsFiltered(restaurants: [], filterOption: .all)
+    var topPicksDataSource = RestaurantsFiltered(restaurants: [], filterOption: .topPick)
+    var popularDataSource = RestaurantsFiltered(restaurants: [], filterOption: .popular)
     
     private var subscriber = Set<AnyCancellable>()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
-        deselectAll()
     }
-   
-    //MARK: - Helpers
-    func configureCollectionView(){
-        collectionView.isSkeletonable = true
-        collectionView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.backgroundColor = .backgroundColor
-        collectionView.register(FilterResultSection.self, forCellWithReuseIdentifier: foodCardSection)
-        collectionView.register(CategoriesCard.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerCell)
-        collectionView.register(AllRestaurantsSection.self, forSupplementaryViewOfKind:UICollectionView.elementKindSectionFooter,
-                                withReuseIdentifier: footerCell)
+}
+//MARK: - Update collectionview data source
+extension CategoriesViewController {
+    func updateSelectStatus(restaurantID: String, shouldSelect: Bool){
+        guard let delegate = delegate else { return }
+        self.popularDataSource.restaurants = delegate.updateRestaurantSelectStatus(restaurants: &popularDataSource.restaurants,
+                                                                                   restaurantID: restaurantID,
+                                                                                   shouldSelect: shouldSelect)
+        
+        self.topPicksDataSource.restaurants =  delegate.updateRestaurantSelectStatus(restaurants: &topPicksDataSource.restaurants,
+                                                                                     restaurantID: restaurantID,
+                                                                                     shouldSelect: shouldSelect)
+        
+        self.dataSource.restaurants = delegate.updateRestaurantSelectStatus(restaurants: &dataSource.restaurants,
+                                                                            restaurantID: restaurantID,
+                                                                            shouldSelect: shouldSelect)
+        self.collectionView.reloadData()
     }
-    func updateSelectStatus(restaurantID: String){
-        if let index = self.popularDataSource.firstIndex(where: { $0.restaurantID == restaurantID}) {
-            self.popularDataSource[index].isSelected.toggle()
-        }
-        if let index = self.topPicksDataSource.firstIndex(where: { $0.restaurantID == restaurantID}){
-            self.topPicksDataSource[index].isSelected.toggle()
-        }
-        if let index = self.dataSource.firstIndex(where: { $0.restaurantID == restaurantID}){
-            self.dataSource[index].isSelected.toggle()
-        }
+    func updateLikeRestaurant(restaurantID: String, shouldLike: Bool){
+        guard let delegate = delegate else { return }
+        self.popularDataSource.restaurants = delegate.updateRestaurantLikeStatus(restaurants: &popularDataSource.restaurants,
+                                                                                 restaurantID: restaurantID,
+                                                                                 shouldLike: shouldLike)
+        
+        self.topPicksDataSource.restaurants =  delegate.updateRestaurantLikeStatus(restaurants: &topPicksDataSource.restaurants,
+                                                                                   restaurantID: restaurantID,
+                                                                                   shouldLike: shouldLike)
+        
+        self.dataSource.restaurants = delegate.updateRestaurantLikeStatus(restaurants: &dataSource.restaurants,
+                                                                          restaurantID: restaurantID,
+                                                                          shouldLike: shouldLike)
+        self.collectionView.reloadData()
     }
-    func updateLikeRestaurant(restaurantID: String){
-        if let index = self.popularDataSource.firstIndex(where: { $0.restaurantID == restaurantID}) {
-            self.popularDataSource[index].isLiked.toggle()
-        }
-        if let index = self.topPicksDataSource.firstIndex(where: { $0.restaurantID == restaurantID}){
-            self.topPicksDataSource[index].isLiked.toggle()
-        }
-        if let index = self.dataSource.firstIndex(where: { $0.restaurantID == restaurantID}){
-            self.dataSource[index].isLiked.toggle()
-        }
-    }
-    
-    //MARK: - Core data
-    public func deselectAll(){
-        let connect = CoredataConnect(context: context)
-        connect.deleteAllRestaurant(in: selectedEntityName)
+    func calculatTheSectionNumber(){
+        if self.popularDataSource.restaurants.isEmpty { self.defaultOptions.remove(.popular) }
+        else { self.defaultOptions.insert(.popular)}
+        if self.topPicksDataSource.restaurants.isEmpty { self.defaultOptions.remove(.topPick) }
+        else { self.defaultOptions.insert(.topPick)}
     }
 }
 //MARK: -  UICollectionView Delegate/ DataSource
@@ -90,8 +80,8 @@ extension CategoriesViewController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: foodCardSection, for: indexPath)
             as! FilterResultSection
         let source = indexPath.row == 0 ? popularDataSource : topPicksDataSource
-        cell.restaurants = source
-        cell.option = defaultOptions[indexPath.row]
+        cell.restaurants = source.restaurants
+        cell.option = indexPath.row == 0 ? .popular : .topPick
         cell.delegate = self
         return cell
     }
@@ -102,7 +92,7 @@ extension CategoriesViewController {
             return header
         }else {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerCell, for: indexPath) as! AllRestaurantsSection
-            footer.restaurants = dataSource          
+            footer.restaurants = dataSource.restaurants
             footer.delegate = self
             return footer
         }
@@ -121,7 +111,7 @@ extension CategoriesViewController : UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width, height: 80)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        let height : CGFloat = dataSource.isEmpty ? 132 : 132 + CGFloat(117*dataSource.count)
+        let height : CGFloat = dataSource.restaurants.isEmpty ? 132 : 132 + CGFloat(117*dataSource.restaurants.count)
         return CGSize(width: view.frame.width - 32 , height: height)
     }
 }
@@ -132,16 +122,15 @@ extension CategoriesViewController: CategoryCardDelegate {
         delegate?.didTapCategoryCard(textOnCard: keyword)
     }
 }
-
 //MARK: - FilterResultSectionDelegate
 extension CategoriesViewController : FilterResultSectionDelegate {
-    func didSelectRestaurant(_ restaurant: Restaurant, option: recommendOption) {
+    func didSelectRestaurant(_ restaurant: Restaurant) {
         delegate?.didSelectRestaurant(restaurant: restaurant)
     }
-    func didLikeRestaurant(_ restaurant: Restaurant) {
+    func didLikeRestaurant(restaurant: Restaurant) {
         delegate?.didLikeRestaurant(restaurant: restaurant)
     }
-    func didTappedRestaurant(_ restaurant: Restaurant) {
+    func pushToDetailVC(_ restaurant: Restaurant) {
         self.delegate?.pushToDetailVC(restaurant)
     }
     func shouldShowMoreRestaurants(_ restaurants:[Restaurant]) {
@@ -174,5 +163,17 @@ extension CategoriesViewController: MoreRestaurantViewControllerDelegate{
     }
     func didLikeRestaurantFromMore(restaurant: Restaurant) {
         delegate?.didLikeRestaurant(restaurant: restaurant)
+    }
+}
+//MARK: - Collection view set up
+extension CategoriesViewController {
+    func configureCollectionView(){
+        collectionView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .backgroundColor
+        collectionView.register(FilterResultSection.self, forCellWithReuseIdentifier: foodCardSection)
+        collectionView.register(CategoriesCard.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerCell)
+        collectionView.register(AllRestaurantsSection.self, forSupplementaryViewOfKind:UICollectionView.elementKindSectionFooter,
+                                withReuseIdentifier: footerCell)
     }
 }

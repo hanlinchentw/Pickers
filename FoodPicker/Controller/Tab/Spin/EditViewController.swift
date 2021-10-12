@@ -11,8 +11,8 @@ import Combine
 
 private let editIdentifier = "EditCell"
 
-protocol EditViewControllerDelegate: class {
-    func didEditList(_ controller: EditViewController)
+protocol EditViewControllerDelegate: AnyObject{
+    func didEditList(_ controller: EditViewController, editList: List?)
 }
 
 class EditViewController: UITableViewController{
@@ -87,6 +87,8 @@ class EditViewController: UITableViewController{
         return button
     }()
     private var subscriber = Set<AnyCancellable>()
+    
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     init(list:List) {
         self.list = list
@@ -100,44 +102,24 @@ class EditViewController: UITableViewController{
         configureTableView()
         configureUI()
     }
-    
-    //MARK: - Helpers
 
-    func configureUI(){
-        view.backgroundColor = .backgroundColor
-        listNameTextField.delegate = self
-        navigationItem.title = "Edit List"
-
-        let backButtonView = UIView(frame: CGRect(x: 0, y: 0, width: 56, height: 40))
-        backButtonView.bounds = backButtonView.bounds.offsetBy(dx: 18, dy: 0)
-        backButtonView.addSubview(backButton)
-        let leftBarItem = UIBarButtonItem(customView: backButtonView)
-        navigationItem.leftBarButtonItem = leftBarItem
-    }
-    func configureTableView(){
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.isScrollEnabled = false
-        tableView.rowHeight = 93+24
-        tableView.separatorStyle = .none
-        tableView.register(RestaurantListCell.self, forCellReuseIdentifier: editIdentifier)
-        tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
-    }
     func saveList(){
+        let coreDataService = CoredataConnect(context: context)
         if list.restaurantsID.isEmpty{
             self.presentPopupViewWithButtonAndProvidePublisher(title: "Empty List", subtitle: "Empty List will be DELETED 😲", buttonTitle: "DELETE")
                 .sink { [unowned self] _ in
-                    RestaurantService.shared.updateSavedList(list: self.list){
-                        self.delegate?.didEditList(self)
+                    coreDataService.deleteList(list: list){
+                        self.delegate?.didEditList(self, editList: nil)
+                    }failure: { error in
+                        print("DEBUG: Failed to delete list")
                     }
                 }.store(in: &subscriber)
         }else if (self.listNameTextField.text == nil) || (self.listNameTextField.text == "") {
             self.presentPopupViewWithoutButton(title: "Invalid name", subtitle:  "Please name your list in 20 chars." )
         }else{
             self.list.name = self.listNameTextField.text!
-            RestaurantService.shared.updateSavedList(list: list){
-                self.delegate?.didEditList(self)
-            }
+            coreDataService.updateList(list: list)
+            self.delegate?.didEditList(self, editList: self.list)
         }
     }
     //MARK: - Selectors
@@ -176,7 +158,7 @@ extension EditViewController{
         let view = UIView()
         view.backgroundColor = .white
         view.addSubview(listNameTextField)
-        listNameTextField.setDimension(width: 382, height: 40)
+        listNameTextField.setDimension(width: self.view.frame.width*0.8, height: 40)
         listNameTextField.centerX(inView: view)
         listNameTextField.anchor(top: view.topAnchor, paddingTop: 16)
         
@@ -185,9 +167,8 @@ extension EditViewController{
                             paddingTop: 4, paddingRight: 16)
        
         view.addSubview(numOfRestaurantsLabel)
-        numOfRestaurantsLabel.anchor(left:view.leftAnchor, bottom: view.bottomAnchor,
+        numOfRestaurantsLabel.anchor(left: view.leftAnchor, bottom: view.bottomAnchor,
                                     paddingLeft: 16, paddingBottom: 8)
-        
         return view
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -230,16 +211,37 @@ extension EditViewController: UITextFieldDelegate{
 }
 //MARK: -RestaurantListCellDelegate
 extension EditViewController: RestaurantListCellDelegate{
-    func shouldDeleteCell(_ restaurant: Restaurant) {
+    func deleteFavoriteRestaurant(_ restaurant: Restaurant) {
         guard let index = self.list.restaurants.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) else { return }
         tableView.beginUpdates()
         self.list.restaurants.remove(at: index)
-        self.list.restaurantsID.remove(at: index)
         UIView.animate(withDuration: 0.1) {
             self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
         }
         tableView.endUpdates()
         self.numOfRestaurantsLabel.text = "\(self.list.restaurantsID.count) restaurants"
         self.isEdited = true
+    }
+}
+//MARK: - Autolayout and configure table view method
+extension EditViewController {
+    func configureUI(){
+        view.backgroundColor = .backgroundColor
+        listNameTextField.delegate = self
+        navigationItem.title = "Edit List"
+
+        let backButtonView = UIView(frame: CGRect(x: 0, y: 0, width: 56, height: 40))
+        backButtonView.bounds = backButtonView.bounds.offsetBy(dx: 18, dy: 0)
+        backButtonView.addSubview(backButton)
+        let leftBarItem = UIBarButtonItem(customView: backButtonView)
+        navigationItem.leftBarButtonItem = leftBarItem
+    }
+    func configureTableView(){
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.rowHeight = 93+24
+        tableView.separatorStyle = .none
+        tableView.register(RestaurantListCell.self, forCellReuseIdentifier: editIdentifier)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 }

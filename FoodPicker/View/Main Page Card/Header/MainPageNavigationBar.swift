@@ -9,7 +9,7 @@
 import UIKit
 
 
-protocol MainPageHeaderDelegate : class {
+protocol MainPageHeaderDelegate : AnyObject {
     func handleHeaderGotTapped()
 }
 
@@ -44,10 +44,11 @@ class MainPageNavigationBar : UIView {
         let navItemStack = UIStackView(arrangedSubviews: [listModeButton, mapModeButton])
         navItemStack.axis = .horizontal
         navItemStack.distribution = .fillEqually
+        navItemStack.alignment = .bottom
         
         addSubview(navItemStack)
-        navItemStack.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor,
-                            paddingTop: 32, paddingBottom: 16)
+        navItemStack.anchor(top: topAnchor, left: leftAnchor,
+                            right: rightAnchor, bottom: bottomAnchor, paddingBottom: 16)
         
         addSubview(blackDot)
         blackDot.centerX(inView: listModeButton)
@@ -62,7 +63,7 @@ class MainPageNavigationBar : UIView {
     }
     //MARK: - Helpers
     fileprivate func createModeButton(withTitle title: String) -> UIButton {
-        let button = UIButton(type: .system)
+        let button = UIButton(type: .custom)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = UIFont(name: "Arial-BoldMT", size: 16)
         button.setTitleColor(.black, for: .normal)

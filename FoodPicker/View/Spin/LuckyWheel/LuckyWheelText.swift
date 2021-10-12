@@ -43,7 +43,7 @@ class LuckyWheelText: UIView {
             guard var name = items[i].title else { return }
             var numOfChars = name.count
             let nameContainsChinese = name.containsChineseCharacters
-            let charOffset = nameContainsChinese ? 12 : 4
+            let charOffset = nameContainsChinese ? 12 : 8
             while (Int(wheelRadius)/2) <= numOfChars * charOffset{
                 name = String(name.dropLast())
                 numOfChars -= 1

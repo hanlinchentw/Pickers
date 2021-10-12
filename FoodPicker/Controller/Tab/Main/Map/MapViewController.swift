@@ -14,26 +14,18 @@ import AlamofireImage
 private let mapAnnotationIdentifier = "mapAnnotationIdentifier"
 private let mapCardCellIdentifier = "mapCellIdentifier"
 
-
-class MapViewController: UIViewController, MBProgressHUDProtocol{
+class MapViewController: UIViewController, MBProgressHUDProtocol, CoredataOperation{
     //MARK: - Properties
-    public var restaurants = [Restaurant]() { didSet{
-        self.addAnnotations(restaurants: self.restaurants)
-    }
-    }
+    public var restaurants = [Restaurant]()
     let bottomViewController = BottomSwipableCollectionViewController()
     private var mapView = MKMapView()
     private let locationManager = LocationHandler.shared.locationManager
     weak var delegate: MainPageChildControllersDelegate?
-    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    internal let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureMapView()
-        configureCollectionView()
-        guard let location = self.locationManager.location?.coordinate else { return }
-        self.fetchRestaurant(location: location)
-        self.startReceivingSingificantLocationChanges()
+        checkIfUserAuthorize()
     }
     //MARK: - API
     fileprivate func fetchRestaurant(location: CLLocationCoordinate2D) {
@@ -42,16 +34,18 @@ class MapViewController: UIViewController, MBProgressHUDProtocol{
             self.fetchRestaurants(by: location, success: success, failure: failure)
         } success: {
             self.hideLoadingAnimation()
+            self.collectionViewAnimateIn()
         } failure: { _ in
             self.hideLoadingAnimation()
         }
     }
     fileprivate func fetchRestaurants(by location: CLLocationCoordinate2D, success: @escaping () -> Void, failure: @escaping (Error) -> Void) {
-        self.fetchRestaurantsByOption(location: location) { (result, error) in
+        self.fetchRestaurantsByOption(location: location) { [weak self] (result, error) in
             if let result = result {
-                self.restaurantsCheckProcess(restaurants: result) { checkedRestaurants in
-                    self.restaurants += checkedRestaurants
-                    self.bottomViewController.restaurants = self.restaurants
+                self?.restaurantsLikeStatusCheck(restaurants: result) { checkedRestaurants in
+                    self?.restaurants = checkedRestaurants
+                    self?.addAnnotations(restaurants: checkedRestaurants)
+                    self?.bottomViewController.restaurants = self?.restaurants ?? []
                 }
                 success()
             }else {
@@ -64,36 +58,150 @@ class MapViewController: UIViewController, MBProgressHUDProtocol{
     func checkBeforeRestaurantLoaded(completion: (()->Void)?){
         for (index, item) in self.restaurants.enumerated(){
             let connect = CoredataConnect(context: context)
-            connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: item.restaurantID) { (isSelected) in
+            connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: item.restaurantID) { [weak self] (isSelected) in
                 guard isSelected else { return }
-                self.restaurants[index].isSelected = true
+                self?.restaurants[index].isSelected = true
             }
-            connect.checkIfRestaurantIsIn(entity: likedEntityName, id: item.restaurantID) { (isLiked) in
+            connect.checkIfRestaurantIsIn(entity: likedEntityName, id: item.restaurantID) { [weak self] (isLiked) in
                 guard isLiked else { return }
-                self.restaurants[index].isLiked = true
+                self?.restaurants[index].isLiked = true
             }
         }
     }
-    func updateSelectStatus(restaurantID: String){
-        if let index = self.restaurants.firstIndex(where: { $0.restaurantID == restaurantID}) {
-            self.restaurants[index].isSelected.toggle()
-        }
+    func updateSelectStatus(restaurantID: String, shouldSelect: Bool){
+        guard let delegate = delegate else { return }
+        self.restaurants = delegate.updateRestaurantSelectStatus(restaurants: &restaurants,
+                                                                 restaurantID: restaurantID,
+                                                                 shouldSelect: shouldSelect)
+        self.bottomViewController.restaurants = self.restaurants
     }
-    func updateLikeRestaurant(restaurantID: String){
-        if let index = self.restaurants.firstIndex(where: { $0.restaurantID == restaurantID}) {
-            self.restaurants[index].isLiked.toggle()
-        }
+    func updateLikeRestaurant(restaurantID: String, shouldLike: Bool){
+        guard let delegate = delegate else { return }
+        self.restaurants = delegate.updateRestaurantLikeStatus(restaurants: &restaurants,
+                                                               restaurantID: restaurantID,
+                                                               shouldLike: shouldLike)
+        self.bottomViewController.restaurants = self.restaurants
     }
     //MARK: - Helpers
     func checkIfUserAuthorize(){
-        switch CLLocationManager.authorizationStatus() {
+        switch locationManager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             configureMapView()
+            configureCollectionView()
             startReceivingSingificantLocationChanges()
         default:
             configureNonAuthView()
         }
     }
+    func collectionViewAnimateOut() {
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn) {
+            self.bottomViewController.view.transform = CGAffineTransform(translationX: 0, y: self.bottomViewController.view.frame.height)
+        }
+    }
+    func collectionViewAnimateIn() {
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn) {
+            self.bottomViewController.view.transform = .identity
+        }
+    }
+    //MARK: - LocationManager Method
+    func startReceivingSingificantLocationChanges() {
+        if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
+            print("Service is not available")
+            return
+        }
+        locationManager.delegate = self
+        locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.startMonitoringSignificantLocationChanges()
+    }
+}
+//MARK: - BottomSwipableCollectionViewControllerDelegate
+extension MapViewController : BottomSwipableCollectionViewControllerDelegate{
+    func didScrollToItem(restaurantID: String) {
+        for anno in mapView.annotations {
+            guard let anno = anno as? RestaurantAnnotation,
+                  anno.id == restaurantID else { continue }
+            mapView.selectAnnotation(anno, animated: true)
+            break
+        }
+    }
+    func pushToDetailVC(_ restaurant: Restaurant) {
+        delegate?.pushToDetailVC(restaurant)
+    }
+    func didLikeRestaurant(restaurant: Restaurant) {
+        delegate?.didLikeRestaurant(restaurant: restaurant)
+    }
+    func didSelectRestaurant(restaurant: Restaurant) {
+        delegate?.didSelectRestaurant(restaurant: restaurant)
+    }
+}
+//MARK: -  Map Helpers
+private extension MapViewController {
+    func addAnnotations(restaurants : [Restaurant]){
+        self.mapView.removeAnnotations(self.mapView.annotations)
+        for (index, restaurant) in restaurants.enumerated() {
+            let id = restaurant.restaurantID
+            let anno = RestaurantAnnotation(id: id, url: restaurant.imageUrl)
+            anno.coordinate = restaurant.coordinates
+            anno.title = restaurant.name
+            anno.index = index
+            self.mapView.addAnnotation(anno)
+        }
+        self.fitAll()
+    }
+}
+//MARK: -  Map Delegate
+extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate{
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("DEBUG: Did change location")
+        if let location = locations.last{
+            self.fetchRestaurant(location: location.coordinate)
+        }
+    }
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        self.collectionViewAnimateOut()
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let anno = view.annotation as? RestaurantAnnotation,
+              let index = anno.index else { return }
+        self.collectionViewAnimateIn()
+        self.bottomViewController.scrollToSpecificRestaurant(at: index, withAnimation: false)
+        let pinImage = UIImage(named: "btnLocationSelected")
+        view.image = pinImage
+    }
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        view.image = UIImage(named: "btnLocationUnselect")
+    }
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let annotation = annotation as? RestaurantAnnotation {
+            let view = MKAnnotationView(annotation: annotation, reuseIdentifier: mapAnnotationIdentifier)
+            view.image = UIImage(named: "btnLocationUnselect")
+            view.contentMode = .scaleAspectFit
+            view.canShowCallout = true
+            view.calloutOffset = CGPoint(x: 0, y: 5)
+            return view
+        }else{ return nil }
+    }
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let rendere = MKPolylineRenderer(overlay: overlay)
+        rendere.lineWidth = 3
+        rendere.strokeColor = .systemGreen
+        return rendere
+    }
+    func fitAll() {
+        var zoomRect = MKMapRect.null;
+        for annotation in self.mapView.annotations {
+            let annotationPoint = MKMapPoint(annotation.coordinate)
+            let pointRect = MKMapRect(x: annotationPoint.x, y: annotationPoint.y, width: 0.01, height: 0.01)
+            zoomRect = zoomRect.union(pointRect)
+        }
+        self.mapView.setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50), animated: true)
+    }
+    
+}
+
+//MARK: - Auto layout
+extension MapViewController {
     func configureNonAuthView(){
         let titleLabel = UILabel()
         titleLabel.text = "Where are you?"
@@ -129,107 +237,10 @@ class MapViewController: UIViewController, MBProgressHUDProtocol{
     }
     func configureCollectionView(){
         addChild(bottomViewController)
-        bottomViewController.delegate = self
+        bottomViewController.bottomDelegate = self
         view.addSubview(bottomViewController.view)
         bottomViewController.view.anchor(left: view.leftAnchor,right: view.rightAnchor,
-                             bottom: mapView.bottomAnchor,
-                             paddingBottom: view.tabBarHeight, height: view.restaurantCardCGSize.height * 1.25)
+                                         bottom: mapView.bottomAnchor,
+                                         paddingBottom: view.tabBarHeight, height: view.restaurantCardCGSize.height * 1.25)
     }
-    func collectionViewAnimateOut() {
-        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn) {
-            self.bottomViewController.view.transform = CGAffineTransform(translationX: 0, y: self.bottomViewController.view.frame.height)
-        }
-    }
-    func collectionViewAnimateIn() {
-        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseIn) {
-            self.bottomViewController.view.transform = .identity
-        }
-    }
-    //MARK: - LocationManager Method
-    func startReceivingSingificantLocationChanges() {
-        if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
-            print("Service is not available")
-            return
-        }
-        locationManager.delegate = self
-        locationManager.pausesLocationUpdatesAutomatically = false
-        locationManager.startMonitoringSignificantLocationChanges()
-    }
-}
-//MARK: - BottomSwipableCollectionViewControllerDelegate
-extension MapViewController : BottomSwipableCollectionViewControllerDelegate{
-    func didScrollToItem(restaurantID: String) {
-        for anno in mapView.annotations {
-            guard let anno = anno as? RestaurantAnnotation,
-                  anno.id == restaurantID else { continue }
-            mapView.selectAnnotation(anno, animated: true)
-            break
-        }
-    }
-    func didTapRestaurant(_ indexPath: IndexPath) {
-        delegate?.pushToDetailVC(restaurants[indexPath.row])
-    }
-    func didLikeRestaurant(_ restaurant: Restaurant) {
-        delegate?.didLikeRestaurant(restaurant: restaurant)
-    }
-    func didSelectRestaurant(_ restaurant: Restaurant) {
-        delegate?.didSelectRestaurant(restaurant: restaurant)
-    }
-}
-//MARK: -  Map Helpers
-private extension MapViewController {
-    func addAnnotations(restaurants : [Restaurant]){
-        self.mapView.removeAnnotations(self.mapView.annotations)
-        for (index, restaurant) in restaurants.enumerated() {
-            let id = restaurant.restaurantID
-            let anno = RestaurantAnnotation(id: id, url: restaurant.imageUrl)
-            anno.coordinate = restaurant.coordinates
-            anno.title = restaurant.name
-            anno.index = index
-            self.mapView.addAnnotation(anno)
-        }
-    }
-}
-//MARK: -  Map Delegate
-extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate{
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("DEBUG: Did change location")
-        if let location = locations.last{
-            let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-            let region = MKCoordinateRegion(center: center, latitudinalMeters: 500, longitudinalMeters: 500)
-            self.mapView.setRegion(region, animated: true)
-            self.fetchRestaurant(location: location.coordinate)
-        }
-    }
-    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        self.collectionViewAnimateOut()
-    }
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let anno = view.annotation as? RestaurantAnnotation,
-              let index = anno.index else { return }
-        self.collectionViewAnimateIn()
-        self.bottomViewController.scrollToSpecificRestaurant(at: index, withAnimation: false)
-        let pinImage = UIImage(named: "btnLocationSelected")
-        view.image = pinImage
-    }
-    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-        view.image = UIImage(named: "btnLocationUnselect")
-    }
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if let annotation = annotation as? RestaurantAnnotation {
-            let view = MKAnnotationView(annotation: annotation, reuseIdentifier: mapAnnotationIdentifier)
-            view.image = UIImage(named: "btnLocationUnselect")
-            view.contentMode = .scaleAspectFit
-            view.canShowCallout = true
-            view.calloutOffset = CGPoint(x: 0, y: 5)
-            return view
-        }else{ return nil }
-    }
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-            let rendere = MKPolylineRenderer(overlay: overlay)
-            rendere.lineWidth = 3
-            rendere.strokeColor = .systemGreen
-            return rendere
-        }
 }

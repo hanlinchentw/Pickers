@@ -18,12 +18,12 @@ enum ListConfiguration{
 
 protocol RestaurantListCellDelegate : class {
     func didSelectRestaurant(_ restaurant : Restaurant)
-    func shouldDeleteCell(_ restaurant: Restaurant)
+    func deleteFavoriteRestaurant(_ restaurant: Restaurant)
 }
 
 extension RestaurantListCellDelegate{
     func didSelectRestaurant(_ restaurant : Restaurant){}
-    func shouldDeleteCell(_ restaurant: Restaurant){}
+    func deleteFavoriteRestaurant(_ restaurant: Restaurant){}
 }
 
 class RestaurantListCell : UITableViewCell {
@@ -90,7 +90,7 @@ class RestaurantListCell : UITableViewCell {
         guard let viewModel = viewModel else { return }
         if config == .edit{
             print("DEBUG: Should delete restaurant ... ")
-            self.delegate?.shouldDeleteCell(viewModel.restaurant)
+            self.delegate?.deleteFavoriteRestaurant(viewModel.restaurant)
         }else{
             print("DEBUG: Did select restaurant ... from cell")
             self.viewModel!.restaurant.isSelected.toggle()
@@ -114,6 +114,8 @@ class RestaurantListCell : UITableViewCell {
         }else if config == .list{
             backgroundColor = .backgroundColor
             actionButton.isHidden = true
+            priceLabel.isHidden = true
+            ratedLabel.isHidden = true
         }else if config == .sheet || config ==  .all {
             self.actionButton.setImage(UIImage(named: viewModel.selectButtonImagename)?.withRenderingMode(.alwaysOriginal), for: .normal)
         }

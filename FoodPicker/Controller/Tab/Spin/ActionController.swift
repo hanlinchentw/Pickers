@@ -9,13 +9,12 @@
 import UIKit
 import CoreData
 
-class ActionViewController: UIViewController {
+class ActionViewController: UIViewController, CoredataOperation, MBProgressHUDProtocol {
     //MARK: - Properties
     var state: ListState?
     var selectedRestaurants = [Restaurant]()
     var viewModel: LuckyWheelViewModel? { didSet{ configureWheel() } }
     
-    private var resultView: SpinResultView?
     private var startButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "btnSpin")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -30,20 +29,17 @@ class ActionViewController: UIViewController {
         button.addTarget(self, action: #selector(handleListButtonTapped), for: .touchUpInside)
         return button
     }()
-    private let stateLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont(name: "Arial-BoldMT", size: 16)
-        label.textColor = .black
-        return label
-    }()
+    private var resultView = SpinResultView()
     private var wheel : LuckyWheel?
     private let bottomSheetVC = BottomSheetViewController()
-    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    internal let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureWheel()
-        configureUI()
+        configureListButton()
+        configureResultView()
+//        observeEntityChange()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -51,6 +47,9 @@ class ActionViewController: UIViewController {
         view.backgroundColor = .backgroundColor
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .default
+        navigationController?.navigationBar.isTranslucent = true
+        tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isTranslucent = true
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -61,102 +60,21 @@ class ActionViewController: UIViewController {
             self.bottomSheetVC.state = .temp
         }
     }
-    //MARK: - Helpers
-    func configureUI(){
-        view.addSubview(listButton)
-        listButton.anchor(top: view.topAnchor, right: view.rightAnchor,
-                          paddingTop: 52, paddingRight: 20,
-                          width: 40, height: 40)
-        
-    }
-    func configureBottomSheetView(){
-        self.addChild(bottomSheetVC)
-        self.view.addSubview(bottomSheetVC.view)
-        let height = view.frame.height
-        let width  = view.frame.width
-        bottomSheetVC.view.frame = CGRect(x: 0, y: self.wheel!.frame.maxY + 24, width: width, height: height)
-    }
-    func configureWheel(){
-        let wheelWidthAndHeight = 330 * view.widthMultiplier
-        wheel = LuckyWheel(frame: CGRect(x: 0, y: 0, width: wheelWidthAndHeight , height: wheelWidthAndHeight))
-        wheel?.delegate = self
-        wheel?.dataSource = self
-        wheel?.isUserInteractionEnabled = false
-        wheel?.removeFromSuperview()
-        self.view.addSubview(wheel!)
-        wheel?.center = view.center
-        let wheelInset = 72 * view.widthMultiplier
-        wheel?.frame.origin.y = view.frame.origin.y + wheelInset
-        wheel?.animateLanding = false
-        
-        view.addSubview(startButton)
-        startButton.center(inView: wheel!)
-        startButton.setDimension(width: 85, height: 85)
-        startButton.layer.cornerRadius = 40 / 2
-        startButton.isUserInteractionEnabled = !(viewModel == nil)
-        self.view.bringSubviewToFront(self.bottomSheetVC.view)
-    }
-
-    func configureList(list: List?, addRestaurant: Restaurant? = nil){
-        if list == nil{
-            let currentListState: ListState = (bottomSheetVC.state == .temp) ? .temp : .edited
-            bottomSheetVC.state = currentListState
-            self.state = currentListState
-            guard let viewModel = viewModel else { return }
-            if self.state == .temp{
-                self.configureTempList(viewModel: viewModel)
-            }else{
-                guard let restaurant = addRestaurant else { return }
-                self.configureEditedList(restaurant: restaurant)
-            }
-        }else if let list = list{
-            self.configureExistedList(list:list)
-        }
-    }
-    func configureSpiningUI(){
-        self.bottomSheetVC.view.isHidden = true
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.image = UIImage(named: "hungryGirl")?.withRenderingMode(.alwaysOriginal)
-        
-        view.addSubview(stateLabel)
-        stateLabel.text = "What's for today?"
-        stateLabel.centerX(inView: view)
-        stateLabel.anchor(top: wheel?.bottomAnchor, paddingTop: 32)
-        
-        view.addSubview(iv)
-        let imageWidthAndHeight = 200 * view.heightMultiplier
-        iv.anchor(top: stateLabel.bottomAnchor, paddingTop: 16, width: imageWidthAndHeight, height: imageWidthAndHeight)
-        iv.centerX(inView: view)
-    }
-    func configureResultView(valueRelateToResult value: Int){
-        guard let restaurant = self.viewModel?.restaurants[value-1] else { return }
-        self.resultView = SpinResultView(restaurant: restaurant)
-        if let resultView = resultView {
-            view.addSubview(resultView)
-            resultView.centerX(inView: self.view)
-            resultView.anchor(top: stateLabel.bottomAnchor, paddingTop: 16)
-            let resultViewWidth = self.view.restaurantCardCGSize.width * 1.2
-            let resultViewHeight = self.view.restaurantCardCGSize.height * 1.1
-            resultView.anchor(width: resultViewWidth, height: resultViewHeight)
-            stateLabel.text = "✔︎ \(restaurant.name) for TODAY !"
-        }
-    }
-    
     //MARK: - Selectors
     @objc func handleStartButtonTapped(){
         guard let viewModel = self.viewModel else { return }
         guard !viewModel.restaurants.isEmpty else { return}
         self.startButton.changeImageButtonWithBounceAnimation(changeTo: "btnSpin")
-        
+        self.configureWheel()
         let resultNumber = Int.random(in: 1...viewModel.restaurants.count)
-        
-        self.wheel?.setTarget(section: resultNumber)
-        bottomSheetVC.view.isHidden = true
-        wheel?.manualRotation(aCircleTime: 0.3)
-        configureSpiningUI()
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
-            self.wheel?.manualRotation(aCircleTime: 0.7)
+        wheelSpin(targetIndex: resultNumber)
+        bottomSheetVC.fold()
+        self.resultView.alpha = 1
+    }
+    func wheelSpin(targetIndex: Int){
+        self.wheel?.setTarget(section: targetIndex)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+            self.wheel?.manualRotation(aCircleTime: 0.3)
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1.5) {
                 self.wheel?.stop()
             }
@@ -171,7 +89,7 @@ class ActionViewController: UIViewController {
 //MARK: - LuckyWheelDelegate, LuckyWheelDataSource
 extension ActionViewController : LuckyWheelDelegate, LuckyWheelDataSource {
     func wheelDidChangeValue(_ newValue: Int) {
-        configureResultView(valueRelateToResult: newValue)
+        self.configureResult(valueRelateToResult: newValue)
     }
     func numberOfSections() -> Int {
         guard let viewModel = self.viewModel, !selectedRestaurants.isEmpty else { return 4 }
@@ -182,89 +100,200 @@ extension ActionViewController : LuckyWheelDelegate, LuckyWheelDataSource {
         let item2 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .pale)
         let item3 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .white)
         let item4 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .pale)
-        
         guard let viewModel = viewModel, !selectedRestaurants.isEmpty else { return [item1, item2, item3, item4]}
         return viewModel.itemForSection
     }
 }
-//MARK: - list method
-private extension ActionViewController {
-    func configureTempList(viewModel: LuckyWheelViewModel) {
-        let resIDs = viewModel.restaurants.map {$0.restaurantID}
-        let timestamp = NSDate().timeIntervalSince1970
-        let list = List(name: "My selected list", restaurantsID: resIDs, timestamp: timestamp)
-        bottomSheetVC.list = list
-        bottomSheetVC.tableView.restaurants = viewModel.restaurants
+//MARK: - Observe entityChange
+extension ActionViewController {
+    func observeEntityChange(){
+        NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange), name: NSManagedObjectContext.didSaveObjectsNotification, object: context)
     }
-    func configureEditedList(restaurant:Restaurant) {
-        if restaurant.isSelected{
-            bottomSheetVC.list?.restaurantsID.append(restaurant.restaurantID)
-            if let index = bottomSheetVC.tableView.restaurants
-                .firstIndex(where: { $0.restaurantID == restaurant.restaurantID}){
-                bottomSheetVC.tableView.restaurants[index].isSelected.toggle()
-            }else{
-                bottomSheetVC.tableView.restaurants.append(restaurant)
+    @objc func contextDidChange(_ notification: NSNotification){
+        guard let userInfo = notification.userInfo else { return }
+        if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>,
+           inserts.count > 0 {
+            let insertedObject = inserts.first
+            if let selected = insertedObject as? SelectedRestaurant{
+                var restaurant = self.transfromSelectedRestaurantIntoRestaurant(selectedRestaurant: selected)
+                restaurant.isSelected = true
+                self.selectedRestaurants.append(restaurant)
+                let vm = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
+                self.viewModel = vm
+                if state == .temp || state == nil{
+                    bottomSheetVC.state = .temp
+                    self.state = .temp
+                    configureList(list: nil)
+                }else if state == .existed || state == .edited{
+                    configureList(list: nil, addRestaurant: restaurant)
+                }
             }
-        }else{
-            guard let newlistID =
-                (bottomSheetVC.list?.restaurantsID.filter({ $0 != restaurant.restaurantID })) else { return }
-            bottomSheetVC.list?.restaurantsID = newlistID
-            bottomSheetVC.tableView.restaurants = bottomSheetVC.tableView.restaurants.filter({ $0.restaurantID != restaurant.restaurantID })
         }
-    }
-    func configureExistedList(list: List){
-        self.state = .existed
-        self.selectedRestaurants = list.restaurants
-        bottomSheetVC.list = list
-        bottomSheetVC.tableView.restaurants = list.restaurants
-        bottomSheetVC.state = .existed
-        let viewModel = LuckyWheelViewModel(restaurants: list.restaurants)
-        self.viewModel = viewModel
-        
-        guard let tab = self.tabBarController as? HomeController else { return }
-        tab.deselectAllFromActionViewController(actionVC: self)
-        self.selectedRestaurants.forEach{
-            try! tab.updateSelectedRestaurants(from: self, restaurant: $0)
-            self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: $0)
+        if let deletes = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ,
+           deletes.count > 0 {
+            let deleteObject = deletes.first
+            if let selected = deleteObject as? SelectedRestaurant , let id = selected.id,
+               let index = self.selectedRestaurants.firstIndex(where: { $0.restaurantID == id}){
+                var restaurant = self.selectedRestaurants[index]
+                restaurant.isSelected = false
+                self.selectedRestaurants.remove(at: index)
+                let vm = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
+                self.viewModel = vm
+                if state == .temp || state == nil{
+                    configureList(list: nil)
+                }else if state == .existed || state == .edited{
+                    configureList(list: nil, addRestaurant: restaurant)
+                }
+            }
         }
     }
 }
-//MARK: -  BottomSheetDelegate
-extension ActionViewController{
-    func didSelectFromSheet(restaurant: Restaurant){
-        if restaurant.isSelected {
-            selectedRestaurants.append(restaurant)
-        }else {
-            selectedRestaurants = selectedRestaurants.filter{($0.restaurantID != restaurant.restaurantID)}
+//MARK: - list method
+extension ActionViewController {
+    func configureList(list: List?, addRestaurant: Restaurant? = nil){
+        let restaurants = viewModel?.restaurants ?? []
+        let currentState : ListState = (self.state == .temp) ? .temp : .edited
+        self.state = currentState
+        self.bottomSheetVC.configureList(list: list,
+                                         restaurants: restaurants,
+                                         addRestaurant: addRestaurant)
+        if list != nil { self.state = .existed  }
+    }
+    private func ReplaceAllSelectedRestaurantsWithExistedList(list: List){
+        self.deselectAll()
+        list.restaurants.forEach{
+            self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: $0)
         }
-        let viewModel = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
-        self.viewModel = viewModel
-        
+        self.configureList(list: list)
+    }
+}
+//MARK: -  BottomSheetDelegate
+extension ActionViewController: BottomSheetViewControllerDelegate{
+    func shouldHideResultView(shouldHide: Bool) {
+        if shouldHide {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
+                self.resultView.alpha = 0
+            }
+        }else {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
+                self.resultView.alpha = 1
+            }
+        }
+    }
+    func didSelectFromSheet(restaurant: Restaurant){
         self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: restaurant)
-        guard let tab = self.tabBarController as? HomeController else { return }
-        try! tab.updateSelectedRestaurants(from: self, restaurant: restaurant)
     }
 }
 //MARK: - ListTableViewControllerDelegate
 extension ActionViewController: ListTableViewControllerDelegate{
     func didSelectList(_ controller: ListTableViewController, list: List) {
-        configureList(list: list)
+        ReplaceAllSelectedRestaurantsWithExistedList(list: list)
         controller.navigationController?.popViewController(animated: true)
     }
     func willPopViewController(_ controller: ListTableViewController){
         let list = self.bottomSheetVC.list
-        if let index = controller.lists.firstIndex(where: {$0.id == list?.id}){
-            var mutableList = controller.lists[index]
-            guard mutableList.isEdited else { controller.navigationController?.popViewController(animated: true)
-                    return }
-            controller.fetchRestaurants(restaurantsID: mutableList.restaurantsID) { (restaurants) in
-                mutableList.restaurants = restaurants
-                self.configureList(list: mutableList)
-                guard mutableList.restaurantsID.count == restaurants.count else { return }
-                controller.navigationController?.popViewController(animated: true)
-                return
-            }
+        if let index = controller.lists.firstIndex(where: {$0.id == list?.id }){
+            let mutableList = controller.lists[index]
+            guard mutableList.isEdited  else { controller.navigationController?.popViewController(animated: true)
+                return }
+            self.configureList(list: mutableList)
+        }else {
+            self.state = .temp
+            self.bottomSheetVC.state = .temp
+            self.configureList(list: nil, addRestaurant: nil)
         }
         controller.navigationController?.popViewController(animated: true)
+    }
+}
+//MARK: -  ResultViewDelegate
+extension ActionViewController: SpinResultViewDelegate {
+    func pushToDetailVC(restaurant: Restaurant) {
+        let detailVC = DetailController(restaurant: restaurant)
+        self.showLoadingAnimation()
+        self.retry(3) { success, failure in
+            detailVC.fetchDetail(success: success, failure: failure)
+        } success: {
+            detailVC.delegate = self
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
+                self.navigationController?.navigationBar.barStyle = .black
+                self.navigationController?.pushViewController(detailVC, animated: true)
+                detailVC.configureUIForResult()
+                self.hideLoadingAnimation()
+            }
+        } failure: { _ in
+            self.presentPopupViewWithoutButton(title: "Sorry..",
+                                               subtitle: "Please check you internet connection")
+            self.hideLoadingAnimation()
+        }
+    }
+}
+//MARK: - DetailControllerDelegate
+extension ActionViewController: DetailControllerDelegate {
+    func didSelectRestaurant(restaurant: Restaurant) {
+        
+    }
+    
+    func didLikeRestaurant(restaurant: Restaurant) {
+        
+    }
+    
+    func willPopViewController(_ controller: DetailController) {
+        controller.navigationController?.popViewController(animated: true)
+    }
+}
+//MARK: - Auto layout
+extension ActionViewController {
+    func configureWheel(){
+        wheel?.removeFromSuperview()
+        wheel = LuckyWheel(frame: CGRect(x: 0, y: 0,
+                                         width: self.view.wheelHeightAndWidth, height: self.view.wheelHeightAndWidth))
+        wheel?.delegate = self
+        wheel?.dataSource = self
+        wheel?.isUserInteractionEnabled = false
+        wheel?.animateLanding = true
+        
+        self.view.addSubview(wheel!)
+        wheel?.center = view.center
+        wheel?.frame.origin.y = view.frame.origin.y + 72 * view.widthMultiplier
+
+        view.addSubview(startButton)
+        startButton.center(inView: wheel!)
+        startButton.setDimension(width: 85, height: 85)
+        startButton.layer.cornerRadius = 40 / 2
+        startButton.isUserInteractionEnabled = !(viewModel == nil)
+        self.view.bringSubviewToFront(self.bottomSheetVC.view)
+    }
+    func configureListButton(){
+        view.addSubview(listButton)
+        listButton.anchor(top: view.topAnchor, right: view.rightAnchor,
+                          paddingTop: 52, paddingRight: 20,
+                          width: 40, height: 40)
+        
+    }
+    func configureBottomSheetView(){
+        self.addChild(bottomSheetVC)
+        bottomSheetVC.delegate = self
+        self.view.addSubview(bottomSheetVC.view)
+        let height = view.frame.height
+        let width  = view.frame.width
+        let offset = 72 * view.widthMultiplier + view.wheelHeightAndWidth + 24
+        
+        bottomSheetVC.view.frame = CGRect(x: 0, y: offset, width: width, height: height)
+    }
+    func configureResultView(){
+        resultView.alpha = 0
+        let resultViewWidth = self.view.restaurantCardCGSize.width * 1.3
+        let resultViewHeight = self.view.restaurantCardCGSize.height * 1.2
+        
+        view.addSubview(resultView)
+        resultView.centerX(inView: self.view)
+        let offset = 72 * view.widthMultiplier + view.wheelHeightAndWidth + 24
+        resultView.anchor(top: self.view.topAnchor, paddingTop: offset)
+        resultView.setDimension(width: resultViewWidth, height: resultViewHeight)
+    }
+    func configureResult(valueRelateToResult value: Int){
+        guard let restaurant = self.viewModel?.restaurants[value-1] else { return }
+        self.resultView.restaurant = restaurant
+        self.resultView.delegate =  self
     }
 }

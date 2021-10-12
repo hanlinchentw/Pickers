@@ -16,9 +16,8 @@ enum SelectRestaurantResult: Error {
     case error
 }
 class HomeController : UITabBarController, MBProgressHUDProtocol {
-    
     //MARK: - Properties
-    var selectedRestaurants  = [Restaurant]()
+    var selectedRestaurantCount = 0
     private let numOfSelectedLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.arialBoldMT
@@ -40,7 +39,6 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
     
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
     private lazy var context = appDelegate.persistentContainer.viewContext
-    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,14 +46,6 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
         authenticateUserAndConfigureUI()
         overrideUserInterfaceStyle = .light
 //        try? Auth.auth().signOut()
-    }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let height = 100 * view.heightMultiplier
-        var frame = tabBar.frame
-        frame.size.height = height
-        frame.origin.y = self.view.frame.size.height - height
-        tabBar.frame = frame
     }
     //MARK: - API
     func authenticateUserAndConfigureUI(){
@@ -70,22 +60,70 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
         }else{
             configureTabBar()
             configureTabBarController()
+            observeEntityChange()
         }
     }
-    func cleanUpLocalDatabase(){
-        let connect = CoredataConnect(context: context)
-        connect.deleteAllRestaurant(in: likedEntityName)
-        connect.deleteAllRestaurant(in: selectedEntityName)
+}
+
+//MARK: - SelectRestaurant Data flow
+extension HomeController {
+    func observeEntityChange(){
+        NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange), name: NSManagedObjectContext.didSaveObjectsNotification, object: context)
     }
-    
-    //MARK: - Helpers
+    @objc func contextDidChange(_ notification: NSNotification){
+        guard let userInfo = notification.userInfo else { return }
+        
+        if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>,
+           inserts.count > 0 {
+            let object = inserts.first
+            if let _ = object as? SelectedRestaurant{
+                self.selectedRestaurantCount += 1
+                self.configureActionIcon()
+            }
+        }
+        if let deletes = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ,
+           deletes.count > 0 {
+            let object = deletes.first
+            if let _ = object as? SelectedRestaurant{
+                self.selectedRestaurantCount -= 1
+                self.configureActionIcon()
+            }
+        }
+    }
+}
+//MARK: -  Search Restaurants from category cards
+extension HomeController {
+    func searchRestaurantsFromCategoryCard(textOnCard text: String) {
+        self.showLoadingAnimation()
+        UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve) {
+            self.selectedIndex = 1
+        } completion: { _ in
+            guard let nav = self.viewControllers?[1] as? UINavigationController else { return }
+            guard let searchVC = nav.viewControllers[0] as? SearchController else { return }
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                if searchVC.isViewLoaded {
+                    searchVC.searchRestaurants(withKeyword: text)
+                    timer.invalidate()
+                }
+            }
+        }
+    }
+}
+//MARK: - ProfileControllerDelegate
+extension HomeController : ProfileControllerDelegate {
+    func logOutButtonTapped() {
+        authenticateUserAndConfigureUI()
+    }
+}
+//MARK: -  HomeController setup
+extension HomeController{
     func configureActionIcon(){
-        if selectedRestaurants.count == 0 {
+        if selectedRestaurantCount == 0 {
             numOfSelectedLabel.text = nil
             actionIconView.image = UIImage(named: "spinActive")
         }else {
             actionIconView.image = nil
-            numOfSelectedLabel.changeLabelWithBounceAnimation(changeTo: "\(selectedRestaurants.count)")
+            numOfSelectedLabel.changeLabelWithBounceAnimation(changeTo: "\(selectedRestaurantCount)")
         }
     }
     func configureTabBar(){
@@ -118,6 +156,7 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
         let action = ActionViewController()
         let nav3 = templateNavigationController(image: UIImage(named: ""),
                                                 rootViewController: action)
+        action.observeEntityChange()
         // Create favorite View controller
         let favorite = FavoriteController()
         let nav4 = templateNavigationController(image: UIImage(named: "favoriteUnselectedS"),
@@ -140,81 +179,5 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
         let offset = view.heightMultiplier * 12
         nav.tabBarItem.imageInsets = UIEdgeInsets(top: offset, left: 0, bottom: -offset, right: 0)
         return nav
-    }
-}
-
-//MARK: -SelectRestaurant Data flow
-extension HomeController {
-    func updateSelectedRestaurants(from controller: UIViewController, restaurant: Restaurant) throws {
-        if selectedRestaurants.count == 8, restaurant.isSelected { throw SelectRestaurantResult.upToLimit }
-        self.didSelect(restaurant: restaurant)
-        self.configureActionIcon()
-        if controller.isKind(of: MainPageController.self)
-            || controller.isKind(of: FavoriteController.self)
-            || controller.isKind(of: SearchController.self) {
-            updateSelectedRestaurantsForSpinPage(restaurant: restaurant)
-        }
-        if controller.isKind(of: ActionViewController.self)
-            || controller.isKind(of: FavoriteController.self)
-            || controller.isKind(of: SearchController.self){
-            updateSelectedRestaurantsForMainPage(restaurant: restaurant)
-        }
-    }
-    
-    private func updateSelectedRestaurantsForSpinPage(restaurant: Restaurant){
-        guard let nav = viewControllers?[2] as? UINavigationController else { return }
-        guard let action = nav.viewControllers[0] as? ActionViewController else { return }
-        let vm = LuckyWheelViewModel(restaurants: self.selectedRestaurants)
-        action.selectedRestaurants = self.selectedRestaurants
-        action.viewModel = vm
-        if action.state == .temp || action.state == nil{
-            action.configureList(list: nil)
-        }else if action.state == .existed || action.state == .edited{
-            action.configureList(list: nil, addRestaurant: restaurant)
-        }
-    }
-    private func updateSelectedRestaurantsForMainPage(restaurant: Restaurant) {
-        guard let nav = viewControllers?[0] as? UINavigationController else { return }
-        guard let main = nav.viewControllers[0] as? MainPageController else { return }
-        guard let cate = main.children[1] as? CategoriesViewController else { return }
-        cate.updateSelectStatus(restaurantID: restaurant.restaurantID)
-    }
-    
-    func didSelect(restaurant : Restaurant){
-        if restaurant.isSelected, selectedRestaurants.count < 8 {
-            selectedRestaurants.append(restaurant)
-        }else {
-            selectedRestaurants = selectedRestaurants.filter{($0.restaurantID != restaurant.restaurantID)}
-        }
-    }
-    func deselectAllFromActionViewController(actionVC: ActionViewController){
-        self.selectedRestaurants.forEach { try! updateSelectedRestaurants(from: actionVC, restaurant: $0)}
-        selectedRestaurants.removeAll()
-        let connect = CoredataConnect(context: context)
-        connect.deleteAllRestaurant(in: selectedEntityName)
-    }
-}
-//MARK: -  Search Restaurants from category cards
-extension HomeController {
-    func searchRestaurantsFromCategoryCard(textOnCard text: String) {
-        self.showLoadingAnimation()
-        UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve) {
-            self.selectedIndex = 1
-        } completion: { _ in
-            guard let nav = self.viewControllers?[1] as? UINavigationController else { return }
-            guard let searchVC = nav.viewControllers[0] as? SearchController else { return }
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-                if searchVC.isViewLoaded {
-                    searchVC.searchRestaurants(withKeyword: text)
-                    timer.invalidate()
-                }
-            }
-        }
-    }
-}
-//MARK: - ProfileControllerDelegate
-extension HomeController : ProfileControllerDelegate {
-    func logOutButtonTapped() {
-        authenticateUserAndConfigureUI()
     }
 }

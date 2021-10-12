@@ -11,57 +11,9 @@ import CoreData
 import Combine
 
 extension UIViewController{
-    func updateSelectedRestaurantsInCoredata(context: NSManagedObjectContext ,restaurant: Restaurant){
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: restaurant.restaurantID) { (isSelected) in
-            if isSelected{
-                connect.deleteRestaurantIn(entityName: selectedEntityName, id: restaurant.restaurantID)
-            }else{
-                connect.saveSelectedRestaurant(restaurant: restaurant)
-            }
-        }
-    }
-    
-    func checkIfRestaurantIsSelected(context: NSManagedObjectContext, restaurant: Restaurant, completion: @escaping(Bool)->Void){
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: selectedEntityName, id: restaurant.restaurantID) { (isSelected) in
-            completion(isSelected)
-        }
-    }
-    
-    func updateLikedRestaurantsInDataBase(context: NSManagedObjectContext, restaurant: Restaurant){
-        RestaurantService.shared.updateLikedRestaurant(restaurant: restaurant, shouldLike: restaurant.isLiked)
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: likedEntityName, id: restaurant.restaurantID) { (isLiked) in
-            if isLiked{
-                connect.deleteRestaurantIn(entityName: likedEntityName, id: restaurant.restaurantID)
-            }else{
-                connect.saveLikedRestaurant(restaurant: restaurant)
-            }
-        }
-    }
-    
-    func checkIfUserLiked(context: NSManagedObjectContext, uncheckedRestaurant: Restaurant, completion: @escaping(Bool)->Void){
-        let connect = CoredataConnect(context: context)
-        connect.checkIfRestaurantIsIn(entity: likedEntityName, id: uncheckedRestaurant.restaurantID) { (isLiked) in
-            completion(isLiked)
-        }
-    }
-    
-    func restaurantsCheckProcess(restaurants: [Restaurant], completion: @escaping([Restaurant])->Void) {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        var uncheckedRestaurants = restaurants
-        for (index, item) in uncheckedRestaurants.enumerated(){
-            self.checkIfUserLiked(context: context, uncheckedRestaurant: item) { (isLiked) in
-                uncheckedRestaurants[index].isLiked = isLiked
-                completion(uncheckedRestaurants)
-            }
-        }
-    }
-    
-    func fetchRestaurantsByOption(location: CLLocationCoordinate2D , option: recommendOption? = nil,
-                                  limit: Int = 20, offset: Int = 0 ,completion: @escaping(restaurantResponse)) {
-        
+    func fetchRestaurantsByOption(location: CLLocationCoordinate2D ,
+                                  option: recommendOption? = nil,
+                                  limit: Int = 30, offset: Int = 0 ,completion: @escaping(restaurantResponse)) {
         NetworkService.shared.fetchRestaurants(lat: location.latitude, lon: location.longitude,
                                                withOffset: offset, option: option, limit: limit)
             { restaurants, error in
@@ -82,17 +34,18 @@ extension UIViewController{
         window.addSubview(popup)
         return popup.actionButton.publisher(for: .touchUpInside)
     }
+    
     func presentPopupViewWithoutButton(title: String, subtitle: String) {
         let popup = PopupView(title: title, titleFont: 24, subtitle: subtitle, subtitleFont: 16, withButton: false)
         guard let window = UIApplication.shared.windows.first else { fatalError("DEBUG: Keywindow isn't existed.") }
         window.addSubview(popup)
     }
     
-    func retry(_ times: Int, task: @escaping(@escaping () -> Void, @escaping (Error) -> Void) -> Void, success: @escaping () -> Void, failure: @escaping (Error) -> Void) {
-        task(success,
-            { error in
+    func retry(_ times: Int, task: @escaping(@escaping () -> Void, @escaping (Error) -> Void) -> Void,
+               success: @escaping () -> Void, failure: @escaping (Error) -> Void) {
+        task(success, { error in
                 if times > 0 {
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
                         self.retry(times - 1, task: task, success: success, failure: failure)
                     }
                 } else {

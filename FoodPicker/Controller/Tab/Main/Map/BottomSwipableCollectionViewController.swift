@@ -8,22 +8,14 @@
 
 import UIKit
 
-protocol BottomSwipableCollectionViewControllerDelegate: AnyObject {
-    func didLikeRestaurant(_ restaurant: Restaurant)
-    func didSelectRestaurant(_ restaurant: Restaurant)
-    func didTapRestaurant(_ indexPath: IndexPath)
+protocol BottomSwipableCollectionViewControllerDelegate: RestaurantAPI {
     func didScrollToItem(restaurantID: String)
 }
 
-
 class BottomSwipableCollectionViewController : UIViewController {
     //MARK: - Properties
-    weak var delegate: BottomSwipableCollectionViewControllerDelegate?
-    var restaurants = [Restaurant](){
-        didSet{
-            self.restaurantCardCollectionView.restaurants = self.restaurants
-        }
-    }
+    weak var bottomDelegate: BottomSwipableCollectionViewControllerDelegate?
+    var restaurants = [Restaurant](){ didSet{ self.restaurantCardCollectionView.restaurants = self.restaurants } }
     lazy var restaurantCardCollectionView : RestaurantCarouselCollectionView = {
         let layout = ZoomAndSnapFlowLayout()
         layout.scrollDirection = .horizontal
@@ -49,17 +41,15 @@ class BottomSwipableCollectionViewController : UIViewController {
 //MARK: - RestaurantCarouselCollectionViewDelegate
 extension BottomSwipableCollectionViewController: RestaurantCarouselCollectionViewDelegate {
     func didScrollToItem(restaurantID: String) {
-        delegate?.didScrollToItem(restaurantID: restaurantID)
+        bottomDelegate?.didScrollToItem(restaurantID: restaurantID)
     }
-    func didLikeRestaurant(_ restaurant: Restaurant) {
-        delegate?.didLikeRestaurant(restaurant)
+    func didLikeRestaurant(restaurant: Restaurant) {
+        bottomDelegate?.didLikeRestaurant(restaurant: restaurant)
     }
-    
-    func didSelectRestaurant(_ restaurant: Restaurant) {
-        delegate?.didSelectRestaurant(restaurant)
+    func didSelectRestaurant(restaurant: Restaurant) {
+        bottomDelegate?.didSelectRestaurant(restaurant: restaurant)
     }
-    
-    func didTapCard(at indexPath: IndexPath) {
-        delegate?.didTapRestaurant(indexPath)
+    func pushToDetailVC(_ restaurant: Restaurant) {
+        bottomDelegate?.pushToDetailVC(restaurant)
     }
 }

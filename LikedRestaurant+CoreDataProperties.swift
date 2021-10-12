@@ -2,7 +2,7 @@
 //  LikedRestaurant+CoreDataProperties.swift
 //  
 //
-//  Created by 陳翰霖 on 2021/6/1.
+//  Created by 陳翰霖 on 2021/10/10.
 //
 //
 
@@ -25,6 +25,6 @@ extension LikedRestaurant {
     @NSManaged public var price: String?
     @NSManaged public var rating: Double
     @NSManaged public var reviewCount: Int16
-    @NSManaged public var user: User?
+    @NSManaged public var uid: String?
 
 }

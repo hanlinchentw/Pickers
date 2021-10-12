@@ -25,8 +25,8 @@ import CoreGraphics
     case bottom = 90
 }
 open class LuckyWheel :UIControl{
-    @IBOutlet public  var delegate: LuckyWheelDelegate?
-    @IBOutlet public  var dataSource :LuckyWheelDataSource? {
+    public  var delegate: LuckyWheelDelegate?
+    public  var dataSource :LuckyWheelDataSource? {
         didSet{
             drawWheel()
         }
