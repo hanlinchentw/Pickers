@@ -1,6 +1,6 @@
 # Pickers
 
-![image](https://github.com/hanlinchentw/Picker/blob/master/demo.gif) 
+![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Demo2.gif) 
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -32,6 +32,8 @@
 
 ### Built With
 
+POP (Protocol oriented Programming)
+
 網路層以及資料儲存組成：
 * Moya
 * Core Data
@@ -62,16 +64,12 @@
 ## Usage
 1. 主頁呈現 分成卡片與地圖方式呈現
 ### 卡片 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;地圖
-![image](https://github.com/hanlinchentw/Picker/blob/master/main.png) 
-![image](https://github.com/hanlinchentw/Picker/blob/master/main_map.png) 
+![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/LIST.gif) 
+![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Map.gif) 
 
-2. 卡片右上角可以選取餐廳，將餐廳加入轉盤中，至多選擇8間餐廳。
+2. . 餐廳選取後可以透過轉盤取出今天的餐點！
 
-![image](https://github.com/hanlinchentw/Picker/blob/master/addRestaurant.png) 
-
-3. 餐廳選取後可以透過轉盤取出今天的餐點！
-
-![image](https://github.com/hanlinchentw/Picker/blob/master/action_result.gif) 
+![image](https://github.com/hanlinchentw/Pickers/tree/main/picker%20demo%20gif%26image) 
 
 4. 轉盤上的餐廳們可以用儲存起來，下次不用再選一次
 
