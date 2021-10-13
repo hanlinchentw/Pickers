@@ -23,7 +23,8 @@ class  NetworkService {
     let service = MoyaProvider<YelpService.BusinessesProvider>()
     let jsonDecoder = JSONDecoder()
     static let shared = NetworkService()
-    func fetchRestaurants(lat: Double, lon: Double, withOffset offset: Int = 0, category: String = "food", option: recommendOption? = nil, limit: Int, completion: @escaping(restaurantResponse)) {
+    func fetchRestaurants(lat: Double, lon: Double, withOffset offset: Int = 0, category: String = "food",
+                          option: recommendOption? = nil, limit: Int, completion: @escaping(restaurantResponse)) {
         
         var restaurants = [Restaurant]()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase

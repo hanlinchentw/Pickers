@@ -16,10 +16,11 @@ enum YelpService{
     enum BusinessesProvider : TargetType {
         case searchByTerm(lat:Double, lon: Double, term: String)
         case search(lat: Double, lon: Double,
-            offset: Int = 0,
-            category: String = "food", sortBy : String,
-            limit: Int)
-        case detail(id:String)
+                    offset: Int = 0,
+                    category: String = "food",
+                    sortBy : String,
+                    limit: Int)
+        case detail(id: String)
         
         var baseURL: URL { return URL(string:"https://api.yelp.com/v3/businesses")! }
         
@@ -49,6 +50,7 @@ enum YelpService{
                 return .requestParameters(parameters: ["latitude":lat, "longitude": lon,
                                                        "sort_by": "distance",
                                                        "limit" : 50,
+                                                       "categories": "food",
                                                        "term": term,
                                                        "locale":"zh_TW"],
                                           encoding: URLEncoding.queryString)
