@@ -69,7 +69,7 @@ POP (Protocol oriented Programming) / MVVM
 <!-- Usage -->
 ## Usage
 1. 主頁呈現 分成卡片與地圖方式呈現
-### 卡片 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;地圖
+### 卡片 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;地圖
 ![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/LIST.gif) 
 ![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Map.gif) 
 
