@@ -27,22 +27,29 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-  Picker主要是幫助使用者決定要吃什麼的app，使用YELP提供的的business search API，搜尋附近的餐廳，呈現給使用者，使用者可以將餐廳加入選單中，至多選擇八家。 想要的餐廳名字會呈現在轉盤上，轉盤是透過UIBezier畫出來的，將餐廳名字旋轉角度後放在轉盤上，按下中心的START鍵後，轉盤就會幫你選出今天的餐點！
+Picker使用YELP API 搜尋使用者附近的餐廳，並且以卡片、清單或是地圖的方式呈現，使用者可以選擇或儲存餐廳，餐廳選擇後會呈現在轉盤上，轉盤可以幫助使用者隨機決定幾任餐點。
 
 
 ### Built With
 
-POP (Protocol oriented Programming)
+POP (Protocol oriented Programming) / MVVM
 
 網路層以及資料儲存組成：
-* Moya
-* Core Data
-* Firebase
+* [Moya](https://github.com/Moya/Moya)
+---  網路層由MOYA組成，MOYA是基於Alamofire的抽象層，使用的目的是為了方便管理不同的Endpoint以及各項功能如base url, method, params, header。
+* [Core Data](https://developer.apple.com/documentation/coredata)
+--- 使用Core Data 處理餐廳的選擇、儲存等操作，並且加入Observer觀察Entity Change，並更新每一個頁面的資訊。
+* [Firebase](https://firebase.google.com)
+--- 使用者可以使用email註冊並登入，後台管理使用Firebase/Auth。
 
 其他UI：
-* MBProgressHUD
-* ImageSlideshow
-* LuckyWheel
+* [MBProgressHUD](https://github.com/jdg/MBProgressHUD)
+--- Loading data 時使用，簡單方便！
+* [imageSlideShow](https://github.com/zvonicek/ImageSlideshow)
+--- 可左右滑動的圖片牆，此乃基於Alamofire的套件，可以根據image url載入圖片。
+* [LuckyWheel](https://github.com/AhmedNasserSh/iOSLuckyWheel)
+--- 使用UIBezierPath刻出的轉盤
+
 
 
 <!-- GETTING STARTED -->
