@@ -89,6 +89,12 @@ POP (Protocol oriented Programming) / MVVM
 
 ![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Favorite.gif)
 
+<!-- Technical challenge-->
+## Technical challenge
+這個project最主要的挑戰在於轉盤，渲染轉盤的方式，省事一點的方法應該就是直接匯入圖片，但是因為轉盤是動態的，隨著每一次選擇餐廳都不一樣，因此需要用code渲染轉盤，因此我利用UIBezierPath刻出轉盤，每一次有餐廳選擇以後，就重新渲染一次，這樣一來轉盤就可以隨著資料變動，也不會佔用硬碟空間。
+
+第二個挑戰在於資料的處理，一開始我是使用Firebase Real time Database，但是因為Firebase Real time Database是有使用成本的，因此我決定將資料的處理放在本地，利用Coredata進行餐廳的選擇以及儲存，將使用者對餐廳的操作儲存，並且觀察Entity的變化，由此更新UI。
+
 <!-- CONTACT -->
 ## Contact
 
