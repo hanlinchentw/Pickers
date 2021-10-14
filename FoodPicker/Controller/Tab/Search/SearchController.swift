@@ -76,25 +76,25 @@ extension SearchController {
     func fetchRestautantsByterms(term: String){
         self.showLoadingAnimation()
         guard let location = LocationHandler.shared.locationManager.location?.coordinate else { return }
-        NetworkService.shared.fetchRestaurantsByTerm(lat: location.latitude, lon: location.longitude, terms: term) { (restaurants, error) in
+        NetworkService.shared.fetchRestaurantsByTerm(lat: location.latitude, lon: location.longitude, terms: term) { [weak self] (restaurants, error) in
             if error == .noInternet {
-                self.isDataLoadedSuccessfully(false)
+                self?.isDataLoadedSuccessfully(false)
                 return
             }
             if let restaurants = restaurants{
-                self.resultVC.searchTerm = term
-                self.restaurants = restaurants
+                self?.resultVC.searchTerm = term
+                self?.restaurants = restaurants
                 if !restaurants.isEmpty{
-                    self.addHistoricalRecordByTerm(term: term)
-                    for (index, item) in self.restaurants.enumerated() {
-                        self.checkIfRestaurantIsSelected(restaurant: item) { isSelected in
-                            self.restaurants[index].isSelected = isSelected
+                    self?.addHistoricalRecordByTerm(term: term)
+                    for (index, item) in restaurants.enumerated() {
+                        self?.checkIfRestaurantIsSelected(restaurant: item) { isSelected in
+                            self?.restaurants[index].isSelected = isSelected
                         }
                     }
-                    self.isDataLoadedSuccessfully(true)
-                    self.resultVC.searchResult = self.restaurants
+                    self?.isDataLoadedSuccessfully(true)
+                    self?.resultVC.searchResult = restaurants
                 }else{
-                    self.hideLoadingAnimation()
+                    self?.hideLoadingAnimation()
                 }
             }}}
     func searchRestaurants(withKeyword keyword: String) {

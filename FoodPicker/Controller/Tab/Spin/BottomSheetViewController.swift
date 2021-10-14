@@ -154,7 +154,6 @@ class BottomSheetViewController : UIViewController {
 extension BottomSheetViewController {
     func configureList(list: List?, restaurants: [Restaurant] = [], addRestaurant: Restaurant? = nil){
         if list == nil{
-          
             let currentListState: ListState = (self.state == .temp) ? .temp : .edited
             print(currentListState)
             self.state = currentListState

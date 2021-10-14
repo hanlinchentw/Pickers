@@ -42,9 +42,9 @@ class ListTableViewController: UITableViewController, MBProgressHUDProtocol{
     //MARK: -  Core Data API
     func fetchSavedLists(completion: (()-> Void)? = nil){
         let coreDataService = CoredataConnect(context: context)
-        coreDataService.fetchLists { lists, error in
+        coreDataService.fetchLists {[weak self] lists, error in
             if !lists.isEmpty{
-                self.lists = lists
+                self?.lists = lists
                 if let completion = completion{
                     completion()
                 }

@@ -63,18 +63,18 @@ class FavoriteController: UIViewController, CoredataOperation {
     func fetchLikedRestauants(){
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let connect = CoredataConnect(context: context)
-        connect.fetchLikedRestaurant(uid: uid) { restaurants in
-            self.likedRestaurants = restaurants
-            self.mutableSource = restaurants
-            self.checkIfRestaurantsSelected()
+        connect.fetchLikedRestaurant(uid: uid) { [weak self] restaurants in
+            self?.likedRestaurants = restaurants
+            self?.mutableSource = restaurants
+            self?.checkIfRestaurantsSelected()
         }
     }
     func checkIfRestaurantsSelected(){
         for (index, item) in likedRestaurants.enumerated() {
-            self.checkIfRestaurantIsSelected(restaurant: item) { isSelected in
-                self.likedRestaurants[index].isSelected = isSelected
-                self.mutableSource[index].isSelected = isSelected
-                self.tableView.reloadData()
+            self.checkIfRestaurantIsSelected(restaurant: item) {  [weak self] isSelected in
+                self?.likedRestaurants[index].isSelected = isSelected
+                self?.mutableSource[index].isSelected = isSelected
+                self?.tableView.reloadData()
             }
         }
     }

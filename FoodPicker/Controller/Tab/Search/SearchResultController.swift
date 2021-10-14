@@ -101,9 +101,10 @@ class SearchResultController: UIViewController {
         let coreConnect = CoredataConnect(context: context)
         for (index, item) in filterResult.enumerated() {
             coreConnect
-                .checkIfRestaurantIsIn(entity: selectedEntityName,id: item.restaurantID) { isSelected in
-                    self.filterResult[index].isSelected = isSelected
-                    self.resultView.reloadData()
+                .checkIfRestaurantIsIn(entity: selectedEntityName,id: item.restaurantID) {
+                    [weak self] isSelected in
+                    self?.filterResult[index].isSelected = isSelected
+                    self?.resultView.reloadData()
             }
         }
     }
