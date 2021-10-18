@@ -58,10 +58,10 @@ class BottomSheetViewController : UIViewController {
         button.layer.borderColor = UIColor.butterscotch.cgColor
         button.layer.cornerRadius = 8
         button.layer.borderWidth = 0.75
+        button.isHidden = true
         button.setDimension(width: 81 , height: 32)
         button.backgroundColor = .white
         button.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
-        button.alpha = 0
         return button
     }()
     let tableView = RestaurantsList()
@@ -214,13 +214,14 @@ extension BottomSheetViewController{
         case .existed:
             UIView.animate(withDuration: 0.3, animations: {
                 self.titleLabel.alpha = 0
-                self.saveButton.alpha = 0
-                self.updateButton.alpha = 0
                 self.saveButton.isHidden = true
                 self.updateButton.isHidden = true
+
             }) { _ in
                 self.titleLabel.alpha = 1
                 self.titleLabel.text = list.name
+                self.saveButton.alpha = 0
+                self.updateButton.alpha = 0
             }
         case .edited:
             let ns = NSMutableAttributedString(string: list.name,
@@ -297,13 +298,10 @@ extension BottomSheetViewController {
         tableView.isLoading = nil
     }
     func configureButton() {
-        let buttonStack = UIStackView(arrangedSubviews: [updateButton, saveButton])
-        buttonStack.axis = .horizontal
-        buttonStack.spacing = 16
-        buttonStack.distribution = .fillProportionally
-        
-        view.addSubview(buttonStack)
-        buttonStack.anchor(top: titleLabel.topAnchor, right: view.rightAnchor, paddingRight: 16)
+        view.addSubview(saveButton)
+        saveButton.anchor(top: titleLabel.topAnchor, right: view.rightAnchor, paddingRight: 16)
+        view.addSubview(updateButton)
+        updateButton.anchor(top: titleLabel.topAnchor, right: saveButton.leftAnchor, paddingRight: 16)
     }
     
     func animateIn(){

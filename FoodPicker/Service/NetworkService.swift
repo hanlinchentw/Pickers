@@ -23,14 +23,15 @@ class  NetworkService {
     let service = MoyaProvider<YelpService.BusinessesProvider>()
     let jsonDecoder = JSONDecoder()
     static let shared = NetworkService()
-    func fetchRestaurants(lat: Double, lon: Double, withOffset offset: Int = 0, category: String = "food",
-                          option: recommendOption? = nil, limit: Int, completion: @escaping(restaurantResponse)) {
+    func fetchRestaurants(lat: Double, lon: Double,
+                          withOffset offset: Int = 0,
+                          option: recommendOption? = nil, limit: Int,
+                          completion: @escaping(restaurantResponse)) {
         
         var restaurants = [Restaurant]()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         service.request(.search(lat: lat, lon: lon,
                                 offset: offset,
-                                category: category,
                                 sortBy: option?.search ?? "distance",
                                 limit: limit)) { (result) in
             switch result {
@@ -39,14 +40,14 @@ class  NetworkService {
                     let root = try self.jsonDecoder.decode(Root.self, from: response.data)
                     root.businesses.forEach { (business) in
                         var restaurant = Restaurant(business: business)
-                        restaurant.division = option?.description ?? "All restaurants"
+                        restaurant.category = option ?? .all
                         restaurants.append(restaurant)
                     }
                 completion(restaurants, nil)
                 }catch{
                     completion(nil, URLRequestFailureResult(rawValue: 1))
                 }
-            case .failure(let error):
+            case .failure(_):
                 if !NetworkMonitor.shared.isConnected {completion(nil, URLRequestFailureResult.noInternet) }
                 else { completion(nil, URLRequestFailureResult.serverFailure)}
             }

@@ -76,7 +76,9 @@ extension SearchController {
     func fetchRestautantsByterms(term: String){
         self.showLoadingAnimation()
         guard let location = LocationHandler.shared.locationManager.location?.coordinate else { return }
-        NetworkService.shared.fetchRestaurantsByTerm(lat: location.latitude, lon: location.longitude, terms: term) { [weak self] (restaurants, error) in
+        NetworkService.shared
+            .fetchRestaurantsByTerm(lat: location.latitude, lon: location.longitude,
+                                    terms: term) { [weak self] (restaurants, error) in
             if error == .noInternet {
                 self?.isDataLoadedSuccessfully(false)
                 return

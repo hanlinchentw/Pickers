@@ -54,7 +54,7 @@ class MainPageController: UIViewController, MBProgressHUDProtocol, CoredataOpera
         let concurrentQueue: DispatchQueue = DispatchQueue(label: "CorrentQueue", attributes: .concurrent)
         group.enter()
         concurrentQueue.async(group:group) {
-            self.fetchRestaurantsRetryWhenFailed(by: .all, numOfRestaurant: 30)
+            self.fetchRestaurantsRetryWhenFailed(by: .all, numOfRestaurant: 10)
             group.leave()
         }
         group.enter()
@@ -69,7 +69,6 @@ class MainPageController: UIViewController, MBProgressHUDProtocol, CoredataOpera
         }
     }
     fileprivate func fetchRestaurantsRetryWhenFailed(by option: recommendOption, numOfRestaurant: Int) {
-        print("DEBUG: Preload data ... Main page")
         self.retry(3) { success, failure in
             self.fetchRestaurants(by: option, limit: numOfRestaurant,
                                   success: success,
@@ -93,7 +92,7 @@ class MainPageController: UIViewController, MBProgressHUDProtocol, CoredataOpera
                                       failure: @escaping (Error) -> Void) {
         print("DEBUG: Fetching data ... main VC ")
         guard let location = location else {
-            failure(URLRequestFailureResult(rawValue: 0)!)
+            failure(URLRequestFailureResult.clientFailure)
             return
         }
         self.fetchRestaurantsByOption(location: location, option: option, limit: limit) { (result, error) in
@@ -115,13 +114,13 @@ class MainPageController: UIViewController, MBProgressHUDProtocol, CoredataOpera
         }
     }
     func isDataLoadedSuccessfully(_ isSuccess: Bool){
-        self.hideLoadingAnimation()
         if isSuccess {
             if errorView != nil {
                 self.errorView?.removeFromSuperview()
                 self.errorView = nil
             }
             self.categoryVC.collectionView.isHidden = false
+            self.hideLoadingAnimation()
         }else{
             self.errorView?.removeFromSuperview()
             errorView = ErrorView()
@@ -130,6 +129,7 @@ class MainPageController: UIViewController, MBProgressHUDProtocol, CoredataOpera
                 self.view.addSubview(errorView!)
                 self.categoryVC.collectionView.isHidden = true
             }
+            self.hideLoadingAnimation()
         }
     }
     func updateCategoryData(){

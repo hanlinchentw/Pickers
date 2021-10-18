@@ -27,7 +27,7 @@ public struct Restaurant {
     var isSelected : Bool = false
     var isLiked : Bool = false
     var numOfLike : Int = 0
-    var division: String = "All restaurants"
+    var category: recommendOption? = .all
     var distance : Double {
         guard let loacation = LocationHandler.shared.locationManager.location else { return 0 }
         let restaurantLocation = CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)

@@ -34,9 +34,11 @@ class MoreRestaurantViewController: UIViewController, CoredataOperation {
     }()
     
     private let tableView = RestaurantsList()
+    let option: recommendOption
     //MARK: - Lifecycle
-    init(restaurants: [Restaurant]) {
+    init(restaurants: [Restaurant], option: recommendOption) {
         self.tableView.restaurants = restaurants
+        self.option = option
         super.init(nibName: nil, bundle: nil)
     }
     required init?(coder: NSCoder) {
@@ -45,10 +47,10 @@ class MoreRestaurantViewController: UIViewController, CoredataOperation {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        configureNavBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        configureNavBar()
         tabBarController?.tabBar.isHidden = true
     }
     //MARK: - Helpers
@@ -57,8 +59,7 @@ class MoreRestaurantViewController: UIViewController, CoredataOperation {
         navBar.shadowImage = UIImage()
         navBar.barTintColor = .backgroundColor
         navBar.isTranslucent = true
-        let division = self.tableView.restaurants[0].division
-        navigationItem.title = division.description
+        navigationItem.title = option.description
         
         let backButtonView = UIView(frame: CGRect(x: 0, y: 0, width: 56, height: 40))
         backButtonView.bounds = backButtonView.bounds.offsetBy(dx: 18, dy: 0)
@@ -85,18 +86,9 @@ class MoreRestaurantViewController: UIViewController, CoredataOperation {
     func loadData(){
         guard let location = LocationHandler.shared.locationManager.location?.coordinate else { return }
         let offset = self.tableView.restaurants.count
-        var option: recommendOption? {
-            switch self.tableView.restaurants[0].division {
-            case "Top picks":
-                return recommendOption.topPick
-            case "Popular":
-                return recommendOption.popular
-            default:
-                return nil
-            }
-        }
+
         NetworkService.shared.fetchRestaurants(lat: location.latitude, lon: location.longitude,
-                                               withOffset: offset, option: option, limit: 20)
+                                               withOffset: offset, option: self.option, limit: 20)
         { [weak self] (restaurants, error) in
             guard let self = self,
                 let res = restaurants, !res.isEmpty else {

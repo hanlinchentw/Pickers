@@ -36,32 +36,27 @@ class CategoriesViewController: UICollectionViewController, MBProgressHUDProtoco
 extension CategoriesViewController {
     func updateSelectStatus(restaurantID: String, shouldSelect: Bool){
         guard let delegate = delegate else { return }
-        self.popularDataSource.restaurants = delegate.updateRestaurantSelectStatus(restaurants: &popularDataSource.restaurants,
-                                                                                   restaurantID: restaurantID,
-                                                                                   shouldSelect: shouldSelect)
+        self.popularDataSource.restaurants =
+            delegate.updateRestaurantSelectStatus(restaurants: &popularDataSource.restaurants, restaurantID: restaurantID, shouldSelect: shouldSelect)
         
-        self.topPicksDataSource.restaurants =  delegate.updateRestaurantSelectStatus(restaurants: &topPicksDataSource.restaurants,
-                                                                                     restaurantID: restaurantID,
-                                                                                     shouldSelect: shouldSelect)
+        self.topPicksDataSource.restaurants =
+            delegate.updateRestaurantSelectStatus(restaurants: &topPicksDataSource.restaurants, restaurantID: restaurantID, shouldSelect: shouldSelect)
+    
+        self.dataSource.restaurants =
+            delegate.updateRestaurantSelectStatus(restaurants: &dataSource.restaurants, restaurantID: restaurantID, shouldSelect: shouldSelect)
         
-        self.dataSource.restaurants = delegate.updateRestaurantSelectStatus(restaurants: &dataSource.restaurants,
-                                                                            restaurantID: restaurantID,
-                                                                            shouldSelect: shouldSelect)
         self.collectionView.reloadData()
     }
     func updateLikeRestaurant(restaurantID: String, shouldLike: Bool){
         guard let delegate = delegate else { return }
-        self.popularDataSource.restaurants = delegate.updateRestaurantLikeStatus(restaurants: &popularDataSource.restaurants,
-                                                                                 restaurantID: restaurantID,
-                                                                                 shouldLike: shouldLike)
+        self.popularDataSource.restaurants =
+            delegate.updateRestaurantLikeStatus(restaurants: &popularDataSource.restaurants, restaurantID: restaurantID, shouldLike: shouldLike)
         
-        self.topPicksDataSource.restaurants =  delegate.updateRestaurantLikeStatus(restaurants: &topPicksDataSource.restaurants,
-                                                                                   restaurantID: restaurantID,
-                                                                                   shouldLike: shouldLike)
+        self.topPicksDataSource.restaurants =
+            delegate.updateRestaurantLikeStatus(restaurants: &topPicksDataSource.restaurants, restaurantID: restaurantID, shouldLike: shouldLike)
         
-        self.dataSource.restaurants = delegate.updateRestaurantLikeStatus(restaurants: &dataSource.restaurants,
-                                                                          restaurantID: restaurantID,
-                                                                          shouldLike: shouldLike)
+        self.dataSource.restaurants =
+            delegate.updateRestaurantLikeStatus(restaurants: &dataSource.restaurants, restaurantID: restaurantID, shouldLike: shouldLike)
         self.collectionView.reloadData()
     }
     func calculatTheSectionNumber(){
@@ -134,7 +129,8 @@ extension CategoriesViewController : FilterResultSectionDelegate {
         self.delegate?.pushToDetailVC(restaurant)
     }
     func shouldShowMoreRestaurants(_ restaurants:[Restaurant]) {
-        let more = MoreRestaurantViewController(restaurants: restaurants)
+        let more = MoreRestaurantViewController(restaurants: restaurants,
+                                                option: restaurants[0].category ?? .popular)
         more.delegate = self
         self.parent?.navigationController?.pushViewController(more, animated: true)
     }
@@ -142,7 +138,7 @@ extension CategoriesViewController : FilterResultSectionDelegate {
 //MARK: - AllRestaurantsSectionDelegate
 extension CategoriesViewController: AllRestaurantsSectionDelegate {
     func shouldSeeAllRestaurants(restaurants: [Restaurant]) {
-        let more = MoreRestaurantViewController(restaurants: restaurants)
+        let more = MoreRestaurantViewController(restaurants: restaurants, option: recommendOption.all)
         more.delegate = self
         self.parent?.navigationController?.pushViewController(more, animated: true)
     }
