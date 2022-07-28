@@ -86,9 +86,9 @@ PODS:
   - ImageSlideshow/Core (1.9.1)
   - leveldb-library (1.22)
   - MBProgressHUD (1.2.0)
-  - Moya (14.0.0):
-    - Moya/Core (= 14.0.0)
-  - Moya/Core (14.0.0):
+  - Moya (15.0.0):
+    - Moya/Core (= 15.0.0)
+  - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
   - nanopb (0.3.9011):
     - nanopb/decode (= 0.3.9011)
@@ -106,7 +106,7 @@ DEPENDENCIES:
   - ImageSlideshow (~> 1.9.0)
   - ImageSlideshow/Alamofire
   - MBProgressHUD
-  - Moya (~> 14.0)
+  - Moya (~> 15.0)
 
 SPEC REPOS:
   trunk:
@@ -153,10 +153,10 @@ SPEC CHECKSUMS:
   ImageSlideshow: 67184be896a28472bd3b906c33ce4e0734aa3d22
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
-  Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
+  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
 
-PODFILE CHECKSUM: 66739e183683c56d9c410fe64c10e2e9434c90aa
+PODFILE CHECKSUM: 0252d66862aa27ce01a7f3e1946d345524c4711a
 
 COCOAPODS: 1.9.1

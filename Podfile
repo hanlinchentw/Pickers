@@ -6,7 +6,7 @@ target 'FoodPicker' do
   use_frameworks!
 
   # Pods for FoodPicker
-  pod 'Moya', '~> 14.0'
+  pod 'Moya', '~> 15.0'
   pod 'Alamofire', '~> 5.2'
   pod 'AlamofireImage', '~> 4.1'
   pod "ImageSlideshow/Alamofire"

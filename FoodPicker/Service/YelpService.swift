@@ -15,15 +15,15 @@ private let clientID = "YuD9cka95Qb_g7WsdCA-rQ"
 enum YelpService{
     enum BusinessesProvider : TargetType {
         case searchByTerm(lat:Double, lon: Double, term: String)
-        case search(lat: Double, lon: Double,
-                    offset: Int = 0,
+        case search(_ lat: Double, _ lon: Double,
                     category: String = "food",
                     sortBy : String,
+                    offset: Int = 0,
                     limit: Int)
         case detail(id: String)
-        
+
         var baseURL: URL { return URL(string:"https://api.yelp.com/v3/businesses")! }
-        
+
         var path: String {
             switch self {
             case .searchByTerm: return "/search"
@@ -32,9 +32,9 @@ enum YelpService{
             }
         }
         var method: Moya.Method { return .get }
-        
+
         var sampleData: Data { return Data() }
-        
+
         var task: Task {
             switch self {
             case let .search(lat,lon,offset, category, sortBy, limit):
