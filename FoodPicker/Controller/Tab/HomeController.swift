@@ -42,7 +42,7 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("DEBUG:App folder: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))")
+    
         authenticateUserAndConfigureUI()
         overrideUserInterfaceStyle = .light
 //        try? Auth.auth().signOut()

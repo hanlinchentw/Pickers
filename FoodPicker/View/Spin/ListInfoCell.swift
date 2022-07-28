@@ -7,7 +7,7 @@
 //
 
 import UIKit
-protocol ListInfoCellDelagete: class {
+protocol ListInfoCellDelagete: AnyObject {
     func shouldExpandList(_ cell: ListInfoCell, _ shouldExpand: Bool, list: List)
     func didTapMoreButton(list: List)
 }

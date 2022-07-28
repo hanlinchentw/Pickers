@@ -9,6 +9,8 @@
 import Foundation
 import CoreData
 import FirebaseAuth
+import CoreLocation
+
 class CoredataConnect {
     enum CoreDataEntityType: String {
         case select
@@ -48,11 +50,6 @@ extension CoredataConnect {
             let _ = self.transformRestaurantsIntoSelectedRestaraunts(restaurants: [restaurant])
         }else if type == .like{
             let _ = self.transformRestaurantsIntoLikedRestaraunts(restaurants: [restaurant])
-        }
-        do {
-            try self.context.save()
-        }catch {
-            print("DEBUG: Failed to save data in SQL ... \(error.localizedDescription) ")
         }
         do {
             try self.context.save()
