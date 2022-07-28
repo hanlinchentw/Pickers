@@ -12,4 +12,6 @@ target 'FoodPicker' do
   pod "ImageSlideshow/Alamofire"
   pod 'ImageSlideshow', '~> 1.9.0'
   pod 'MBProgressHUD'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
 end
