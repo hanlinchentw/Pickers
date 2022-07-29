@@ -7,7 +7,6 @@
 //
 import UIKit
 import CoreLocation
-import Firebase
 import CoreData
 import Combine
 

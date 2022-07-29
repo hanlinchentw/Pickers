@@ -8,7 +8,6 @@
 
 import Foundation
 import CoreData
-import FirebaseAuth
 import CoreLocation
 
 class CoredataConnect {
@@ -25,7 +24,6 @@ class CoredataConnect {
     }
     //MARK: - Properties
     private var context: NSManagedObjectContext!
-    private var uid = Auth.auth().currentUser?.uid
     //MARK: - lifecycle
     init(context: NSManagedObjectContext) {
         self.context = context
@@ -58,28 +56,26 @@ extension CoredataConnect {
         }
     }
     
-    func fetchLikedRestaurant(uid: String, completion: @escaping(([Restaurant]) -> Void)){
+    func fetchLikedRestaurant(completion: @escaping(([Restaurant]) -> Void)){
         var restaurants = [Restaurant]()
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: likedEntityName)
         do{
             let object = try context.fetch(request) as! [LikedRestaurant]
             print("DEBUG: Fetch from coredata \(object)")
             for raw in object{
-                if raw.uid == uid {
-                    let coordinate = CLLocationCoordinate2D(latitude: raw.latitude, longitude: raw.longitude)
-                    let dict : [String : Any?] = [
-                        "id": raw.id,
-                        "name" : raw.name,
-                        "rating" : raw.rating,
-                        "price" : raw.price,
-                        "imageUrl" : raw.imageUrl,
-                        "reviewCount" : Int(raw.reviewCount),
-                        "category" : raw.category,
-                        "coordinate" : coordinate,
-                    ]
-                    let restaurant = Restaurant(business: nil, dictionary: dict)
-                    restaurants.append(restaurant)
-                }
+              let coordinate = CLLocationCoordinate2D(latitude: raw.latitude, longitude: raw.longitude)
+              let dict : [String : Any?] = [
+                  "id": raw.id,
+                  "name" : raw.name,
+                  "rating" : raw.rating,
+                  "price" : raw.price,
+                  "imageUrl" : raw.imageUrl,
+                  "reviewCount" : Int(raw.reviewCount),
+                  "category" : raw.category,
+                  "coordinate" : coordinate,
+              ]
+              let restaurant = Restaurant(business: nil, dictionary: dict)
+              restaurants.append(restaurant)
             }
         }catch{
             print("Debug: Failed to read data in core data model ... \(error.localizedDescription)")
@@ -102,13 +98,11 @@ extension CoredataConnect {
     }
     func checkIfRestaurantIsIn(entity name: String, id: String,
                                completion: @escaping(Bool)->Void){
-        guard let uid = uid else { return }
         let request = NSFetchRequest<NSManagedObject>(entityName: name)
         request.returnsObjectsAsFaults = false
-        let userIDPredicate = NSPredicate(format: "uid == %@", uid)
         let restaurantIDPredicate = NSPredicate(format: "id == %@", id)
         let andPredicate = NSCompoundPredicate(type: .and,
-                                               subpredicates: [userIDPredicate, restaurantIDPredicate])
+                                               subpredicates: [restaurantIDPredicate])
         request.predicate = andPredicate
         do{
             let object = try context.fetch(request)
@@ -265,7 +259,6 @@ extension CoredataConnect {
             object.price = restaurant.price
             object.rating = restaurant.rating
             object.reviewCount = Int16(restaurant.reviewCount)
-            object.uid = self.uid
             object.belongList = savedList
             savedRestaurants.append(object)
         }
@@ -285,7 +278,6 @@ extension CoredataConnect {
             object.price = restaurant.price
             object.rating = restaurant.rating
             object.reviewCount = Int16(restaurant.reviewCount)
-            object.uid = self.uid
             selectedRestaurants.append(object)
         }
         return selectedRestaurants
@@ -319,7 +311,6 @@ extension CoredataConnect {
             object.price = restaurant.price
             object.rating = restaurant.rating
             object.reviewCount = Int16(restaurant.reviewCount)
-            object.uid = self.uid
             likedRestaurants.append(object)
         }
         return likedRestaurants

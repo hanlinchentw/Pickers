@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import FirebaseAuth
 
 private let favoriteIdentifier = "FavoriteCell"
 
@@ -61,9 +60,8 @@ class FavoriteController: UIViewController, CoredataOperation {
     }
     //MARK: - API
     func fetchLikedRestauants(){
-        guard let uid = Auth.auth().currentUser?.uid else { return }
         let connect = CoredataConnect(context: context)
-        connect.fetchLikedRestaurant(uid: uid) { [weak self] restaurants in
+        connect.fetchLikedRestaurant() { [weak self] restaurants in
             self?.likedRestaurants = restaurants
             self?.mutableSource = restaurants
             self?.checkIfRestaurantsSelected()

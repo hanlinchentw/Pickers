@@ -8,7 +8,7 @@
 
 import Moya
 
-private let apiKey = "NDYmGcRu-jtnwWAlz4DQCujSkV40o0slbM1UvUwxAgIcN95XFI8yEtr9L6YKSn6epsJR6d30YxD5XAmHqHR_l-8-uj7anj05-j2bQYQO__a1H0_-tuDQTVrBXpeIYnYx"
+private let apiKey = "h5NSdIjEmi4z7epQTIJPYugPGwWYgNhiJH5RcUoVX90k7KmDfC5WuBElnwDhnAvaFt2QltMWNgtd7dOVDWu824Z0yvqUlfFozS7qdperB2Jm5Ks1VU-oY_gIvsLiYnYx"
 
 private let clientID = "YuD9cka95Qb_g7WsdCA-rQ"
 
@@ -37,7 +37,7 @@ enum YelpService{
 
         var task: Task {
             switch self {
-            case let .search(lat,lon,offset, category, sortBy, limit):
+            case let .search(lat, lon, category, sortBy, offset, limit):
                 return .requestParameters(parameters: ["categories": category,
                                                        "latitude":lat, "longitude": lon,
                                                        "limit":limit,

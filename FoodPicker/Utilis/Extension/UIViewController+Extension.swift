@@ -15,15 +15,13 @@ extension UIViewController{
     func fetchRestaurantsByOption(location: CLLocationCoordinate2D ,
                                   option: recommendOption? = nil,
                                   limit: Int = 50, offset: Int = 0 ,completion: @escaping(restaurantResponse)) {
-        NetworkService.shared.fetchRestaurants(lat: location.latitude, lon: location.longitude,
+      NetworkService.shared.fetchRestaurants(lat: location.latitude, lon: location.longitude,
                                                withOffset: offset, option: option, limit: limit)
             { restaurants, error in
                 guard let res = restaurants, !res.isEmpty else {
-                    print("DEBUG: Failed to get the restaurants ...")
                     completion(nil, error)
                     return
                 }
-                print("DEBUG: Loading data ...")
                 completion(res,nil)
         }
     }

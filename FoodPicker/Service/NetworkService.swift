@@ -19,9 +19,9 @@ enum URLRequestFailureResult : Int ,Error {
 }
 
 class  NetworkService {
-  static let service = MoyaProvider<YelpService.BusinessesProvider>()
+  let service = MoyaProvider<YelpService.BusinessesProvider>()
 
-  static let jsonDecoder = JSONDecoder()
+  let jsonDecoder = JSONDecoder()
 
   static let shared = NetworkService()
 
@@ -31,15 +31,18 @@ class  NetworkService {
                         completion: @escaping(restaurantResponse)) {
 
     var restaurants = [Restaurant]()
-    NetworkService.jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-    NetworkService.service.request(.search(lat, lon, sortBy: option?.search ?? "distance", offset: offset, limit: limit)) { (result) in
+    self.jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+    self.service.request(.search(lat, lon, sortBy: option?.search ?? "distance", offset: offset, limit: limit)) { (result) in
+      print(">>>>> NetworkService.fetchRestaurants \(option) start")
       switch result {
       case .success(let response):
         do {
-          let root = try NetworkService.jsonDecoder.decode(Root.self, from: response.data)
+          let root = try self.jsonDecoder.decode(Root.self, from: response.data)
+
           root.businesses.forEach { (business) in
             var restaurant = Restaurant(business: business)
             restaurant.category = option ?? .all
+            print(">>>>> NetworkService.restaurant.name \(restaurant.name)")
             restaurants.append(restaurant)
           }
           completion(restaurants, nil)
@@ -47,6 +50,7 @@ class  NetworkService {
           completion(nil, URLRequestFailureResult(rawValue: 1))
         }
       case .failure(_):
+        print(">>>>> NetworkService.fetchRestaurants failed")
         if !NetworkMonitor.shared.isConnected {completion(nil, URLRequestFailureResult.noInternet) }
         else { completion(nil, URLRequestFailureResult.serverFailure)}
       }
@@ -55,13 +59,13 @@ class  NetworkService {
 
   func fetchRestaurantsByTerm(lat: Double, lon: Double,terms:String, completion: @escaping(restaurantResponse) ){
     var restaurants = [Restaurant]()
-    NetworkService.jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+    self.jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
     if !NetworkMonitor.shared.isConnected {completion(nil, URLRequestFailureResult.noInternet) }
-    NetworkService.service.request(.searchByTerm(lat: lat, lon: lon, term: terms)) { (result) in
+    self.service.request(.searchByTerm(lat: lat, lon: lon, term: terms)) { (result) in
       switch result {
       case .success(let response):
         do {
-          let root = try NetworkService.jsonDecoder.decode(Root.self, from: response.data)
+          let root = try self.jsonDecoder.decode(Root.self, from: response.data)
           root.businesses.forEach { (business) in
             let restaurant = Restaurant(business: business)
             restaurants.append(restaurant)
@@ -76,12 +80,12 @@ class  NetworkService {
     }
   }
   func fetchDetail(id : String, completion: @escaping(detailResponse)){
-    NetworkService.jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-    NetworkService.service.request(.detail(id:id)) {(result) in
+    self.jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+    self.service.request(.detail(id:id)) {(result) in
       switch result {
       case .success(let response):
         do {
-          let detail = try NetworkService.jsonDecoder.decode(Details.self, from: response.data)
+          let detail = try self.jsonDecoder.decode(Details.self, from: response.data)
           completion(detail, nil)
         }catch {
           completion(nil, URLRequestFailureResult(rawValue: 0))

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Firebase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,18 +17,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         window?.makeKeyAndVisible()
-       
-        let isSignIn = Auth.auth().currentUser != nil
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
-            if isSignIn{
-                let home = HomeController()
-                self.window?.rootViewController = home
-            }else{
-                let intro = IntroController()
-                let nav = UINavigationController(rootViewController: intro)
-                self.window?.rootViewController = nav
-            }
-        }
+      #if DEBUG
+      #else
+
+      #endif
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+        let home = HomeController()
+        self.window?.rootViewController = home
+      }
     }
     func resize(image: UIImage, newWidth: CGFloat) -> UIImage {
 
