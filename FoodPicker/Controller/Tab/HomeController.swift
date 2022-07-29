@@ -9,13 +9,44 @@
 import UIKit
 import CoreData
 
-enum SelectRestaurantResult: Error {
-  case success
-  case upToLimit
-  case error
+enum TabItemType {
+  case main
+  case search
+  case favorite
+  case spin
+
+  var viewController: UIViewController.Type {
+    switch self {
+    case .main: return MainPageController.self
+    case .search: return SearchTableViewController.self
+    case .favorite: return FavoriteController.self
+    case .spin: return ActionViewController.self
+    }
+  }
+
+  var defaultTabItemImage: String {
+    switch self {
+    case .main: return "homeUnselectedS"
+    case .search: return "searchUnselectedS"
+    case .favorite: return "favoriteUnselectedS"
+    case .spin: return ""
+    }
+  }
+
+  var selectedTabItemImage: String {
+    switch self {
+    case .main: return "homeSelectedS"
+    case .search: return "searchSelectedS"
+    case .favorite: return "icnHeartXs"
+    case .spin: return ""
+    }
+  }
 }
+
 class HomeController : UITabBarController, MBProgressHUDProtocol {
   //MARK: - Properties
+  var displayTab: Array<TabItemType> = [.main, .search, .favorite, .spin]
+
   var selectedRestaurantCount = 0
   private let numOfSelectedLabel : UILabel = {
     let label = UILabel()
@@ -41,14 +72,8 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
   //MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    authenticateUserAndConfigureUI()
     overrideUserInterfaceStyle = .light
-  }
-  //MARK: - API
-  func authenticateUserAndConfigureUI(){
     configureTabBar()
-    configureTabBarController()
     observeEntityChange()
   }
 }
@@ -97,12 +122,7 @@ extension HomeController {
     }
   }
 }
-//MARK: - ProfileControllerDelegate
-extension HomeController {
-  func logOutButtonTapped() {
-    authenticateUserAndConfigureUI()
-  }
-}
+
 //MARK: -  HomeController setup
 extension HomeController{
   func configureActionIcon(){
@@ -116,49 +136,43 @@ extension HomeController{
   }
   func configureTabBar(){
     view.backgroundColor = .backgroundColor
-    tabBar.addSubview(actionIconView)
-    print(UIScreen.main.bounds.height)
-    let offset = UIScreen.main.bounds.height < 700 ? 0 : -10 * view.heightMultiplier
-    actionIconView.center(inView: tabBar, yConstant: offset)
-
+    viewControllers = displayTab.map { TabItemFactory.createTabItem(type: $0) }
+    self.selectedIndex = 0
     tabBar.backgroundColor = .white
     tabBar.backgroundImage = UIImage(named: "bar")?.withRenderingMode(.alwaysOriginal)
     tabBar.layer.cornerRadius = 36
     tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
     tabBar.layer.masksToBounds = true
-    self.selectedIndex = 0
-  }
 
-  func configureTabBarController(){
-    // Create main page view controller
-    let main = MainPageController()
-    let nav1 = templateNavigationController(image: UIImage(named: "homeUnselectedS"),
-                                            rootViewController: main)
-    nav1.tabBarItem.selectedImage = UIImage(named: "homeSelectedS")?.withRenderingMode(.alwaysOriginal)
-    // Create searcg page view controller
-    let search = SearchController(collectionViewLayout: UICollectionViewFlowLayout())
-    let nav2 = templateNavigationController(image: UIImage(named: "searchUnselectedS"),
-                                            rootViewController: search)
-    nav2.tabBarItem.selectedImage = UIImage(named: "searchSelectedS")?.withRenderingMode(.alwaysOriginal)
-    // Create Spin page view controller
-    let action = ActionViewController()
-    let nav3 = templateNavigationController(image: UIImage(named: ""),
-                                            rootViewController: action)
-    action.observeEntityChange()
-    // Create favorite View controller
-    let favorite = FavoriteController()
-    let nav4 = templateNavigationController(image: UIImage(named: "favoriteUnselectedS"),
-                                            rootViewController: favorite)
-    favorite.fetchLikedRestauants()
-    nav4.tabBarItem.selectedImage = UIImage(named: "icnTabHeartSelected")?.withRenderingMode(.alwaysOriginal)
-
-    viewControllers = [nav1, nav2, nav3, nav4]
+    let spinTabItem = tabBar.subviews.last
+    spinTabItem!.addSubview(actionIconView)
+    actionIconView.center(inView: spinTabItem!, yConstant: 12)
   }
-  func templateNavigationController(image: UIImage?, rootViewController:UIViewController) -> UINavigationController{
-    let nav = UINavigationController(rootViewController: rootViewController)
-    nav.tabBarItem.image = image?.withRenderingMode(.alwaysOriginal)
-    let offset = view.heightMultiplier * 12
-    nav.tabBarItem.imageInsets = UIEdgeInsets(top: offset, left: 0, bottom: -offset, right: 0)
+}
+
+extension HomeController: UITabBarControllerDelegate {
+  override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+    guard let index = tabBar.items?.firstIndex(of: item) else { return }
+    guard let view = tabBar.subviews[index+1].subviews.last else { return }
+    let bounceAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+    bounceAnimation.values = [1.0, 1.3, 0.9, 1.02, 1.0]
+    bounceAnimation.duration = TimeInterval(0.3)
+    bounceAnimation.calculationMode = CAAnimationCalculationMode.cubic
+    view.layer.add(bounceAnimation, forKey: nil)
+  }
+}
+
+//MARK: - TabItem Factory
+struct TabItemFactory {
+  static func createTabItem(type: TabItemType) -> UINavigationController {
+    let nav = UINavigationController(rootViewController: type.viewController.init(nibName: nil, bundle: nil))
+    nav.tabBarItem.image = UIImage(named: type.defaultTabItemImage)?.withRenderingMode(.alwaysOriginal)
+    nav.tabBarItem.selectedImage = UIImage(named: type.selectedTabItemImage)?.withRenderingMode(.alwaysOriginal)
+    nav.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
     return nav
   }
 }
+
+
+//action.observeEntityChange()
+//favorite.fetchLikedRestauants()
