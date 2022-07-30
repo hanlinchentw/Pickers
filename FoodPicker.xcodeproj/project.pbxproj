@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		34E70F312F31F8E2CB2A5415 /* Pods_FoodPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E100F4CF94676583B4975A33 /* Pods_FoodPicker.framework */; };
+		B606C07F2894E69000139907 /* SpinTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B606C07E2894E69000139907 /* SpinTabItemView.swift */; };
 		B63C19A325179B090012CC4A /* SearchShortcutSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C19A225179B090012CC4A /* SearchShortcutSection.swift */; };
 		B63C19A5251A36DE0012CC4A /* SearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C19A4251A36DE0012CC4A /* SearchResultController.swift */; };
 		B63C19A7251B97850012CC4A /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C19A6251B97850012CC4A /* SearchTableViewController.swift */; };
@@ -102,6 +103,7 @@
 /* Begin PBXFileReference section */
 		82BE6C24A2D73B898301F556 /* Pods-FoodPicker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FoodPicker.debug.xcconfig"; path = "Target Support Files/Pods-FoodPicker/Pods-FoodPicker.debug.xcconfig"; sourceTree = "<group>"; };
 		AEC916B8058ACB981C566D94 /* Pods-FoodPicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FoodPicker.release.xcconfig"; path = "Target Support Files/Pods-FoodPicker/Pods-FoodPicker.release.xcconfig"; sourceTree = "<group>"; };
+		B606C07E2894E69000139907 /* SpinTabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinTabItemView.swift; sourceTree = "<group>"; };
 		B63C19A225179B090012CC4A /* SearchShortcutSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchShortcutSection.swift; sourceTree = "<group>"; };
 		B63C19A4251A36DE0012CC4A /* SearchResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultController.swift; sourceTree = "<group>"; };
 		B63C19A6251B97850012CC4A /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
@@ -225,6 +227,16 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		B606C07D2894E66600139907 /* Tab */ = {
+			isa = PBXGroup;
+			children = (
+				B647A4E024B1FA640098B7A2 /* MainTabBarController.swift */,
+				B606C07E2894E69000139907 /* SpinTabItemView.swift */,
+			);
+			name = Tab;
+			path = Tab/Tab;
+			sourceTree = "<group>";
+		};
 		B626F57126156F9400F17F7F /* Header */ = {
 			isa = PBXGroup;
 			children = (
@@ -330,7 +342,12 @@
 		B647A4E424B203630098B7A2 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B6D1306824C4181400040F85 /* Tab */,
+				B606C07D2894E66600139907 /* Tab */,
+				B6D1306924C4183300040F85 /* DetailController.swift */,
+				B6C7D5A62550FB8B005D2AA0 /* Main */,
+				B6A2FA8C2533E6B2005CB171 /* Search */,
+				B6A2FA8D2533E6C6005CB171 /* Spin */,
+				B6C7D5A52550FB80005D2AA0 /* Favorite */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -533,19 +550,6 @@
 			path = JsonDecode;
 			sourceTree = "<group>";
 		};
-		B6D1306824C4181400040F85 /* Tab */ = {
-			isa = PBXGroup;
-			children = (
-				B647A4E024B1FA640098B7A2 /* MainTabBarController.swift */,
-				B6D1306924C4183300040F85 /* DetailController.swift */,
-				B6C7D5A62550FB8B005D2AA0 /* Main */,
-				B6A2FA8C2533E6B2005CB171 /* Search */,
-				B6A2FA8D2533E6C6005CB171 /* Spin */,
-				B6C7D5A52550FB80005D2AA0 /* Favorite */,
-			);
-			path = Tab;
-			sourceTree = "<group>";
-		};
 		B6F789AA26760DFB0003ED5C /* Auth */ = {
 			isa = PBXGroup;
 			children = (
@@ -722,6 +726,7 @@
 				B6F789B826774D9B0003ED5C /* String+Extensions.swift in Sources */,
 				B6B84D512665D52F002E418D /* UIFont+UIColor+Extension.swift in Sources */,
 				B6597042268859C700E8C88D /* RestaurantCarouselCollectionView.swift in Sources */,
+				B606C07F2894E69000139907 /* SpinTabItemView.swift in Sources */,
 				B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */,
 				B6AE009924D7F94F00423D72 /* CategoriesCard.swift in Sources */,
 				B6B41AC4251316E800A5ACBE /* SortOptionCell.swift in Sources */,

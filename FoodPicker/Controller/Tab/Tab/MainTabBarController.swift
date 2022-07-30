@@ -46,26 +46,7 @@ enum TabItemType {
 class MainTabBarController : UITabBarController, MBProgressHUDProtocol {
   //MARK: - Properties
   var displayTab: Array<TabItemType> = [.main, .search, .favorite, .spin]
-
-  var selectedRestaurantCount = 0
-  private let numOfSelectedLabel : UILabel = {
-    let label = UILabel()
-    label.font = UIFont.arialBoldMT
-    label.textColor = .white
-    return label
-  }()
-  private lazy var actionIconView : UIImageView = {
-    let iv = UIImageView()
-    iv.backgroundColor = .butterscotch
-    iv.image = UIImage(named: "spinActive")
-    iv.contentMode = .scaleAspectFit
-    iv.setDimension(width: 54, height: 54)
-    iv.layer.cornerRadius = 54 / 2
-
-    iv.addSubview(numOfSelectedLabel)
-    numOfSelectedLabel.center(inView: iv)
-    return iv
-  }()
+  private let spinTabItemView = SpinTabItemView(frame: .zero)
 
   private let appDelegate = UIApplication.shared.delegate as! AppDelegate
   private lazy var context = appDelegate.persistentContainer.viewContext
@@ -74,33 +55,21 @@ class MainTabBarController : UITabBarController, MBProgressHUDProtocol {
     super.viewDidLoad()
     overrideUserInterfaceStyle = .light
     configureTabBar()
-    observeEntityChange()
+    NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange), name: NSManagedObjectContext.didSaveObjectsNotification, object: context)
   }
 }
 
 //MARK: - SelectRestaurant Data flow
 extension MainTabBarController {
-  func observeEntityChange(){
-    NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange), name: NSManagedObjectContext.didSaveObjectsNotification, object: context)
-  }
   @objc func contextDidChange(_ notification: NSNotification){
     guard let userInfo = notification.userInfo else { return }
-
     if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>,
-       inserts.count > 0 {
-      let object = inserts.first
-      if let _ = object as? SelectedRestaurant{
-        self.selectedRestaurantCount += 1
-        self.configureActionIcon()
-      }
+       let _ = inserts.first as? SelectedRestaurant{
+      self.spinTabItemView.increase()
     }
-    if let deletes = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ,
-       deletes.count > 0 {
-      let object = deletes.first
-      if let _ = object as? SelectedRestaurant{
-        self.selectedRestaurantCount -= 1
-        self.configureActionIcon()
-      }
+    if let deletes = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>,
+        let _ = deletes.first as? SelectedRestaurant {
+      self.spinTabItemView.decrease()
     }
   }
 }
@@ -125,15 +94,6 @@ extension MainTabBarController {
 
 //MARK: -  HomeController setup
 extension MainTabBarController{
-  func configureActionIcon(){
-    if selectedRestaurantCount == 0 {
-      numOfSelectedLabel.text = nil
-      actionIconView.image = UIImage(named: "spinActive")
-    }else {
-      actionIconView.image = nil
-      numOfSelectedLabel.changeLabelWithBounceAnimation(changeTo: "\(selectedRestaurantCount)")
-    }
-  }
   func configureTabBar(){
     view.backgroundColor = .backgroundColor
     viewControllers = displayTab.map { TabItemFactory.createTabItem(type: $0) }
@@ -145,8 +105,8 @@ extension MainTabBarController{
     tabBar.layer.masksToBounds = true
 
     let spinTabItem = tabBar.subviews.last
-    spinTabItem!.addSubview(actionIconView)
-    actionIconView.center(inView: spinTabItem!, yConstant: 16)
+    spinTabItem!.addSubview(spinTabItemView)
+    spinTabItemView.center(inView: spinTabItem!, yConstant: 16)
   }
 }
 

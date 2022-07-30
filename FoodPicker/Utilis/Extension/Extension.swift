@@ -28,3 +28,10 @@ extension Collection where Indices.Iterator.Element == Index {
         return indices.contains(index) ? self[index] : nil
     }
 }
+
+
+extension Int {
+  var toString: String {
+    return "\(self)"
+  }
+}
