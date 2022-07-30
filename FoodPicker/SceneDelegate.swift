@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         window?.makeKeyAndVisible()
-        let home = HomeController()
+        let home = MainTabBarController()
         self.window?.rootViewController = home
     }
     func resize(image: UIImage, newWidth: CGFloat) -> UIImage {

@@ -169,7 +169,7 @@ extension MainPageController : MainPageHeaderDelegate {
 //MARK: - CategoriesViewControllerDelegate
 extension MainPageController: MainPageChildControllersDelegate{
   func didTapCategoryCard(textOnCard text: String) {
-    guard let tab = tabBarController as? HomeController else { return }
+    guard let tab = tabBarController as? MainTabBarController else { return }
     tab.searchRestaurantsFromCategoryCard(textOnCard: text)
   }
   func pushToDetailVC(_ restaurant: Restaurant) {

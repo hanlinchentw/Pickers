@@ -43,7 +43,7 @@ enum TabItemType {
   }
 }
 
-class HomeController : UITabBarController, MBProgressHUDProtocol {
+class MainTabBarController : UITabBarController, MBProgressHUDProtocol {
   //MARK: - Properties
   var displayTab: Array<TabItemType> = [.main, .search, .favorite, .spin]
 
@@ -79,7 +79,7 @@ class HomeController : UITabBarController, MBProgressHUDProtocol {
 }
 
 //MARK: - SelectRestaurant Data flow
-extension HomeController {
+extension MainTabBarController {
   func observeEntityChange(){
     NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange), name: NSManagedObjectContext.didSaveObjectsNotification, object: context)
   }
@@ -105,7 +105,7 @@ extension HomeController {
   }
 }
 //MARK: -  Search Restaurants from category cards
-extension HomeController {
+extension MainTabBarController {
   func searchRestaurantsFromCategoryCard(textOnCard text: String) {
     self.showLoadingAnimation()
     UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve) {
@@ -124,7 +124,7 @@ extension HomeController {
 }
 
 //MARK: -  HomeController setup
-extension HomeController{
+extension MainTabBarController{
   func configureActionIcon(){
     if selectedRestaurantCount == 0 {
       numOfSelectedLabel.text = nil
@@ -146,11 +146,11 @@ extension HomeController{
 
     let spinTabItem = tabBar.subviews.last
     spinTabItem!.addSubview(actionIconView)
-    actionIconView.center(inView: spinTabItem!, yConstant: 12)
+    actionIconView.center(inView: spinTabItem!, yConstant: 16)
   }
 }
 
-extension HomeController: UITabBarControllerDelegate {
+extension MainTabBarController: UITabBarControllerDelegate {
   override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
     guard let index = tabBar.items?.firstIndex(of: item) else { return }
     guard let view = tabBar.subviews[index+1].subviews.last else { return }
