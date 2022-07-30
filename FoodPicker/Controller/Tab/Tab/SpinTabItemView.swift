@@ -10,10 +10,12 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SpinTabItemView: UIImageView {
-//MARK: - Properties
-  var displayNumber = BehaviorRelay(value: 0)
+protocol SpinTabItemViewProps {
+  var increase: () -> Void { get }
+  var decrease: () -> Void { get }
+}
 
+class SpinTabItemView: UIImageView, SpinTabItemViewProps {
   var increase: () -> Void {
     let newValue = self.displayNumber.value + 1
     return { self.displayNumber.accept(newValue) }
@@ -23,7 +25,8 @@ class SpinTabItemView: UIImageView {
     let newValue = self.displayNumber.value - 1
     return { self.displayNumber.accept(newValue) }
   }
-
+//MARK: - Properties
+  private var displayNumber = BehaviorRelay(value: 0)
   private let numOfSelectedLabel : UILabel = {
     let label = UILabel()
     label.font = UIFont.arialBoldMT
