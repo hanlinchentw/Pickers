@@ -8,7 +8,6 @@
 import UIKit
 import CoreLocation
 import CoreData
-import Combine
 
 private let foodCardSection = "FoodCardCell"
 private let headerCell = "SortHeader"
@@ -23,8 +22,6 @@ class CategoriesViewController: UICollectionViewController, MBProgressHUDProtoco
     var dataSource = RestaurantsFiltered(restaurants: [], filterOption: .all)
     var topPicksDataSource = RestaurantsFiltered(restaurants: [], filterOption: .topPick)
     var popularDataSource = RestaurantsFiltered(restaurants: [], filterOption: .popular)
-    
-    private var subscriber = Set<AnyCancellable>()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()

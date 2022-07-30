@@ -26,18 +26,18 @@ enum TabItemType {
 
   var defaultTabItemImage: String {
     switch self {
-    case .main: return "homeUnselectedS"
-    case .search: return "searchUnselectedS"
-    case .favorite: return "favoriteUnselectedS"
+    case .main: return MainTabBarConstants.homeUnselectedTabImage
+    case .search: return MainTabBarConstants.searchUnselectedTabImage
+    case .favorite: return MainTabBarConstants.favoriteUnselectedTabImage
     case .spin: return ""
     }
   }
 
   var selectedTabItemImage: String {
     switch self {
-    case .main: return "homeSelectedS"
-    case .search: return "searchSelectedS"
-    case .favorite: return "icnHeartXs"
+    case .main: return MainTabBarConstants.homeSelectedTabImage
+    case .search: return MainTabBarConstants.searchSelectedTabImage
+    case .favorite: return MainTabBarConstants.favoriteSelectedTabImage
     case .spin: return ""
     }
   }
@@ -99,7 +99,7 @@ extension MainTabBarController{
     viewControllers = displayTab.map { TabItemFactory.createTabItem(type: $0) }
     self.selectedIndex = 0
     tabBar.backgroundColor = .white
-    tabBar.backgroundImage = UIImage(named: "bar")?.withRenderingMode(.alwaysOriginal)
+    tabBar.backgroundImage = UIImage(named: MainTabBarConstants.tabImage)?.withRenderingMode(.alwaysOriginal)
     tabBar.layer.cornerRadius = 36
     tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
     tabBar.layer.masksToBounds = true
