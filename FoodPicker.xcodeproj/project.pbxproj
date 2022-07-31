@@ -10,6 +10,7 @@
 		34E70F312F31F8E2CB2A5415 /* Pods_FoodPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E100F4CF94676583B4975A33 /* Pods_FoodPicker.framework */; };
 		B606C07F2894E69000139907 /* SpinTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B606C07E2894E69000139907 /* SpinTabItemView.swift */; };
 		B606C0822894EDCB00139907 /* MainTabBarConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B606C0812894EDCB00139907 /* MainTabBarConstants.swift */; };
+		B607E99D289620680093BC9A /* Inject in Resources */ = {isa = PBXBuildFile; fileRef = B607E99C289620680093BC9A /* Inject */; };
 		B63C19A325179B090012CC4A /* SearchShortcutSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C19A225179B090012CC4A /* SearchShortcutSection.swift */; };
 		B63C19A5251A36DE0012CC4A /* SearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C19A4251A36DE0012CC4A /* SearchResultController.swift */; };
 		B63C19A7251B97850012CC4A /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C19A6251B97850012CC4A /* SearchTableViewController.swift */; };
@@ -106,6 +107,7 @@
 		AEC916B8058ACB981C566D94 /* Pods-FoodPicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FoodPicker.release.xcconfig"; path = "Target Support Files/Pods-FoodPicker/Pods-FoodPicker.release.xcconfig"; sourceTree = "<group>"; };
 		B606C07E2894E69000139907 /* SpinTabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinTabItemView.swift; sourceTree = "<group>"; };
 		B606C0812894EDCB00139907 /* MainTabBarConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarConstants.swift; sourceTree = "<group>"; };
+		B607E99C289620680093BC9A /* Inject */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Inject; sourceTree = "<group>"; };
 		B63C19A225179B090012CC4A /* SearchShortcutSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchShortcutSection.swift; sourceTree = "<group>"; };
 		B63C19A4251A36DE0012CC4A /* SearchResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultController.swift; sourceTree = "<group>"; };
 		B63C19A6251B97850012CC4A /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 			children = (
 				B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */,
 				B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */,
+				B607E99C289620680093BC9A /* Inject */,
 				B647A4E224B203600098B7A2 /* Model */,
 				B647A4E324B203620098B7A2 /* View */,
 				B647A50224B3146B0098B7A2 /* View Model */,
@@ -631,6 +634,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B607E99D289620680093BC9A /* Inject in Resources */,
 				B647A4D924B1F7BE0098B7A2 /* LaunchScreen.storyboard in Resources */,
 				B6D1306124C01E2800040F85 /* GoogleService-Info.plist in Resources */,
 				B647A4D624B1F7BE0098B7A2 /* Assets.xcassets in Resources */,
