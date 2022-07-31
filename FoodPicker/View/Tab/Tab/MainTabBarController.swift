@@ -9,40 +9,6 @@
 import UIKit
 import CoreData
 
-enum TabItemType {
-  case main
-  case search
-  case favorite
-  case spin
-
-  var viewController: UIViewController.Type {
-    switch self {
-    case .main: return MainPageController.self
-    case .search: return SearchTableViewController.self
-    case .favorite: return FavoriteController.self
-    case .spin: return ActionViewController.self
-    }
-  }
-
-  var defaultTabItemImage: String {
-    switch self {
-    case .main: return MainTabBarConstants.homeUnselectedTabImage
-    case .search: return MainTabBarConstants.searchUnselectedTabImage
-    case .favorite: return MainTabBarConstants.favoriteUnselectedTabImage
-    case .spin: return ""
-    }
-  }
-
-  var selectedTabItemImage: String {
-    switch self {
-    case .main: return MainTabBarConstants.homeSelectedTabImage
-    case .search: return MainTabBarConstants.searchSelectedTabImage
-    case .favorite: return MainTabBarConstants.favoriteSelectedTabImage
-    case .spin: return ""
-    }
-  }
-}
-
 class MainTabBarController : UITabBarController, MBProgressHUDProtocol {
   //MARK: - Properties
   var displayTab: Array<TabItemType> = [.main, .search, .favorite, .spin]

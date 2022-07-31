@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import CoreLocation
+import UIKit
 
 class CoredataConnect {
     enum CoreDataEntityType: String {
@@ -24,6 +25,7 @@ class CoredataConnect {
     }
     //MARK: - Properties
     private var context: NSManagedObjectContext!
+    static let shared = CoredataConnect.init(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
     //MARK: - lifecycle
     init(context: NSManagedObjectContext) {
         self.context = context

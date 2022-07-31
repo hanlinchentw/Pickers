@@ -13,9 +13,8 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         NetworkMonitor.shared.startMonitoring()
-        let context = self.persistentContainer.viewContext
-        let connect = CoredataConnect(context: context)
-        connect.deleteAll(entity: selectedEntityName)
+        Resolver.sharedInstance.register(type: NetworkService.self, dependency: NetworkService.shared)
+        Resolver.sharedInstance.register(type: CoredataConnect.self, dependency: CoredataConnect.shared)
         return true
     }
 
