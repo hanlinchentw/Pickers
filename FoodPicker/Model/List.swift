@@ -9,20 +9,20 @@
 import Foundation
 
 struct List{
-    var id: String?
-    var name: String
-    var restaurantsID: [String] {
-        return self.restaurants.map { $0.restaurantID }
-    }
-    var restaurants: [Restaurant]
-    let date: Date
-
-    var isEdited : Bool = false
-    init(name:String, restaurants: [Restaurant], date: Date) {
-        self.name = name
-        self.restaurants = restaurants
-        self.date = date
-    }
+//    var id: String?
+//    var name: String
+//    var restaurantsID: [String] {
+//        return self.restaurants.map { $0.restaurantID }
+//    }
+//    var restaurants: [Restaurant]
+//    let date: Date
+//
+//    var isEdited : Bool = false
+//    init(name:String, restaurants: [Restaurant], date: Date) {
+//        self.name = name
+//        self.restaurants = restaurants
+//        self.date = date
+//    }
     
 }
 

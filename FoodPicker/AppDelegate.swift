@@ -13,9 +13,11 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         NetworkMonitor.shared.startMonitoring()
-        let context = self.persistentContainer.viewContext
-        let connect = CoredataConnect(context: context)
-        connect.deleteAll(entity: selectedEntityName)
+        Resolver.sharedInstance.register(type: BusinessService.self, dependency: BusinessService.sharedInstance)
+        Resolver.sharedInstance.register(type: CoredataService.self, dependency: CoredataService.sharedInstance)
+        Resolver.sharedInstance.register(type: SelectedRestaurantCoreService.self, dependency: SelectedRestaurantCoreService.sharedInstance)
+        Resolver.sharedInstance.register(type: LikedRestaurantCoreService.self, dependency: LikedRestaurantCoreService.sharedInstance)
+        Resolver.sharedInstance.register(type: LocationService.self, dependency: LocationService.shared)
         return true
     }
 

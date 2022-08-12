@@ -18,3 +18,4 @@ let DID_SELECT_KEY = "restaurantDidSelect"
 let DID_LIKE_KEY = "restaurantDidLike"
 let categoryPreload = ["Coffee", "Bubble Tea", "Hamburger", "Pizza", "Korean", "Italian", "Chinese",
                        "Taiwanese","Japanese", "Thai"]
+let defaultImageURL = "https://pixy.org/src/31/316448.png"
