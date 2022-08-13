@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MainTabBarController : UITabBarController, MBProgressHUDProtocol {
+class MainTabBarController : UITabBarController {
   //MARK: - Properties
   var displayTab: Array<MainTabBarConstants.TabItemType> = [.main, .spin, .favorite]
   private let spinTabItemView = SpinTabItemView(frame: .zero)

@@ -15,7 +15,7 @@ protocol ListTableViewControllerDelegate: AnyObject {
     func didSelectList(_ controller: ListTableViewController, list: List)
 }
 
-class ListTableViewController: UITableViewController, MBProgressHUDProtocol{
+class ListTableViewController: UITableViewController {
     //MARK: - Properties
     var lists = [List]() { didSet{ self.tableView.reloadData() }}
     var expandListIndex = [Int]() { didSet{ self.tableView.reloadData() }}

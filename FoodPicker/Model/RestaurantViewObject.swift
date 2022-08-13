@@ -16,7 +16,7 @@ enum RestaurantSorting: Int, CaseIterable {
 
   var description: String {
     switch self {
-    case .all : return "All Restaurant Nearby"
+    case .all : return "Restaurant Nearby"
     case .popular: return "Popular"
     }
   }
@@ -26,13 +26,20 @@ enum RestaurantSorting: Int, CaseIterable {
     case .popular: return "rating"
     }
   }
+
+  var numberOfSearch: Int {
+    switch self {
+    case .all: return 50
+    case .popular: return 20
+    }
+  }
 }
 struct MainListSectionViewObject {
   var section: RestaurantSorting
   var content: Array<RestaurantViewObject>
 }
 
-struct RestaurantViewObject {
+struct RestaurantViewObject: Identifiable {
   let id: String
   let name: String
   let rating: Double

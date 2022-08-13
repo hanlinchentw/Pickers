@@ -27,14 +27,19 @@ protocol NetworkProvider {
 
 class NetworkService {
   typealias DataResponseHandler = ((AFDataResponse<Data?>) -> Void)
-  static func httpRequest(service: NetworkProvider, completion: @escaping DataResponseHandler) {
+
+  static func createHttpRequest(service: NetworkProvider) -> DataRequest {
     let urlPath = URL(string: "\(service.baseURL)\(service.path)")!
-    AF.request(urlPath, method: service.method, parameters: service.parameters, headers: service.headers)
-      .response(completionHandler: completion)
+    return AF.request(urlPath, method: service.method, parameters: service.parameters, headers: service.headers)
+  }
+
+  static func requestWithCompletion(service: NetworkProvider, completion: @escaping DataResponseHandler) {
+    let request = NetworkService.createHttpRequest(service: service)
+    request.response(completionHandler: completion)
   }
   static func requestWithSingleResponse(service: NetworkProvider) -> Single<Data?> {
     return Single<Data?>.create { (singleEvent) -> Disposable in
-      NetworkService.httpRequest(service: service) { response in
+      NetworkService.requestWithCompletion(service: service) { response in
         switch response.result {
         case .success:
           singleEvent(.success(response.data))

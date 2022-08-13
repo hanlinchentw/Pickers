@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ActionViewController: UIViewController, MBProgressHUDProtocol {
+class ActionViewController: UIViewController {
     //MARK: - Properties
     var state: ListState?
     var selectedRestaurants = [RestaurantViewObject]()

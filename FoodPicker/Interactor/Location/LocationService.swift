@@ -7,47 +7,57 @@
 //
 
 import UIKit
+import Combine
 import CoreLocation
 import MapKit
 
 enum LoactionError: Error {
-  case locationNotFound
+  case locationNotFound(message: String)
 }
 
-class LocationService: NSObject {
-    static let shared = LocationService()
-    
-    var locationManager : CLLocationManager = {
-        let lm = CLLocationManager()
-        lm.desiredAccuracy = kCLLocationAccuracyBest
-        return lm
-    }()
+class LocationService: NSObject, ObservableObject {
+  static let shared = LocationService()
+  static let locationManager = CLLocationManager()
 
-    var coordinate: CLLocationCoordinate2D? {
-      return self.locationManager.location?.coordinate
-    }
-    
-    func enableLocationServices(){
-        locationManager.delegate = self
-        switch locationManager.authorizationStatus {
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .restricted, .denied:
-            locationManager.requestAlwaysAuthorization()
-        case .authorizedAlways:
-            locationManager.startUpdatingLocation()
-        case .authorizedWhenInUse:
-            locationManager.requestAlwaysAuthorization()
-        @unknown default:
-            break
-        }
-    }
+  @Published var lastLocation: CLLocation?
+
+  override init() {
+    super.init()
+    LocationService.locationManager.delegate = self
+    LocationService.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    LocationService.locationManager.requestWhenInUseAuthorization()
+    LocationService.locationManager.pausesLocationUpdatesAutomatically = true
+    LocationService.locationManager.startMonitoringSignificantLocationChanges()
+  }
+
+  var latitude: Double? {
+    return lastLocation?.coordinate.latitude
+  }
+
+  var longitude: Double? {
+    return lastLocation?.coordinate.longitude
+  }
+
+  func getDistanceFromCurrentLocation(_ targetLatitude: Double, _ targetLongitude: Double) -> Int {
+    guard let latitude = latitude, let longitude = longitude else { return 1000 }
+    let currentLocation = CLLocation(latitude: latitude, longitude: longitude)
+    let targetLocation = CLLocation(latitude: targetLatitude, longitude: targetLongitude)
+    let distance = targetLocation.distance(from: currentLocation)
+    return Int(distance)
+  }
 }
+
 //MARK: - CLLocationManagerDelegate
-extension LocationService : CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        if manager.authorizationStatus == .authorizedWhenInUse {
-            locationManager.requestAlwaysAuthorization()
-        }
+extension LocationService: CLLocationManagerDelegate {
+  func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    if manager.authorizationStatus == .authorizedWhenInUse {
+      LocationService.locationManager.requestAlwaysAuthorization()
     }
+  }
+
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    guard let location = locations.last else { return }
+    lastLocation = location
+    print(#function, location)
+  }
 }

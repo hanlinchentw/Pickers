@@ -82,7 +82,7 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource{
 //    cell.delegate = self
 //    let viewModel = CardCellViewModel(restaurant: self.restaurants[indexPath.row])
 //    cell.viewModel = viewModel
-    cell.config = self.config
+//    cell.config = self.config
     cell.contentView.isUserInteractionEnabled = true
     return cell
   }

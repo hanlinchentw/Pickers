@@ -19,11 +19,9 @@ class RestaurantCardPresenter {
   var imageUrl: URL {
     return restaurant.imageUrl ?? URL(string: defaultImageURL)!
   }
-  var priceString : NSAttributedString? {
-      let attributedTitle =  NSMutableAttributedString(string: "\(restaurant.price)・\(restaurant.businessCategory)・\(distance) m", attributes:
-          [NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14),
-           NSAttributedString.Key.foregroundColor:UIColor.gray ])
-      return attributedTitle
+
+  var sccondRowString: String {
+    return "\(restaurant.price)・\(restaurant.businessCategory)・\(distance) m"
   }
 
   var selectButtonImagename : String {
@@ -36,39 +34,28 @@ class RestaurantCardPresenter {
 //      return restaurant.isLiked ? "btnBookmarkHeartPressed" : "icnHeart"
   }
 
-  var businessString : NSAttributedString? {
-
-      let closedText =  NSMutableAttributedString(string: "CLOSED", attributes:
-      [NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14),
-       NSAttributedString.Key.foregroundColor:UIColor.systemRed])
-      let openText =  NSMutableAttributedString(string: "OPEN", attributes:
-      [NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14),
-       NSAttributedString.Key.foregroundColor:UIColor.freshGreen])
-
-      return restaurant.isClosed ?? true ? closedText : openText
+  var openOrCloseString: String {
+    guard let isClosed = restaurant.isClosed else {
+      return "Close"
+    }
+    return isClosed ? "Closed" : "Open"
   }
 
-  var ratedString : NSAttributedString? {
-      let attributedTitle =  NSMutableAttributedString(string: "★ ", attributes:
-          [NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14),
-           NSAttributedString.Key.foregroundColor:UIColor.butterscotch])
-      attributedTitle.append(NSAttributedString(string: "\(restaurant.rating)", attributes:
-      [NSAttributedString.Key.foregroundColor : UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1),
-       NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14), ]))
-      attributedTitle.append(NSAttributedString(string: " (\(restaurant.reviewCount))", attributes:
-          [NSAttributedString.Key.foregroundColor : UIColor(red: 151/255, green: 151/255, blue: 151/255, alpha: 1),
-           NSAttributedString.Key.font : UIFont(name: "Avenir-Book", size: 14), ]))
+  var rating: String {
+    return "\(restaurant.rating)"
+  }
 
-
-      return attributedTitle
+  var reviewCount: String {
+    return "+(\(restaurant.reviewCount))"
   }
 
   var distance : Int {
-      let location = CLLocation(latitude: restaurant.coordinates.latitude,
-                                longitude: restaurant.coordinates.longitude)
-      guard let currentLocation = LocationService.shared.locationManager.location else { return 1000 }
-      let distance = location.distance(from: currentLocation)
-      return Int(distance)
+    return 10
+//      let location = CLLocation(latitude: restaurant.coordinates.latitude,
+//                                longitude: restaurant.coordinates.longitude)
+//      guard let currentLocation = LocationService.shared.locationManager.location else { return 1000 }
+//      let distance = location.distance(from: currentLocation)
+//      return Int(distance)
   }
 
   init(restaurant : RestaurantViewObject) {

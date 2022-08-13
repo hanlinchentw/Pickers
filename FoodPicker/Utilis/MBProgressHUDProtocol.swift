@@ -9,27 +9,22 @@
 import UIKit
 import MBProgressHUD
 
-protocol MBProgressHUDProtocol where Self: UIViewController {
-    func showLoadingAnimation()
-    func hideLoadingAnimation()
-}
+final class MBProgressHUDHelper {
+  static func showLoadingAnimation() {
+      DispatchQueue.main.async {
+          guard let window = UIApplication.shared.windows.first else { return }
+          let animation = MBProgressHUD.showAdded(to: window, animated: true)
+          animation.animationType = .fade
+          animation.bezelView.blurEffectStyle = .dark
+          animation.contentColor = .white
+          animation.label.text = "Loading"
+      }
+  }
 
-extension MBProgressHUDProtocol {
-    func showLoadingAnimation() {
-        DispatchQueue.main.async {
-            guard let window = UIApplication.shared.windows.first else { return }
-            let animation = MBProgressHUD.showAdded(to: window, animated: true)
-            animation.animationType = .fade
-            animation.bezelView.blurEffectStyle = .dark
-            animation.contentColor = .white
-            animation.label.text = "Loading"
-        }
-    }
-    
-    func hideLoadingAnimation(){
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now(), execute: {
-            guard let window = UIApplication.shared.windows.first else { return }
-            MBProgressHUD.hide(for: window, animated: true)
-        })
-    }
+  static func hideLoadingAnimation(){
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now(), execute: {
+          guard let window = UIApplication.shared.windows.first else { return }
+          MBProgressHUD.hide(for: window, animated: true)
+      })
+  }
 }

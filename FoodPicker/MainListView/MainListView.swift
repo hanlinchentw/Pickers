@@ -9,9 +9,22 @@
 import SwiftUI
 
 struct MainListView: View {
+  @StateObject var locationService = LocationService.shared
+
+  @State private var inputText: String = ""
+
   var body: some View {
-    
-    Text("Hello world")
+    ZStack {
+      Color.listViewBackground.ignoresSafeArea()
+      ScrollView(.vertical, showsIndicators: false) {
+        VStack(spacing: 24) {
+          SearchFieldContainer(inputText: inputText)
+          HorizontalSectionContainer().environmentObject(locationService)
+          VerticalListContainer()
+        }
+      }
+    }
+    .navigationBarHidden(true)
   }
 }
 
