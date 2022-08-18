@@ -23,7 +23,7 @@ protocol BottomSheetViewControllerDelegate: AnyObject {
 }
 class BottomSheetViewController : UIViewController {
     //MARK: - Properties
-    var list: List?
+    var list: _List?
     var state: ListState = .temp { didSet{ didChangeState() }}
     weak var delegate: BottomSheetViewControllerDelegate?
     private let notchView : UIView = {
@@ -66,7 +66,7 @@ class BottomSheetViewController : UIViewController {
     }()
     let tableView = RestaurantsList()
     private var subscriber = Set<AnyCancellable>()
-    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()

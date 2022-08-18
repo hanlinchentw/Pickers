@@ -7,24 +7,38 @@
 //
 
 import SwiftUI
+import CoreData
 
+typealias ItemOnPress = (_ id: String) -> Void
 struct MainListView: View {
-  @StateObject var locationService = LocationService.shared
+  @Environment(\.managedObjectContext) private var viewContext
 
   @State private var inputText: String = ""
 
+  init() {
+    let newAppearance = UITabBarAppearance()
+    newAppearance.configureWithOpaqueBackground()
+    newAppearance.backgroundColor = UIColor(Color.white)
+    UITabBar.appearance().standardAppearance = newAppearance
+  }
+
   var body: some View {
-    ZStack {
-      Color.listViewBackground.ignoresSafeArea()
-      ScrollView(.vertical, showsIndicators: false) {
-        VStack(spacing: 24) {
-          SearchFieldContainer(inputText: inputText)
-          HorizontalSectionContainer().environmentObject(locationService)
-          VerticalListContainer()
+    NavigationView {
+      ZStack {
+        Color.listViewBackground.ignoresSafeArea()
+        ScrollView(.vertical, showsIndicators: false) {
+          VStack(spacing: 24) {
+            SearchFieldContainer(inputText: inputText)
+
+            HorizontalSectionContainer().environment(\.managedObjectContext, viewContext)
+
+            VerticalListContainer().environment(\.managedObjectContext, viewContext)
+          }
         }
       }
+      .navigationBarHidden(true)
+      Spacer()
     }
-    .navigationBarHidden(true)
   }
 }
 

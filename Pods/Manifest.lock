@@ -9,12 +9,6 @@ PODS:
     - ImageSlideshow/Core
   - ImageSlideshow/Core (1.9.2)
   - MBProgressHUD (1.2.0)
-  - RxCocoa (6.5.0):
-    - RxRelay (= 6.5.0)
-    - RxSwift (= 6.5.0)
-  - RxRelay (6.5.0):
-    - RxSwift (= 6.5.0)
-  - RxSwift (6.5.0)
 
 DEPENDENCIES:
   - Alamofire (~> 5.6.1)
@@ -22,8 +16,6 @@ DEPENDENCIES:
   - ImageSlideshow (~> 1.9.0)
   - ImageSlideshow/Alamofire
   - MBProgressHUD
-  - RxCocoa (= 6.5.0)
-  - RxSwift (= 6.5.0)
 
 SPEC REPOS:
   trunk:
@@ -31,19 +23,13 @@ SPEC REPOS:
     - AlamofireImage
     - ImageSlideshow
     - MBProgressHUD
-    - RxCocoa
-    - RxRelay
-    - RxSwift
 
 SPEC CHECKSUMS:
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
   AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
   ImageSlideshow: be305b54eaf2b2cfc7a7141c7c734605d44dc07d
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
-  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
-  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
-  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
 
-PODFILE CHECKSUM: 7888741ad319dc7067280ad831084b24b23175f6
+PODFILE CHECKSUM: 1d78886f767772cd35e9a36eae7e4dce0162add3
 
 COCOAPODS: 1.9.1

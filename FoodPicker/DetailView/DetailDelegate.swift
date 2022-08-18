@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-protocol DetailControllerDelegate {
+protocol DetailControllerDelegate: AnyObject {
     func willPopViewController(_ controller: DetailController)
 }
 protocol DetailHeaderDelegate : AnyObject {

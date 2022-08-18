@@ -8,7 +8,6 @@
 
 import UIKit
 import Alamofire
-import RxSwift
 
 enum URLRequestError: Error {
   case noInternet
@@ -32,23 +31,4 @@ class NetworkService {
     let urlPath = URL(string: "\(service.baseURL)\(service.path)")!
     return AF.request(urlPath, method: service.method, parameters: service.parameters, headers: service.headers)
   }
-
-  static func requestWithCompletion(service: NetworkProvider, completion: @escaping DataResponseHandler) {
-    let request = NetworkService.createHttpRequest(service: service)
-    request.response(completionHandler: completion)
-  }
-  static func requestWithSingleResponse(service: NetworkProvider) -> Single<Data?> {
-    return Single<Data?>.create { (singleEvent) -> Disposable in
-      NetworkService.requestWithCompletion(service: service) { response in
-        switch response.result {
-        case .success:
-          singleEvent(.success(response.data))
-        case .failure(let error):
-          singleEvent(.failure(error))
-        }
-      }
-      return Disposables.create()
-    }
-  }
-
 }

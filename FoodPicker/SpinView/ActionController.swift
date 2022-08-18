@@ -32,7 +32,6 @@ class ActionViewController: UIViewController {
     private var resultView = SpinResultView()
     private var wheel : LuckyWheel?
     private let bottomSheetVC = BottomSheetViewController()
-    internal let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,9 +107,6 @@ extension ActionViewController : LuckyWheelDelegate, LuckyWheelDataSource {
 }
 //MARK: - Observe entityChange
 extension ActionViewController {
-    func observeEntityChange(){
-        NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange), name: NSManagedObjectContext.didSaveObjectsNotification, object: context)
-    }
     @objc func contextDidChange(_ notification: NSNotification){
 //        guard let userInfo = notification.userInfo else { return }
 //        if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>,
@@ -161,7 +157,7 @@ extension ActionViewController {
 //                                         addRestaurant: addRestaurant)
 //        if list != nil { self.state = .existed  }
 //    }
-    private func ReplaceAllSelectedRestaurantsWithExistedList(list: List){
+    private func ReplaceAllSelectedRestaurantsWithExistedList(list: _List){
 //        self.deselectAll()
 //        list.restaurants.forEach{
 //            self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: $0)
@@ -188,7 +184,7 @@ extension ActionViewController: BottomSheetViewControllerDelegate{
 }
 //MARK: - ListTableViewControllerDelegate
 extension ActionViewController: ListTableViewControllerDelegate{
-    func didSelectList(_ controller: ListTableViewController, list: List) {
+    func didSelectList(_ controller: ListTableViewController, list: _List) {
         ReplaceAllSelectedRestaurantsWithExistedList(list: list)
         controller.navigationController?.popViewController(animated: true)
     }

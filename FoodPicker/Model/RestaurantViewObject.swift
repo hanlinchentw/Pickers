@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 import CoreData
+import SwiftUI
 
 enum RestaurantSorting: Int, CaseIterable {
   case all
@@ -20,17 +21,10 @@ enum RestaurantSorting: Int, CaseIterable {
     case .popular: return "Popular"
     }
   }
-  var search: String {
+  var sortBy: String {
     switch self {
     case .all: return "distance"
     case .popular: return "rating"
-    }
-  }
-
-  var numberOfSearch: Int {
-    switch self {
-    case .all: return 50
-    case .popular: return 20
     }
   }
 }
@@ -39,7 +33,7 @@ struct MainListSectionViewObject {
   var content: Array<RestaurantViewObject>
 }
 
-struct RestaurantViewObject: Identifiable {
+class RestaurantViewObject: Identifiable {
   let id: String
   let name: String
   let rating: Double
@@ -50,6 +44,9 @@ struct RestaurantViewObject: Identifiable {
   let coordinates: CLLocationCoordinate2D
   let businessCategory: String
 
+
+  var isSelected: Bool = false
+  var isLiked: Bool = false
   init(business: Business) {
     self.id = business.id
     self.name = business.name
@@ -65,14 +62,25 @@ struct RestaurantViewObject: Identifiable {
 
 // MARK: - Core data init
 extension RestaurantViewObject {
-  init(restaurant: Restaurant) {
-    self.id = restaurant.id
-    self.name = restaurant.name
-    self.imageUrl = restaurant.imageUrl ?? URL(string: defaultImageURL)!
-    self.rating = restaurant.rating
-    self.reviewCount = Int(restaurant.reviewCount)
-    self.price = restaurant.price
-    self.coordinates = CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude)
-    self.businessCategory = restaurant.businessCategory
+  convenience init(restaurant: Restaurant) {
+    let business = Business(id: restaurant.id,
+                            name: restaurant.name,
+                            rating: restaurant.rating,
+                            price: restaurant.price,
+                            imageUrl: "\(restaurant.imageUrl)",
+                            distance: nil,
+                            isClosed: nil,
+                            categories: [Categories.init(title: restaurant.businessCategory)],
+                            reviewCount: Int(restaurant.reviewCount),
+                            coordinates: CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude))
+    self.init(business: business)
+//    self.id = restaurant.id
+//    self.name = restaurant.name
+//    self.imageUrl = restaurant.imageUrl ?? URL(string: defaultImageURL)!
+//    self.rating = restaurant.rating
+//    self.reviewCount = Int(restaurant.reviewCount)
+//    self.price = restaurant.price
+//    self.coordinates = CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude)
+//    self.businessCategory = restaurant.businessCategory
   }
 }

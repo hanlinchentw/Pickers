@@ -9,55 +9,73 @@
 import SwiftUI
 
 struct VerticalListContainer: View {
+  @StateObject var dataStore = VerticalListDataStore()
+
+  @Environment(\.managedObjectContext) private var viewContext
+  @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
+  
+  @Inject var locationService: LocationService
+  @Inject var selectedCoreService: SelectedCoreService
+  
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
-      Text(RestaurantSorting.all.description)
-        .en24ArialBold()
-        .padding(.leading, 16)
-      VStack(spacing: 16) {
-        ForEach(0 ..< 20) { _ in
-          RestaurantListItemView()
+      if (!dataStore.data.isEmpty) {
+        Text(RestaurantSorting.all.description)
+          .en24ArialBold()
+          .padding(.leading, 16)
+        VStack(spacing: 16) {
+          ForEach($dataStore.data.indices, id: \.self) { index in
+            let restaurant = dataStore.data[index]
+            let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
+            let id = restaurant.id
+            let presenter = RestaurantPresenter(restaurant: restaurant, isSelected: isSelected)
+            RestaurantListItemView(presenter: presenter) {
+              selectButtonOnPress(isSelected: isSelected, itemId: id)
+            }
+            .swipeActions {
+              Button {
+                print("Muting conversation")
+              } label: {
+                Label("Mute", systemImage: "bell.slash.fill")
+              }
+              .tint(.indigo)
+            }
+          }
         }
+        .padding(.top, 16)
+        .background(Color.white)
+        .cornerRadius(24, corners: [.topLeft, .topRight])
+        Spacer()
       }
-      .padding(.top, 16)
-      .background(Color.white)
-      .cornerRadius(24, corners: [.topLeft, .topRight])
-      .redacted(reason: .placeholder)
-      Spacer()
+    }.task {
+      await dataStore.fetchData(lat: locationService.latitude, lon: locationService.longitude)
+    }
+  }
+  
+  func selectButtonOnPress(isSelected: Bool, itemId: String) {
+    if (isSelected) {
+      try! selectedCoreService.deleteRestaurant(id: itemId, in: viewContext)
+    } else {
+      try! selectedCoreService.addRestaurant(data: ["id": itemId], in: viewContext)
     }
   }
 }
 
-struct VerticalRestaurantListContainer_Previews: PreviewProvider {
-  static var previews: some View {
-    VerticalListContainer()
-  }
-}
+class VerticalListDataStore: ObservableObject {
+  @Inject var restaurantCoreService: RestaurantCoreService
+  @Published var data: Array<Restaurant> = []
 
-struct RestaurantListItemView: View {
-  var body: some View {
-    HStack {
-      AsyncImage(url: nil) { _ in
-        Color.gray.opacity(0.7)
+  func fetchData(lat: Double?, lon: Double?) async {
+    do {
+      guard let latitude = lat, let longitude = lon else {
+        throw LoactionError.locationNotFound(message: "Coordinate found nil.")
       }
-      .frame(width: 93, height: 93)
-      .cornerRadius(16)
-      .padding(.leading, 16)
-      VStack(alignment: .leading) {
-        VStack(alignment: .leading, spacing: 6) {
-          Text("Papa's Coffee").en16ArialBold()
-          Text("$100-300・Coffee・300m away").en14Arial()
-        }
-        HStack(spacing: 4, content: {
-          Image("ratingStarXs")
-          Text("4.8").en14Arial()
-          Text("(300+)").en14Arial()
-          Spacer()
-        })
+      let result = try await BusinessService.createDataTask(lat: latitude, lon: longitude, option: RestaurantSorting.all, limit: 30).value
+      DispatchQueue.main.async {
+        self.data = result.map { Restaurant.init(business: $0)}
       }
-      .padding(.leading, 6)
-      Image("addL")
-        .shadow(color: Color.gray.opacity(0.25), radius: 3, x: 0, y: 0)
+    } catch {
+      print("VerticalListDataStore.fetchSectionData >>> \(error.localizedDescription)")
     }
   }
 }

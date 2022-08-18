@@ -12,12 +12,12 @@ private let listCellIdentifier = "ListTableCell"
 
 protocol ListTableViewControllerDelegate: AnyObject {
     func willPopViewController(_ controller: ListTableViewController)
-    func didSelectList(_ controller: ListTableViewController, list: List)
+    func didSelectList(_ controller: ListTableViewController, list: _List)
 }
 
 class ListTableViewController: UITableViewController {
     //MARK: - Properties
-    var lists = [List]() { didSet{ self.tableView.reloadData() }}
+    var lists = [_List]() { didSet{ self.tableView.reloadData() }}
     var expandListIndex = [Int]() { didSet{ self.tableView.reloadData() }}
     weak var delegate: ListTableViewControllerDelegate?
     private lazy var backButton: UIButton = {
@@ -31,7 +31,7 @@ class ListTableViewController: UITableViewController {
         return button
     }()
     
-    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +41,6 @@ class ListTableViewController: UITableViewController {
     }
     //MARK: -  Core Data API
     func fetchSavedLists(completion: (()-> Void)? = nil){
-        let coreDataService = CoredataService()
 //        coreDataService.fetchLists {[weak self] lists, error in
 //            if !lists.isEmpty{
 //                self?.lists = lists
@@ -123,7 +122,7 @@ extension ListTableViewController{
 //}
 //MARK: - MoreOptionAlertViewContrllerDelegate
 extension ListTableViewController: MoreOptionAlertViewContrllerDelegate{
-    func deleteList(list: List){
+    func deleteList(list: _List){
 //        let coreConnect = CoredataConnect()
 //        coreConnect.deleteList(list: list) {
 //            guard let index = self.lists.firstIndex(where: {$0.name == list.name}) else { return }
@@ -132,7 +131,7 @@ extension ListTableViewController: MoreOptionAlertViewContrllerDelegate{
 //
 //        }
     }
-    func editList(list: List) {
+    func editList(list: _List) {
 //        let edit = EditViewController(list: list)
 //        self.navigationController?.pushViewController(edit, animated: true)
 //        edit.delegate = self
@@ -140,7 +139,7 @@ extension ListTableViewController: MoreOptionAlertViewContrllerDelegate{
 }
 //MARK: - EditViewControllerDelegate
 extension ListTableViewController: EditViewControllerDelegate{
-    func didEditList(_ controller: EditViewController, editList: List?) {
+    func didEditList(_ controller: EditViewController, editList: _List?) {
 //        if let editList = editList, let index = self.lists.firstIndex(where: { $0.id == editList.id }){
 //            self.lists[index] = editList
 //            self.lists[index].isEdited = true

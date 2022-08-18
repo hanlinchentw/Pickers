@@ -9,13 +9,13 @@
 import UIKit
 
 protocol MoreOptionAlertViewContrllerDelegate: AnyObject {
-    func deleteList(list: List)
-    func editList(list: List)
+    func deleteList(list: _List)
+    func editList(list: _List)
 }
 
 class MoreOptionAlertViewContrller: UIViewController {
     //MARK: - Properties
-    var list: List
+    var list: _List
     weak var delegate: MoreOptionAlertViewContrllerDelegate?
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
@@ -41,7 +41,7 @@ class MoreOptionAlertViewContrller: UIViewController {
         return button
     }()
     //MARK: - Lifecycle
-    init(list: List) {
+    init(list: _List) {
         self.list = list
         super.init(nibName: nil, bundle: nil)
     }

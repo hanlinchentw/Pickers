@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SearchFieldContainer: View {
   @State var inputText: String
-  
+
   var body: some View {
     HStack(alignment: .center) {
       TextField("Search for Restaurants", text: $inputText)

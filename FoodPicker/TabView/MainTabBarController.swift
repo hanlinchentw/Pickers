@@ -15,29 +15,16 @@ class MainTabBarController : UITabBarController {
   private let spinTabItemView = SpinTabItemView(frame: .zero)
 
   private let appDelegate = UIApplication.shared.delegate as! AppDelegate
-  private lazy var context = appDelegate.persistentContainer.viewContext
   //MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
     overrideUserInterfaceStyle = .light
     configureTabBar()
-    NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange), name: NSManagedObjectContext.didSaveObjectsNotification, object: context)
   }
 }
 
 //MARK: - SelectRestaurant Data flow
 extension MainTabBarController {
-  @objc func contextDidChange(_ notification: NSNotification){
-    guard let userInfo = notification.userInfo else { return }
-    if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>,
-       let _ = inserts.first as? SelectedRestaurant{
-      self.spinTabItemView.increase()
-    }
-    if let deletes = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>,
-        let _ = deletes.first as? SelectedRestaurant {
-      self.spinTabItemView.decrease()
-    }
-  }
 }
 
 //MARK: -  HomeController setup
@@ -51,6 +38,7 @@ extension MainTabBarController{
     tabBar.layer.cornerRadius = 36
     tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
     tabBar.layer.masksToBounds = true
+    tabBar.isTranslucent = true
 
     let spinTabItem = tabBar.subviews[1]
     spinTabItem.addSubview(spinTabItemView)
@@ -72,11 +60,11 @@ extension MainTabBarController: UITabBarControllerDelegate {
 
 //MARK: - TabItem Factory
 final class TabItemFactory {
-  static func createTabItem(type: MainTabBarConstants.TabItemType) -> UINavigationController {
-    let nav = UINavigationController(rootViewController: type.viewController)
-    nav.tabBarItem.image = UIImage(named: type.defaultTabItemImage)?.withRenderingMode(.alwaysOriginal)
-    nav.tabBarItem.selectedImage = UIImage(named: type.selectedTabItemImage)?.withRenderingMode(.alwaysOriginal)
-    nav.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
-    return nav
+  static func createTabItem(type: MainTabBarConstants.TabItemType) -> UIViewController {
+    let vc = type.viewController
+    vc.tabBarItem.image = UIImage(named: type.defaultTabItemImage)?.withRenderingMode(.alwaysOriginal)
+    vc.tabBarItem.selectedImage = UIImage(named: type.selectedTabItemImage)?.withRenderingMode(.alwaysOriginal)
+    vc.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
+    return vc
   }
 }

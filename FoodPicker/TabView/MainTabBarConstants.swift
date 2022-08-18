@@ -8,7 +8,7 @@
 
 import UIKit
 import SwiftUI
-
+import CoreData
 final class MainTabBarConstants {
   enum TabItemType {
     case main
@@ -17,9 +17,9 @@ final class MainTabBarConstants {
 
     var viewController: UIViewController {
       switch self {
-      case .main: return UIHostingController(rootView: MainListView())
-      case .favorite: return FavoriteController.init()
-      case .spin: return ActionViewController.init()
+      case .main: return UIHostingController(rootView: MainListView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
+      case .favorite: return UINavigationController(rootViewController: FavoriteController.init())
+      case .spin: return UINavigationController(rootViewController:ActionViewController.init())
       }
     }
 

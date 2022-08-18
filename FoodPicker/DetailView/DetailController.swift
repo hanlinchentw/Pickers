@@ -11,16 +11,50 @@ import MapKit
 import CoreData
 import Alamofire
 import AlamofireImage
+import SwiftUI
+
+struct DetailContentView: UIViewControllerRepresentable {
+  typealias UIViewControllerType = DetailController
+  var id: String
+  @State fileprivate var shouldDismiss = false
+
+  func makeUIViewController(context: Context) -> DetailController {
+    let detailVC = DetailController(id: id)
+    detailVC.delegate = context.coordinator
+    return detailVC
+  }
+
+  func updateUIViewController(_ uiViewController: DetailController, context: Context) {
+    guard !shouldDismiss || !context.environment.presentationMode.wrappedValue.isPresented else {
+      context.environment.presentationMode.wrappedValue.dismiss()
+      return
+    }
+  }
+
+  func makeCoordinator() -> DetailCoordinator {
+    return DetailCoordinator(self)
+
+  }
+
+  class DetailCoordinator: NSObject, DetailControllerDelegate {
+    var parent: DetailContentView
+
+    init(_ parent: DetailContentView) {
+      self.parent = parent
+    }
+    func willPopViewController(_ controller: DetailController) {
+      parent.shouldDismiss = true
+    }
+  }
+}
 
 private let detailCellIdentifier = "DetailCell"
 private let headerIdentifier = "DetailHeader"
 
-
-
 class DetailController : UICollectionViewController {
   //MARK: - Prorperties
-//  var restaurant : Restaurant { didSet { self.collectionView.reloadData() } }
-//  weak var delegate: DetailControllerDelegate?
+  weak var delegate: DetailControllerDelegate?
+  private var detail: Detail? { didSet { collectionView.reloadData() }}
   private var isExpanded = false
   private lazy var addButton : UIButton = {
     let button = UIButton(type: .system)
@@ -30,39 +64,54 @@ class DetailController : UICollectionViewController {
     button.layer.shadowOffset = CGSize(width: 0, height: 1)
     button.layer.shadowRadius = 3
 
-//    let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
-//    button.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
+    //    let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
+    //    button.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
     button.addTarget(self, action: #selector(handleSelectButtonTapped), for: .touchUpInside)
     return button
   }()
-  private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   //MARK: - Lifecycle
-//  init(restaurant:Restaurant) {
-//    self.restaurant = restaurant
-//    super.init(collectionViewLayout: UICollectionViewFlowLayout())
-//  }
+  init(id: String) {
+    super.init(collectionViewLayout: UICollectionViewFlowLayout())
+    fetchDetail(id: id)
+  }
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   override func viewDidLoad() {
     super.viewDidLoad()
     configureUI()
+    configureCollectionView()
   }
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    configureCollectionView()
+    self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     self.tabBarController?.tabBar.isHidden = true
+    self.navigationController?.navigationBar.isTranslucent = true
   }
-  //MARK: - API
-  func fetchDetail(success: @escaping()->Void, failure: @escaping(Error)->Void){
 
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    self.tabBarController?.tabBar.isHidden = false
+    self.navigationController?.navigationBar.isTranslucent = false
+  }
+  // MARK: - BusinessService
+  func fetchDetail(id: String) {
+    Task {
+      do {
+        let detail = try await BusinessService.fetchDetail(id: id)
+        self.detail = detail
+      } catch {
+        print("fetchDetail.failed >>> \(error.localizedDescription)")
+      }
+    }
   }
   //MARK: - Selectors
   @objc func handleSelectButtonTapped(){
-//    restaurant.isSelected.toggle()
-//    delegate?.didSelectRestaurant(restaurant: restaurant)
-//    let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
-//    addButton.changeImageButtonWithBounceAnimation(changeTo: imageName)
+    //    restaurant.isSelected.toggle()
+    //    delegate?.didSelectRestaurant(restaurant: restaurant)
+    //    let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
+    //    addButton.changeImageButtonWithBounceAnimation(changeTo: imageName)
   }
   //MARK: - Helpers
   func configureCollectionView(){
@@ -73,8 +122,7 @@ class DetailController : UICollectionViewController {
     collectionView.dataSource = self
     collectionView.bounces = false
 
-    let inset = UIApplication.shared.windows[0].safeAreaInsets.top
-    collectionView.contentInset = UIEdgeInsets(top: -inset, left: 0, bottom: 100, right: 0)
+    collectionView.contentInset = UIEdgeInsets(top: -SafeAreaUtils.top, left: 0, bottom: 100, right: 0)
   }
   func configureUI(){
     tabBarController?.tabBar.isHidden = true
@@ -106,11 +154,14 @@ extension DetailController {
 
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellIdentifier, for: indexPath)
-    as! DetailCell
+    guard let detail = detail,
+          let cell = cell as? DetailCell else {
+      return .init()
+    }
     let config = RestaurantDetail(rawValue: indexPath.row)
-//    let viewModel = DetailCellViewModel(restaurant: restaurant, config: config, isExpanded: isExpanded)
+    let viewModel = DetailCellViewModel(detail: detail, config: config, isExpanded: isExpanded)
     cell.config = config
-//    cell.viewModel = viewModel
+    cell.viewModel = viewModel
     cell.delegate = self
     cell.isExpanded = self.isExpanded
     return cell
@@ -119,9 +170,8 @@ extension DetailController {
   override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
     let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: headerIdentifier, for: indexPath) as! DetailHeader
     header.delegate = self
-
-//    let viewModel = DetailHeaderViewModel(restaurant: restaurant)
-//    header.viewModel = viewModel
+    let viewModel = DetailHeaderViewModel(detail: detail)
+    header.viewModel = viewModel
     return header
   }
 }
@@ -130,10 +180,12 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
     if isExpanded, indexPath.row == 1{
       return  CGSize(width: collectionView.frame.width, height: 262)
     }
+    guard let detail = detail else {
+      return CGSize(width: 0, height: 0)
+    }
     let config = RestaurantDetail(rawValue: indexPath.row)
-//    let viewModel = DetailCellViewModel(restaurant: restaurant, config: config, isExpanded: isExpanded)
-//    return  CGSize(width: collectionView.frame.width, height: viewModel.heightForEachCell)
-    return CGSize(width: 132, height: 123)
+    let viewModel = DetailCellViewModel(detail: detail, config: config, isExpanded: isExpanded)
+    return  CGSize(width: collectionView.frame.width, height: viewModel.heightForEachCell)
 
   }
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -146,21 +198,21 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
 }
 //MARK: - DetailHeaderDelegate
 extension DetailController : DetailHeaderDelegate {
-  func handleDismissDetailPage() {
-    
+  @objc func handleDismissDetailPage() {
+    delegate?.willPopViewController(self)
   }
   func handleLikeRestaurant() {
-//    restaurant.isLiked.toggle()
-//    delegate?.didLikeRestaurant(restaurant: restaurant)
+    //    restaurant.isLiked.toggle()
+    //    delegate?.didLikeRestaurant(restaurant: restaurant)
     self.collectionView.reloadData()
   }
   func handleShareRestaurant() {
     let imageView = UIImageView()
-//    imageView.af.setImage(withURL: restaurant.imageUrl)
+    //    imageView.af.setImage(withURL: restaurant.imageUrl)
     guard let image = imageView.image else { return }
 
-//    let activityViewController = UIActivityViewController(activityItems: [image, restaurant.name], applicationActivities: nil)
-//    self.present(activityViewController, animated: true, completion: nil)
+    //    let activityViewController = UIActivityViewController(activityItems: [image, restaurant.name], applicationActivities: nil)
+    //    self.present(activityViewController, animated: true, completion: nil)
   }
 }
 //MARK: - DetailCellDelegate

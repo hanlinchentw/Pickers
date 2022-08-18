@@ -9,12 +9,6 @@
 import UIKit
 import CoreData
 
-extension NSManagedObjectContext {
-  static func defaultContext() -> NSManagedObjectContext {
-    return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-  }
-}
-
 extension NSManagedObject {
   static func allIn<T: NSManagedObject>(_ context: NSManagedObjectContext) throws -> Array<T>  {
     return try self.fetchWithCondition(for: nil, in: context)
@@ -39,28 +33,17 @@ extension NSManagedObject {
 }
 
 extension NSManagedObject {
-  static var entityName: String {
-    return NSStringFromClass(self)
-  }
-
   static func fetchWithCondition<T>(for condition: Dictionary<String, String>?, in context: NSManagedObjectContext) throws -> Array<T> {
-    let request = self.createFetchRequestIn(context)
+    let request = self.fetchRequest()
     request.returnsObjectsAsFaults = false
     if let condition = condition {
       let predicates: Array<NSPredicate> = condition.map { key, value in
-        return NSPredicate(format: "%1$@ == %2$@", argumentArray: [key, value])
+        return NSPredicate(format: "%K = %@", key, value)
       }
       let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
       request.predicate = compoundPredicate
     }
     return try context.fetch(request) as! Array<T>
-  }
-
-  static func createFetchRequestIn(_ context: NSManagedObjectContext) -> NSFetchRequest<NSFetchRequestResult> {
-    let request: NSFetchRequest = NSFetchRequest<NSFetchRequestResult>()
-    let entity = NSEntityDescription.entity(forEntityName: self.entityName, in: context)
-    request.entity = entity
-    return request
   }
 }
 

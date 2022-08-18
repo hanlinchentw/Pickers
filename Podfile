@@ -11,17 +11,4 @@ target 'FoodPicker' do
   pod "ImageSlideshow/Alamofire"
   pod 'ImageSlideshow', '~> 1.9.0'
   pod 'MBProgressHUD'
-  pod 'RxSwift', '6.5.0'
-  pod 'RxCocoa', '6.5.0'
-
-  post_install do |installer|
-   installer.pods_project.targets.each do |target|
-     target.build_configurations.each do |config|
-       if config.name == 'Debug'
-         config.build_settings['OTHER_SWIFT_FLAGS'] = ['$(inherited)', '-Onone']
-         config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-O'
-       end
-     end
-   end
-  end
 end
