@@ -29,17 +29,14 @@ struct VerticalListContainer: View {
             let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
             let id = restaurant.id
             let presenter = RestaurantPresenter(restaurant: restaurant, isSelected: isSelected)
-            RestaurantListItemView(presenter: presenter) {
-              selectButtonOnPress(isSelected: isSelected, itemId: id)
-            }
-            .swipeActions {
-              Button {
-                print("Muting conversation")
-              } label: {
-                Label("Mute", systemImage: "bell.slash.fill")
+            NavigationLink {
+              DetailContentView(id: restaurant.id).navigationBarHidden(true).ignoresSafeArea()
+            } label: {
+              RestaurantListItemView(presenter: presenter) {
+                selectButtonOnPress(isSelected: isSelected, itemId: id)
               }
-              .tint(.indigo)
             }
+            .buttonStyle(.plain)
           }
         }
         .padding(.top, 16)

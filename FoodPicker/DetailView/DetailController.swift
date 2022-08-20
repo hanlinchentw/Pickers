@@ -11,42 +11,7 @@ import MapKit
 import CoreData
 import Alamofire
 import AlamofireImage
-import SwiftUI
-
-struct DetailContentView: UIViewControllerRepresentable {
-  typealias UIViewControllerType = DetailController
-  var id: String
-  @State fileprivate var shouldDismiss = false
-
-  func makeUIViewController(context: Context) -> DetailController {
-    let detailVC = DetailController(id: id)
-    detailVC.delegate = context.coordinator
-    return detailVC
-  }
-
-  func updateUIViewController(_ uiViewController: DetailController, context: Context) {
-    guard !shouldDismiss || !context.environment.presentationMode.wrappedValue.isPresented else {
-      context.environment.presentationMode.wrappedValue.dismiss()
-      return
-    }
-  }
-
-  func makeCoordinator() -> DetailCoordinator {
-    return DetailCoordinator(self)
-
-  }
-
-  class DetailCoordinator: NSObject, DetailControllerDelegate {
-    var parent: DetailContentView
-
-    init(_ parent: DetailContentView) {
-      self.parent = parent
-    }
-    func willPopViewController(_ controller: DetailController) {
-      parent.shouldDismiss = true
-    }
-  }
-}
+import Combine
 
 private let detailCellIdentifier = "DetailCell"
 private let headerIdentifier = "DetailHeader"
@@ -63,14 +28,16 @@ class DetailController : UICollectionViewController {
     button.layer.shadowOpacity = 0.3
     button.layer.shadowOffset = CGSize(width: 0, height: 1)
     button.layer.shadowRadius = 3
-
-    //    let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
-    //    button.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
     button.addTarget(self, action: #selector(handleSelectButtonTapped), for: .touchUpInside)
     return button
   }()
+
+  var set = Set<AnyCancellable>()
+  @Published var isSelected: Bool
   //MARK: - Lifecycle
   init(id: String) {
+    @Inject var selectedCoreService: SelectedCoreService
+    self.isSelected = try! selectedCoreService.exists(id: id, in: CoreDataManager.sharedInstance.managedObjectContext)
     super.init(collectionViewLayout: UICollectionViewFlowLayout())
     fetchDetail(id: id)
   }
@@ -81,6 +48,7 @@ class DetailController : UICollectionViewController {
     super.viewDidLoad()
     configureUI()
     configureCollectionView()
+    bindSelectButton()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -95,23 +63,30 @@ class DetailController : UICollectionViewController {
     self.tabBarController?.tabBar.isHidden = false
     self.navigationController?.navigationBar.isTranslucent = false
   }
+  // MARK: - Binding
+  func bindSelectButton() {
+    $isSelected.sink { isSelected in
+      let imageName = isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
+      self.addButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
+    }.store(in: &set)
+  }
   // MARK: - BusinessService
   func fetchDetail(id: String) {
+    MBProgressHUDHelper.showLoadingAnimation()
     Task {
       do {
         let detail = try await BusinessService.fetchDetail(id: id)
         self.detail = detail
+        MBProgressHUDHelper.hideLoadingAnimation()
       } catch {
         print("fetchDetail.failed >>> \(error.localizedDescription)")
+        MBProgressHUDHelper.hideLoadingAnimation()
       }
     }
   }
   //MARK: - Selectors
   @objc func handleSelectButtonTapped(){
-    //    restaurant.isSelected.toggle()
-    //    delegate?.didSelectRestaurant(restaurant: restaurant)
-    //    let imageName = restaurant.isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
-    //    addButton.changeImageButtonWithBounceAnimation(changeTo: imageName)
+    self.isSelected.toggle()
   }
   //MARK: - Helpers
   func configureCollectionView(){

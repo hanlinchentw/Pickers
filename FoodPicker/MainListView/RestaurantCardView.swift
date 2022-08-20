@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import Kingfisher
 
 struct RestaurantCardView: View {
   var presenter:  RestaurantPresenter
