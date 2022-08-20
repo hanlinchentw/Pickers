@@ -16,11 +16,10 @@ import Combine
 private let detailCellIdentifier = "DetailCell"
 private let headerIdentifier = "DetailHeader"
 
+@MainActor
 class DetailController : UICollectionViewController {
   //MARK: - Prorperties
   weak var delegate: DetailControllerDelegate?
-  private var detail: Detail? { didSet { collectionView.reloadData() }}
-  private var isExpanded = false
   private lazy var addButton : UIButton = {
     let button = UIButton(type: .system)
     button.layer.masksToBounds = false
@@ -33,19 +32,13 @@ class DetailController : UICollectionViewController {
   }()
 
   var set = Set<AnyCancellable>()
-  @Published var isSelected: Bool
-  @Published var isLiked: Bool
+  var viewModel: DetailViewModel
   //MARK: - Lifecycle
   init(id: String) {
-    @Inject var selectedCoreService: SelectedCoreService
-    @Inject var likedCoreService: LikedCoreService
-
-    self.isSelected = try! selectedCoreService.exists(id: id, in: CoreDataManager.sharedInstance.managedObjectContext)
-    self.isLiked = try! likedCoreService.exists(id: id, in: CoreDataManager.sharedInstance.managedObjectContext)
-
+    self.viewModel = DetailViewModel(restaurantId: id)
     super.init(collectionViewLayout: UICollectionViewFlowLayout())
-    fetchDetail(id: id)
   }
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -55,6 +48,8 @@ class DetailController : UICollectionViewController {
     configureUI()
     configureCollectionView()
     bindSelectButton()
+    bindCollectionView()
+    viewModel.refresh()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -71,28 +66,24 @@ class DetailController : UICollectionViewController {
   }
   // MARK: - Binding
   func bindSelectButton() {
-    $isSelected.sink { isSelected in
+    viewModel.$isSelected.sink { isSelected in
       let imageName = isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
       self.addButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
     }.store(in: &set)
   }
-  // MARK: - BusinessService
-  func fetchDetail(id: String) {
-    MBProgressHUDHelper.showLoadingAnimation()
-    Task {
-      do {
-        let detail = try await BusinessService.fetchDetail(id: id)
-        self.detail = detail
-        MBProgressHUDHelper.hideLoadingAnimation()
-      } catch {
-        print("fetchDetail.failed >>> \(error.localizedDescription)")
-        MBProgressHUDHelper.hideLoadingAnimation()
+
+  func bindCollectionView() {
+    viewModel.$detail
+      .combineLatest(viewModel.$isLiked, viewModel.$isSelected, viewModel.$isExpanded)
+      .sink { _, _, _, _ in
+        print("bindCollectionView.reload")
+        self.collectionView.reloadData()
       }
-    }
+      .store(in: &set)
   }
   //MARK: - Selectors
   @objc func handleSelectButtonTapped(){
-    self.isSelected.toggle()
+    self.viewModel.selectButtonTapped()
   }
   //MARK: - Helpers
   func configureCollectionView(){
@@ -102,7 +93,6 @@ class DetailController : UICollectionViewController {
     collectionView.delegate = self
     collectionView.dataSource = self
     collectionView.bounces = false
-
     collectionView.contentInset = UIEdgeInsets(top: -SafeAreaUtils.top, left: 0, bottom: 100, right: 0)
   }
 
@@ -113,62 +103,38 @@ class DetailController : UICollectionViewController {
     addButton.anchor(right:view.rightAnchor, bottom: view.bottomAnchor,
                      paddingRight: 16, paddingBottom: 30,width: 56, height: 56)
   }
-
-  func configureUIForResult(){
-    self.addButton.isHidden = true
-  }
-
-  func openMapForPlace(name: String, coordinate: CLLocationCoordinate2D) {
-    let regionDistance: CLLocationDistance = 3000
-    let regionSpan = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
-    let options = [
-      MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
-      MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
-    ]
-    let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: nil)
-    let mapItem = MKMapItem(placemark: placemark)
-    mapItem.name = name
-    mapItem.openInMaps(launchOptions: options)
-  }
 }
 extension DetailController {
   override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return DetailConfig.allCases.count
   }
 
+  @MainActor
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellIdentifier, for: indexPath)
-    guard let detail = detail, let cell = cell as? DetailCell else {
-      return .init()
-    }
-    let config = DetailConfig(rawValue: indexPath.row)
-    let viewModel = DetailCellViewModel(detail: detail, config: config, isExpanded: isExpanded)
-    cell.config = config
-    cell.viewModel = viewModel
-    cell.delegate = self
-    cell.isExpanded = self.isExpanded
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellIdentifier, for: indexPath) as! DetailCell
+    guard let detail = viewModel.detail else { return cell }
+    let config = DetailConfig(rawValue: indexPath.row)!
+    var presenter: DetailRowPresenter = DetailRowPresenterMapper.mapPresenterFromDetailConfig(config, detail: detail, isExpanded: viewModel.isExpanded)
+    presenter.delegate = self
+    cell.presenter = presenter
+    cell.isExpanded = self.viewModel.isExpanded
     return cell
   }
 
   override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
     let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: headerIdentifier, for: indexPath) as! DetailHeader
     header.delegate = self
-    let viewModel = DetailHeaderViewModel( isLiked: self.isLiked, detail: detail)
-    header.viewModel = viewModel
+    let viewModel = DetailHeaderPresenter( isLiked: self.viewModel.isLiked, detail: viewModel.detail)
+    header.presenter = viewModel
     return header
   }
 }
 extension DetailController : UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    if isExpanded, indexPath.row == 1{
+    if self.viewModel.isExpanded, indexPath.row == 1 {
       return  CGSize(width: collectionView.frame.width, height: 262)
     }
-    guard let detail = detail else {
-      return CGSize(width: 0, height: 0)
-    }
-    let config = DetailConfig(rawValue: indexPath.row)
-    let viewModel = DetailCellViewModel(detail: detail, config: config, isExpanded: isExpanded)
-    return  CGSize(width: collectionView.frame.width, height: viewModel.heightForEachCell)
+    return  CGSize(width: collectionView.frame.width, height: 72)
 
   }
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -185,8 +151,7 @@ extension DetailController : DetailHeaderDelegate {
     delegate?.willPopViewController(self)
   }
   func handleLikeRestaurant() {
-    self.isLiked.toggle()
-    self.collectionView.reloadData()
+    self.viewModel.likedButtonTapped()
   }
   func handleShareRestaurant() {
     let imageView = UIImageView()
@@ -199,13 +164,16 @@ extension DetailController : DetailHeaderDelegate {
 }
 //MARK: - DetailCellDelegate
 extension DetailController: DetailCellDelegate {
-  func didTapMapOption(name: String, coordinate: CLLocationCoordinate2D) {
-    MKMapView.openMapForPlace(name: name, coordinate: coordinate)
-  }
-  func shouldCellExpand(_ isExpanded: Bool, config: DetailConfig) {
-    if config == .businessHour {
-      self.isExpanded = isExpanded
-      self.collectionView.reloadData()
+  func didTapActionButton(_ config: DetailConfig) {
+    guard let detail = viewModel.detail else { return }
+    switch config {
+    case .main, .phone: break
+    case .businessHour:
+      viewModel.isExpanded.toggle()
+      break
+    case .address:
+      MKMapView.openMapForPlace(name: detail.name, coordinate: detail.coordinates)
+      break
     }
   }
 }

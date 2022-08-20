@@ -13,8 +13,7 @@ import MapKit
 class DetailCell : UICollectionViewCell {
   //MARK: - Properties
   weak var delegate : DetailCellDelegate?
-  var config : DetailConfig?
-  var viewModel : DetailCellViewModel? { didSet{ configureCellInformation()}}
+  var presenter: DetailRowPresenter? { didSet{ configureCellInformation()}}
 
   private let iconImageView : UIImageView = {
     let iv = UIImageView()
@@ -28,7 +27,7 @@ class DetailCell : UICollectionViewCell {
     return label
   }()
 
-  private let subtitleLabel : UILabel = {
+  private let contentLabel : UILabel = {
     let label = UILabel()
     label.font = UIFont.arialMT
     label.text = "No Providing"
@@ -36,36 +35,7 @@ class DetailCell : UICollectionViewCell {
     label.textColor = .black
     return label
   }()
-  private let ratingLabel = UILabel()
-  private let reviewCountLabel = UILabel()
-  private lazy var ratingAndReviewView: UIView = {
-    let view = UIView()
-    view.isHidden = true
-    let starIconImageView = UIImageView()
-    starIconImageView.image = UIImage(named: "ratingStarXs")
-    starIconImageView.contentMode = .scaleAspectFit
-    view.addSubview(starIconImageView)
-    starIconImageView.anchor(top:view.topAnchor, left:view.leftAnchor,
-                             bottom: view.bottomAnchor, width:16, height: 16)
-
-    ratingLabel.font = .arialMT
-    ratingLabel.text = "4.9"
-    ratingLabel.textColor = .customblack
-    view.addSubview(ratingLabel)
-    ratingLabel.anchor(top:view.topAnchor, left: starIconImageView.rightAnchor,
-                       right: view.rightAnchor, bottom: view.bottomAnchor,
-                       paddingLeft: 4)
-
-    reviewCountLabel.font = .arialMT
-    reviewCountLabel.text = "(500+)"
-    reviewCountLabel.textColor = .gray
-
-    view.addSubview(reviewCountLabel)
-    reviewCountLabel.anchor(top:view.topAnchor, left: starIconImageView.rightAnchor,
-                            right: view.rightAnchor, bottom: view.bottomAnchor,
-                            paddingLeft: 29)
-    return view
-  }()
+  private let rightTextLabel = UILabel()
 
   private lazy var actionButton : UIImageView = {
     let view = UIImageView()
@@ -100,38 +70,22 @@ class DetailCell : UICollectionViewCell {
   }
   //MARK: - Selectors
   @objc func handleActionButtonTapped(){
-    guard let config = config else { return }
-    guard let viewModel = viewModel else { return}
-
-    switch config {
-    case .businessHour:
-      isExpanded.toggle()
-      delegate?.shouldCellExpand(isExpanded, config: config)
-      print("DEBUG: Show business hour...")
-    case .address:
-      print("DEBUG: Show address...")
-      delegate?.didTapMapOption(name: viewModel.name, coordinate: viewModel.coordinates)
-    case .phone:
-      guard let phoneNumberString = viewModel.phoneSub else { return }
-      guard let phoneNumberURL = URL(string : phoneNumberString) else { return }
-      UIApplication.shared.open(phoneNumberURL)
-    default: break
-    }
+    presenter?.actionButtonTapped()
   }
   //MARK: - Helpers
   func configureCellInformation(){
-    guard let viewModel = viewModel else { return }
-    ratingLabel.text = "\(viewModel.rating)"
-    reviewCountLabel.text = "(\(viewModel.reviewCount))"
-    titleLabel.text = viewModel.titleText
-    subtitleLabel.attributedText = viewModel.subtitleText
-    iconImageView.image = UIImage(named: viewModel.iconImageName)
-    actionButton.image = UIImage(named: viewModel.actionButtonImageName)?.withRenderingMode(.alwaysOriginal)
+//    guard let viewModel = viewModel else { return }
+    guard let presenter = presenter else {
+      return
+    }
+    titleLabel.text = presenter.title
+    contentLabel.attributedText = presenter.content
 
-    iconImageView.isHidden = (viewModel.config == .main)
-    actionButton.isHidden = (viewModel.config == .main)
-    ratingAndReviewView.isHidden = !(viewModel.config == .main)
-    actionButton.layer.shadowOpacity = viewModel.shouldShadowTurnOff ?  0 : 0.2
+    iconImageView.isHidden = presenter.iconIsHidden
+    actionButton.isHidden = presenter.actionButtonIsHidden
+
+    iconImageView.image = UIImage(named: presenter.icon ?? "")
+    actionButton.image = UIImage(named: presenter.actionButtonImageName ?? "")
   }
 }
 //MARK: - Auto layout
@@ -149,12 +103,12 @@ extension DetailCell {
     addSubview(actionButton)
     actionButton.anchor(top:topAnchor, right: rightAnchor, paddingTop: 12, paddingRight: 16)
     
-    addSubview(subtitleLabel)
-    subtitleLabel.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, right:rightAnchor,
+    addSubview(contentLabel)
+    contentLabel.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, right:rightAnchor,
                          paddingTop: 4, paddingLeft: 16, paddingRight: 100)
 
-    addSubview(ratingAndReviewView)
-    ratingAndReviewView.anchor(right: rightAnchor, paddingRight: 12)
-    ratingAndReviewView.centerY(inView: titleLabel)
+    addSubview(rightTextLabel)
+    rightTextLabel.anchor(right: rightAnchor, paddingRight: 12)
+    rightTextLabel.centerY(inView: titleLabel)
   }
 }

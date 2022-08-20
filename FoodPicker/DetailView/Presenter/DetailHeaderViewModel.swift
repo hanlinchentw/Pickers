@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-class DetailHeaderViewModel: ObservableObject {
+class DetailHeaderPresenter: ObservableObject {
   var detail : Detail?
   @Published var isLiked: Bool
 

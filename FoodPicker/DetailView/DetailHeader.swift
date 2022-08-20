@@ -14,7 +14,7 @@ private let photoCellIdentifier = "PhotoCell"
 class DetailHeader : UICollectionReusableView {
   //MARK: - Properties
   weak var delegate : DetailHeaderDelegate?
-  var viewModel: DetailHeaderViewModel? { didSet{ configureHeaderInformation()} }
+  var presenter: DetailHeaderPresenter? { didSet{ configureHeaderInformation()} }
   private let slideShow = ImageSlideshow()
   private lazy var backbuttonContainerView : UIView = {
     let view = UIView()
@@ -73,7 +73,7 @@ class DetailHeader : UICollectionReusableView {
   }
   //MARK: - Helpers
   func configureHeaderInformation(){
-    guard let vm = self.viewModel else {return}
+    guard let vm = self.presenter else {return}
     let likeButtonImage = UIImage(named: vm.likeButtonImageName)?.withRenderingMode(.alwaysOriginal)
     self.likeButton.setImage(likeButtonImage, for: .normal)
     guard let urls =  vm.imageUrl else { return }
