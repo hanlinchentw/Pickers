@@ -18,6 +18,6 @@ protocol DetailHeaderDelegate : AnyObject {
     func handleShareRestaurant()
 }
 protocol DetailCellDelegate : AnyObject {
-    func shouldCellExpand(_ isExpanded: Bool, config: RestaurantDetail)
+    func shouldCellExpand(_ isExpanded: Bool, config: DetailConfig)
     func didTapMapOption(name: String, coordinate: CLLocationCoordinate2D)
 }

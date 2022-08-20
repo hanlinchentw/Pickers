@@ -34,16 +34,22 @@ class DetailController : UICollectionViewController {
 
   var set = Set<AnyCancellable>()
   @Published var isSelected: Bool
+  @Published var isLiked: Bool
   //MARK: - Lifecycle
   init(id: String) {
     @Inject var selectedCoreService: SelectedCoreService
+    @Inject var likedCoreService: LikedCoreService
+
     self.isSelected = try! selectedCoreService.exists(id: id, in: CoreDataManager.sharedInstance.managedObjectContext)
+    self.isLiked = try! likedCoreService.exists(id: id, in: CoreDataManager.sharedInstance.managedObjectContext)
+
     super.init(collectionViewLayout: UICollectionViewFlowLayout())
     fetchDetail(id: id)
   }
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     configureUI()
@@ -99,6 +105,7 @@ class DetailController : UICollectionViewController {
 
     collectionView.contentInset = UIEdgeInsets(top: -SafeAreaUtils.top, left: 0, bottom: 100, right: 0)
   }
+
   func configureUI(){
     tabBarController?.tabBar.isHidden = true
     tabBarController?.tabBar.isTranslucent = true
@@ -106,11 +113,13 @@ class DetailController : UICollectionViewController {
     addButton.anchor(right:view.rightAnchor, bottom: view.bottomAnchor,
                      paddingRight: 16, paddingBottom: 30,width: 56, height: 56)
   }
+
   func configureUIForResult(){
     self.addButton.isHidden = true
   }
+
   func openMapForPlace(name: String, coordinate: CLLocationCoordinate2D) {
-    let regionDistance:CLLocationDistance = 3000
+    let regionDistance: CLLocationDistance = 3000
     let regionSpan = MKCoordinateRegion(center: coordinate, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
     let options = [
       MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
@@ -124,16 +133,15 @@ class DetailController : UICollectionViewController {
 }
 extension DetailController {
   override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return RestaurantDetail.allCases.count
+    return DetailConfig.allCases.count
   }
 
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellIdentifier, for: indexPath)
-    guard let detail = detail,
-          let cell = cell as? DetailCell else {
+    guard let detail = detail, let cell = cell as? DetailCell else {
       return .init()
     }
-    let config = RestaurantDetail(rawValue: indexPath.row)
+    let config = DetailConfig(rawValue: indexPath.row)
     let viewModel = DetailCellViewModel(detail: detail, config: config, isExpanded: isExpanded)
     cell.config = config
     cell.viewModel = viewModel
@@ -145,7 +153,7 @@ extension DetailController {
   override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
     let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: headerIdentifier, for: indexPath) as! DetailHeader
     header.delegate = self
-    let viewModel = DetailHeaderViewModel(detail: detail)
+    let viewModel = DetailHeaderViewModel( isLiked: self.isLiked, detail: detail)
     header.viewModel = viewModel
     return header
   }
@@ -158,7 +166,7 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
     guard let detail = detail else {
       return CGSize(width: 0, height: 0)
     }
-    let config = RestaurantDetail(rawValue: indexPath.row)
+    let config = DetailConfig(rawValue: indexPath.row)
     let viewModel = DetailCellViewModel(detail: detail, config: config, isExpanded: isExpanded)
     return  CGSize(width: collectionView.frame.width, height: viewModel.heightForEachCell)
 
@@ -177,8 +185,7 @@ extension DetailController : DetailHeaderDelegate {
     delegate?.willPopViewController(self)
   }
   func handleLikeRestaurant() {
-    //    restaurant.isLiked.toggle()
-    //    delegate?.didLikeRestaurant(restaurant: restaurant)
+    self.isLiked.toggle()
     self.collectionView.reloadData()
   }
   func handleShareRestaurant() {
@@ -193,10 +200,9 @@ extension DetailController : DetailHeaderDelegate {
 //MARK: - DetailCellDelegate
 extension DetailController: DetailCellDelegate {
   func didTapMapOption(name: String, coordinate: CLLocationCoordinate2D) {
-    openMapForPlace(name: name, coordinate: coordinate)
+    MKMapView.openMapForPlace(name: name, coordinate: coordinate)
   }
-  func shouldCellExpand(_ isExpanded: Bool, config: RestaurantDetail) {
-    print("DEBUG: Expand...\(isExpanded)")
+  func shouldCellExpand(_ isExpanded: Bool, config: DetailConfig) {
     if config == .businessHour {
       self.isExpanded = isExpanded
       self.collectionView.reloadData()

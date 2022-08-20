@@ -7,19 +7,24 @@
 //
 
 import UIKit
+import CoreLocation
+
+enum DetailConfig: Int, CaseIterable {
+  case main = 0
+  case businessHour
+  case address
+  case phone
+}
 
 struct DetailCellViewModel {
-  var config : RestaurantDetail?
+  var config : DetailConfig?
   var detail : Detail
   let isExpanded : Bool
 
-  init(detail: Detail, config: RestaurantDetail?, isExpanded: Bool) {
+  init(detail: Detail, config: DetailConfig?, isExpanded: Bool) {
     self.detail = detail
     self.isExpanded = isExpanded
-    if let config = config {
-      self.config = config
-    }
-
+    self.config = config
   }
   // MARK: - Common
   var titleText : String {
@@ -76,12 +81,34 @@ struct DetailCellViewModel {
     default: return true
     }
   }
+
+  var coordinates: CLLocationCoordinate2D {
+    return detail.coordinates
+  }
+
+  var name: String {
+    return detail.name
+  }
   //MARK: - Main
+  var categories: String {
+    var result = ""
+    detail.categories.forEach { category in
+      result.append("・")
+      result.append(contentsOf: category.title)
+    }
+    return result
+  }
+
+  var price: String {
+    return detail.price ?? "-"
+  }
+
   var mainSub : NSAttributedString {
-    let attributedString = NSMutableAttributedString(string: "\(detail.price) ・ \(detail.categories)",
+    let attributedString = NSMutableAttributedString(string: "\(price)\(categories)",
                                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
     return attributedString
   }
+
   var rating : Double {
     return detail.rating
   }

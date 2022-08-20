@@ -9,17 +9,11 @@
 import UIKit
 import MapKit
 
-enum RestaurantDetail : Int, CaseIterable {
-  case main = 0
-  case businessHour
-  case address
-  case phone
-}
 
 class DetailCell : UICollectionViewCell {
   //MARK: - Properties
   weak var delegate : DetailCellDelegate?
-  var config : RestaurantDetail?
+  var config : DetailConfig?
   var viewModel : DetailCellViewModel? { didSet{ configureCellInformation()}}
 
   private let iconImageView : UIImageView = {
@@ -106,22 +100,23 @@ class DetailCell : UICollectionViewCell {
   }
   //MARK: - Selectors
   @objc func handleActionButtonTapped(){
-    //        guard let config = config else { return }
-    //        switch config {
-    //        case .businessHour:
-    //            isExpanded.toggle()
-    //            delegate?.shouldCellExpand(isExpanded, config: config)
-    //            print("DEBUG: Show business hour...")
-    //        case .address:
-    //            print("DEBUG: Show address...")
-    //            guard let restaurant = viewModel?.restaurant else { return }
-    //            delegate?.didTapMapOption(name: restaurant.name, coordinate: restaurant.coordinates)
-    //        case .phone:
-    //            guard let phoneNumberString = viewModel?.phoneSub else { return }
-    //            guard let phoneNumberURL = URL(string : phoneNumberString) else { return }
-    //            UIApplication.shared.open(phoneNumberURL)
-    //        default: break
-    //        }
+    guard let config = config else { return }
+    guard let viewModel = viewModel else { return}
+
+    switch config {
+    case .businessHour:
+      isExpanded.toggle()
+      delegate?.shouldCellExpand(isExpanded, config: config)
+      print("DEBUG: Show business hour...")
+    case .address:
+      print("DEBUG: Show address...")
+      delegate?.didTapMapOption(name: viewModel.name, coordinate: viewModel.coordinates)
+    case .phone:
+      guard let phoneNumberString = viewModel.phoneSub else { return }
+      guard let phoneNumberURL = URL(string : phoneNumberString) else { return }
+      UIApplication.shared.open(phoneNumberURL)
+    default: break
+    }
   }
   //MARK: - Helpers
   func configureCellInformation(){

@@ -7,11 +7,15 @@
 //
 
 import Foundation
-struct DetailHeaderViewModel{
-  var detail : Detail?
+import Combine
 
-  init(detail: Detail?) {
+class DetailHeaderViewModel: ObservableObject {
+  var detail : Detail?
+  @Published var isLiked: Bool
+
+  init(isLiked: Bool, detail: Detail?) {
     self.detail = detail
+    self.isLiked = isLiked
   }
   //MARK: - Header
   var imageUrl : [URL]? {
@@ -26,7 +30,6 @@ struct DetailHeaderViewModel{
     return []
   }
   var likeButtonImageName: String {
-    return "btnBookmarkHeartPressed"
-//    return restaurant.isLiked ? "btnBookmarkHeartPressed" : "btnBookmarkHeartDefault"
+    return isLiked ? "btnBookmarkHeartPressed" : "btnBookmarkHeartDefault"
   }
 }
