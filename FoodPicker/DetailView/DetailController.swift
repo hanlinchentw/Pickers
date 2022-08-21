@@ -13,6 +13,10 @@ import Alamofire
 import AlamofireImage
 import Combine
 
+protocol DetailControllerDelegate: AnyObject {
+  func willPopViewController(_ controller: DetailController)
+}
+
 private let detailCellIdentifier = "DetailCell"
 private let headerIdentifier = "DetailHeader"
 
@@ -20,70 +24,46 @@ private let headerIdentifier = "DetailHeader"
 class DetailController : UICollectionViewController {
   //MARK: - Prorperties
   weak var delegate: DetailControllerDelegate?
-  private lazy var addButton : UIButton = {
-    let button = UIButton(type: .system)
-    button.layer.masksToBounds = false
-    button.layer.shadowColor = UIColor.customblack.cgColor
-    button.layer.shadowOpacity = 0.3
-    button.layer.shadowOffset = CGSize(width: 0, height: 1)
-    button.layer.shadowRadius = 3
-    button.addTarget(self, action: #selector(handleSelectButtonTapped), for: .touchUpInside)
-    return button
-  }()
-
-  var set = Set<AnyCancellable>()
   var viewModel: DetailViewModel
+  var set = Set<AnyCancellable>()
   //MARK: - Lifecycle
   init(id: String) {
     self.viewModel = DetailViewModel(restaurantId: id)
     super.init(collectionViewLayout: UICollectionViewFlowLayout())
   }
-
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    configureUI()
     configureCollectionView()
-    bindSelectButton()
+    configureAddButton()
     bindCollectionView()
     viewModel.refresh()
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     self.tabBarController?.tabBar.isHidden = true
     self.navigationController?.navigationBar.isTranslucent = true
   }
-
+  
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     self.tabBarController?.tabBar.isHidden = false
     self.navigationController?.navigationBar.isTranslucent = false
   }
   // MARK: - Binding
-  func bindSelectButton() {
-    viewModel.$isSelected.sink { isSelected in
-      let imageName = isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
-      self.addButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
-    }.store(in: &set)
-  }
-
   func bindCollectionView() {
     viewModel.$detail
       .combineLatest(viewModel.$isLiked, viewModel.$isSelected, viewModel.$isExpanded)
-      .sink { _, _, _, _ in
-        print("bindCollectionView.reload")
-        self.collectionView.reloadData()
+      .sink { [weak self] _, _, _, _ in
+        self?.collectionView.reloadData()
       }
       .store(in: &set)
-  }
-  //MARK: - Selectors
-  @objc func handleSelectButtonTapped(){
-    self.viewModel.selectButtonTapped()
   }
   //MARK: - Helpers
   func configureCollectionView(){
@@ -95,21 +75,26 @@ class DetailController : UICollectionViewController {
     collectionView.bounces = false
     collectionView.contentInset = UIEdgeInsets(top: -SafeAreaUtils.top, left: 0, bottom: 100, right: 0)
   }
-
-  func configureUI(){
-    tabBarController?.tabBar.isHidden = true
-    tabBarController?.tabBar.isTranslucent = true
+  
+  func configureAddButton(){
+    lazy var addButton = DetailAddButton { self.viewModel.selectButtonTapped() }
     view.addSubview(addButton)
     addButton.anchor(right:view.rightAnchor, bottom: view.bottomAnchor,
                      paddingRight: 16, paddingBottom: 30,width: 56, height: 56)
+
+    viewModel.$isSelected.sink { isSelected in
+      let imageName = isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
+      addButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
+    }.store(in: &set)
   }
 }
+
+@MainActor
 extension DetailController {
   override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return DetailConfig.allCases.count
   }
 
-  @MainActor
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellIdentifier, for: indexPath) as! DetailCell
     guard let detail = viewModel.detail else { return cell }
@@ -120,12 +105,12 @@ extension DetailController {
     cell.isExpanded = self.viewModel.isExpanded
     return cell
   }
-
+  
   override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
     let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: headerIdentifier, for: indexPath) as! DetailHeader
-    header.delegate = self
-    let viewModel = DetailHeaderPresenter( isLiked: self.viewModel.isLiked, detail: viewModel.detail)
-    header.presenter = viewModel
+    let presenter = DetailHeaderPresenter(isLiked: self.viewModel.isLiked, detail: viewModel.detail)
+    presenter.delegate = self
+    header.presenter = presenter
     return header
   }
 }
@@ -135,11 +120,10 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
       return  CGSize(width: collectionView.frame.width, height: 262)
     }
     return  CGSize(width: collectionView.frame.width, height: 72)
-
+    
   }
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-    let height = 300 * view.heightMultiplier * view.iPhoneSEMutiplier
-    return CGSize(width: collectionView.frame.width, height: height)
+    return CGSize(width: collectionView.frame.width, height: 300)
   }
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     return 4
@@ -150,16 +134,13 @@ extension DetailController : DetailHeaderDelegate {
   @objc func handleDismissDetailPage() {
     delegate?.willPopViewController(self)
   }
-  func handleLikeRestaurant() {
-    self.viewModel.likedButtonTapped()
-  }
-  func handleShareRestaurant() {
-    let imageView = UIImageView()
-    //    imageView.af.setImage(withURL: restaurant.imageUrl)
-    guard let image = imageView.image else { return }
 
-    //    let activityViewController = UIActivityViewController(activityItems: [image, restaurant.name], applicationActivities: nil)
-    //    self.present(activityViewController, animated: true, completion: nil)
+  func handleLikeRestaurant() {
+    self.viewModel.likeButtonTapped()
+  }
+
+  func handleShareRestaurant() {
+    self.viewModel.shareButtonTapped()
   }
 }
 //MARK: - DetailCellDelegate

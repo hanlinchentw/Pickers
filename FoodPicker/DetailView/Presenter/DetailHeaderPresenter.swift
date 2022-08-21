@@ -9,7 +9,14 @@
 import Foundation
 import Combine
 
-class DetailHeaderPresenter: ObservableObject {
+protocol DetailHeaderDelegate : AnyObject {
+    func handleDismissDetailPage()
+    func handleLikeRestaurant()
+    func handleShareRestaurant()
+}
+
+class DetailHeaderPresenter {
+  var delegate: DetailHeaderDelegate?
   var detail : Detail?
   @Published var isLiked: Bool
 
@@ -17,7 +24,7 @@ class DetailHeaderPresenter: ObservableObject {
     self.detail = detail
     self.isLiked = isLiked
   }
-  //MARK: - Header
+
   var imageUrl : [URL]? {
     if let photos = detail?.photos, !photos.isEmpty {
       return photos
@@ -31,5 +38,16 @@ class DetailHeaderPresenter: ObservableObject {
   }
   var likeButtonImageName: String {
     return isLiked ? "btnBookmarkHeartPressed" : "btnBookmarkHeartDefault"
+  }
+
+  func dismissDetailPage(){
+    delegate?.handleDismissDetailPage()
+  }
+  func likeButtonTapped(){
+    delegate?.handleLikeRestaurant()
+  }
+
+  func shareButtonTapped(){
+    delegate?.handleShareRestaurant()
   }
 }

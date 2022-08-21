@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import Combine
 
 enum URLRequestError: Error {
   case noInternet

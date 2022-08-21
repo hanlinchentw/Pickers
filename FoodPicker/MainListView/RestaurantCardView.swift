@@ -20,7 +20,7 @@ struct RestaurantCardView: View {
   }
 
   var body: some View {
-    VStack {
+    VStack(alignment: .leading, spacing: 8) {
       AsyncImage(url: presenter.imageUrl, content: { phase in
         switch phase {
         case .empty:
@@ -34,7 +34,7 @@ struct RestaurantCardView: View {
         }
       })
       .aspectRatio(contentMode: .fill)
-      .frame(width: 264, height: 128)
+      .frame(height: 128)
       .overlay(alignment: .topTrailing) {
         ActionButton(imageName: presenter.selectButtonImage) {
           selectButtonOnPress()
@@ -72,16 +72,14 @@ struct RestaurantCardView: View {
           Spacer()
         })
       }
-      .padding(.top, 4)
       .padding(.leading, 16)
       .padding(.trailing, 8)
-      Spacer()
     }
-    .frame(width: 280, height: 242)
+    .frame(width: 280, height: 250)
     .roundedViewWithShadow(cornerRadius: 16,
                            backgroundColor: Color.white,
-                           shadowColor: Color.gray.opacity(0.5),
-                           shadowRadius: 7)
+                           shadowColor: Color.gray.opacity(0.3),
+                           shadowRadius: 3)
   }
 }
 

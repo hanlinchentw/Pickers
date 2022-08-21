@@ -9,6 +9,13 @@
 import SwiftUI
 import CoreData
 
+enum LoadingState {
+  case idle
+  case loading
+  case loaded
+  case empty
+  case error
+}
 typealias ItemOnPress = (_ id: String) -> Void
 struct MainListView: View {
   @Environment(\.managedObjectContext) private var viewContext

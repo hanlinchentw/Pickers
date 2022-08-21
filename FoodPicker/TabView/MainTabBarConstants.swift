@@ -18,7 +18,7 @@ final class MainTabBarConstants {
     var viewController: UIViewController {
       switch self {
       case .main: return UIHostingController(rootView: MainListView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
-      case .favorite: return UINavigationController(rootViewController: FavoriteController.init())
+      case .favorite: return UIHostingController(rootView: FavoriteView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
       case .spin: return UINavigationController(rootViewController:ActionViewController.init())
       }
     }
@@ -47,7 +47,7 @@ final class MainTabBarConstants {
   static let searchSelectedTabImage = "searchSelectedS"
 
   static let favoriteUnselectedTabImage = "favoriteUnselectedS"
-  static let favoriteSelectedTabImage = "icnHeartXs"
+  static let favoriteSelectedTabImage = "icnTabHeartSelected"
 
   static let SpinTabImage = "spinActive"
 

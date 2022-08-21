@@ -13,9 +13,10 @@ private let photoCellIdentifier = "PhotoCell"
 
 class DetailHeader : UICollectionReusableView {
   //MARK: - Properties
-  weak var delegate : DetailHeaderDelegate?
   var presenter: DetailHeaderPresenter? { didSet{ configureHeaderInformation()} }
+
   private let slideShow = ImageSlideshow()
+
   private lazy var backbuttonContainerView : UIView = {
     let view = UIView()
     view.backgroundColor = .white
@@ -31,9 +32,9 @@ class DetailHeader : UICollectionReusableView {
     view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
     view.layer.cornerRadius = 16
     view.layer.masksToBounds = true
-
     return view
   }()
+
   private lazy var shareButton : UIButton = {
     let button = UIButton(type: .system)
     button.backgroundColor = .white
@@ -44,6 +45,7 @@ class DetailHeader : UICollectionReusableView {
 
     return button
   }()
+
   private lazy var likeButton : UIButton = {
     let button = UIButton(type: .system)
     button.backgroundColor = .white
@@ -73,11 +75,11 @@ class DetailHeader : UICollectionReusableView {
   }
   //MARK: - Helpers
   func configureHeaderInformation(){
-    guard let vm = self.presenter else {return}
-    let likeButtonImage = UIImage(named: vm.likeButtonImageName)?.withRenderingMode(.alwaysOriginal)
+    guard let presenter = self.presenter else {return}
+    let likeButtonImage = UIImage(named: presenter.likeButtonImageName)?.withRenderingMode(.alwaysOriginal)
     self.likeButton.setImage(likeButtonImage, for: .normal)
-    guard let urls =  vm.imageUrl else { return }
 
+    guard let urls =  presenter.imageUrl else { return }
     slideShow.contentScaleMode = .scaleAspectFill
     let pageIndicator = UIPageControl()
     pageIndicator.pageIndicatorTintColor = UIColor.customblack
@@ -86,14 +88,14 @@ class DetailHeader : UICollectionReusableView {
   }
   //MARK: - Selectors
   @objc func handleDismissDetailPage(){
-    delegate?.handleDismissDetailPage()
+    presenter?.dismissDetailPage()
   }
   @objc func handleLikeButtonTapped(){
-    delegate?.handleLikeRestaurant()
+    presenter?.likeButtonTapped()
   }
 
   @objc func handleShareButtonTapped(){
-    delegate?.handleShareRestaurant()
+    presenter?.shareButtonTapped()
   }
 }
 

@@ -8,6 +8,10 @@
 
 import Foundation
 
+protocol DetailCellDelegate : AnyObject {
+  func didTapActionButton(_ config: DetailConfig)
+}
+
 enum DetailConfig: Int, CaseIterable {
   case main = 0
   case businessHour

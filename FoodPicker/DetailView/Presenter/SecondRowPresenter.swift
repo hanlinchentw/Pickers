@@ -10,6 +10,7 @@ import UIKit
 import Combine
 
 class SecondRowPresenter: DetailRowPresenter {
+  var delegate: DetailCellDelegate?
   let detail: Detail
   let config: DetailConfig
   var isExpanded: Bool

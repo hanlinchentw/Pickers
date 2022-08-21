@@ -11,16 +11,13 @@ import CoreData
 
 class LikedAddBehavior: AddBehavior {
   override func add(data: [String: Any], in context: NSManagedObjectContext) throws {
-    guard let id = data["id"] as? String else {
-      throw NSError(domain: "\(#function) id not found.", code: 0)
-    }
-    let restaurant: Array<Restaurant> = try Restaurant.find(for: ["id": id], in: context)
-    let likedRestaurant = LikedRestaurant.init(context: context)
-    guard let restaurant = restaurant.first else {
-      throw NSError(domain: #function, code: NSCoreDataError)
+    guard let restaurant = data["restaurant"] as? Restaurant else {
+      throw NSError(domain: "\(#function), business not found", code: NSCoreDataError)
     }
     restaurant.isLiked = true
-    likedRestaurant.id = id
+
+    let likedRestaurant = LikedRestaurant.init(context: context)
+    likedRestaurant.id = restaurant.id
     likedRestaurant.restaurant = restaurant
     try context.save()
   }

@@ -48,3 +48,19 @@ extension Restaurant : Identifiable {
     self.longitude = business.coordinates.longitude
   }
 }
+
+extension Restaurant {
+  convenience init(detail: Detail, context: NSManagedObjectContext = CoreDataManager.sharedInstance.managedObjectContext) {
+    let entity = NSEntityDescription.entity(forEntityName: "Restaurant", in: context)!
+    self.init(entity: entity, insertInto: context)
+    self.id = detail.id
+    self.name = detail.name
+    self.imageUrl = detail.imageUrl ?? URL(string: defaultImageURL)
+    self.reviewCount = Int32(detail.reviewCount)
+    self.rating = detail.rating
+    self.price = detail.price ?? "-"
+    self.businessCategory = detail.categories[safe: 0]?.title ?? "Cusine"
+    self.latitude = detail.coordinates.latitude
+    self.longitude = detail.coordinates.longitude
+  }
+}

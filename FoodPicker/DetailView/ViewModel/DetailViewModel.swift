@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+import Alamofire
 
 class DetailViewModel {
   @Inject var selectedCoreService: SelectedCoreService
@@ -31,21 +33,36 @@ extension DetailViewModel {
   }
 
   func selectButtonTapped() {
+    guard let detail = detail else {
+      return
+    }
+    let restaurant: Restaurant = .init(detail: detail)
     if isSelected {
-      try! selectedCoreService.deleteRestaurant(id: self.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+      try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
     } else {
-      try! selectedCoreService.addRestaurant(data: ["id": id], in: CoreDataManager.sharedInstance.managedObjectContext)
+      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
     }
     isSelected.toggle()
   }
 
-  func likedButtonTapped() {
+  func likeButtonTapped() {
+    guard let detail = detail else {
+      return
+    }
+    let restaurant: Restaurant = .init(detail: detail)
     if isLiked {
-      try! likedCoreService.deleteRestaurant(id: self.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+      try! likedCoreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
     } else {
-      try! likedCoreService.addRestaurant(data: ["id": id], in: CoreDataManager.sharedInstance.managedObjectContext)
+      try! likedCoreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
     }
     isLiked.toggle()
+  }
+
+  func shareButtonTapped() {
+    let activityViewController = UIActivityViewController(activityItems: [detail?.name, detail?.url], applicationActivities: nil)
+    OperationQueue.main.addOperation {
+      PresentHelper.topViewController?.present(activityViewController, animated: true, completion: nil)
+    }
   }
 
   func expandButtonTapped() {

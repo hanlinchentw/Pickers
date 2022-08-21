@@ -20,6 +20,7 @@ struct Detail : Decodable {
     let rating : Double
     let isClosed : Bool?
     let imageUrl : URL?
+    let url : URL?
     let reviewCount : Int
     let price : String?
     let coordinates : CLLocationCoordinate2D

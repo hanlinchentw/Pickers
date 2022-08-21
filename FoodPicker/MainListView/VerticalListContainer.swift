@@ -14,29 +14,38 @@ struct VerticalListContainer: View {
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
   
-  @Inject var locationService: LocationService
   @Inject var selectedCoreService: SelectedCoreService
-  
+  @Inject var locationService: LocationService
+
+  var showContent: Bool {
+    dataStore.loadState != LoadingState.empty && dataStore.loadState != LoadingState.error
+  }
+
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
-      if (!dataStore.data.isEmpty) {
+      if showContent {
         Text(RestaurantSorting.all.description)
           .en24ArialBold()
           .padding(.leading, 16)
         VStack(spacing: 16) {
-          ForEach($dataStore.data.indices, id: \.self) { index in
-            let restaurant = dataStore.data[index]
-            let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
-            let id = restaurant.id
-            let presenter = RestaurantPresenter(restaurant: restaurant, isSelected: isSelected)
-            NavigationLink {
-              DetailContentView(id: restaurant.id).navigationBarHidden(true).ignoresSafeArea()
-            } label: {
-              RestaurantListItemView(presenter: presenter) {
-                selectButtonOnPress(isSelected: isSelected, itemId: id)
+          ForEach(0 ..< dataStore.dataCount, id: \.self) { index in
+            if dataStore.loadState != LoadingState.loaded {
+              IdleRestaurantListItemView()
+                .padding(.vertical, 8)
+                .shimmer()
+            } else {
+              let restaurant = dataStore.data[index]
+              let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
+              let presenter = RestaurantPresenter(restaurant: restaurant, isSelected: isSelected)
+              NavigationLink {
+                DetailContentView(id: restaurant.id).navigationBarHidden(true).ignoresSafeArea()
+              } label: {
+                RestaurantListItemView(presenter: presenter) {
+                  selectButtonOnPress(isSelected: isSelected, restaurant: restaurant)
+                }
               }
+              .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
           }
         }
         .padding(.top, 16)
@@ -44,25 +53,34 @@ struct VerticalListContainer: View {
         .cornerRadius(24, corners: [.topLeft, .topRight])
         Spacer()
       }
-    }.task {
+    }
+    .task {
+      if (dataStore.loadState == LoadingState.loaded) { return }
       await dataStore.fetchData(lat: locationService.latitude, lon: locationService.longitude)
     }
   }
   
-  func selectButtonOnPress(isSelected: Bool, itemId: String) {
+  func selectButtonOnPress(isSelected: Bool, restaurant: Restaurant) {
     if (isSelected) {
-      try! selectedCoreService.deleteRestaurant(id: itemId, in: viewContext)
+      try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: viewContext)
     } else {
-      try! selectedCoreService.addRestaurant(data: ["id": itemId], in: viewContext)
+      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: viewContext)
     }
   }
 }
 
 class VerticalListDataStore: ObservableObject {
   @Inject var restaurantCoreService: RestaurantCoreService
-  @Published var data: Array<Restaurant> = []
 
-  func fetchData(lat: Double?, lon: Double?) async {
+  @Published var data: Array<Restaurant> = []
+  @Published var loadState: LoadingState = .idle
+
+  var dataCount: Int {
+    return loadState != LoadingState.loaded ? 10 : data.count
+  }
+
+  @MainActor func fetchData(lat: Double?, lon: Double?) async {
+    loadState = LoadingState.loading
     do {
       guard let latitude = lat, let longitude = lon else {
         throw LoactionError.locationNotFound(message: "Coordinate found nil.")
@@ -70,8 +88,10 @@ class VerticalListDataStore: ObservableObject {
       let result = try await BusinessService.createDataTask(lat: latitude, lon: longitude, option: RestaurantSorting.all, limit: 30).value
       DispatchQueue.main.async {
         self.data = result.map { Restaurant.init(business: $0)}
+        self.loadState = result.isEmpty ? LoadingState.empty : LoadingState.loaded
       }
     } catch {
+      loadState = LoadingState.error
       print("VerticalListDataStore.fetchSectionData >>> \(error.localizedDescription)")
     }
   }
