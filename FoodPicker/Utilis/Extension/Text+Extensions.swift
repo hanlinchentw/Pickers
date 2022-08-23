@@ -24,4 +24,8 @@ extension Text {
   func en24ArialBold() -> Text {
     return self.font(Font.custom("Arial-BoldMT", fixedSize: 24))
   }
+
+  func en32ArialBold() -> Text {
+    return self.font(Font.custom("Arial-BoldMT", fixedSize: 32))
+  }
 }

@@ -36,7 +36,9 @@ struct VerticalListContainer: View {
             } else {
               let restaurant = dataStore.data[index]
               let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
-              let presenter = RestaurantPresenter(restaurant: restaurant, isSelected: isSelected)
+              let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
+              let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
+
               NavigationLink {
                 DetailContentView(id: restaurant.id).navigationBarHidden(true).ignoresSafeArea()
               } label: {

@@ -9,10 +9,18 @@
 import SwiftUI
 import CoreLocation
 
+enum ActionButtonMode {
+  case none
+  case edit
+  case select
+  case deselect
+}
+
 struct RestaurantPresenter {
   private var restaurant: Restaurant
-  var isSelected: Bool?
+  var actionButtonMode: ActionButtonMode = .none
   var isLiked: Bool?
+  var isEditing: Bool?
 
   var name: String {
     return restaurant.name
@@ -43,20 +51,20 @@ struct RestaurantPresenter {
   }
 
   var reviewCount: String {
-    return "+(\(restaurant.reviewCount))"
+    return "(\(restaurant.reviewCount)+)"
   }
-
 
   var distance : Int {
     LocationService.shared.getDistanceFromCurrentLocation(restaurant.latitude, restaurant.longitude)
   }
 
-  var selectButtonImage: String {
-    guard let isSelected = isSelected else {
-      return "icnOvalSelected"
+  var actionButtonImage: String {
+    switch actionButtonMode {
+    case .none: return ""
+    case .select: return "icnOvalSelected"
+    case .deselect: return "addL"
+    case .edit: return "icnDeleteNoShadow"
     }
-
-    return isSelected ? "icnOvalSelected" : "addL"
   }
 
   var likeButtonImage: String {
@@ -67,9 +75,9 @@ struct RestaurantPresenter {
     return isLiked ? "btnBookmarkHeartPressed" : "icnHeart"
   }
 
-  init(restaurant : Restaurant, isSelected: Bool? = nil, isLiked: Bool? = nil) {
+  init(restaurant : Restaurant, actionButtonMode: ActionButtonMode, isLiked: Bool? = nil) {
     self.restaurant = restaurant
-    self.isSelected = isSelected
+    self.actionButtonMode = actionButtonMode
     self.isLiked = isLiked
   }
 }

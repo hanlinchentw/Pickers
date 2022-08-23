@@ -23,5 +23,10 @@ extension LikedRestaurant: RestaurantManagedObject {
 }
 
 extension LikedRestaurant : Identifiable {
-
+  convenience init(restaurant: Restaurant, in context: NSManagedObjectContext = CoreDataManager.sharedInstance.managedObjectContext) {
+    let entity = NSEntityDescription.entity(forEntityName: "Restaurant", in: context)!
+    self.init(entity: entity, insertInto: context)
+    self.id = restaurant.id
+    self.restaurant = restaurant
+  }
 }

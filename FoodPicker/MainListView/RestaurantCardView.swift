@@ -36,9 +36,10 @@ struct RestaurantCardView: View {
       .aspectRatio(contentMode: .fill)
       .frame(height: 128)
       .overlay(alignment: .topTrailing) {
-        ActionButton(imageName: presenter.selectButtonImage) {
+        ActionButton(imageName: presenter.actionButtonImage) {
           selectButtonOnPress()
         }
+        .animation(.easeInOut(duration: 0.25), value: presenter.actionButtonImage)
       }
       .cornerRadius(16)
       .padding(.top, 8)
@@ -58,6 +59,7 @@ struct RestaurantCardView: View {
             ActionButton(imageName: presenter.likeButtonImage) {
               likeButtonOnPress()
             }
+            .animation(.easeInOut(duration: 0.25), value: presenter.likeButtonImage)
             .clipped()
             .aspectRatio(contentMode: .fit)
             .frame(width: 48, height: 48)
@@ -67,7 +69,7 @@ struct RestaurantCardView: View {
         HStack(spacing: 4, content: {
           Text("★").foregroundColor(Color.yellow)
           Text("\(presenter.ratingWithOneDecimal)").en14Arial()
-          Text("\("(\(presenter.reviewCount))")").en14Arial()
+          Text("\("\(presenter.reviewCount)")").en14Arial()
             .foregroundColor(Color.gray.opacity(0.7))
           Spacer()
         })

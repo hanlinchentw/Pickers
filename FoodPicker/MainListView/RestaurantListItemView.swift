@@ -11,11 +11,11 @@ import SwiftUI
 struct RestaurantListItemView: View {
   var presenter: RestaurantPresenter
 
-  var selectButtonOnPress: () -> Void
+  var actionButtonOnPress: () -> Void
 
-  init(presenter: RestaurantPresenter, selectedButtonOnPress: @escaping () -> Void) {
+  init(presenter: RestaurantPresenter, actionButtonOnPress: @escaping () -> Void) {
     self.presenter = presenter
-    self.selectButtonOnPress = selectedButtonOnPress
+    self.actionButtonOnPress = actionButtonOnPress
   }
   var body: some View {
     HStack {
@@ -45,18 +45,20 @@ struct RestaurantListItemView: View {
         HStack(spacing: 4, content: {
           Text("★").foregroundColor(Color.yellow)
           Text("\(presenter.ratingWithOneDecimal)").en14Arial()
-          Text("\("(\(presenter.reviewCount))")").en14Arial()
+          Text("\(presenter.reviewCount)").en14Arial()
             .foregroundColor(Color.gray.opacity(0.7))
           Spacer()
         })
       }
       .padding(.leading, 6)
       Button {
-        selectButtonOnPress()
+        actionButtonOnPress()
       } label: {
-        Image(presenter.selectButtonImage)
+        Image(presenter.actionButtonImage)
           .shadow(color: Color.gray.opacity(0.25), radius: 3, x: 0, y: 0)
+          .animation(.easeInOut(duration: 0.25), value: presenter.actionButtonImage)
       }
+      .frame(width: 40, height: 40)
     }
   }
 }

@@ -41,7 +41,8 @@ struct HorizontalSectionContainer: View {
                 let restaurant = dataStore.data[index]
                 let isLiked = likedRestaurants.contains(where: { $0.id == restaurant.id })
                 let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
-                let presenter = RestaurantPresenter(restaurant: restaurant, isSelected: isSelected, isLiked: isLiked)
+                let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
+                let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode, isLiked: isLiked)
 
                 NavigationLink {
                   DetailContentView(id: restaurant.id).navigationBarHidden(true).ignoresSafeArea()

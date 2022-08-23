@@ -37,4 +37,14 @@ extension View {
   func `shimmer`() -> some View {
     modifier(ShimmerModifier())
   }
+  
+  func `showAlert`<Content: View>(when shouldShow: Bool, alert: () -> Alert<Content>) -> some View {
+    ZStack {
+      self
+      if (shouldShow) {
+        alert().opacity(shouldShow ? 1 : 0)
+      }
+    }
+    .animation(.easeInOut(duration: 0.3), value: shouldShow)
+  }
 }

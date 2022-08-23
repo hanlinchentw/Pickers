@@ -13,6 +13,7 @@ final class SafeAreaUtils {
   static var safeAreaInset: UIEdgeInsets? {
     return UIApplication.shared.keyWindow?.safeAreaInsets
   }
+
   static var top: CGFloat {
     guard let safeAreaInset = safeAreaInset else {
       return 0

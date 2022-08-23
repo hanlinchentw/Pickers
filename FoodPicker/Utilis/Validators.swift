@@ -13,7 +13,6 @@ struct Validator<T> {
 }
 
 struct Validators {
-    
     static var nonEmpty: Validator<String> {
         return Validator<String> { text in
             return !text.isEmpty
