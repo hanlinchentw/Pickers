@@ -26,8 +26,8 @@ struct RestaurantPresenter {
     return restaurant.name
   }
 
-  var imageUrl: URL {
-    return restaurant.imageUrl ?? URL(string: defaultImageURL)!
+  var imageUrl: String {
+    return restaurant.imageUrl ?? defaultImageURL
   }
 
   var thirdRowString: String {

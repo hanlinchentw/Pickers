@@ -31,7 +31,7 @@ class DetailHeaderPresenter {
     }
 
     if let imageUrl = detail?.imageUrl {
-      return [imageUrl]
+      return [URL(string: imageUrl)!]
     }
 
     return []

@@ -35,6 +35,10 @@
 		B634A73728A9214D00796D63 /* LikedDeleteBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A73628A9214D00796D63 /* LikedDeleteBehavior.swift */; };
 		B634A73928A9217800796D63 /* RestaurantAddBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A73828A9217800796D63 /* RestaurantAddBehavior.swift */; };
 		B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63548F528B51EB500136A15 /* URLCache+Extensions.swift */; };
+		B63548F928B5292700136A15 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63548F828B5292700136A15 /* ImageCache.swift */; };
+		B63548FB28B52A1E00136A15 /* CachedAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63548FA28B52A1E00136A15 /* CachedAsyncImage.swift */; };
+		B63548FD28B52A6500136A15 /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63548FC28B52A6500136A15 /* ImageFetcher.swift */; };
+		B63548FF28B52CEF00136A15 /* CachedAsyncImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63548FE28B52CEF00136A15 /* CachedAsyncImageViewModel.swift */; };
 		B63C19AB251C656A0012CC4A /* RestaurantsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C19AA251C656A0012CC4A /* RestaurantsList.swift */; };
 		B647A4CD24B1F7BA0098B7A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */; };
 		B647A4CF24B1F7BA0098B7A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */; };
@@ -153,6 +157,10 @@
 		B634A73628A9214D00796D63 /* LikedDeleteBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedDeleteBehavior.swift; sourceTree = "<group>"; };
 		B634A73828A9217800796D63 /* RestaurantAddBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantAddBehavior.swift; sourceTree = "<group>"; };
 		B63548F528B51EB500136A15 /* URLCache+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+Extensions.swift"; sourceTree = "<group>"; };
+		B63548F828B5292700136A15 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		B63548FA28B52A1E00136A15 /* CachedAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAsyncImage.swift; sourceTree = "<group>"; };
+		B63548FC28B52A6500136A15 /* ImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFetcher.swift; sourceTree = "<group>"; };
+		B63548FE28B52CEF00136A15 /* CachedAsyncImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAsyncImageViewModel.swift; sourceTree = "<group>"; };
 		B63C19AA251C656A0012CC4A /* RestaurantsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantsList.swift; sourceTree = "<group>"; };
 		B647A4C924B1F7BA0098B7A2 /* FoodPicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodPicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -361,6 +369,17 @@
 			path = Delete;
 			sourceTree = "<group>";
 		};
+		B63548F728B5291700136A15 /* CachedImage */ = {
+			isa = PBXGroup;
+			children = (
+				B63548F828B5292700136A15 /* ImageCache.swift */,
+				B63548FC28B52A6500136A15 /* ImageFetcher.swift */,
+				B63548FA28B52A1E00136A15 /* CachedAsyncImage.swift */,
+				B63548FE28B52CEF00136A15 /* CachedAsyncImageViewModel.swift */,
+			);
+			path = CachedImage;
+			sourceTree = "<group>";
+		};
 		B647A4C024B1F7BA0098B7A2 = {
 			isa = PBXGroup;
 			children = (
@@ -420,6 +439,7 @@
 		B647A4E324B203620098B7A2 /* CommonView */ = {
 			isa = PBXGroup;
 			children = (
+				B63548F728B5291700136A15 /* CachedImage */,
 				B63C19AA251C656A0012CC4A /* RestaurantsList.swift */,
 				B685484524B4511A009BC800 /* RestaurantListCell.swift */,
 				B6C7D5B1255992E0005D2AA0 /* LoadingCell.swift */,
@@ -770,6 +790,7 @@
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B634A73928A9217800796D63 /* RestaurantAddBehavior.swift in Sources */,
 				B6AA6C3828A55C4700444F0A /* SelectedCoreService.swift in Sources */,
+				B63548FB28B52A1E00136A15 /* CachedAsyncImage.swift in Sources */,
 				B634A73328A920A200796D63 /* DeleteBehavior.swift in Sources */,
 				B674149F28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift in Sources */,
 				B6CB5FE428B0A2220042C34C /* FourthRowPresenter.swift in Sources */,
@@ -786,6 +807,7 @@
 				B634A72C28A8D45B00796D63 /* SelectedAddBehavior.swift in Sources */,
 				B6AE009D24DD188400423D72 /* BottomSheetViewController.swift in Sources */,
 				B6EF13AD28B21AD9009345D6 /* FavoriteListContainer.swift in Sources */,
+				B63548FD28B52A6500136A15 /* ImageFetcher.swift in Sources */,
 				B674149E28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift in Sources */,
 				B6D1306A24C4183300040F85 /* DetailController.swift in Sources */,
 				B619CBB728A1ED0900376348 /* RestaurantPresenter.swift in Sources */,
@@ -803,6 +825,7 @@
 				B634A71728A76B2E00796D63 /* HorizontalSectionContainer.swift in Sources */,
 				B60E87E628A54BFE0062A2B2 /* BaseCoreService.swift in Sources */,
 				B65A3CC328A56D9000B15966 /* MainListView.swift in Sources */,
+				B63548F928B5292700136A15 /* ImageCache.swift in Sources */,
 				B6B84D512665D52F002E418D /* UIFont+UIColor+Extension.swift in Sources */,
 				B606C07F2894E69000139907 /* SpinTabItemView.swift in Sources */,
 				B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */,
@@ -834,6 +857,7 @@
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */,
 				B6EF139F28B0AEC0009345D6 /* PresentHelper.swift in Sources */,
+				B63548FF28B52CEF00136A15 /* CachedAsyncImageViewModel.swift in Sources */,
 				B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */,
 				B6B84D58266633C4002E418D /* ErrorView.swift in Sources */,
 				B6D407C628AE9FB100E59CE3 /* DetailContentView.swift in Sources */,

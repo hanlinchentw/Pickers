@@ -19,7 +19,7 @@ extension Restaurant: RestaurantManagedObject {
 
     @NSManaged public var businessCategory: String
     @NSManaged public var id: String
-    @NSManaged public var imageUrl: URL?
+    @NSManaged public var imageUrl: String?
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
     @NSManaged public var distance: Double
@@ -39,7 +39,7 @@ extension Restaurant : Identifiable {
     self.init(entity: entity, insertInto: context)
     self.id = business.id
     self.name = business.name
-    self.imageUrl = URL(string: business.imageUrl ?? defaultImageURL)
+    self.imageUrl = business.imageUrl ?? defaultImageURL
     self.reviewCount = Int32(business.reviewCount)
     self.rating = business.rating
     self.price = business.price ?? "-"
@@ -55,7 +55,7 @@ extension Restaurant {
     self.init(entity: entity, insertInto: context)
     self.id = detail.id
     self.name = detail.name
-    self.imageUrl = detail.imageUrl ?? URL(string: defaultImageURL)
+    self.imageUrl = detail.imageUrl ?? defaultImageURL
     self.reviewCount = Int32(detail.reviewCount)
     self.rating = detail.rating
     self.price = detail.price ?? "-"

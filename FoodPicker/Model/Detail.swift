@@ -19,7 +19,7 @@ struct Detail : Decodable {
     let name: String
     let rating : Double
     let isClosed : Bool?
-    let imageUrl : URL?
+    let imageUrl : String?
     let url : URL?
     let reviewCount : Int
     let price : String?

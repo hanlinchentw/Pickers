@@ -21,7 +21,7 @@ struct RestaurantCardView: View {
 
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
-      AsyncImage(url: presenter.imageUrl, content: { phase in
+      CachedAsyncImage(url: presenter.imageUrl, content: { phase in
         switch phase {
         case .empty:
           Color.gray.opacity(0.5)

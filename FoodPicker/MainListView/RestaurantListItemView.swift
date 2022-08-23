@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct RestaurantListItemView: View {
   var presenter: RestaurantPresenter
@@ -19,7 +20,7 @@ struct RestaurantListItemView: View {
   }
   var body: some View {
     HStack {
-      AsyncImage(url: presenter.imageUrl) { phase in
+      CachedAsyncImage(url: presenter.imageUrl) { phase in
         switch phase {
         case .empty:
           Color.gray.opacity(0.5)
@@ -37,6 +38,7 @@ struct RestaurantListItemView: View {
       .cornerRadius(16)
       .padding(.top, 8)
       .padding(.horizontal, 8)
+
       VStack(alignment: .leading) {
         VStack(alignment: .leading, spacing: 6) {
           Text(presenter.name).en16ArialBold()
