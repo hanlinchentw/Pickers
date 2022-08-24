@@ -49,3 +49,24 @@ class BusinessService {
     }
   }
 }
+
+extension BusinessService {
+  enum RestaurantSorting {
+    case all
+    case popular
+
+    var description: String {
+      switch self {
+      case .all: return "Restaurant nearby"
+      case .popular: return "Popular"
+      }
+    }
+
+    var sortBy: String {
+      switch self {
+      case .all: return "distance"
+      case .popular: return "rating"
+      }
+    }
+  }
+}

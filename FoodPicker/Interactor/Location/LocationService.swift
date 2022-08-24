@@ -50,8 +50,7 @@ class LocationService: NSObject, ObservableObject {
 //MARK: - CLLocationManagerDelegate
 extension LocationService: CLLocationManagerDelegate {
   func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-    if manager.authorizationStatus == .authorizedWhenInUse {
-      LocationService.locationManager.requestAlwaysAuthorization()
+    if manager.authorizationStatus == .denied {
     }
   }
 

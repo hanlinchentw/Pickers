@@ -27,7 +27,7 @@ struct HorizontalSectionContainer: View {
     VStack(alignment: .leading, spacing: 8) {
 
       if (showContent) {
-        Text(RestaurantSorting.popular.description)
+        Text(BusinessService.RestaurantSorting.popular.description)
           .en24ArialBold()
           .padding(.leading, 16)
         ScrollView(.horizontal, showsIndicators: false) {
@@ -101,7 +101,7 @@ class HorizontalSectionDataStore: ObservableObject {
       guard let latitude = lat, let longitude = lon else {
         throw LoactionError.locationNotFound(message: "Coordinate found nil.")
       }
-      let task = BusinessService.createDataTask(lat: latitude, lon: longitude, option: RestaurantSorting.popular, limit: 10)
+      let task = BusinessService.createDataTask(lat: latitude, lon: longitude, option: BusinessService.RestaurantSorting.popular, limit: 10)
       let result = try await task.value
       DispatchQueue.main.async {
         self.data = result.map { Restaurant.init(business: $0)}

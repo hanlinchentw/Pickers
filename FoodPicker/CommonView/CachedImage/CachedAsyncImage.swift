@@ -40,7 +40,7 @@ struct CachedAsyncImage<Content: View>: View {
 
 struct CachedAsyncImage_Previews: PreviewProvider {
   static var previews: some View {
-    CachedAsyncImage(url: defaultImageURL) { phase in
+    CachedAsyncImage(url: Constants.defaultImageURL) { phase in
 
     }
   }

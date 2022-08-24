@@ -24,7 +24,7 @@ struct VerticalListContainer: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
       if showContent {
-        Text(RestaurantSorting.all.description)
+        Text(BusinessService.RestaurantSorting.all.description)
           .en24ArialBold()
           .padding(.leading, 16)
         VStack(spacing: 16) {
@@ -87,7 +87,7 @@ class VerticalListDataStore: ObservableObject {
       guard let latitude = lat, let longitude = lon else {
         throw LoactionError.locationNotFound(message: "Coordinate found nil.")
       }
-      let result = try await BusinessService.createDataTask(lat: latitude, lon: longitude, option: RestaurantSorting.all, limit: 30).value
+      let result = try await BusinessService.createDataTask(lat: latitude, lon: longitude, option: BusinessService.RestaurantSorting.all, limit: 30).value
       DispatchQueue.main.async {
         self.data = result.map { Restaurant.init(business: $0)}
         self.loadState = result.isEmpty ? LoadingState.empty : LoadingState.loaded

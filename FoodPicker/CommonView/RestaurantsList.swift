@@ -27,7 +27,7 @@ extension RestaurantsListDelegate{
 class RestaurantsList: UITableView{
   //MARK: - Properties
   weak var listDelegate : RestaurantsListDelegate?
-  var _restaurants = [RestaurantViewObject]()
+  var _restaurants = [Restaurant]()
 
 //  var restaurants = [Restaurant]() { didSet { self.reloadData() }}
   var config: ListConfiguration? {

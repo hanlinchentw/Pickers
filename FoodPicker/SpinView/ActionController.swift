@@ -12,7 +12,7 @@ import CoreData
 class ActionViewController: UIViewController {
     //MARK: - Properties
     var state: ListState?
-    var selectedRestaurants = [RestaurantViewObject]()
+    var selectedRestaurants = [Restaurant]()
 //    var viewModel: LuckyWheelViewModel? { didSet{ configureWheel() } }
     
     private var startButton: UIButton = {
@@ -93,14 +93,14 @@ extension ActionViewController : LuckyWheelDelegate, LuckyWheelDataSource {
     func numberOfSections() -> Int {
 //        guard let viewModel = self.viewModel, !selectedRestaurants.isEmpty else { return 4 }
 //        return viewModel.numOfSection
-      return 2
+      return 4
     }
     func itemsForSections() -> [WheelItem] {
         let item1 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .white)
         let item2 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .pale)
         let item3 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .white)
         let item4 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .pale)
-      return [item1]
+      return [item1, item2, item3, item4]
 //        guard let viewModel = viewModel, !selectedRestaurants.isEmpty else { return [item1, item2, item3, item4]}
 //        return viewModel.itemForSection
     }
