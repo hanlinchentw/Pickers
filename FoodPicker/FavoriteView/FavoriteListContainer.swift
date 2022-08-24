@@ -9,9 +9,11 @@
 import SwiftUI
 
 struct FavoriteListContainer: View {
+  @Environment(\.managedObjectContext) private var viewContext
+  @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
+
   var listData: Array<Restaurant>
   @Binding var isEditing: Bool
-
   var deleteButtonOnPress: (_ item: Restaurant) -> Void
 
   var viewModel = FavoriteListViewModel()
@@ -49,12 +51,12 @@ class FavoriteListViewModel: ObservableObject {
   }
 
   func getActionButtonMode(isEditing: Bool, restaurantId: String) -> ActionButtonMode {
-    if isEditing {
-      return .edit
+    if isEditing { return .edit }
+
+    guard let isSelected = try? selectedCoreService.exists(id: restaurantId, in: Self.viewContext) else {
+      return .deselect
     }
-    if let isSelected = try? selectedCoreService.exists(id: restaurantId, in: Self.viewContext) {
-      return isSelected ? .select : .deselect
-    }
-    return .deselect
+
+    return isSelected ? .select : .deselect
   }
 }

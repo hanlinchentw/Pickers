@@ -25,14 +25,14 @@ final class EditFavoriteListUsecase: ObservableObject {
     }
   }
 
-  var removeItemFromFavorite: () -> Void {
+  var removeItem: () -> Void {
     return {
       try? self.likedCoreService.deleteRestaurant(id: self.deletedItem!.id, in: CoreDataManager.sharedInstance.managedObjectContext)
       self.deletedItem = nil
     }
   }
 
-  var cancelDeletion: () -> Void {
+  var cancel: () -> Void {
     return {
       self.deletedItem = nil
     }

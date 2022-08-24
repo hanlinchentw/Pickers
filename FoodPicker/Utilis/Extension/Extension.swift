@@ -16,11 +16,14 @@ extension UIScreen{
    static let screenSize = UIScreen.main.bounds.size
 }
 
-
-
 extension Collection where Indices.Iterator.Element == Index {
     subscript (safe index: Index) -> Iterator.Element? {
         return indices.contains(index) ? self[index] : nil
     }
 }
 
+extension UIResponder {
+  static func resign() {
+    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+  }
+}

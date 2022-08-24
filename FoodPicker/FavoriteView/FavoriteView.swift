@@ -19,15 +19,6 @@ struct FavoriteView: View {
   // States
   @State var searchText: String = ""
 
-  var data: Array<Restaurant> {
-    return likedRestaurants.map { $0.restaurant }
-      .filter({ restaurant in
-        if (searchText.isEmpty) { return true }
-        let pred = NSPredicate(format: "SELF CONTAINS %@", searchText.lowercased())
-        return pred.evaluate(with: restaurant.name.lowercased())
-      })
-  }
-
   var body: some View {
     ZStack {
       Color.listViewBackground.ignoresSafeArea()
@@ -38,10 +29,14 @@ struct FavoriteView: View {
         FavoriteEditButtonContainer(isEditing: $editUsecase.isEditing)
 
         FavoriteListContainer(
-          listData: data,
+          listData:
+            likedRestaurants
+            .map { $0.restaurant }
+            .filter( { filterListData(name: $0.name) }),
           isEditing: $editUsecase.isEditing,
           deleteButtonOnPress: editUsecase.setDeleteItem
         )
+        .environment(\.managedObjectContext, viewContext)
       }
       .safeAreaInset(edge: .top) { Spacer().height(50) }
       .safeAreaInset(edge: .bottom) { Spacer().height(50) }
@@ -51,8 +46,8 @@ struct FavoriteView: View {
         title: "Remove from My Favorite",
         rightButtonText: "Remove",
         leftButtonText: "Cancel",
-        rightButtonOnPress: editUsecase.removeItemFromFavorite,
-        leftButtonOnPress: editUsecase.cancelDeletion,
+        rightButtonOnPress: editUsecase.removeItem,
+        leftButtonOnPress: editUsecase.cancel,
         content: {
           Text(editUsecase.deletionAlertText).multilineTextAlignment(.center)
         }
@@ -60,8 +55,14 @@ struct FavoriteView: View {
     })
     .navigationBarHidden(true)
     .onTapGesture {
-      UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+      UIResponder.resign()
     }
+  }
+
+  func filterListData(name: String) -> Bool {
+    if (searchText.isEmpty) { return true }
+    let predicate = NSPredicate(format: "SELF CONTAINS %@", searchText.lowercased())
+    return predicate.evaluate(with: name.lowercased())
   }
 }
 
