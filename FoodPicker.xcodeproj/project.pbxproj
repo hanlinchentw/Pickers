@@ -47,13 +47,13 @@
 		B647A4D924B1F7BE0098B7A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */; };
 		B647A4E124B1FA640098B7A2 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4E024B1FA640098B7A2 /* MainTabBarController.swift */; };
 		B647A4E724B2039D0098B7A2 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4E624B2039D0098B7A2 /* Extension.swift */; };
-		B647A4F124B22B010098B7A2 /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4F024B22B010098B7A2 /* ActionController.swift */; };
+		B647A4F124B22B010098B7A2 /* SpinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4F024B22B010098B7A2 /* SpinViewController.swift */; };
 		B647A4F324B22B100098B7A2 /* FavoriteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4F224B22B100098B7A2 /* FavoriteController.swift */; };
 		B64BE92428B28D3F0072F6A0 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64BE92328B28D3F0072F6A0 /* Alert.swift */; };
 		B64BE92828B3E6100072F6A0 /* EditFavoriteListUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64BE92728B3E6100072F6A0 /* EditFavoriteListUsecase.swift */; };
-		B650ECD4257F2655004A4049 /* LuckyWheelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD0257F2655004A4049 /* LuckyWheelItem.swift */; };
-		B650ECD5257F2655004A4049 /* LuckyWheelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD1257F2655004A4049 /* LuckyWheelText.swift */; };
-		B650ECD7257F2655004A4049 /* LuckyWheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD3257F2655004A4049 /* LuckyWheel.swift */; };
+		B650ECD4257F2655004A4049 /* WheelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD0257F2655004A4049 /* WheelItem.swift */; };
+		B650ECD5257F2655004A4049 /* SpinWheelItemText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD1257F2655004A4049 /* SpinWheelItemText.swift */; };
+		B650ECD7257F2655004A4049 /* SpinWheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650ECD3257F2655004A4049 /* SpinWheel.swift */; };
 		B65A3CC328A56D9000B15966 /* MainListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65A3CC228A56D9000B15966 /* MainListView.swift */; };
 		B674149C28A5668200C545D2 /* SelectedRestaurant+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149828A5668200C545D2 /* SelectedRestaurant+CoreDataClass.swift */; };
 		B674149D28A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149928A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift */; };
@@ -64,7 +64,7 @@
 		B685484624B4511A009BC800 /* RestaurantListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484524B4511A009BC800 /* RestaurantListCell.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
 		B685485124BD8631009BC800 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685485024BD8631009BC800 /* NetworkService.swift */; };
-		B685485324BECC7F009BC800 /* LuckyWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685485224BECC7F009BC800 /* LuckyWheelViewModel.swift */; };
+		B685485324BECC7F009BC800 /* SpinWheelPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */; };
 		B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6898D4828A41DDA005D4EFA /* NSManagedObject.swift */; };
 		B689A7A42564DBBE009D270B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A32564DBBE009D270B /* ListTableViewController.swift */; };
 		B689A7A72564DFE4009D270B /* ListInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A62564DFE4009D270B /* ListInfoCell.swift */; };
@@ -95,7 +95,6 @@
 		B6C7D5B62563F3E0005D2AA0 /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5B52563F3E0005D2AA0 /* Business.swift */; };
 		B6C7D5B82563F4F3005D2AA0 /* RestaurantAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5B72563F4F3005D2AA0 /* RestaurantAnnotation.swift */; };
 		B6C7D5BD2563F65A005D2AA0 /* _List.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5BC2563F65A005D2AA0 /* _List.swift */; };
-		B6C90FC325E2560A008B492F /* TextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C90FC225E2560A008B492F /* TextLayer.swift */; };
 		B6CB5FE428B0A2220042C34C /* FourthRowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB5FE328B0A2220042C34C /* FourthRowPresenter.swift */; };
 		B6D1306124C01E2800040F85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6D1306024C01E2800040F85 /* GoogleService-Info.plist */; };
 		B6D1306A24C4183300040F85 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1306924C4183300040F85 /* DetailController.swift */; };
@@ -170,13 +169,13 @@
 		B647A4DA24B1F7BE0098B7A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B647A4E024B1FA640098B7A2 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		B647A4E624B2039D0098B7A2 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
-		B647A4F024B22B010098B7A2 /* ActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionController.swift; sourceTree = "<group>"; };
+		B647A4F024B22B010098B7A2 /* SpinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinViewController.swift; sourceTree = "<group>"; };
 		B647A4F224B22B100098B7A2 /* FavoriteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteController.swift; sourceTree = "<group>"; };
 		B64BE92328B28D3F0072F6A0 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		B64BE92728B3E6100072F6A0 /* EditFavoriteListUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavoriteListUsecase.swift; sourceTree = "<group>"; };
-		B650ECD0257F2655004A4049 /* LuckyWheelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheelItem.swift; sourceTree = "<group>"; };
-		B650ECD1257F2655004A4049 /* LuckyWheelText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheelText.swift; sourceTree = "<group>"; };
-		B650ECD3257F2655004A4049 /* LuckyWheel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LuckyWheel.swift; sourceTree = "<group>"; };
+		B650ECD0257F2655004A4049 /* WheelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WheelItem.swift; sourceTree = "<group>"; };
+		B650ECD1257F2655004A4049 /* SpinWheelItemText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinWheelItemText.swift; sourceTree = "<group>"; };
+		B650ECD3257F2655004A4049 /* SpinWheel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinWheel.swift; sourceTree = "<group>"; };
 		B65A3CC228A56D9000B15966 /* MainListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListView.swift; sourceTree = "<group>"; };
 		B674149828A5668200C545D2 /* SelectedRestaurant+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedRestaurant+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		B674149928A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedRestaurant+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
@@ -187,7 +186,7 @@
 		B685484524B4511A009BC800 /* RestaurantListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantListCell.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B685485024BD8631009BC800 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
-		B685485224BECC7F009BC800 /* LuckyWheelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuckyWheelViewModel.swift; sourceTree = "<group>"; };
+		B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinWheelPresenter.swift; sourceTree = "<group>"; };
 		B6898D4828A41DDA005D4EFA /* NSManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObject.swift; sourceTree = "<group>"; };
 		B689A7A32564DBBE009D270B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
 		B689A7A62564DFE4009D270B /* ListInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInfoCell.swift; sourceTree = "<group>"; };
@@ -218,7 +217,6 @@
 		B6C7D5B52563F3E0005D2AA0 /* Business.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Business.swift; sourceTree = "<group>"; };
 		B6C7D5B72563F4F3005D2AA0 /* RestaurantAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantAnnotation.swift; sourceTree = "<group>"; };
 		B6C7D5BC2563F65A005D2AA0 /* _List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _List.swift; sourceTree = "<group>"; };
-		B6C90FC225E2560A008B492F /* TextLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextLayer.swift; sourceTree = "<group>"; };
 		B6CB5FE328B0A2220042C34C /* FourthRowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthRowPresenter.swift; sourceTree = "<group>"; };
 		B6D1306024C01E2800040F85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		B6D1306924C4183300040F85 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
@@ -476,15 +474,14 @@
 			path = Utilis;
 			sourceTree = "<group>";
 		};
-		B650ECCF257F2648004A4049 /* LuckyWheel */ = {
+		B650ECCF257F2648004A4049 /* SpinWheel */ = {
 			isa = PBXGroup;
 			children = (
-				B650ECD3257F2655004A4049 /* LuckyWheel.swift */,
-				B650ECD0257F2655004A4049 /* LuckyWheelItem.swift */,
-				B650ECD1257F2655004A4049 /* LuckyWheelText.swift */,
-				B6C90FC225E2560A008B492F /* TextLayer.swift */,
+				B650ECD0257F2655004A4049 /* WheelItem.swift */,
+				B650ECD3257F2655004A4049 /* SpinWheel.swift */,
+				B650ECD1257F2655004A4049 /* SpinWheelItemText.swift */,
 			);
-			path = LuckyWheel;
+			path = SpinWheel;
 			sourceTree = "<group>";
 		};
 		B65A3CC128A56D1100B15966 /* MainListView */ = {
@@ -515,7 +512,7 @@
 		B67414A128A5693800C545D2 /* VIewModel */ = {
 			isa = PBXGroup;
 			children = (
-				B685485224BECC7F009BC800 /* LuckyWheelViewModel.swift */,
+				B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */,
 			);
 			path = VIewModel;
 			sourceTree = "<group>";
@@ -532,10 +529,10 @@
 			isa = PBXGroup;
 			children = (
 				B67414A128A5693800C545D2 /* VIewModel */,
-				B650ECCF257F2648004A4049 /* LuckyWheel */,
+				B650ECCF257F2648004A4049 /* SpinWheel */,
 				B689A7A62564DFE4009D270B /* ListInfoCell.swift */,
 				B68DD029268032CA008E1FDE /* SpinResultView.swift */,
-				B647A4F024B22B010098B7A2 /* ActionController.swift */,
+				B647A4F024B22B010098B7A2 /* SpinViewController.swift */,
 				B6AE009C24DD188400423D72 /* BottomSheetViewController.swift */,
 				B689A7A32564DBBE009D270B /* ListTableViewController.swift */,
 				B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */,
@@ -760,7 +757,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6F789AE267610950003ED5C /* NetworkMonitor.swift in Sources */,
-				B650ECD5257F2655004A4049 /* LuckyWheelText.swift in Sources */,
+				B650ECD5257F2655004A4049 /* SpinWheelItemText.swift in Sources */,
 				B685484C24B6D390009BC800 /* Constants.swift in Sources */,
 				B6ABC1ED28B09550007398F4 /* ThirdRowPresenter.swift in Sources */,
 				B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */,
@@ -811,9 +808,9 @@
 				B689A7A9256B84EF009D270B /* MoreOptionAlertViewContrller.swift in Sources */,
 				B69D3823266882D000287954 /* BusinessProvider.swift in Sources */,
 				B647A4CF24B1F7BA0098B7A2 /* SceneDelegate.swift in Sources */,
-				B650ECD4257F2655004A4049 /* LuckyWheelItem.swift in Sources */,
+				B650ECD4257F2655004A4049 /* WheelItem.swift in Sources */,
 				B634A70D28A6C0CA00796D63 /* RoundedCorner.swift in Sources */,
-				B647A4F124B22B010098B7A2 /* ActionController.swift in Sources */,
+				B647A4F124B22B010098B7A2 /* SpinViewController.swift in Sources */,
 				B647A4E124B1FA640098B7A2 /* MainTabBarController.swift in Sources */,
 				B64BE92828B3E6100072F6A0 /* EditFavoriteListUsecase.swift in Sources */,
 				B647A4E724B2039D0098B7A2 /* Extension.swift in Sources */,
@@ -830,7 +827,7 @@
 				B685485124BD8631009BC800 /* NetworkService.swift in Sources */,
 				B634A71928A76B4800796D63 /* VerticalListContainer.swift in Sources */,
 				B6EF13A628B0CA0B009345D6 /* ShimmerView.swift in Sources */,
-				B650ECD7257F2655004A4049 /* LuckyWheel.swift in Sources */,
+				B650ECD7257F2655004A4049 /* SpinWheel.swift in Sources */,
 				B634A71F28A8C0E200796D63 /* TestRestaurantData.swift in Sources */,
 				B674149D28A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift in Sources */,
 				B6F789A92675DC440003ED5C /* Validators.swift in Sources */,
@@ -865,11 +862,10 @@
 				B6FD55AD2896CB0100B659F4 /* Inject.swift in Sources */,
 				B6C7D5B82563F4F3005D2AA0 /* RestaurantAnnotation.swift in Sources */,
 				B6E0D79128A61C4600B8CAE1 /* RestaurantCardView.swift in Sources */,
-				B6C90FC325E2560A008B492F /* TextLayer.swift in Sources */,
 				B634A73528A920CA00796D63 /* SelectedDeleteBehavior.swift in Sources */,
 				B689A7AB2574EDB4009D270B /* EditViewController.swift in Sources */,
 				B6B84D4B2665D4BD002E418D /* UIView+Extension.swift in Sources */,
-				B685485324BECC7F009BC800 /* LuckyWheelViewModel.swift in Sources */,
+				B685485324BECC7F009BC800 /* SpinWheelPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

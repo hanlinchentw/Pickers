@@ -23,6 +23,7 @@ private let headerIdentifier = "DetailHeader"
 @MainActor
 class DetailController : UICollectionViewController {
   //MARK: - Prorperties
+  private var addButton = DetailAddButton()
   weak var delegate: DetailControllerDelegate?
   var viewModel: DetailViewModel
   var set = Set<AnyCancellable>()
@@ -77,15 +78,21 @@ class DetailController : UICollectionViewController {
   }
   
   func configureAddButton(){
-    lazy var addButton = DetailAddButton { self.viewModel.selectButtonTapped() }
+    addButton.addTarget(self, action: #selector(handleSelectButtonTapped), for: .touchUpInside)
+
     view.addSubview(addButton)
     addButton.anchor(right:view.rightAnchor, bottom: view.bottomAnchor,
                      paddingRight: 16, paddingBottom: 30,width: 56, height: 56)
 
-    viewModel.$isSelected.sink { isSelected in
-      let imageName = isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
-      addButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
+    viewModel.$isSelected
+      .sink { [weak self] isSelected in
+        let imageName = isSelected ? "btnFloatingAddSelectedXshadow" : "btnFloatingAddNoShadow"
+        self?.addButton.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
     }.store(in: &set)
+  }
+
+  @objc func handleSelectButtonTapped(){
+    viewModel.selectButtonTapped()
   }
 }
 
@@ -95,6 +102,7 @@ extension DetailController {
     return DetailConfig.allCases.count
   }
 
+  @MainActor
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailCellIdentifier, for: indexPath) as! DetailCell
     guard let detail = viewModel.detail else { return cell }
@@ -105,7 +113,8 @@ extension DetailController {
     cell.isExpanded = self.viewModel.isExpanded
     return cell
   }
-  
+
+  @MainActor
   override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
     let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: headerIdentifier, for: indexPath) as! DetailHeader
     let presenter = DetailHeaderPresenter(isLiked: self.viewModel.isLiked, detail: viewModel.detail)

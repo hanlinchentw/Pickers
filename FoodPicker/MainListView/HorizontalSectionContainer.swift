@@ -45,7 +45,9 @@ struct HorizontalSectionContainer: View {
                 let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode, isLiked: isLiked)
 
                 NavigationLink {
-                  DetailContentView(id: restaurant.id).navigationBarHidden(true).ignoresSafeArea()
+                  DetailContentView(id: restaurant.id)
+                    .navigationBarHidden(true)
+                    .ignoresSafeArea()
                 } label: {
                   RestaurantCardView(presenter: presenter) {
                     selectButtonOnPress(isSelected: isSelected, restaurant: restaurant)

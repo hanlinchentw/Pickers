@@ -19,7 +19,7 @@ final class MainTabBarConstants {
       switch self {
       case .main: return UIHostingController(rootView: MainListView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
       case .favorite: return UIHostingController(rootView: FavoriteView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
-      case .spin: return UINavigationController(rootViewController:ActionViewController.init())
+      case .spin: return UINavigationController(rootViewController: SpinViewController.init())
       }
     }
 

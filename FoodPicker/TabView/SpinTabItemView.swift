@@ -16,19 +16,16 @@ protocol SpinTabItemViewProps {
 
 class SpinTabItemView: UIImageView, SpinTabItemViewProps {
   var increase: () -> Void {
-    return {}
-//    let newValue = self.displayNumber.value + 1
-//    return { self.displayNumber.accept(newValue) }
+    { self.displayNumber = self.displayNumber + 1 }
   }
 
   var decrease: () -> Void {
-    return {}
-//    let newValue = self.displayNumber.value - 1
-//    return { self.displayNumber.accept(newValue) }
+    { self.displayNumber = self.displayNumber - 1 }
   }
 
 //MARK: - Properties
-//  private var displayNumber = BehaviorRelay(value: 0)
+  @Published private var displayNumber = 0
+
   private let numOfSelectedLabel : UILabel = {
     let label = UILabel()
     label.font = UIFont.arialBoldMT
@@ -36,7 +33,7 @@ class SpinTabItemView: UIImageView, SpinTabItemViewProps {
     return label
   }()
 
-//  var disposeBag = DisposeBag()
+  private var set = Set<AnyCancellable>()
 //MARK: - Lifecycle
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -60,19 +57,19 @@ class SpinTabItemView: UIImageView, SpinTabItemViewProps {
   }
 
   private func displayLabelBinding() {
-//    displayNumber
-//      .map { $0.toString }
-//      .bind(onNext: { [weak self] newNumberStr in
-//        if newNumberStr.toInt == 0 {
-//          self?.numOfSelectedLabel.rx.text.onNext(nil)
-//          self?.image = UIImage(named: MainTabBarConstants.SpinTabImage)
-//        } else {
-//          self?.numOfSelectedLabel.rx.text.onNext(newNumberStr)
-//          self?.numOfSelectedLabel.performBounceAnimataion(scale: 1.5, duration: 0.2)
-//          self?.image = nil
-//        }
-//      })
-//      .disposed(by: disposeBag)
+    $displayNumber
+      .map { $0.toString }
+      .sink(receiveValue: { [weak self] newNumberStr in
+        if newNumberStr.toInt == 0 {
+          self?.numOfSelectedLabel.text = nil
+          self?.image = UIImage(named: MainTabBarConstants.SpinTabImage)
+        } else {
+          self?.numOfSelectedLabel.text = newNumberStr
+          self?.numOfSelectedLabel.performBounceAnimataion(scale: 1.5, duration: 0.2)
+          self?.image = nil
+        }
+      })
+      .store(in: &set)
   }
 }
 

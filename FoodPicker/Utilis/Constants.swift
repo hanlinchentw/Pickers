@@ -6,7 +6,7 @@
 //  Copyright © 2020 陳翰霖. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 final class Constants {
   static let defaultImageURL = "https://pixy.org/src/31/316448.png"

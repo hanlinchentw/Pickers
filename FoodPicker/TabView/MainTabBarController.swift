@@ -8,23 +8,43 @@
 
 import UIKit
 import CoreData
+import Combine
 
 class MainTabBarController : UITabBarController {
   //MARK: - Properties
   var displayTab: Array<MainTabBarConstants.TabItemType> = [.main, .spin, .favorite]
   private let spinTabItemView = SpinTabItemView(frame: .zero)
 
-  private let appDelegate = UIApplication.shared.delegate as! AppDelegate
+  private var set = Set<AnyCancellable>()
   //MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
     overrideUserInterfaceStyle = .light
     configureTabBar()
+    observeSelectedRestaurantChange()
   }
 }
-
 //MARK: - SelectRestaurant Data flow
 extension MainTabBarController {
+  func observeSelectedRestaurantChange() {
+    try? SelectedRestaurant.deleteAll(in: CoreDataManager.sharedInstance.managedObjectContext)
+    CoreDataManager.sharedInstance.saveContext()
+
+    NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
+      .sink { [weak self] notificaiton in
+        let userInfo = notificaiton.userInfo
+        if let inserted = userInfo?["inserted"], inserted is Set<SelectedRestaurant>  {
+          print("observeSelectedRestaurantChange >>> insert")
+          self?.spinTabItemView.increase()
+          return
+        }
+        if let deleted = userInfo?["deleted"], deleted is Set<SelectedRestaurant> {
+          print("observeSelectedRestaurantChange >>> deleted")
+          self?.spinTabItemView.decrease()
+          return
+        }
+      }.store(in: &set)
+  }
 }
 
 //MARK: -  HomeController setup
@@ -51,8 +71,8 @@ extension MainTabBarController: UITabBarControllerDelegate {
     guard let index = tabBar.items?.firstIndex(of: item) else { return }
     guard let view = tabBar.subviews[index+1].subviews.last else { return }
     let bounceAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
-    bounceAnimation.values = [1.0, 1.3, 0.9, 1.02, 1.0]
-    bounceAnimation.duration = TimeInterval(0.3)
+    bounceAnimation.values = [1.0, 1.1, 0.95, 1.02, 1.0]
+    bounceAnimation.duration = TimeInterval(0.2)
     bounceAnimation.calculationMode = CAAnimationCalculationMode.cubic
     view.layer.add(bounceAnimation, forKey: nil)
   }

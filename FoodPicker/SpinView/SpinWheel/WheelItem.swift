@@ -8,7 +8,8 @@
 
 import Foundation
 import UIKit
-@objc public class WheelItem:NSObject{
+
+@objc public class WheelItem: NSObject{
     var title :String?
     var titleColor :UIColor?
     var itemColor :UIColor?

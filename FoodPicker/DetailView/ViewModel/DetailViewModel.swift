@@ -26,6 +26,7 @@ class DetailViewModel {
 }
 
 extension DetailViewModel {
+  @MainActor
   func refresh() {
     self.isSelected = try! selectedCoreService.exists(id: self.id, in: CoreDataManager.sharedInstance.managedObjectContext)
     self.isLiked = try! likedCoreService.exists(id: self.id, in: CoreDataManager.sharedInstance.managedObjectContext)
@@ -33,6 +34,7 @@ extension DetailViewModel {
   }
 
   func selectButtonTapped() {
+    print("selectButtonTapped")
     guard let detail = detail else {
       return
     }
@@ -71,6 +73,7 @@ extension DetailViewModel {
 }
 
 extension DetailViewModel {
+  @MainActor
   func fetchDetail() {
     MBProgressHUDHelper.showLoadingAnimation()
     Task {
