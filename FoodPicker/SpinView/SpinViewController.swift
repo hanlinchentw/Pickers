@@ -111,7 +111,7 @@ extension SpinViewController {
           guard let userInfo = notification.userInfo else { return }
           let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
           let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
-          if insert == nil || delete == nil { return }
+          if insert == nil && delete == nil { return }
           self.presenter.refresh()
         }
         .store(in: &set)

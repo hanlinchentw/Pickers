@@ -8,7 +8,9 @@
 
 import Foundation
 
-class BottomSheetViewModel  {
+class BottomSheetViewModel {
+  @Inject var coreService: SelectedCoreService
+
   @Published var list: List?
   @Published var restaurants: Array<Restaurant> = []
   @Published var isRefresh: Bool = false
@@ -18,5 +20,19 @@ class BottomSheetViewModel  {
       self.restaurants = selectedRestaurants.map { $0.restaurant }
     }
     isRefresh = true
+  }
+
+  func didTapActionButton(_ target: Restaurant) {
+    let restaurant = restaurants.first(where: { $0.id == target.id })
+    guard let restaurant = restaurant else {
+      return
+    }
+    if restaurant.isSelected {
+      try? coreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+      restaurant.isSelected.toggle()
+    } else {
+      try? coreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
+    }
+//    isRefresh = true
   }
 }

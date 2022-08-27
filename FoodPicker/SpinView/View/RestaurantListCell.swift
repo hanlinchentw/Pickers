@@ -84,7 +84,6 @@ extension RestaurantListCell {
 
   func configure(){
     guard let presenter = presenter else { return }
-    print("Restaurant.configure")
     restaurantName.text = presenter.name
     priceLabel.text = presenter.thirdRowString
     restaurantImageView.url = presenter.imageUrl

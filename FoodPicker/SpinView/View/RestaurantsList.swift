@@ -11,7 +11,7 @@ import UIKit
 private let restaurantListCellIdentifier = "listCellIdentifier"
 
 protocol RestaurantsListDelegate: AnyObject {
-  func didTapActionButton(_ restaurant: Restaurant)
+  func didTapActionButton(_ restaurant: Restaurant, indexPath: IndexPath)
 }
 
 class RestaurantsList: UITableView{
@@ -53,6 +53,8 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource {
 // MARK: - RestaurantListCellDelegate
 extension RestaurantsList: RestaurantListCellDelegate {
   func didTapActionButton(_ restaurant: Restaurant) {
-    listDelegate?.didTapActionButton(restaurant)
+    let index = restaurants.firstIndex(where: {$0.id == restaurant.id })!
+    let indexPath = IndexPath.init(row: index, section: 0)
+    listDelegate?.didTapActionButton(restaurant, indexPath: indexPath)
   }
 }

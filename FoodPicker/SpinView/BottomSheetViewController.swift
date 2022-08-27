@@ -73,7 +73,6 @@ class BottomSheetViewController : UIViewController {
     configureTableView()
 
     bindRefresh()
-    observeSelectedRestaurantChange()
   }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -83,7 +82,6 @@ class BottomSheetViewController : UIViewController {
   private func bindRefresh() {
     viewModel.$isRefresh
       .sink { _ in
-        print("BottomSheet.refresh >>> restaurant: \(self.viewModel.restaurants)")
       self.tableView.restaurants = self.viewModel.restaurants
     }
     .store(in: &set)
@@ -154,17 +152,6 @@ class BottomSheetViewController : UIViewController {
 }
 //MARK: -  List's Restaurant update method
 extension BottomSheetViewController {
-  func observeSelectedRestaurantChange() {
-    NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
-      .sink { notification in
-        guard let userInfo = notification.userInfo else { return }
-        let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
-        let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
-        if insert == nil || delete == nil { return }
-        self.viewModel.refresh()
-      }
-      .store(in: &set)
-  }
   //    private func configureTempList(restaurants: [Restaurant]) {
   //        let list = List(name: "My selected list", restaurants: restaurants, date: Date())
   //        self.list = list
@@ -238,27 +225,12 @@ extension BottomSheetViewController{
 }
 //MARK: - RestaurantsListDelegate
 extension BottomSheetViewController: RestaurantsListDelegate {
-  func didTapActionButton(_ restaurant: Restaurant) {
-
+  func didTapActionButton(_ restaurant: Restaurant, indexPath: IndexPath) {
+    OperationQueue.main.addOperation {
+      self.viewModel.didTapActionButton(restaurant)
+      self.tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
   }
-
-  //    func didSelectRestaurant(_ restaurant: Restaurant) {
-  //        self.state = self.state == .temp ? .temp : .edited
-  //
-  //        guard let index = self.tableView.restaurants
-  //            .firstIndex(where: {$0.restaurantID == restaurant.restaurantID}) else { return }
-  //        self.tableView.restaurants[index].isSelected.toggle()
-  //        self.tableView.reloadData()
-  //
-  //        if restaurant.isSelected{
-  //            self.list?.restaurants.append(restaurant)
-  //        }else{
-  //            guard let newListRestaurants = (self.list?.restaurants.filter{ $0.restaurantID != restaurant.restaurantID })
-  //                else { return }
-  //            self.list?.restaurants = newListRestaurants
-  //        }
-  //        delegate?.didSelectFromSheet(restaurant:restaurant)
-  //    }
 }
 //MARK: - UIGestureRecognizerDelegate
 extension BottomSheetViewController: UIGestureRecognizerDelegate {
