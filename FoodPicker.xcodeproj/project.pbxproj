@@ -74,7 +74,7 @@
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
 		B690436728A1633F00278964 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690436628A1633F00278964 /* Detail.swift */; };
 		B69D3823266882D000287954 /* BusinessProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D3822266882D000287954 /* BusinessProvider.swift */; };
-		B69E3B1C28B9223300014AA3 /* BottomSheetPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69E3B1B28B9223300014AA3 /* BottomSheetPresenter.swift */; };
+		B69E3B1C28B9223300014AA3 /* BottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69E3B1B28B9223300014AA3 /* BottomSheetViewModel.swift */; };
 		B6AA6C3828A55C4700444F0A /* SelectedCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA6C3728A55C4700444F0A /* SelectedCoreService.swift */; };
 		B6AA6C3A28A55C6000444F0A /* LikedCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA6C3928A55C6000444F0A /* LikedCoreService.swift */; };
 		B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */; };
@@ -199,7 +199,7 @@
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		B690436628A1633F00278964 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
 		B69D3822266882D000287954 /* BusinessProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessProvider.swift; sourceTree = "<group>"; };
-		B69E3B1B28B9223300014AA3 /* BottomSheetPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresenter.swift; sourceTree = "<group>"; };
+		B69E3B1B28B9223300014AA3 /* BottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewModel.swift; sourceTree = "<group>"; };
 		B6AA6C3728A55C4700444F0A /* SelectedCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCoreService.swift; sourceTree = "<group>"; };
 		B6AA6C3928A55C6000444F0A /* LikedCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedCoreService.swift; sourceTree = "<group>"; };
 		B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Map+Extensions.swift"; sourceTree = "<group>"; };
@@ -518,7 +518,6 @@
 			isa = PBXGroup;
 			children = (
 				B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */,
-				B69E3B1B28B9223300014AA3 /* BottomSheetPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -544,6 +543,7 @@
 		B6A2FA8D2533E6C6005CB171 /* SpinView */ = {
 			isa = PBXGroup;
 			children = (
+				B6B9976928B9FA76007C3D1D /* ViewModel */,
 				B69E3B1D28B9267000014AA3 /* View */,
 				B67414A128A5693800C545D2 /* Presenter */,
 				B650ECCF257F2648004A4049 /* SpinWheel */,
@@ -613,6 +613,14 @@
 				B6B9976728B9F1A1007C3D1D /* NSAttributedString+Extensions.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		B6B9976928B9FA76007C3D1D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				B69E3B1B28B9223300014AA3 /* BottomSheetViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		B6C7D5A52550FB80005D2AA0 /* FavoriteView */ = {
@@ -865,7 +873,7 @@
 				B6EF13B128B23366009345D6 /* FavoriteSearchContainer.swift in Sources */,
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B647A4F324B22B100098B7A2 /* FavoriteController.swift in Sources */,
-				B69E3B1C28B9223300014AA3 /* BottomSheetPresenter.swift in Sources */,
+				B69E3B1C28B9223300014AA3 /* BottomSheetViewModel.swift in Sources */,
 				B685484624B4511A009BC800 /* RestaurantListCell.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */,

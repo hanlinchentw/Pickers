@@ -8,7 +8,7 @@
 
 import Foundation
 
-class BottomSheetPresenter  {
+class BottomSheetViewModel  {
   @Published var list: List?
   @Published var restaurants: Array<Restaurant> = []
   @Published var isRefresh: Bool = false

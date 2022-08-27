@@ -19,7 +19,7 @@ protocol BottomSheetViewControllerDelegate: AnyObject {
 }
 class BottomSheetViewController : UIViewController {
   //MARK: - Properties
-  let presenter = BottomSheetPresenter()
+  let viewModel = BottomSheetViewModel()
   var state: BottomSheetViewController.ListState = .temp { didSet{ didChangeState() }}
   weak var delegate: BottomSheetViewControllerDelegate?
   private let notchView : UIView = {
@@ -77,14 +77,14 @@ class BottomSheetViewController : UIViewController {
   }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    presenter.refresh()
+    viewModel.refresh()
   }
   // MARK: - Binding
   private func bindRefresh() {
-    presenter.$isRefresh
+    viewModel.$isRefresh
       .sink { _ in
-        print("BottomSheet.refresh >>> restaurant: \(self.presenter.restaurants)")
-      self.tableView.restaurants = self.presenter.restaurants
+        print("BottomSheet.refresh >>> restaurant: \(self.viewModel.restaurants)")
+      self.tableView.restaurants = self.viewModel.restaurants
     }
     .store(in: &set)
   }
@@ -161,7 +161,7 @@ extension BottomSheetViewController {
         let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
         let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
         if insert == nil || delete == nil { return }
-        self.presenter.refresh()
+        self.viewModel.refresh()
       }
       .store(in: &set)
   }
@@ -201,7 +201,7 @@ extension BottomSheetViewController {
 extension BottomSheetViewController{
   func didChangeState(){
     print("DEBUG: Current state is \(state) ")
-    guard let list = self.presenter.list else { return }
+    guard let list = self.viewModel.list else { return }
     switch state {
     case .temp:
       self.titleLabel.text = "My selected list"
