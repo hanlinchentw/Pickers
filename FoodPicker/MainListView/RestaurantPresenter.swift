@@ -17,7 +17,7 @@ enum ActionButtonMode {
 }
 
 struct RestaurantPresenter {
-  private var restaurant: Restaurant
+  private(set) var restaurant: Restaurant
   var actionButtonMode: ActionButtonMode = .none
   var isLiked: Bool?
   var isEditing: Bool?
@@ -71,7 +71,6 @@ struct RestaurantPresenter {
     guard let isLiked = isLiked else {
       return "btnBookmarkHeartPressed"
     }
-
     return isLiked ? "btnBookmarkHeartPressed" : "icnHeart"
   }
 

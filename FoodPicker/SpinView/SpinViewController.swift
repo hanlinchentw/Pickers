@@ -52,13 +52,12 @@ class SpinViewController: UIViewController {
         self.startButton.isUserInteractionEnabled = self.presenter.isSpinButtonEnabled
       }
       .store(in: &set)
-    //    observeSelectedRestaurantChange()
+    observeSelectedRestaurantChange()
   }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     configureBottomSheetView()
     presenter.refresh()
-
     view.backgroundColor = .backgroundColor
     navigationController?.navigationBar.isHidden = true
     navigationController?.navigationBar.barStyle = .default
@@ -106,26 +105,17 @@ extension SpinViewController : SpinWheelDelegate, SpinWheelDataSource {
 }
 //MARK: - Observe entityChange
 extension SpinViewController {
-  //  func observeSelectedRestaurantChange() {
-  //    NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
-  //      .sink { notification in
-  //        print("SpinViewController.0")
-  //        guard let userInfo = notification.userInfo else { return }
-  //        let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
-  //        let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
-  //        if insert == nil || delete == nil { return }
-  //
-  //        print("SpinViewController.1")
-  //        let newSource: Array<SelectedRestaurant>? = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext)
-  //        print("SpinViewController.2")
-  //        if let selectedRestaurants = newSource {
-  //          print("SpinViewController.observeSelectedRestaurantChange \(selectedRestaurants)")
-  //          self.selectedRestaurants = selectedRestaurants.map { $0.restaurant }
-  //          self.presenter = SpinWheelPresenter(restaurants: self.selectedRestaurants)
-  //        }
-  //      }
-  //      .store(in: &set)
-  //  }
+    func observeSelectedRestaurantChange() {
+      NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
+        .sink { notification in
+          guard let userInfo = notification.userInfo else { return }
+          let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
+          let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
+          if insert == nil || delete == nil { return }
+          self.presenter.refresh()
+        }
+        .store(in: &set)
+    }
 }
 //MARK: - list method
 extension SpinViewController {
