@@ -12,56 +12,27 @@ import CoreData
 
 private let selectedIdentifier = "RestaurantListCell"
 
-
 protocol BottomSheetViewControllerDelegate: AnyObject {
   //    func shouldHideResultView(shouldHide: Bool)
   //    func didSelectFromSheet(restaurant: Restaurant)
 }
 class BottomSheetViewController : UIViewController {
   //MARK: - Properties
-  let viewModel = BottomSheetViewModel()
-  var state: BottomSheetViewController.ListState = .temp { didSet{ didChangeState() }}
-  weak var delegate: BottomSheetViewControllerDelegate?
-  private let notchView : UIView = {
-    let view = UIView()
-    view.backgroundColor = .lightlightGray
-    view.setDimension(width: 60, height: 4)
-    view.layer.cornerRadius = 4 / 2
-    return view
-  }()
-  private let titleLabel : UILabel = {
+  private let viewModel = BottomSheetViewModel()
 
+  weak var delegate: BottomSheetViewControllerDelegate?
+
+  private let notchView = NotchView()
+
+  private let titleLabel: UILabel = {
     let label = UILabel()
     label.font = UIFont(name: "Avenir-Heavy", size: 16)
     label.text = "My selected list"
     label.textColor = .black
     return label
   }()
-  private lazy var saveButton: UIButton = {
-    let button = UIButton(type:.system)
-    button.backgroundColor = .butterscotch
-    button.setTitle("Save list", for: .normal)
-    button.setTitleColor(UIColor.white, for: .normal)
-    button.titleLabel?.font = UIFont(name: "Arial-BoldMT", size: 14)
-    button.setDimension(width: 103 , height: 32)
-    button.layer.cornerRadius = 8
-    button.addTarget(self, action: #selector(handleSaveButtonTapped), for: .touchUpInside)
-    return button
-  }()
-
-  private let updateButton: UIButton = {
-    let button = UIButton(type:.system)
-    button.setTitle("Update", for: .normal)
-    button.setTitleColor(.butterscotch, for: .normal)
-    button.layer.borderColor = UIColor.butterscotch.cgColor
-    button.layer.cornerRadius = 8
-    button.layer.borderWidth = 0.75
-    button.isHidden = true
-    button.setDimension(width: 81 , height: 32)
-    button.backgroundColor = .white
-    button.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
-    return button
-  }()
+  private let saveButton = ListSaveButton()
+  private let updateButton = ListUpdateButton()
   private let tableView = RestaurantsList()
   private var set = Set<AnyCancellable>()
   //MARK: - Lifecycle
@@ -69,11 +40,13 @@ class BottomSheetViewController : UIViewController {
     super.viewDidLoad()
     configurePanGesture()
     configureUI()
-    configureButton()
     configureTableView()
+    configureButton()
 
     bindRefresh()
+    bindListState()
   }
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     viewModel.refresh()
@@ -82,54 +55,51 @@ class BottomSheetViewController : UIViewController {
   private func bindRefresh() {
     viewModel.$isRefresh
       .sink { _ in
-      self.tableView.restaurants = self.viewModel.restaurants
-    }
-    .store(in: &set)
+        self.tableView.restaurants = self.viewModel.restaurants
+      }
+      .store(in: &set)
   }
   //MARK: - Selectors
   @objc func panGesture(recognizer: UIPanGestureRecognizer) {
     let translation = recognizer.translation(in: self.view)
-    let y = self.view.frame.minY
-    let newYPosition = y + translation.y
+    let oldYPosition = self.view.frame.minY
+    let newYPosition = oldYPosition + translation.y
     switch recognizer.state {
     case .changed:
-      if newYPosition == 100 { return }
+      if newYPosition <= 0 { return }
       self.view.frame = CGRect(x: 0, y: newYPosition, width: view.frame.width, height: view.frame.height)
       recognizer.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
-      //            delegate?.shouldHideResultView(shouldHide:newYPosition < UIScreen.main.bounds.height/1.5)
     case .ended:
-      if newYPosition < UIScreen.main.bounds.height/1.5, newYPosition > UIScreen.main.bounds.height/3{
-        animateOut()
-        //                delegate?.shouldHideResultView(shouldHide: true)
-      }else if newYPosition > UIScreen.main.bounds.height/1.5{
-        fold()
-        //                delegate?.shouldHideResultView(shouldHide: false)
-      }else{
-        animateIn()
+      if newYPosition < UIScreen.main.bounds.height / 1.5, newYPosition > UIScreen.main.bounds.height / 3 {
+        self.animateIn(.middle)
+      } else if newYPosition > UIScreen.main.bounds.height / 1.5 {
+        self.animateIn(.bottom)
+      } else {
+        self.animateIn(.top)
       }
-    default:
-      break
+    default: break
     }
   }
+
   @objc func handleSaveButtonTapped(){
-    //        if self.list?.restaurantsID.isEmpty ?? true {
-    //            self.presentPopupViewWithoutButton(title: "Empty", subtitle: "Select at least one restaurant.")
-    //        }else{
-    //            let alertVC = UIAlertController(title: "Save list", message: nil, preferredStyle: .alert)
-    //            alertVC.addTextField { (tf) in
-    //                tf.placeholder = "Enter list name"
-    //                tf.keyboardType = .asciiCapable
-    //            }
-    //            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-    //            let saveAction = UIAlertAction(title: "Save", style: .default) { (action) in
-    //                let name = alertVC.textFields?[0].text
-    //                self.list?.name = name ?? ""
-    //                self.saveList()
-    //            }
-    //            alertVC.addAction(cancelAction)
-    //            alertVC.addAction(saveAction)
-    //            present(alertVC, animated: true, completion: nil)
-    //        }
+    let alertVC = UIAlertController(title: "Save list", message: nil, preferredStyle: .alert)
+    alertVC.addTextField { (tf) in
+      tf.placeholder = "Enter list name"
+      tf.keyboardType = .asciiCapable
+    }
+    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+    let saveAction = UIAlertAction(title: "Save", style: .default) { (action) in
+      let name = alertVC.textFields?[0].text
+      self.viewModel.createList(name: name!)
+    }
+    alertVC.addAction(cancelAction)
+    alertVC.addAction(saveAction)
+    present(alertVC, animated: true, completion: nil)
+    //    if self.list?.restaurantsID.isEmpty ?? true {
+    //      self.presentPopupViewWithoutButton(title: "Empty", subtitle: "Select at least one restaurant.")
+    //    }else{
+    //
+    //    }
   }
   @objc func handleUpdateButtonTapped(){
     //        guard let list = self.list else { return }
@@ -186,49 +156,50 @@ extension BottomSheetViewController {
 }
 //MARK: -  List State change animation
 extension BottomSheetViewController{
-  func didChangeState(){
-    print("DEBUG: Current state is \(state) ")
-    guard let list = self.viewModel.list else { return }
-    switch state {
-    case .temp:
-      self.titleLabel.text = "My selected list"
-      self.saveButton.setTitle("Save list", for: .normal)
-      self.saveButton.alpha = 1
-      self.saveButton.isHidden = false
-      self.updateButton.isHidden = true
-    case .existed:
-      UIView.animate(withDuration: 0.3, animations: {
-        self.titleLabel.alpha = 0
-        self.saveButton.isHidden = true
-        self.updateButton.isHidden = true
-
-      }) { _ in
-        self.titleLabel.alpha = 1
-        //                self.titleLabel.text = list.name
-        self.saveButton.alpha = 0
-        self.updateButton.alpha = 0
+  func bindListState() {
+    viewModel.$listState
+      .sink { state in
+        switch state {
+        case .temp:
+          self.titleLabel.text = "My selected list"
+          self.saveButton.setTitle("Save list", for: .normal)
+          self.saveButton.alpha = 1
+          self.saveButton.isHidden = false
+          self.updateButton.isHidden = true
+        case .existed:
+          UIView.animate(withDuration: 0.2, animations: {
+            self.titleLabel.alpha = 0
+            self.saveButton.alpha = 0
+            self.updateButton.alpha = 0
+          }) { _ in
+            self.titleLabel.alpha = 1
+            self.titleLabel.text = self.viewModel.list?.name
+            self.saveButton.isHidden = true
+            self.updateButton.isHidden = true
+          }
+        case .edited:
+          let ns = NSMutableAttributedString(string: self.viewModel.list?.name ?? "", attributes: .attributes([.arial16Bold, .black]))
+          ns.append(NSAttributedString(string: "*", attributes: .butterScotch))
+          self.titleLabel.attributedText = ns
+          self.saveButton.setTitle("Save as new", for: .normal)
+          self.saveButton.isHidden = false
+          self.updateButton.isHidden = false
+          self.saveButton.alpha = 1
+          self.updateButton.alpha = 1
+        }
+        self.view.layoutIfNeeded()
       }
-    case .edited:
-      //            let ns = NSMutableAttributedString(string: list.name,
-      //                                               attributes: [NSAttributedString.Key.font : UIFont(name: "Arial-BoldMT", size: 16)!,
-      //                                                            NSAttributedString.Key.foregroundColor : UIColor.black])
-      //            ns.append(NSAttributedString(string: "*", attributes: [NSAttributedString.Key.foregroundColor : UIColor.butterscotch]))
-      //            self.titleLabel.attributedText = ns
-      //            self.saveButton.setTitle("Save as new", for: .normal)
-      self.saveButton.isHidden = false
-      self.updateButton.isHidden = false
-      self.saveButton.alpha = 1
-      self.updateButton.alpha = 1
-    }
-    self.view.layoutIfNeeded()
+      .store(in: &set)
   }
 }
+
+
 //MARK: - RestaurantsListDelegate
 extension BottomSheetViewController: RestaurantsListDelegate {
   func didTapActionButton(_ restaurant: Restaurant, indexPath: IndexPath) {
     OperationQueue.main.addOperation {
       self.viewModel.didTapActionButton(restaurant)
-      self.tableView.reloadRows(at: [indexPath], with: .automatic)
+      self.tableView.reloadRows(at: [indexPath], with: .none)
     }
   }
 }
@@ -244,14 +215,6 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
     return false
   }
 }
-// MARK: - ListState
-extension BottomSheetViewController {
-  enum ListState{
-    case temp
-    case existed
-    case edited
-  }
-}
 //MARK: - Auto layout and view set up method
 extension BottomSheetViewController {
   func configurePanGesture(){
@@ -259,16 +222,19 @@ extension BottomSheetViewController {
     gesture.delegate = self
     view.addGestureRecognizer(gesture)
   }
+
   func configureUI(){
     view.layer.cornerRadius = 24
     view.backgroundColor = .white
     view.addSubview(notchView)
+    notchView.setDimension(width: 60, height: 4)
     notchView.anchor(top: view.topAnchor, paddingTop: 8)
     notchView.centerX(inView: view)
 
     view.addSubview(titleLabel)
     titleLabel.anchor(top: notchView.bottomAnchor, left: view.leftAnchor, paddingTop: 24, paddingLeft: 16)
   }
+
   func configureTableView() {
     view.addSubview(tableView)
     tableView.anchor(top: titleLabel.bottomAnchor, left:view.leftAnchor,
@@ -276,42 +242,43 @@ extension BottomSheetViewController {
                      paddingTop: 16, paddingBottom: 200)
     tableView.listDelegate = self
   }
+
   func configureButton() {
     view.addSubview(saveButton)
     saveButton.anchor(top: titleLabel.topAnchor, right: view.rightAnchor, paddingRight: 16)
+    saveButton.setDimension(width: 104, height: 32)
+    saveButton.addTarget(self, action: #selector(handleSaveButtonTapped), for: .touchUpInside)
+
     view.addSubview(updateButton)
     updateButton.anchor(top: titleLabel.topAnchor, right: saveButton.leftAnchor, paddingRight: 16)
+    updateButton.setDimension(width: 81, height: 32)
+    updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
   }
 }
 
+// MARK: - Position
 extension BottomSheetViewController {
-  func animateIn(){
-    UIView.animate(withDuration: 0.3) {
-      self.view.frame = CGRect(x: 0, y: 100,
-                               width: self.view.frame.width, height: self.view.frame.height)
-      self.saveButton.alpha = 1
-      self.updateButton.alpha = 1
-    }
-  }
-  func animateOut(){
-    let wheelHeight = 330 * view.widthMultiplier
+  enum Position {
+    case top
+    case middle
+    case bottom
 
-    UIView.animate(withDuration: 0.3) {
-      self.view.frame = CGRect(x: 0, y: 100 + wheelHeight,
-                               width: self.view.frame.width, height: self.view.frame.height)
-      self.saveButton.alpha = 1
-      self.updateButton.alpha = 1
+    var yPosition: CGFloat {
+      switch self {
+      case .top: return 100
+      case .middle: return 72 + 330 + 24
+      case .bottom: return 330 + 240 + 100
+      }
     }
   }
-  func fold(){
+
+  func animateIn(_ position: BottomSheetViewController.Position){
     UIView.animate(withDuration: 0.3) {
-      let wheelHeight = 330 * self.view.widthMultiplier
-      let cardHeight = self.view.restaurantCardCGSize.height * 1.2
-      let offset = 100 + wheelHeight + cardHeight
-      self.view.frame = CGRect(x: 0, y: offset,
+      self.view.frame = CGRect(x: 0, y: position.yPosition,
                                width: self.view.frame.width, height: self.view.frame.height)
-      self.saveButton.alpha = 0
-      self.updateButton.alpha = 0
+      self.saveButton.alpha = position == .bottom ? 0 : 1
+      self.updateButton.alpha = position == .bottom ? 0 : 1
     }
   }
 }
+

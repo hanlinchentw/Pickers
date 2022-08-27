@@ -4,7 +4,7 @@
         <attribute name="id" optional="YES" attributeType="String"/>
         <relationship name="restaurant" maxCount="1" deletionRule="Deny" destinationEntity="Restaurant"/>
     </entity>
-    <entity name="List" representedClassName="List" syncable="YES" codeGenerationType="class">
+    <entity name="List" representedClassName=".List" syncable="YES">
         <attribute name="date" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>

@@ -11,8 +11,9 @@ import Foundation
 class BottomSheetViewModel {
   @Inject var coreService: SelectedCoreService
 
-  @Published var list: List?
+  var list: List?
   @Published var restaurants: Array<Restaurant> = []
+  @Published var listState: BottomSheetViewModel.ListState = .temp
   @Published var isRefresh: Bool = false
 
   func refresh() {
@@ -33,6 +34,27 @@ class BottomSheetViewModel {
     } else {
       try? coreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
     }
-//    isRefresh = true
+    listState = listState == .temp ? .temp : .edited
+  }
+
+  func createList(name: String) {
+    let moc = CoreDataManager.sharedInstance.managedObjectContext
+    let uuid = UUID().uuidString
+    let date = "\(Date.timeIntervalSinceReferenceDate)"
+    let list = List.init(id: uuid, date: date, name: name, context: moc)
+    let set = NSSet(array: self.restaurants.filter({ $0.isSelected }))
+    list.restaurants = set
+    try? moc.save()
+    listState = .existed
+    self.list = list
+  }
+}
+
+// MARK: - ListState
+extension BottomSheetViewModel {
+  enum ListState: Int {
+    case temp
+    case existed
+    case edited
   }
 }

@@ -45,12 +45,14 @@ class RestaurantListCell : UITableViewCell {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()
   }
+
   override func prepareForReuse() {
     super.prepareForReuse()
     self.restaurantName.text = nil
     self.ratedLabel.text = nil
     self.priceLabel.text = nil
   }
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -69,7 +71,7 @@ extension RestaurantListCell {
     restaurantImageView.anchor(left: leftAnchor, paddingLeft: 12, width: imageHeight, height: imageHeight)
     restaurantImageView.centerY(inView: self)
     contentView.addSubview(actionButton)
-    actionButton.anchor(right: rightAnchor, paddingRight: 12, width: 48, height: 48)
+    actionButton.anchor(right: rightAnchor, paddingRight: 8, width: 48, height: 48)
     actionButton.centerY(inView: self)
 
     let captionStack = UIStackView(arrangedSubviews: [restaurantName, priceLabel, ratedLabel])

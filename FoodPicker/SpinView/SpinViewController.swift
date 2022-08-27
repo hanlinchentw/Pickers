@@ -119,7 +119,7 @@ extension SpinViewController {
 }
 //MARK: - list method
 extension SpinViewController {
-  private func ReplaceAllSelectedRestaurantsWithExistedList(list: _List){
+  private func ReplaceAllSelectedRestaurantsWithExistedList(list: List){
     //        self.deselectAll()
     //        list.restaurants.forEach{
     //            self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: $0)
@@ -143,7 +143,7 @@ extension SpinViewController: BottomSheetViewControllerDelegate{
 }
 //MARK: - ListTableViewControllerDelegate
 extension SpinViewController: ListTableViewControllerDelegate{
-  func didSelectList(_ controller: ListTableViewController, list: _List) {
+  func didSelectList(_ controller: ListTableViewController, list: List) {
     ReplaceAllSelectedRestaurantsWithExistedList(list: list)
     controller.navigationController?.popViewController(animated: true)
   }

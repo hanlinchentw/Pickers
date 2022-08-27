@@ -12,7 +12,7 @@ import Combine
 private let editIdentifier = "EditCell"
 
 protocol EditViewControllerDelegate: AnyObject{
-    func didEditList(_ controller: EditViewController, editList: _List?)
+    func didEditList(_ controller: EditViewController, editList: List?)
 }
 
 class EditViewController: UITableViewController{

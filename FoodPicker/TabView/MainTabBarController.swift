@@ -34,12 +34,10 @@ extension MainTabBarController {
       .sink { [weak self] notificaiton in
         let userInfo = notificaiton.userInfo
         if let inserted = userInfo?["inserted"], inserted is Set<SelectedRestaurant>  {
-          print("observeSelectedRestaurantChange >>> insert")
           self?.spinTabItemView.increase()
           return
         }
         if let deleted = userInfo?["deleted"], deleted is Set<SelectedRestaurant> {
-          print("observeSelectedRestaurantChange >>> deleted")
           self?.spinTabItemView.decrease()
           return
         }

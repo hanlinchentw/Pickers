@@ -29,7 +29,6 @@ class CachedAsyncImageViewModel: ObservableObject {
 
       cache.set(object: remoteData as NSData, forKey: NSString.init(string: imageUrl))
     } catch {
-      print(error.localizedDescription)
       self.currentState = .failed(error)
     }
   }
