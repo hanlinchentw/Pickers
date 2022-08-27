@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import Combine
+import SwiftUI
 
 class SpinViewController: UIViewController {
   static let wheelWidth: CGFloat = 330
@@ -71,7 +72,7 @@ class SpinViewController: UIViewController {
     let resultNumber = Int.random(in: 1...presenter.restaurants.count)
     wheelSpin(targetIndex: resultNumber)
 
-    bottomSheetVC.fold()
+    bottomSheetVC.animateIn(.bottom)
     self.resultView.alpha = 1
   }
 
@@ -86,9 +87,10 @@ class SpinViewController: UIViewController {
   }
 
   @objc func handleListButtonTapped(){
-    let table = ListTableViewController()
-    table.delegate = self
-    self.navigationController?.pushViewController(table, animated: true)
+    let savedListView = SavedListView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
+    let savedListVC = UIHostingController(rootView: savedListView)
+    self.navigationController?.pushViewController(savedListVC, animated: true)
+    self.tabBarController?.tabBar.isHidden = true
   }
 }
 //MARK: - LuckyWheelDelegate, LuckyWheelDataSource
@@ -161,28 +163,6 @@ extension SpinViewController: ListTableViewControllerDelegate{
     //        }
     //        controller.navigationController?.popViewController(animated: true)
   }
-}
-//MARK: -  ResultViewDelegate
-extension SpinViewController: SpinResultViewDelegate {
-  //    func pushToDetailVC(restaurant: Restaurant) {
-  //        let detailVC = DetailController(restaurant: restaurant)
-  //        self.showLoadingAnimation()
-  //        self.retry(3) { success, failure in
-  //            detailVC.fetchDetail(success: success, failure: failure)
-  //        } success: {
-  //            detailVC.delegate = self
-  //            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3) {
-  //                self.navigationController?.navigationBar.barStyle = .black
-  //                self.navigationController?.pushViewController(detailVC, animated: true)
-  //                detailVC.configureUIForResult()
-  //                self.hideLoadingAnimation()
-  //            }
-  //        } failure: { _ in
-  //            self.presentPopupViewWithoutButton(title: "Sorry..",
-  //                                               subtitle: "Please check you internet connection")
-  //            self.hideLoadingAnimation()
-  //        }
-  //    }
 }
 //MARK: - DetailControllerDelegate
 extension SpinViewController {

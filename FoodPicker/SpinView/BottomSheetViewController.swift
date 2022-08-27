@@ -13,24 +13,15 @@ import CoreData
 private let selectedIdentifier = "RestaurantListCell"
 
 protocol BottomSheetViewControllerDelegate: AnyObject {
-  //    func shouldHideResultView(shouldHide: Bool)
-  //    func didSelectFromSheet(restaurant: Restaurant)
+
 }
 class BottomSheetViewController : UIViewController {
   //MARK: - Properties
   private let viewModel = BottomSheetViewModel()
-
   weak var delegate: BottomSheetViewControllerDelegate?
 
   private let notchView = NotchView()
-
-  private let titleLabel: UILabel = {
-    let label = UILabel()
-    label.font = UIFont(name: "Avenir-Heavy", size: 16)
-    label.text = "My selected list"
-    label.textColor = .black
-    return label
-  }()
+  private let titleLabel = UILabel("My selected list", font: .arialBoldMT, color: .black)
   private let saveButton = ListSaveButton()
   private let updateButton = ListUpdateButton()
   private let tableView = RestaurantsList()
@@ -82,6 +73,7 @@ class BottomSheetViewController : UIViewController {
   }
 
   @objc func handleSaveButtonTapped(){
+    #warning("TODO: 至少要有一間餐廳被選擇")
     let alertVC = UIAlertController(title: "Save list", message: nil, preferredStyle: .alert)
     alertVC.addTextField { (tf) in
       tf.placeholder = "Enter list name"
@@ -95,64 +87,13 @@ class BottomSheetViewController : UIViewController {
     alertVC.addAction(cancelAction)
     alertVC.addAction(saveAction)
     present(alertVC, animated: true, completion: nil)
-    //    if self.list?.restaurantsID.isEmpty ?? true {
-    //      self.presentPopupViewWithoutButton(title: "Empty", subtitle: "Select at least one restaurant.")
-    //    }else{
-    //
-    //    }
   }
-  @objc func handleUpdateButtonTapped(){
-    //        guard let list = self.list else { return }
-    //        let coreConnect = CoredataConnect(context: context)
-    //        if list.restaurantsID.isEmpty{
-    //            self.presentPopupViewWithButtonAndProvidePublisher(title: "Empty List", subtitle: "Empty List will be DELETED", buttonTitle: "Delete")
-    //                .sink {[weak self] _ in
-    //                    coreConnect.deleteList(list: list, success: {
-    //                        self?.state = .temp
-    //                    }, failure: { _ in
-    //
-    //                    })
-    //                }.store(in: &subscriber)
-    //        }else{
-    //            self.tableView.restaurants = self.tableView.restaurants.filter { $0.isSelected }
-    //            coreConnect.updateList(list: list)
-    //            self.state = .existed
-    //        }
+
+  @objc func handleUpdateButtonTapped() {
+  #warning("TODO: 全部都取消的話，跳刪除列表提示")
+    viewModel.updateList()
+    tableView.reloadData()
   }
-}
-//MARK: -  List's Restaurant update method
-extension BottomSheetViewController {
-  //    private func configureTempList(restaurants: [Restaurant]) {
-  //        let list = List(name: "My selected list", restaurants: restaurants, date: Date())
-  //        self.list = list
-  //        self.tableView.restaurants = restaurants
-  //        self.tableView.reloadData()
-  //    }
-  //    private func configureEditedList(restaurant:Restaurant) {
-  //        print("DEBUG: Restaurant is selected \(restaurant.isSelected)")
-  //        if let index = tableView.restaurants
-  //            .firstIndex(where: { $0.restaurantID == restaurant.restaurantID}){
-  //            tableView.restaurants[index].isSelected = restaurant.isSelected
-  //        }else{
-  //            if restaurant.isSelected{
-  //                list?.restaurants.append(restaurant)
-  //                self.tableView.restaurants.append(restaurant)
-  //            }else{
-  //                guard let newlistRestaurants =
-  //                        (list?.restaurants.filter({ $0.restaurantID != restaurant.restaurantID })) else { return }
-  //                list?.restaurants = newlistRestaurants
-  //                tableView.restaurants = tableView.restaurants.filter({ $0.restaurantID != restaurant.restaurantID })
-  //            }
-  //        }
-  //        self.tableView.reloadData()
-  //    }
-  //    private func configureExistedList(list: List){
-  //        self.list = list
-  //        self.state = .existed
-  //        tableView.restaurants = list.restaurants
-  //        print(list.restaurants)
-  //        self.tableView.reloadData()
-  //    }
 }
 //MARK: -  List State change animation
 extension BottomSheetViewController{
@@ -192,8 +133,6 @@ extension BottomSheetViewController{
       .store(in: &set)
   }
 }
-
-
 //MARK: - RestaurantsListDelegate
 extension BottomSheetViewController: RestaurantsListDelegate {
   func didTapActionButton(_ restaurant: Restaurant, indexPath: IndexPath) {

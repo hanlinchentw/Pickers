@@ -41,6 +41,8 @@
 		B63548FF28B52CEF00136A15 /* CachedAsyncImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63548FE28B52CEF00136A15 /* CachedAsyncImageViewModel.swift */; };
 		B63C19AB251C656A0012CC4A /* RestaurantsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C19AA251C656A0012CC4A /* RestaurantsList.swift */; };
 		B63E497928BA20FB00714F94 /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E497828BA20FB00714F94 /* UITableView+Extensions.swift */; };
+		B63E497B28BA669700714F94 /* SavedListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E497A28BA669700714F94 /* SavedListView.swift */; };
+		B63E497E28BA6D4200714F94 /* MockedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E497D28BA6D4200714F94 /* MockedList.swift */; };
 		B647A4CD24B1F7BA0098B7A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */; };
 		B647A4CF24B1F7BA0098B7A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */; };
 		B647A4D424B1F7BA0098B7A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B647A4D224B1F7BA0098B7A2 /* Main.storyboard */; };
@@ -169,6 +171,8 @@
 		B63548FE28B52CEF00136A15 /* CachedAsyncImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAsyncImageViewModel.swift; sourceTree = "<group>"; };
 		B63C19AA251C656A0012CC4A /* RestaurantsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantsList.swift; sourceTree = "<group>"; };
 		B63E497828BA20FB00714F94 /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
+		B63E497A28BA669700714F94 /* SavedListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListView.swift; sourceTree = "<group>"; };
+		B63E497D28BA6D4200714F94 /* MockedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockedList.swift; sourceTree = "<group>"; };
 		B647A4C924B1F7BA0098B7A2 /* FoodPicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodPicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -304,6 +308,10 @@
 		B619CBBF28A2B23100376348 /* Deprecated */ = {
 			isa = PBXGroup;
 			children = (
+				B689A7A62564DFE4009D270B /* ListInfoCell.swift */,
+				B689A7A32564DBBE009D270B /* ListTableViewController.swift */,
+				B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */,
+				B689A7AA2574EDB4009D270B /* EditViewController.swift */,
 			);
 			path = Deprecated;
 			sourceTree = "<group>";
@@ -391,6 +399,14 @@
 				B6B9976528B9DD3A007C3D1D /* CachedImageView.swift */,
 			);
 			path = CachedImage;
+			sourceTree = "<group>";
+		};
+		B63E497C28BA6D2E00714F94 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				B63E497D28BA6D4200714F94 /* MockedList.swift */,
+			);
+			path = Mock;
 			sourceTree = "<group>";
 		};
 		B647A4C024B1F7BA0098B7A2 = {
@@ -555,16 +571,14 @@
 		B6A2FA8D2533E6C6005CB171 /* SpinView */ = {
 			isa = PBXGroup;
 			children = (
+				B63E497C28BA6D2E00714F94 /* Mock */,
 				B6B9976928B9FA76007C3D1D /* ViewModel */,
 				B69E3B1D28B9267000014AA3 /* View */,
 				B67414A128A5693800C545D2 /* Presenter */,
 				B650ECCF257F2648004A4049 /* SpinWheel */,
-				B689A7A62564DFE4009D270B /* ListInfoCell.swift */,
 				B647A4F024B22B010098B7A2 /* SpinViewController.swift */,
 				B6AE009C24DD188400423D72 /* BottomSheetViewController.swift */,
-				B689A7A32564DBBE009D270B /* ListTableViewController.swift */,
-				B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */,
-				B689A7AA2574EDB4009D270B /* EditViewController.swift */,
+				B63E497A28BA669700714F94 /* SavedListView.swift */,
 			);
 			path = SpinView;
 			sourceTree = "<group>";
@@ -873,6 +887,7 @@
 				B650ECD7257F2655004A4049 /* SpinWheel.swift in Sources */,
 				B634A71F28A8C0E200796D63 /* TestRestaurantData.swift in Sources */,
 				B674149D28A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift in Sources */,
+				B63E497B28BA669700714F94 /* SavedListView.swift in Sources */,
 				B6F789A92675DC440003ED5C /* Validators.swift in Sources */,
 				B634A72E28A8D46500796D63 /* LikedAddBehavior.swift in Sources */,
 				B634A71B28A76B7300796D63 /* SearchFieldContainer.swift in Sources */,
@@ -885,6 +900,7 @@
 				B6F789BC2678B8BB0003ED5C /* PopupView.swift in Sources */,
 				B6AA6C3A28A55C6000444F0A /* LikedCoreService.swift in Sources */,
 				B634A72828A8D38500796D63 /* RestaurantManagedObject.swift in Sources */,
+				B63E497E28BA6D4200714F94 /* MockedList.swift in Sources */,
 				B634A71328A74E1500796D63 /* Color+Extensions.swift in Sources */,
 				B634A71128A74DEB00796D63 /* Text+Extensions.swift in Sources */,
 				B6EF13B128B23366009345D6 /* FavoriteSearchContainer.swift in Sources */,

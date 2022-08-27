@@ -45,8 +45,18 @@ class BottomSheetViewModel {
     let set = NSSet(array: self.restaurants.filter({ $0.isSelected }))
     list.restaurants = set
     try? moc.save()
+
     listState = .existed
     self.list = list
+  }
+
+  func updateList() {
+    restaurants = restaurants.filter { $0.isSelected }
+    list?.restaurants = NSSet(array: restaurants)
+    let moc = CoreDataManager.sharedInstance.managedObjectContext
+    try? moc.save()
+
+    listState = .existed
   }
 }
 
