@@ -40,13 +40,13 @@ struct RestaurantListItemView: View {
 
       VStack(alignment: .leading) {
         VStack(alignment: .leading, spacing: 6) {
-          Text(presenter.name).en16ArialBold()
-          Text(presenter.thirdRowString).en14Arial()
+          Text(presenter.name).en16Bold()
+          Text(presenter.thirdRowString).en14()
         }
         HStack(spacing: 4, content: {
           Text("★").foregroundColor(Color.yellow)
-          Text("\(presenter.ratingWithOneDecimal)").en14Arial()
-          Text("\(presenter.reviewCount)").en14Arial()
+          Text("\(presenter.ratingWithOneDecimal)").en14()
+          Text("\(presenter.reviewCount)").en14()
             .foregroundColor(Color.gray.opacity(0.7))
           Spacer()
         })

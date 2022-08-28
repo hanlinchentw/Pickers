@@ -18,10 +18,10 @@ struct FavoriteEditButtonContainer: View {
         isEditing.toggle()
       } label: {
         if isEditing {
-          Text("Finish").en14ArialBold().foregroundColor(.freshGreen)
+          Text("Finish").en14Bold().foregroundColor(.freshGreen)
           Image("icnSuccessS")
         } else {
-          Text("Edit").en14Arial().foregroundColor(.black)
+          Text("Edit").en14().foregroundColor(.black)
           Image("icnEditSmall")
         }
       }

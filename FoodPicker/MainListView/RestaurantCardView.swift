@@ -50,9 +50,9 @@ struct RestaurantCardView: View {
           HStack {
             VStack(alignment: .leading, spacing: 6) {
               Text(presenter.name)
-                .en16ArialBold()
+                .en16Bold()
               Text(presenter.openOrCloseString)
-                .en14ArialBold()
+                .en14Bold()
                 .foregroundColor(presenter.openOrCloseColor)
             }
             Spacer()
@@ -64,12 +64,12 @@ struct RestaurantCardView: View {
             .aspectRatio(contentMode: .fit)
             .frame(width: 48, height: 48)
           }
-          Text(presenter.thirdRowString).en14Arial().foregroundColor(Color.gray.opacity(0.7))
+          Text(presenter.thirdRowString).en14().foregroundColor(Color.gray.opacity(0.7))
         }
         HStack(spacing: 4, content: {
           Text("★").foregroundColor(Color.yellow)
-          Text("\(presenter.ratingWithOneDecimal)").en14Arial()
-          Text("\("\(presenter.reviewCount)")").en14Arial()
+          Text("\(presenter.ratingWithOneDecimal)").en14()
+          Text("\("\(presenter.reviewCount)")").en14()
             .foregroundColor(Color.gray.opacity(0.7))
           Spacer()
         })

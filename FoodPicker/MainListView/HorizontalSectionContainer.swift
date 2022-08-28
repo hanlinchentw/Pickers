@@ -28,7 +28,7 @@ struct HorizontalSectionContainer: View {
 
       if (showContent) {
         Text(BusinessService.RestaurantSorting.popular.description)
-          .en24ArialBold()
+          .en24Bold()
           .padding(.leading, 16)
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 16) {

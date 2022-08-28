@@ -25,7 +25,7 @@ struct VerticalListContainer: View {
     VStack(alignment: .leading, spacing: 12) {
       if showContent {
         Text(BusinessService.RestaurantSorting.all.description)
-          .en24ArialBold()
+          .en24Bold()
           .padding(.leading, 16)
         VStack(spacing: 16) {
           ForEach(0 ..< dataStore.dataCount, id: \.self) { index in

@@ -26,7 +26,7 @@ struct Alert<Content: View>: View {
       VStack(alignment: .center) {
         Spacer()
         if let title = title {
-          Text(title).en16ArialBold()
+          Text(title).en16Bold()
             .foregroundColor(.butterScotch)
             .padding(.horizontal, 32)
             .multilineTextAlignment(.center)

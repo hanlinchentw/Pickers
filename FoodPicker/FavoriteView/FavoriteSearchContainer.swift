@@ -16,7 +16,7 @@ struct FavoriteSearchContainer: View {
     ZStack {
       Text("Memories are the only things left after deletion")
         .foregroundColor(Color.gray.opacity(0.4))
-        .en16ArialBold()
+        .en16Bold()
         .multilineTextAlignment(.center)
         .height(40)
       TextField("", text: $inputText)
@@ -24,7 +24,7 @@ struct FavoriteSearchContainer: View {
           HStack {
             Image("icnSearchSmall")
             Text("Search in my favorite")
-              .en14Arial()
+              .en14()
               .foregroundColor(.gray.opacity(0.5))
           }
         }

@@ -77,7 +77,7 @@ struct FavoriteHeader: View {
     VStack() {
       VStack {
         Text("Favorite")
-          .en16ArialBold()
+          .en16Bold()
           .padding(.top, 24)
       }
       .frame(width: UIScreen.screenWidth, height: 80)

@@ -23,44 +23,8 @@ struct SavedListView: View {
 
         ScrollView(.vertical, showsIndicators: false) {
           VStack {
-            ForEach(MockedList.mock_lists) { list in
-              HStack {
-                VStack(alignment: .leading) {
-                  VStack(alignment: .leading, spacing: 8) {
-                    Text(list.name)
-                      .en16ArialBold()
-                    Text(list.date)
-                      .en14Arial()
-                      .foregroundColor(.gray)
-                  }
-                  Spacer()
-                  Text("3 restaurants")
-                    .en14Arial()
-                }
-                .padding(.vertical, 16)
-                .padding(.leading, 16)
-
-                Spacer()
-
-                VStack() {
-                  Image("icnMoreThreeDot")
-                    .frame(width: 40, height: 40)
-                  Spacer()
-                  Image("icnArrowUp")
-                    .frame(width: 40, height: 40)
-                }
-                .padding(.vertical, 8)
-                .padding(.trailing, 8)
-              }
-              .frame(height: 116)
-              .roundedViewWithShadow(
-                cornerRadius: 16,
-                backgroundColor: .white,
-                shadowColor: .gray.opacity(0.5),
-                shadowRadius: 8
-              )
-              .padding(.bottom, 8)
-              .padding(.horizontal, 8)
+            ForEach(savedLists) { list in
+              ListCardView(list: list)
             }
           }
         }
@@ -94,7 +58,7 @@ struct SavedListHeader: View {
       Spacer()
     }
     .overlay(
-      Text("Saved List").en16ArialBold()
+      Text("Saved List").en16Bold()
     )
   }
 }
