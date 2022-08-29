@@ -36,7 +36,6 @@ struct HorizontalSectionContainer: View {
               if dataStore.loadState != LoadingState.loaded {
                 DummyRestaurantCardView()
                   .padding(.vertical, 8)
-                  .shimmer()
               } else {
                 let restaurant = dataStore.data[index]
                 let isLiked = likedRestaurants.contains(where: { $0.id == restaurant.id })
@@ -74,7 +73,7 @@ struct HorizontalSectionContainer: View {
     if (isSelected) {
       try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: viewContext)
     } else {
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: viewContext)
+      try! selectedCoreService.addRestaurant(data: ["restaurants": [restaurant]], in: viewContext)
     }
   }
 

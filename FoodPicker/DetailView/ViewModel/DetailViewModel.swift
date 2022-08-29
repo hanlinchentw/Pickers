@@ -42,7 +42,7 @@ extension DetailViewModel {
     if isSelected {
       try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
     } else {
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
+      try! selectedCoreService.addRestaurant(data: ["restaurants": [restaurant]], in: CoreDataManager.sharedInstance.managedObjectContext)
     }
     isSelected.toggle()
   }

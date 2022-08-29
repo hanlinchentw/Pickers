@@ -11,14 +11,15 @@ import CoreData
 
 class SelectedAddBehavior: AddBehavior {
   override func add(data: [String: Any], in context: NSManagedObjectContext) throws {
-    guard let restaurant = data["restaurant"] as? Restaurant else {
+    guard let restaurants = data["restaurants"] as? Array<Restaurant> else {
       throw NSError(domain: "\(#function), business not found", code: NSCoreDataError)
     }
-    restaurant.isSelected = true
-
-    let selectedRestaurant = SelectedRestaurant.init(context: context)
-    selectedRestaurant.id = restaurant.id
-    selectedRestaurant.restaurant = restaurant
-    try context.save()
+    for restaurant in restaurants {
+      restaurant.isSelected = true
+      let selectedRestaurant = SelectedRestaurant.init(context: context)
+      selectedRestaurant.id = restaurant.id
+      selectedRestaurant.restaurant = restaurant
+      try context.save()
+    }
   }
 }

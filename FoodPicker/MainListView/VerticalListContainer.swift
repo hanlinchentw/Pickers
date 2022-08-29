@@ -66,7 +66,7 @@ struct VerticalListContainer: View {
     if (isSelected) {
       try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: viewContext)
     } else {
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: viewContext)
+      try! selectedCoreService.addRestaurant(data: ["restaurants": [restaurant]], in: viewContext)
     }
   }
 }

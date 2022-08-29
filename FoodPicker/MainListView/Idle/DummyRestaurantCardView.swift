@@ -9,9 +9,6 @@
 import SwiftUI
 
 struct DummyRestaurantCardView: View {
-
-
-
   var body: some View {
     VStack(alignment: .leading, spacing: 6) {
       VStack(alignment: .leading) {
@@ -35,12 +32,11 @@ struct DummyRestaurantCardView: View {
         .padding(.top, 8)
         Spacer()
       }
+      .shimmer()
     }
     .frame(width: 280, height: 250)
-    .roundedViewWithShadow(cornerRadius: 16,
-                           backgroundColor: Color.white,
-                           shadowColor: Color.gray.opacity(0.1),
-                           shadowRadius: 4)
+    .background(Color.white)
+    .cornerRadius(16)
   }
 }
 

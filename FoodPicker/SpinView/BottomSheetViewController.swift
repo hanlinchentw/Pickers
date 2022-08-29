@@ -36,6 +36,7 @@ class BottomSheetViewController : UIViewController {
 
     bindRefresh()
     bindListState()
+    viewModel.observeSelectedRestaurantChange()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -73,7 +74,6 @@ class BottomSheetViewController : UIViewController {
   }
 
   @objc func handleSaveButtonTapped(){
-    #warning("TODO: 至少要有一間餐廳被選擇")
     let alertVC = UIAlertController(title: "Save list", message: nil, preferredStyle: .alert)
     alertVC.addTextField { (tf) in
       tf.placeholder = "Enter list name"
@@ -90,9 +90,14 @@ class BottomSheetViewController : UIViewController {
   }
 
   @objc func handleUpdateButtonTapped() {
-  #warning("TODO: 全部都取消的話，跳刪除列表提示")
-    viewModel.updateList()
-    tableView.reloadData()
+    PresentHelper.presentPopupViewWithButton(title: "Warning", subtitle: "Unselected restaurants will be deleted.", buttonText: "OK") {
+      self.viewModel.updateList()
+      self.tableView.reloadData()
+    }
+  }
+
+  func applyList(_ list: List) {
+    self.viewModel.applyList(list)
   }
 }
 //MARK: -  List State change animation
@@ -100,35 +105,15 @@ extension BottomSheetViewController{
   func bindListState() {
     viewModel.$listState
       .sink { state in
-        switch state {
-        case .temp:
-          self.titleLabel.text = "My selected list"
-          self.saveButton.setTitle("Save list", for: .normal)
-          self.saveButton.alpha = 1
-          self.saveButton.isHidden = false
-          self.updateButton.isHidden = true
-        case .existed:
-          UIView.animate(withDuration: 0.2, animations: {
-            self.titleLabel.alpha = 0
-            self.saveButton.alpha = 0
-            self.updateButton.alpha = 0
-          }) { _ in
-            self.titleLabel.alpha = 1
-            self.titleLabel.text = self.viewModel.list?.name
-            self.saveButton.isHidden = true
-            self.updateButton.isHidden = true
-          }
-        case .edited:
-          let ns = NSMutableAttributedString(string: self.viewModel.list?.name ?? "", attributes: .attributes([.arial16Bold, .black]))
-          ns.append(NSAttributedString(string: "*", attributes: .butterScotch))
-          self.titleLabel.attributedText = ns
-          self.saveButton.setTitle("Save as new", for: .normal)
-          self.saveButton.isHidden = false
-          self.updateButton.isHidden = false
-          self.saveButton.alpha = 1
-          self.updateButton.alpha = 1
+        OperationQueue.main.addOperation {
+          UIView.animate(withDuration: 0.15, animations: {
+            self.titleLabel.text = self.viewModel.listName
+            self.saveButton.setTitle(self.viewModel.saveButtonText, for: .normal)
+            self.saveButton.isHidden = self.viewModel.saveButtonHidden
+            self.updateButton.isHidden = self.viewModel.updateButtonHidden
+          })
+          self.view.layoutIfNeeded()
         }
-        self.view.layoutIfNeeded()
       }
       .store(in: &set)
   }
@@ -194,7 +179,6 @@ extension BottomSheetViewController {
     updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
   }
 }
-
 // MARK: - Position
 extension BottomSheetViewController {
   enum Position {

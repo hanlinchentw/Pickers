@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     Resolver.sharedInstance.register(type: LikedCoreService.self, dependency: LikedCoreService.sharedInstance)
 
     Resolver.sharedInstance.register(type: LocationService.self, dependency: LocationService.shared)
+    #if TEST
+    return false
+    #endif
     return true
   }
 

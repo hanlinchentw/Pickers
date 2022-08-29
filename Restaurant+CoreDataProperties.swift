@@ -64,3 +64,9 @@ extension Restaurant {
     self.longitude = detail.coordinates.longitude
   }
 }
+
+extension Restaurant {
+  static func !=(lhs: Restaurant, rhs: Restaurant) -> Bool {
+    return lhs.id != rhs.id
+  }
+}

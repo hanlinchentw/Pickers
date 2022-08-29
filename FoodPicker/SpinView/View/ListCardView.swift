@@ -9,21 +9,24 @@
 import SwiftUI
 
 struct ListCardView: View {
-  var list: List
-
+  var viewModel: ListCardViewModel
   @State var isExpand: Bool = false
+
+  init(list: List) {
+    self.viewModel = ListCardViewModel(list: list)
+  }
 
   var body: some View {
     VStack {
       HStack {
         VStack(alignment: .leading) {
           VStack(alignment: .leading, spacing: 8) {
-            Text(list.name).en16Bold()
-            Text(list.date).en14()
+            Text(viewModel.name).en16Bold()
+            Text(viewModel.date).en14()
               .foregroundColor(.gray)
           }
           Spacer()
-          Text("3 restaurants").en14()
+          Text(viewModel.numOfRestaurantsDisplayText).en14()
         }
         .padding(.vertical, 16)
         .padding(.leading, 16)
@@ -39,7 +42,7 @@ struct ListCardView: View {
               isExpand.toggle()
             }
           } label: {
-            isExpand ? Image("icnArrowDown") : Image("icnArrowUp")
+            isExpand ? Image("icnArrowUp") : Image("icnArrowDown")
           }
           .animation(.easeInOut, value: isExpand)
           .frame(width: 40, height: 40)
@@ -57,16 +60,17 @@ struct ListCardView: View {
       .padding(.bottom, 8)
       .padding(.horizontal, 8)
       .zIndex(1)
-      if (!isExpand) {
+
+      if isExpand {
         VStack {
-          ForEach(0 ..< 3) { index in
-//            let restaurant = list.restaurants.allObjects[index] as! Restaurant
-            let presenter = RestaurantPresenter(restaurant: TestRestaurantData.TEST_RESTAURANT, actionButtonMode: .none)
+          ForEach(0 ..< viewModel.numOfRestaurants, id: \.self) { index in
+            let restaurant = viewModel.getRestaurantByIndex(index)
+            let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: .none)
             RestaurantListItemView(presenter: presenter) {
             }
           }
         }
-        .height(3 * 100)
+        .height(CGFloat(viewModel.numOfRestaurants * 120))
         .zIndex(0)
       }
     }

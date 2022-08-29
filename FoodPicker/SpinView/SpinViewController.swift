@@ -87,7 +87,13 @@ class SpinViewController: UIViewController {
   }
 
   @objc func handleListButtonTapped(){
-    let savedListView = SavedListView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
+    @Inject var selectedCoreService: SelectedCoreService
+    let savedListView = SavedListView(
+      applyList: { list in
+        self.presenter.applyList(list)
+        self.bottomSheetVC.applyList(list)
+      })
+      .environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
     let savedListVC = UIHostingController(rootView: savedListView)
     self.navigationController?.pushViewController(savedListVC, animated: true)
     self.tabBarController?.tabBar.isHidden = true
@@ -119,16 +125,6 @@ extension SpinViewController {
         .store(in: &set)
     }
 }
-//MARK: - list method
-extension SpinViewController {
-  private func ReplaceAllSelectedRestaurantsWithExistedList(list: List){
-    //        self.deselectAll()
-    //        list.restaurants.forEach{
-    //            self.updateSelectedRestaurantsInCoredata(context: self.context, restaurant: $0)
-    //        }
-    //        self.configureList(list: list)
-  }
-}
 //MARK: -  BottomSheetDelegate
 extension SpinViewController: BottomSheetViewControllerDelegate{
   func shouldHideResultView(shouldHide: Bool) {
@@ -141,41 +137,6 @@ extension SpinViewController: BottomSheetViewControllerDelegate{
         self.resultView.alpha = 1
       }
     }
-  }
-}
-//MARK: - ListTableViewControllerDelegate
-extension SpinViewController: ListTableViewControllerDelegate{
-  func didSelectList(_ controller: ListTableViewController, list: List) {
-    ReplaceAllSelectedRestaurantsWithExistedList(list: list)
-    controller.navigationController?.popViewController(animated: true)
-  }
-  func willPopViewController(_ controller: ListTableViewController){
-    //        let list = self.bottomSheetVC.list
-    //        if let index = controller.lists.firstIndex(where: {$0.id == list?.id }){
-    //            let mutableList = controller.lists[index]
-    //            guard mutableList.isEdited  else { controller.navigationController?.popViewController(animated: true)
-    //                return }
-    //            self.configureList(list: mutableList)
-    //        }else {
-    //            self.state = .temp
-    //            self.bottomSheetVC.state = .temp
-    //            self.configureList(list: nil, addRestaurant: nil)
-    //        }
-    //        controller.navigationController?.popViewController(animated: true)
-  }
-}
-//MARK: - DetailControllerDelegate
-extension SpinViewController {
-  //    func didSelectRestaurant(restaurant: Restaurant) {
-  //
-  //    }
-  //
-  //    func didLikeRestaurant(restaurant: Restaurant) {
-  //
-  //    }
-
-  func willPopViewController(_ controller: DetailController) {
-    controller.navigationController?.popViewController(animated: true)
   }
 }
 //MARK: - Auto layout

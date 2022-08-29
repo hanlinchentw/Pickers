@@ -1,0 +1,4 @@
+Target dependency graph (2 targets)
+FoodPicker in FoodPicker, no dependencies
+FoodPickerTests in FoodPicker, depends on:
+FoodPicker in FoodPicker (explicit)

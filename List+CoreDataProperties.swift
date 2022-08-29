@@ -2,7 +2,7 @@
 //  List+CoreDataProperties.swift
 //  FoodPicker
 //
-//  Created by 陳翰霖 on 2022/8/27.
+//  Created by 陳翰霖 on 2022/8/28.
 //  Copyright © 2022 陳翰霖. All rights reserved.
 //
 //
@@ -50,5 +50,3 @@ extension List : Identifiable {
     self.date = date
   }
 }
-
-

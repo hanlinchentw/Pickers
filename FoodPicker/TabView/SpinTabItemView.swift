@@ -15,6 +15,10 @@ protocol SpinTabItemViewProps {
 }
 
 class SpinTabItemView: UIImageView, SpinTabItemViewProps {
+  func update(_ number: Int) {
+    self.displayNumber = number
+  }
+
   var increase: () -> Void {
     { self.displayNumber = self.displayNumber + 1 }
   }

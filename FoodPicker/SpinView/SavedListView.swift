@@ -11,7 +11,9 @@ import SwiftUI
 struct SavedListView: View {
   @Environment(\.presentationMode) var presentationMode
   @Environment(\.managedObjectContext) var viewContext
-  @FetchRequest(sortDescriptors: []) var savedLists: FetchedResults<List>
+  @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) var savedLists: FetchedResults<List>
+
+  var applyList: (_ list: List) -> Void
 
   var body: some View {
     ZStack {
@@ -20,11 +22,14 @@ struct SavedListView: View {
         SavedListHeader(back: {
           presentationMode.wrappedValue.dismiss()
         })
-
         ScrollView(.vertical, showsIndicators: false) {
           VStack {
-            ForEach(savedLists) { list in
+            ForEach(savedLists, id: \.self) { list in
               ListCardView(list: list)
+                .onTapGesture {
+                  applyList(list)
+                  presentationMode.wrappedValue.dismiss()
+                }
             }
           }
         }
@@ -38,7 +43,9 @@ struct SavedListView: View {
 
 struct SavedListView_Previews: PreviewProvider {
   static var previews: some View {
-    SavedListView()
+    SavedListView { list in
+
+    }
   }
 }
 

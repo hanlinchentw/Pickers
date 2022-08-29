@@ -46,7 +46,7 @@ class FavoriteListViewModel: ObservableObject {
     if let isSelected = isSelected, isSelected {
       try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: Self.viewContext)
     } else {
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: Self.viewContext)
+      try! selectedCoreService.addRestaurant(data: ["restaurants": [restaurant]], in: Self.viewContext)
     }
   }
 

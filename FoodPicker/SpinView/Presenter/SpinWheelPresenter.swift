@@ -9,13 +9,15 @@
 import UIKit
 
 class SpinWheelPresenter  {
+  @Inject var selectedCoreService: SelectedCoreService
+
   @Published var restaurants: Array<Restaurant> = []
   @Published var isRefresh: Bool = false
 
   var numOfSection: Int {
     if restaurants.isEmpty { return 4 }
 
-    return restaurants.count * 2
+    return restaurants.count
   }
 
   var isSpinButtonEnabled: Bool {
@@ -27,6 +29,7 @@ class SpinWheelPresenter  {
 
     var items1 = [WheelItem]()
     var items2 = [WheelItem]()
+
     if restaurants.count % 2 == 0 {
       for (index, item) in restaurants.enumerated(){
         let itemColor : UIColor = index % 2 != 0 ? .white : .pale
@@ -44,7 +47,8 @@ class SpinWheelPresenter  {
         items2.append(wheelItem2)
       }
     }
-    return items1 + items2
+    return items1
+//    return items1 + items2
   }
 
   func refresh() {
@@ -52,6 +56,14 @@ class SpinWheelPresenter  {
       self.restaurants = selectedRestaurants.map { $0.restaurant }
     }
     isRefresh = true
+  }
+
+  func applyList(_ list: List) {
+    let moc = CoreDataManager.sharedInstance.managedObjectContext
+
+    try? SelectedRestaurant.deleteAll(in: moc)
+    try? selectedCoreService.addRestaurant(data: ["restaurants": restaurants], in: moc)
+    try? moc.save()
   }
 }
 

@@ -31,17 +31,16 @@ extension MainTabBarController {
     CoreDataManager.sharedInstance.saveContext()
 
     NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
-      .sink { [weak self] notificaiton in
-        let userInfo = notificaiton.userInfo
-        if let inserted = userInfo?["inserted"], inserted is Set<SelectedRestaurant>  {
-          self?.spinTabItemView.increase()
-          return
+      .sink { notification in
+        guard let userInfo = notification.userInfo else { return }
+        let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
+        let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
+        if insert == nil && delete == nil { return }
+        if let selectedRestaurants = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext) as? Array<SelectedRestaurant> {
+          self.spinTabItemView.update(selectedRestaurants.count)
         }
-        if let deleted = userInfo?["deleted"], deleted is Set<SelectedRestaurant> {
-          self?.spinTabItemView.decrease()
-          return
-        }
-      }.store(in: &set)
+      }
+      .store(in: &set)
   }
 }
 
