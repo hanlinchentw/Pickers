@@ -16,41 +16,55 @@ struct SavedListView: View {
   var applyList: (_ list: List) -> Void
 
   var body: some View {
-    ZStack {
-      Color.listViewBackground.ignoresSafeArea()
-      VStack(alignment: .center) {
-        SavedListHeader(back: {
-          presentationMode.wrappedValue.dismiss()
-        })
-        ScrollView(.vertical, showsIndicators: false) {
-          VStack {
-            ForEach(savedLists, id: \.self) { list in
-              ListCardView(list: list)
-                .onTapGesture {
-                  applyList(list)
-                  presentationMode.wrappedValue.dismiss()
+    NavigationView {
+      ZStack {
+        Color.listViewBackground.ignoresSafeArea()
+
+        VStack(alignment: .center) {
+
+          ScrollViewReader { proxy in
+            SavedListHeader(
+              back: {
+                presentationMode.wrappedValue.dismiss()
+              },
+              headerOnTap: {
+                proxy.scrollTo("SavedList", anchor: .top)
+              }
+            )
+            ScrollView(.vertical, showsIndicators: false) {
+              VStack {
+                ForEach(savedLists, id: \.self) { list in
+                  ListCardView(list: list)
+                    .onTapGesture {
+                      applyList(list)
+                      presentationMode.wrappedValue.dismiss()
+                    }
                 }
+              }
             }
+            .id("SavedList")
+            .safeAreaInset(edge: .top) { Spacer().height(20) }
           }
+          Spacer()
         }
-        .padding(.top, 16)
-        Spacer()
       }
+      .ignoresSafeArea()
+      .navigationBarHidden(true)
     }
-    .navigationBarHidden(true)
   }
 }
 
 struct SavedListView_Previews: PreviewProvider {
   static var previews: some View {
     SavedListView { list in
-
+      
     }
   }
 }
 
 struct SavedListHeader: View {
   var back: () -> Void
+  var headerOnTap: () -> Void
 
   var body: some View {
     HStack {
@@ -67,5 +81,9 @@ struct SavedListHeader: View {
     .overlay(
       Text("Saved List").en16Bold()
     )
+    .onTapGesture {
+      headerOnTap()
+    }
+    .padding(.top, SafeAreaUtils.top)
   }
 }

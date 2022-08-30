@@ -17,7 +17,7 @@ class SpinWheelPresenter  {
   var numOfSection: Int {
     if restaurants.isEmpty { return 4 }
 
-    return restaurants.count
+    return restaurants.count * 2
   }
 
   var isSpinButtonEnabled: Bool {
@@ -47,8 +47,7 @@ class SpinWheelPresenter  {
         items2.append(wheelItem2)
       }
     }
-    return items1
-//    return items1 + items2
+    return items1 + items2
   }
 
   func refresh() {
@@ -60,9 +59,17 @@ class SpinWheelPresenter  {
 
   func applyList(_ list: List) {
     let moc = CoreDataManager.sharedInstance.managedObjectContext
-
     try? SelectedRestaurant.deleteAll(in: moc)
-    try? selectedCoreService.addRestaurant(data: ["restaurants": restaurants], in: moc)
+    for restaurant in list.restaurants.allObjects {
+      try? selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: moc)
+    }
+
+    try? moc.save()
+  }
+
+  func reset() {
+    let moc = CoreDataManager.sharedInstance.managedObjectContext
+    try? SelectedRestaurant.deleteAll(in: moc)
     try? moc.save()
   }
 }

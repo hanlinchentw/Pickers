@@ -42,16 +42,19 @@ struct FavoriteView: View {
       .safeAreaInset(edge: .bottom) { Spacer().height(50) }
     }
     .showAlert(when: editUsecase.deletedItem != nil, alert: {
-      Alert(
-        title: "Remove from My Favorite",
-        rightButtonText: "Remove",
-        leftButtonText: "Cancel",
-        rightButtonOnPress: editUsecase.removeItem,
-        leftButtonOnPress: editUsecase.cancel,
-        content: {
-          Text(editUsecase.deletionAlertText).multilineTextAlignment(.center)
-        }
-      )
+      Alert(model:
+          .init(
+            title: "Remove from My Favorite",
+            rightButtonText: "Remove",
+            leftButtonText: "Cancel",
+            rightButtonOnPress: editUsecase.removeItem,
+            leftButtonOnPress: editUsecase.cancel))
+      {
+        Text(editUsecase.deletionAlertText)
+          .en16()
+          .multilineTextAlignment(.center)
+          .lineLimit(3)
+      }
     })
     .navigationBarHidden(true)
     .onTapGesture {

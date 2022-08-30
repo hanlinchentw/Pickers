@@ -64,7 +64,7 @@ class BottomSheetViewModel {
     if restaurant.isSelected {
       try? coreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
     } else {
-      try? coreService.addRestaurant(data: ["restaurants": [restaurant]], in: CoreDataManager.sharedInstance.managedObjectContext)
+      try? coreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
     }
     listState = listState == .temp ? .temp : .edited
   }
@@ -102,6 +102,13 @@ class BottomSheetViewModel {
     self.restaurants = Array(restaurantsSet)
     self.list = list
     self.listState = .existed
+    isRefresh = true
+  }
+
+  func reset() {
+    self.list = nil
+    self.listState = .temp
+    self.restaurants = []
     isRefresh = true
   }
 }

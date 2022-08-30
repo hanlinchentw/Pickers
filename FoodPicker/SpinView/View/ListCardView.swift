@@ -11,6 +11,7 @@ import SwiftUI
 struct ListCardView: View {
   var viewModel: ListCardViewModel
   @State var isExpand: Bool = false
+  @State var showEditOption: Bool = false
 
   init(list: List) {
     self.viewModel = ListCardViewModel(list: list)
@@ -34,8 +35,12 @@ struct ListCardView: View {
         Spacer()
 
         VStack() {
-          Image("icnMoreThreeDot")
-            .frame(width: 40, height: 40)
+          NavigationLink(destination: {
+            EditListView()
+          }, label: {
+            Image("icnEditSmall")
+              .frame(width: 40, height: 40)
+          })
           Spacer()
           Button {
             withAnimation {
@@ -74,6 +79,7 @@ struct ListCardView: View {
         .zIndex(0)
       }
     }
+    
   }
 }
 

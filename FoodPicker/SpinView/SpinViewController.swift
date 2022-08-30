@@ -33,6 +33,16 @@ class SpinViewController: UIViewController {
     return button
   }()
 
+  private let cleanButton: UIButton = {
+    let button = UIButton()
+    button.layer.cornerRadius = 8
+    button.backgroundColor = .white
+    button.setImage(UIImage(systemName: "minus.circle"), for: .normal)
+    button.tintColor = .butterscotch
+    button.addTarget(self, action: #selector(handleCleanButtonTapped), for: .touchUpInside)
+    return button
+  }()
+
   private var resultView = SpinResultView()
 
   private var spinWheel = SpinWheel(frame: CGRect(x: 0, y: 0, width: wheelWidth, height: wheelHeight))
@@ -44,6 +54,7 @@ class SpinViewController: UIViewController {
     super.viewDidLoad()
     configureWheel()
     configureListButton()
+    configureCleanButton()
     configureResultView()
     presenter.refresh()
 
@@ -87,9 +98,9 @@ class SpinViewController: UIViewController {
   }
 
   @objc func handleListButtonTapped(){
-    @Inject var selectedCoreService: SelectedCoreService
     let savedListView = SavedListView(
       applyList: { list in
+        print("Apply list >>> \(list)")
         self.presenter.applyList(list)
         self.bottomSheetVC.applyList(list)
       })
@@ -97,6 +108,24 @@ class SpinViewController: UIViewController {
     let savedListVC = UIHostingController(rootView: savedListView)
     self.navigationController?.pushViewController(savedListVC, animated: true)
     self.tabBarController?.tabBar.isHidden = true
+  }
+
+  @objc func handleCleanButtonTapped() {
+    PresentHelper.showAlert(model:
+        .init(
+          rightButtonText: "OK",
+          leftButtonText: "Cancel",
+          rightButtonOnPress: {
+            self.presenter.reset()
+            self.bottomSheetVC.reset()
+          }
+        )
+    ) {
+      Text("Reset Picker")
+        .en18Bold()
+        .foregroundColor(.butterScotch)
+        .padding(.top, 16)
+    }
   }
 }
 //MARK: - LuckyWheelDelegate, LuckyWheelDataSource
@@ -168,6 +197,13 @@ extension SpinViewController {
                       paddingTop: 52, paddingRight: 20,
                       width: 40, height: 40)
 
+  }
+
+  func configureCleanButton() {
+    view.addSubview(cleanButton)
+    cleanButton.anchor(top: view.topAnchor, left: view.leftAnchor,
+                      paddingTop: 52, paddingLeft: 20,
+                      width: 40, height: 40)
   }
 
   func configureBottomSheetView(){

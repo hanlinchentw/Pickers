@@ -8,80 +8,93 @@
 
 import SwiftUI
 
-struct Alert<Content: View>: View {
-  var title: String?
-  var rightButtonText: String?
-  var leftButtonText: String?
-  
+struct AlertPresentationModel {
+  var title: String? = nil
+  var rightButtonText: String? = nil
+  var leftButtonText: String? = nil
+
   var rightButtonOnPress: () -> Void
-  var leftButtonOnPress: () -> Void
-  
+  var leftButtonOnPress: (() -> Void)? = nil
+
+  var rightButtonColor: Color = .black
+  var leftButtonColor: Color = .black
+}
+
+struct Alert<Content: View>: View {
+  @Environment(\.presentationMode) var presentaionMode
+
+  var model: AlertPresentationModel
   var content: (() -> Content)?
+
   var body: some View {
     ZStack {
       Color.black.opacity(0.6)
         .onTapGesture {
-          leftButtonOnPress()
+          if let onPress = model.leftButtonOnPress {
+            onPress()
+          } else {
+            presentaionMode.wrappedValue.dismiss()
+          }
         }
       VStack(alignment: .center) {
-        Spacer()
-        if let title = title {
-          Text(title).en16Bold()
+        if let title = model.title {
+          Text(title).en18Bold()
             .foregroundColor(.butterScotch)
-            .padding(.horizontal, 32)
+            .padding(.horizontal, 28)
             .multilineTextAlignment(.center)
+            .padding(.top, 24)
         }
-        Spacer()
-        if let content = content { content() }
-        Spacer()
+        if let content = content {
+          content()
+            .padding(.horizontal, 28)
+            .padding(.top, 8)
+        }
         HStack {
           Spacer()
-          if let leftButtonText = leftButtonText {
+          if let leftButtonText = model.leftButtonText {
             Button {
-              leftButtonOnPress()
+              if let onPress = model.leftButtonOnPress {
+                onPress()
+              } else {
+                presentaionMode.wrappedValue.dismiss()
+              }
             } label: {
               Text(leftButtonText)
-                .foregroundColor(.gray)
+                .foregroundColor(model.leftButtonColor)
             }
           }
           Spacer()
-          if let rightButtonText = rightButtonText {
+          if let rightButtonText = model.rightButtonText {
             Button {
-              rightButtonOnPress()
+              model.rightButtonOnPress()
+              presentaionMode.wrappedValue.dismiss()
             } label: {
               Text(rightButtonText)
-                .foregroundColor(.gray)
+                .foregroundColor(model.rightButtonColor)
             }
           }
           Spacer()
         }
-        .padding(.bottom, 24)
+        .padding(.top, 16)
+        .padding(.bottom, 16)
       }
       .background(Color.white)
-      .frame(height: 240)
       .cornerRadius(24)
-      .padding(.horizontal, 40)
+      .frame(width: 280)
     }
     .ignoresSafeArea()
   }
 }
 
-struct Alert_Previews: PreviewProvider {
+struct Alert_Previews<Content: View>: PreviewProvider {
   static var previews: some View {
-    Alert(
-      title: "Alert",
-      rightButtonText: "OK",
-      leftButtonText: "Cancel",
-      rightButtonOnPress: {
-        debugPrint("rightButton tapped")
-      },
-      leftButtonOnPress: {
-        debugPrint("leftButton tapped")
-      },
-      content: {
-        Text("Content").font(.body)
-      }
-    )
+    Alert(model: .init(title: "", rightButtonText: "", leftButtonText: "", rightButtonOnPress: {
+
+    }, leftButtonOnPress: {
+
+    })) {
+      Text("123")
+    }
   }
 }
 

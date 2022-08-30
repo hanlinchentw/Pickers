@@ -21,8 +21,16 @@ extension Text {
     return self.font(Font.custom("ArialMT", fixedSize: 16))
   }
 
+  func en18() -> Text {
+    return self.font(Font.custom("ArialMT", fixedSize: 18))
+  }
+
   func en16Bold() -> Text {
     return self.font(Font.custom("Arial-BoldMT", fixedSize: 16))
+  }
+
+  func en18Bold() -> Text {
+    return self.font(Font.custom("Arial-BoldMT", fixedSize: 18))
   }
 
   func en24Bold() -> Text {

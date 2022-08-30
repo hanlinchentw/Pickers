@@ -73,10 +73,6 @@
 		B685485124BD8631009BC800 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685485024BD8631009BC800 /* NetworkService.swift */; };
 		B685485324BECC7F009BC800 /* SpinWheelPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */; };
 		B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6898D4828A41DDA005D4EFA /* NSManagedObject.swift */; };
-		B689A7A42564DBBE009D270B /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A32564DBBE009D270B /* ListTableViewController.swift */; };
-		B689A7A72564DFE4009D270B /* ListInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A62564DFE4009D270B /* ListInfoCell.swift */; };
-		B689A7A9256B84EF009D270B /* MoreOptionAlertViewContrller.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */; };
-		B689A7AB2574EDB4009D270B /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B689A7AA2574EDB4009D270B /* EditViewController.swift */; };
 		B68DD02A268032CA008E1FDE /* SpinResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD029268032CA008E1FDE /* SpinResultView.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
 		B690436728A1633F00278964 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690436628A1633F00278964 /* Detail.swift */; };
@@ -103,6 +99,7 @@
 		B6B9976B28BA0A2A007C3D1D /* NotchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B9976A28BA0A2A007C3D1D /* NotchView.swift */; };
 		B6B9976D28BA0AAD007C3D1D /* ListSaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B9976C28BA0AAD007C3D1D /* ListSaveButton.swift */; };
 		B6B9976F28BA0B21007C3D1D /* ListUpdateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B9976E28BA0B21007C3D1D /* ListUpdateButton.swift */; };
+		B6C40F3428BD227C0086DDBD /* EditListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C40F3328BD227C0086DDBD /* EditListView.swift */; };
 		B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5B1255992E0005D2AA0 /* LoadingCell.swift */; };
 		B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5B3255BA967005D2AA0 /* DetailHeaderPresenter.swift */; };
 		B6C7D5B62563F3E0005D2AA0 /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7D5B52563F3E0005D2AA0 /* Business.swift */; };
@@ -132,7 +129,6 @@
 		B6F789A92675DC440003ED5C /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A82675DC440003ED5C /* Validators.swift */; };
 		B6F789AE267610950003ED5C /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789AD267610950003ED5C /* NetworkMonitor.swift */; };
 		B6F789B826774D9B0003ED5C /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789B726774D9A0003ED5C /* String+Extensions.swift */; };
-		B6F789BC2678B8BB0003ED5C /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789BB2678B8BB0003ED5C /* PopupView.swift */; };
 		B6FCEC0028BB1121007A8041 /* ListCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FCEBFF28BB1121007A8041 /* ListCardView.swift */; };
 		B6FD55AC2896CB0100B659F4 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD55AA2896CB0100B659F4 /* Resolver.swift */; };
 		B6FD55AD2896CB0100B659F4 /* Inject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD55AB2896CB0100B659F4 /* Inject.swift */; };
@@ -231,10 +227,6 @@
 		B685485024BD8631009BC800 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinWheelPresenter.swift; sourceTree = "<group>"; };
 		B6898D4828A41DDA005D4EFA /* NSManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObject.swift; sourceTree = "<group>"; };
-		B689A7A32564DBBE009D270B /* ListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
-		B689A7A62564DFE4009D270B /* ListInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInfoCell.swift; sourceTree = "<group>"; };
-		B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreOptionAlertViewContrller.swift; sourceTree = "<group>"; };
-		B689A7AA2574EDB4009D270B /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		B68DD029268032CA008E1FDE /* SpinResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinResultView.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		B690436628A1633F00278964 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
@@ -261,6 +253,7 @@
 		B6B9976A28BA0A2A007C3D1D /* NotchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchView.swift; sourceTree = "<group>"; };
 		B6B9976C28BA0AAD007C3D1D /* ListSaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSaveButton.swift; sourceTree = "<group>"; };
 		B6B9976E28BA0B21007C3D1D /* ListUpdateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUpdateButton.swift; sourceTree = "<group>"; };
+		B6C40F3328BD227C0086DDBD /* EditListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditListView.swift; sourceTree = "<group>"; };
 		B6C7D5B1255992E0005D2AA0 /* LoadingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCell.swift; sourceTree = "<group>"; };
 		B6C7D5B3255BA967005D2AA0 /* DetailHeaderPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeaderPresenter.swift; sourceTree = "<group>"; };
 		B6C7D5B52563F3E0005D2AA0 /* Business.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Business.swift; sourceTree = "<group>"; };
@@ -290,7 +283,6 @@
 		B6F789A82675DC440003ED5C /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
 		B6F789AD267610950003ED5C /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		B6F789B726774D9A0003ED5C /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
-		B6F789BB2678B8BB0003ED5C /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
 		B6FCEBFF28BB1121007A8041 /* ListCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCardView.swift; sourceTree = "<group>"; };
 		B6FD55AA2896CB0100B659F4 /* Resolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
 		B6FD55AB2896CB0100B659F4 /* Inject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Inject.swift; sourceTree = "<group>"; };
@@ -356,10 +348,6 @@
 		B619CBBF28A2B23100376348 /* Deprecated */ = {
 			isa = PBXGroup;
 			children = (
-				B689A7A62564DFE4009D270B /* ListInfoCell.swift */,
-				B689A7A32564DBBE009D270B /* ListTableViewController.swift */,
-				B689A7A8256B84EF009D270B /* MoreOptionAlertViewContrller.swift */,
-				B689A7AA2574EDB4009D270B /* EditViewController.swift */,
 			);
 			path = Deprecated;
 			sourceTree = "<group>";
@@ -526,7 +514,6 @@
 			children = (
 				B63548F728B5291700136A15 /* CachedImage */,
 				B6C7D5B1255992E0005D2AA0 /* LoadingCell.swift */,
-				B6F789BB2678B8BB0003ED5C /* PopupView.swift */,
 				B6B84D57266633C4002E418D /* ErrorView.swift */,
 				B634A70C28A6C0CA00796D63 /* RoundedCorner.swift */,
 				B6EF13A528B0CA0B009345D6 /* ShimmerView.swift */,
@@ -639,6 +626,7 @@
 				B647A4F024B22B010098B7A2 /* SpinViewController.swift */,
 				B6AE009C24DD188400423D72 /* BottomSheetViewController.swift */,
 				B63E497A28BA669700714F94 /* SavedListView.swift */,
+				B6C40F3328BD227C0086DDBD /* EditListView.swift */,
 			);
 			path = SpinView;
 			sourceTree = "<group>";
@@ -932,10 +920,8 @@
 				B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */,
 				B6B9976F28BA0B21007C3D1D /* ListUpdateButton.swift in Sources */,
 				B6D4505928A9490F0076DE9A /* CoreDataManager.swift in Sources */,
-				B689A7A42564DBBE009D270B /* ListTableViewController.swift in Sources */,
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
 				B6B9976628B9DD3A007C3D1D /* CachedImageView.swift in Sources */,
-				B689A7A72564DFE4009D270B /* ListInfoCell.swift in Sources */,
 				B634A72328A8D0A000796D63 /* Restaurant+CoreDataProperties.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B634A73928A9217800796D63 /* RestaurantAddBehavior.swift in Sources */,
@@ -963,7 +949,6 @@
 				B6D1306A24C4183300040F85 /* DetailController.swift in Sources */,
 				B619CBB728A1ED0900376348 /* RestaurantPresenter.swift in Sources */,
 				B6310C4728A5622D00ABD2E2 /* BusinessService.swift in Sources */,
-				B689A7A9256B84EF009D270B /* MoreOptionAlertViewContrller.swift in Sources */,
 				B69D3823266882D000287954 /* BusinessProvider.swift in Sources */,
 				B647A4CF24B1F7BA0098B7A2 /* SceneDelegate.swift in Sources */,
 				B650ECD4257F2655004A4049 /* WheelItem.swift in Sources */,
@@ -1000,7 +985,6 @@
 				B606C0822894EDCB00139907 /* MainTabBarConstants.swift in Sources */,
 				B6B9976B28BA0A2A007C3D1D /* NotchView.swift in Sources */,
 				B63E497928BA20FB00714F94 /* UITableView+Extensions.swift in Sources */,
-				B6F789BC2678B8BB0003ED5C /* PopupView.swift in Sources */,
 				B6AA6C3A28A55C6000444F0A /* LikedCoreService.swift in Sources */,
 				B634A72828A8D38500796D63 /* RestaurantManagedObject.swift in Sources */,
 				B63E497E28BA6D4200714F94 /* MockedList.swift in Sources */,
@@ -1024,13 +1008,13 @@
 				B674149C28A5668200C545D2 /* SelectedRestaurant+CoreDataClass.swift in Sources */,
 				B634A72228A8D0A000796D63 /* Restaurant+CoreDataClass.swift in Sources */,
 				B63C19AB251C656A0012CC4A /* RestaurantsList.swift in Sources */,
+				B6C40F3428BD227C0086DDBD /* EditListView.swift in Sources */,
 				B6ABC1EF28B095B8007398F4 /* DetailRowPresenter.swift in Sources */,
 				B6B6705927132FCE00715A18 /* Pickers.xcdatamodeld in Sources */,
 				B6FD55AD2896CB0100B659F4 /* Inject.swift in Sources */,
 				B6C7D5B82563F4F3005D2AA0 /* RestaurantAnnotation.swift in Sources */,
 				B6E0D79128A61C4600B8CAE1 /* RestaurantCardView.swift in Sources */,
 				B634A73528A920CA00796D63 /* SelectedDeleteBehavior.swift in Sources */,
-				B689A7AB2574EDB4009D270B /* EditViewController.swift in Sources */,
 				B6B84D4B2665D4BD002E418D /* UIView+Extension.swift in Sources */,
 				B685485324BECC7F009BC800 /* SpinWheelPresenter.swift in Sources */,
 			);

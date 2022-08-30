@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import CoreData
+import SwiftUI
 
 private let selectedIdentifier = "RestaurantListCell"
 
@@ -90,14 +91,22 @@ class BottomSheetViewController : UIViewController {
   }
 
   @objc func handleUpdateButtonTapped() {
-    PresentHelper.presentPopupViewWithButton(title: "Warning", subtitle: "Unselected restaurants will be deleted.", buttonText: "OK") {
+    PresentHelper.showAlert(model: .init(title: "Warning", rightButtonText: "OK", leftButtonText: "Cancel", rightButtonOnPress: {
       self.viewModel.updateList()
       self.tableView.reloadData()
+    })) {
+      Text("Unselected restaurants will be deleted.")
+        .en16()
+        .foregroundColor(.black)
     }
   }
 
   func applyList(_ list: List) {
     self.viewModel.applyList(list)
+  }
+
+  func reset() {
+    self.viewModel.reset()
   }
 }
 //MARK: -  List State change animation
