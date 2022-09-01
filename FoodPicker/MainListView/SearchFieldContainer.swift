@@ -21,11 +21,22 @@ struct SearchFieldContainer: View {
                                shadowColor: Color.gray.opacity(0.3),
                                shadowRadius: 3)
       Spacer()
-      Image("btnGoogleMaps")
-        .roundedViewWithShadow(cornerRadius: 8,
-                               backgroundColor: Color.white,
-                               shadowColor: Color.gray.opacity(0.3),
-                               shadowRadius: 3)
+
+      Button {
+        let mapView = MapView()
+        let mapVC = UIHostingController(rootView: MapView())
+        mapVC.modalPresentationStyle = .fullScreen
+        mapVC.modalTransitionStyle = .flipHorizontal
+        PresentHelper.topViewController?.present(mapVC, animated: true)
+      } label: {
+        Image("btnGoogleMaps")
+          .roundedViewWithShadow(cornerRadius: 8,
+                                 backgroundColor: Color.white,
+                                 shadowColor: Color.gray.opacity(0.3),
+                                 shadowRadius: 3)
+
+      }
+
     }
     .padding(.top, 16)
     .padding(.leading, 16)
