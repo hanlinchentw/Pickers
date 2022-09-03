@@ -48,8 +48,9 @@ struct FavoriteView: View {
             rightButtonText: "Remove",
             leftButtonText: "Cancel",
             rightButtonOnPress: editUsecase.removeItem,
-            leftButtonOnPress: editUsecase.cancel))
-      {
+            leftButtonOnPress: editUsecase.cancel
+          )
+      ) {
         Text(editUsecase.deletionAlertText)
           .en16()
           .multilineTextAlignment(.center)

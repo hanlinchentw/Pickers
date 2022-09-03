@@ -66,6 +66,22 @@ extension Restaurant {
 }
 
 extension Restaurant {
+  convenience init(restaurant: RestaurantViewObject, context: NSManagedObjectContext = CoreDataManager.sharedInstance.managedObjectContext) {
+    let entity = NSEntityDescription.entity(forEntityName: "Restaurant", in: context)!
+    self.init(entity: entity, insertInto: context)
+    self.id = restaurant.id
+    self.name = restaurant.name
+    self.imageUrl = restaurant.imageUrl ?? Constants.defaultImageURL
+    self.reviewCount = Int32(restaurant.reviewCount)
+    self.rating = restaurant.rating
+    self.price = restaurant.price
+    self.businessCategory = restaurant.businessCategory
+    self.latitude = restaurant.latitude
+    self.longitude = restaurant.longitude
+  }
+}
+
+extension Restaurant {
   static func !=(lhs: Restaurant, rhs: Restaurant) -> Bool {
     return lhs.id != rhs.id
   }

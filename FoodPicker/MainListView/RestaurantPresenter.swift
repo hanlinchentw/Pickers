@@ -17,7 +17,7 @@ enum ActionButtonMode {
 }
 
 struct RestaurantPresenter {
-  private(set) var restaurant: Restaurant
+  private(set) var restaurant: RestaurantViewObject
   var actionButtonMode: ActionButtonMode = .none
   var isLiked: Bool?
   var isEditing: Bool?
@@ -74,7 +74,7 @@ struct RestaurantPresenter {
     return isLiked ? "btnBookmarkHeartPressed" : "icnHeart"
   }
 
-  init(restaurant : Restaurant, actionButtonMode: ActionButtonMode, isLiked: Bool? = nil) {
+  init(restaurant : RestaurantViewObject, actionButtonMode: ActionButtonMode, isLiked: Bool? = nil) {
     self.restaurant = restaurant
     self.actionButtonMode = actionButtonMode
     self.isLiked = isLiked

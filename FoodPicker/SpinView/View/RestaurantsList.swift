@@ -11,12 +11,12 @@ import UIKit
 private let restaurantListCellIdentifier = "listCellIdentifier"
 
 protocol RestaurantsListDelegate: AnyObject {
-  func didTapActionButton(_ restaurant: Restaurant, indexPath: IndexPath)
+  func didTapActionButton(_ restaurant: RestaurantViewObject, indexPath: IndexPath)
 }
 
 class RestaurantsList: UITableView{
   //MARK: - Properties
-  var restaurants = [Restaurant]() { didSet { self.reloadData() }}
+  var restaurants = [RestaurantViewObject]() { didSet { self.reloadData() }}
   weak var listDelegate: RestaurantsListDelegate?
   //MARK: - Lifecycle
   override init(frame: CGRect, style: UITableView.Style) {
@@ -52,7 +52,7 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - RestaurantListCellDelegate
 extension RestaurantsList: RestaurantListCellDelegate {
-  func didTapActionButton(_ restaurant: Restaurant) {
+  func didTapActionButton(_ restaurant: RestaurantViewObject) {
     let index = restaurants.firstIndex(where: {$0.id == restaurant.id })!
     let indexPath = IndexPath.init(row: index, section: 0)
     listDelegate?.didTapActionButton(restaurant, indexPath: indexPath)

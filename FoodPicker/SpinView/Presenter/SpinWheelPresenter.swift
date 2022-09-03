@@ -7,16 +7,23 @@
 //
 
 import UIKit
+import Combine
+import CoreData
 
 class SpinWheelPresenter  {
   @Inject var selectedCoreService: SelectedCoreService
 
-  @Published var restaurants: Array<Restaurant> = []
+  @Published var restaurants: Array<RestaurantViewObject> = []
   @Published var isRefresh: Bool = false
+
+  private var set = Set<AnyCancellable>()
+
+  init() {
+    observeSelectedRestaurantChange()
+  }
 
   var numOfSection: Int {
     if restaurants.isEmpty { return 4 }
-
     return restaurants.count * 2
   }
 
@@ -50,20 +57,27 @@ class SpinWheelPresenter  {
     return items1 + items2
   }
 
+  func observeSelectedRestaurantChange() {
+    NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
+      .sink { notification in
+        self.refresh()
+      }
+      .store(in: &set)
+  }
+
   func refresh() {
     if let selectedRestaurants = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext) as? Array<SelectedRestaurant> {
-      self.restaurants = selectedRestaurants.map { $0.restaurant }
+      self.restaurants = selectedRestaurants.map { RestaurantViewObject(restaurant: $0.restaurant) }
     }
     isRefresh = true
   }
 
   func applyList(_ list: List) {
     let moc = CoreDataManager.sharedInstance.managedObjectContext
-    try? SelectedRestaurant.deleteAll(in: moc)
+    reset()
     for restaurant in list.restaurants.allObjects {
       try? selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: moc)
     }
-
     try? moc.save()
   }
 

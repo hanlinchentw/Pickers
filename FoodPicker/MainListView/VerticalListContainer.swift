@@ -62,11 +62,12 @@ struct VerticalListContainer: View {
     }
   }
   
-  func selectButtonOnPress(isSelected: Bool, restaurant: Restaurant) {
+  func selectButtonOnPress(isSelected: Bool, restaurant: RestaurantViewObject) {
     if (isSelected) {
       try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: viewContext)
     } else {
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: viewContext)
+      let restaurantManagedObject = Restaurant(restaurant: restaurant)
+      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: viewContext)
     }
   }
 }
@@ -74,7 +75,7 @@ struct VerticalListContainer: View {
 class VerticalListDataStore: ObservableObject {
   @Inject var restaurantCoreService: RestaurantCoreService
 
-  @Published var data: Array<Restaurant> = []
+  @Published var data: Array<RestaurantViewObject> = []
   @Published var loadState: LoadingState = .idle
 
   var dataCount: Int {
@@ -89,7 +90,7 @@ class VerticalListDataStore: ObservableObject {
       }
       let result = try await BusinessService.createDataTask(lat: latitude, lon: longitude, option: BusinessService.RestaurantSorting.all, limit: 30).value
       DispatchQueue.main.async {
-        self.data = result.map { Restaurant.init(business: $0)}
+        self.data = result.map { RestaurantViewObject.init(business: $0)}
         self.loadState = result.isEmpty ? LoadingState.empty : LoadingState.loaded
       }
     } catch {

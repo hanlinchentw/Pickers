@@ -34,7 +34,8 @@ class ListCardViewModel: ObservableObject {
     return "\(numOfRestaurants) restaurants"
   }
 
-  func getRestaurantByIndex(_ index: Int) -> Restaurant {
-    return list.restaurants.allObjects[index] as! Restaurant
+  func getRestaurantByIndex(_ index: Int) -> RestaurantViewObject {
+    let restaurant = list.restaurants.allObjects[index] as! Restaurant
+    return RestaurantViewObject(restaurant: restaurant)
   }
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 protocol RestaurantListCellDelegate: AnyObject {
-  func didTapActionButton(_ restaurant : Restaurant)
+  func didTapActionButton(_ restaurant : RestaurantViewObject)
 }
 
 class RestaurantListCell : UITableViewCell {

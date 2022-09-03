@@ -23,11 +23,7 @@ struct SearchFieldContainer: View {
       Spacer()
 
       Button {
-        let mapView = MapView()
-        let mapVC = UIHostingController(rootView: MapView())
-        mapVC.modalPresentationStyle = .fullScreen
-        mapVC.modalTransitionStyle = .flipHorizontal
-        PresentHelper.topViewController?.present(mapVC, animated: true)
+        presentMapView()
       } label: {
         Image("btnGoogleMaps")
           .roundedViewWithShadow(cornerRadius: 8,
@@ -41,6 +37,14 @@ struct SearchFieldContainer: View {
     .padding(.top, 16)
     .padding(.leading, 16)
     .padding(.trailing, 8)
+  }
+
+  func presentMapView() {
+    let mapView = MapView()
+    let mapVC = UIHostingController(rootView: mapView)
+    mapVC.modalPresentationStyle = .fullScreen
+    mapVC.modalTransitionStyle = .flipHorizontal
+    PresentHelper.topViewController?.present(mapVC, animated: true)
   }
 }
 

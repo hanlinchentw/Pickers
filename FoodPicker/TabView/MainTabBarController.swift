@@ -33,9 +33,8 @@ extension MainTabBarController {
     NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
       .sink { notification in
         guard let userInfo = notification.userInfo else { return }
-        let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
-        let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
-        if insert == nil && delete == nil { return }
+        if userInfo[NSInsertedObjectsKey] == nil && userInfo[NSDeletedObjectsKey] == nil { return }
+
         if let selectedRestaurants = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext) as? Array<SelectedRestaurant> {
           self.spinTabItemView.update(selectedRestaurants.count)
         }

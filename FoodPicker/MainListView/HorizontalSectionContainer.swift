@@ -69,19 +69,21 @@ struct HorizontalSectionContainer: View {
     }
   }
 
-  func selectButtonOnPress(isSelected: Bool, restaurant: Restaurant) {
+  func selectButtonOnPress(isSelected: Bool, restaurant: RestaurantViewObject) {
     if (isSelected) {
       try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: viewContext)
     } else {
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: viewContext)
+      let restaurantManagedObject = Restaurant(restaurant: restaurant)
+      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: viewContext)
     }
   }
 
-  func likeButtonOnPress(isLiked: Bool, restaurant: Restaurant) {
+  func likeButtonOnPress(isLiked: Bool, restaurant: RestaurantViewObject) {
     if (isLiked) {
       try! likedCoreService.deleteRestaurant(id: restaurant.id, in: viewContext)
     } else {
-      try! likedCoreService.addRestaurant(data: ["restaurant": restaurant], in: viewContext)
+      let restaurantManagedObject = Restaurant(restaurant: restaurant)
+      try! likedCoreService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: viewContext)
     }
   }
 }
@@ -89,7 +91,7 @@ struct HorizontalSectionContainer: View {
 class HorizontalSectionDataStore: ObservableObject {
   @Inject var restaurantCoreService: RestaurantCoreService
 
-  @Published var data: Array<Restaurant> = []
+  @Published var data: Array<RestaurantViewObject> = []
   @Published var loadState: LoadingState = .idle
 
   var dataCount: Int {
@@ -105,7 +107,7 @@ class HorizontalSectionDataStore: ObservableObject {
       let task = BusinessService.createDataTask(lat: latitude, lon: longitude, option: BusinessService.RestaurantSorting.popular, limit: 10)
       let result = try await task.value
       DispatchQueue.main.async {
-        self.data = result.map { Restaurant.init(business: $0)}
+        self.data = result.map { RestaurantViewObject.init(business: $0) }
         self.loadState = result.isEmpty ? LoadingState.empty : LoadingState.loaded
       }
     } catch {

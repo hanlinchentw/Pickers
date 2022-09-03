@@ -9,56 +9,59 @@
 import SwiftUI
 import MapKit
 
-class MapViewModel: ObservableObject {
-  //  @Published var region: MKCoordinateRegion
-  //
-  //  init() {
-  //    @Inject var locationService: LocationService
-  //
-  //    self.region =
-  //  }
-}
-
 struct MapView: View {
-  //  @StateObject var viewModel = MapViewModel()
+  @StateObject var viewModel = MapViewModel()
   @Environment(\.presentationMode) var presentationMode
 
-  @State var region = MKCoordinateRegion(
-    center: CLLocationCoordinate2D(
-      latitude: 24.97524558,
-      longitude: 121.53519691
-    ),
-    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-  )
   var body: some View {
-    Map(coordinateRegion: $region)
-      .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight)
-      .overlay {
-        HStack {
-          VStack {
-            Button {
-              self.presentationMode.wrappedValue.dismiss()
-            } label: {
-              RoundedRectangle(cornerRadius: 22)
-                .fill(Color.white)
-                .frame(width: 44, height: 44)
-                .overlay {
-                  Image("icnBack")
-                }
-            }
-            .padding(.top, 32)
-            .padding(.leading, 16)
-            Spacer()
-          }
-          Spacer()
+    ZStack(alignment: .top) {
+      Map(coordinateRegion: $viewModel.region, annotationItems: viewModel.annotationItems) { item in
+        MapAnnotation(coordinate: item.coordinate) {
+          Image("btnLocationUnselect")
+            .frame(width: 29, height: 39)
         }
+    }
+        .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight)
+      ListButton {
+        self.presentationMode.wrappedValue.dismiss()
       }
-      .navigationBarHidden(true)
+    }
+    .navigationBarHidden(true)
+    .task {
+      MBProgressHUDHelper.showLoadingAnimation()
+      await viewModel.fetchRestaurantNearby()
+      MBProgressHUDHelper.hideLoadingAnimation()
+    }
   }
+
 }
 
 struct MapView_Previews: PreviewProvider {
   static var previews: some View {
     MapView()
+  }
+}
+
+struct ListButton: View  {
+  var dismissMap: () -> Void
+
+  var body: some View {
+    HStack {
+      Spacer()
+      Button {
+        dismissMap()
+      } label: {
+        RoundedRectangle(cornerRadius: 12)
+          .fill(Color.white)
+          .frame(width: 48, height: 48)
+          .overlay {
+            Image(systemName: "line.3.horizontal")
+              .foregroundColor(.butterScotch)
+              .frame(width: 44, height: 44)
+          }
+      }
+      .padding(.top, 32)
+      .padding(.trailing, 16)
+    }
   }
 }

@@ -129,10 +129,9 @@ extension BottomSheetViewController{
 }
 //MARK: - RestaurantsListDelegate
 extension BottomSheetViewController: RestaurantsListDelegate {
-  func didTapActionButton(_ restaurant: Restaurant, indexPath: IndexPath) {
+  func didTapActionButton(_ restaurant: RestaurantViewObject, indexPath: IndexPath) {
     OperationQueue.main.addOperation {
       self.viewModel.didTapActionButton(restaurant)
-      self.tableView.reloadRows(at: [indexPath], with: .none)
     }
   }
 }

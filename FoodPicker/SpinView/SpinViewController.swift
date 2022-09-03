@@ -57,14 +57,7 @@ class SpinViewController: UIViewController {
     configureCleanButton()
     configureResultView()
     presenter.refresh()
-
-    presenter.$isRefresh
-      .sink { _ in
-        self.spinWheel.reloadData()
-        self.startButton.isUserInteractionEnabled = self.presenter.isSpinButtonEnabled
-      }
-      .store(in: &set)
-    observeSelectedRestaurantChange()
+    bindRefresh()
   }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -76,6 +69,15 @@ class SpinViewController: UIViewController {
     navigationController?.navigationBar.isTranslucent = true
     tabBarController?.tabBar.isHidden = false
     tabBarController?.tabBar.isTranslucent = true
+  }
+
+  func bindRefresh() {
+    presenter.$isRefresh
+      .sink { _ in
+        self.spinWheel.reloadData()
+        self.startButton.isUserInteractionEnabled = self.presenter.isSpinButtonEnabled
+      }
+      .store(in: &set)
   }
   //MARK: - Selectors
   @objc func handleStartButtonTapped() {
@@ -139,20 +141,6 @@ extension SpinViewController : SpinWheelDelegate, SpinWheelDataSource {
   func itemsForSections() -> [WheelItem] {
     return presenter.itemForSection
   }
-}
-//MARK: - Observe entityChange
-extension SpinViewController {
-    func observeSelectedRestaurantChange() {
-      NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
-        .sink { notification in
-          guard let userInfo = notification.userInfo else { return }
-          let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
-          let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
-          if insert == nil && delete == nil { return }
-          self.presenter.refresh()
-        }
-        .store(in: &set)
-    }
 }
 //MARK: -  BottomSheetDelegate
 extension SpinViewController: BottomSheetViewControllerDelegate{

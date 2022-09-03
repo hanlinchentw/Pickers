@@ -15,7 +15,7 @@ class BottomSheetViewModel {
   @Inject var coreService: SelectedCoreService
 
   var list: List?
-  var restaurants: Array<Restaurant> = []
+  var restaurants: Array<RestaurantViewObject> = []
 
   @Published var listState: BottomSheetViewModel.ListState = .temp
   @Published var isRefresh: Bool = false
@@ -25,7 +25,7 @@ class BottomSheetViewModel {
   func refresh() {
     // 給第一次進入轉盤頁用
     if let selectedRestaurants = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext) as? Array<SelectedRestaurant> {
-      let allSelectedRestaurants = selectedRestaurants.map { $0.restaurant }
+      let allSelectedRestaurants = selectedRestaurants.map { RestaurantViewObject(restaurant: $0.restaurant) }
       if listState == .temp {
         self.restaurants = allSelectedRestaurants
       }
@@ -37,34 +37,39 @@ class BottomSheetViewModel {
     NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
       .sink { notification in
         guard let userInfo = notification.userInfo else { return }
-        let insert = userInfo[NSInsertedObjectsKey] as? Set<SelectedRestaurant>
-        let delete = userInfo[NSDeletedObjectsKey] as? Set<SelectedRestaurant>
-        if let insert = insert, let object = insert.first {
+
+        let insert = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>
+        let delete = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>
+
+        if let insert = insert, let object = insert.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
           if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
             self.restaurants[index].isSelected = true
           } else {
-            self.restaurants.append(object.restaurant)
+            self.restaurants.append(RestaurantViewObject(restaurant: object.restaurant))
           }
         }
-        if let delete = delete, let object = delete.first {
+        if let delete = delete, let object = delete.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
           if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
             self.restaurants[index].isSelected  = false
           }
         }
         self.listState = self.listState == .temp ? .temp : .edited
+
+        self.isRefresh = true
       }
       .store(in: &set)
   }
 
-  func didTapActionButton(_ target: Restaurant) {
-    let restaurant = restaurants.first(where: { $0.id == target.id })
-    guard let restaurant = restaurant else {
+  func didTapActionButton(_ target: RestaurantViewObject) {
+    guard let restaurant = restaurants.first(where: { $0.id == target.id }) else {
       return
     }
+
     if restaurant.isSelected {
       try? coreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
     } else {
-      try? coreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
+      let restaurantManagedObject = Restaurant(restaurant: target)
+      try? coreService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: CoreDataManager.sharedInstance.managedObjectContext)
     }
     listState = listState == .temp ? .temp : .edited
   }
@@ -76,7 +81,9 @@ class BottomSheetViewModel {
     let list = List.init(id: uuid, date: date, name: name, context: moc)
     let filterRestaurant = self.restaurants.filter({ $0.isSelected })
     restaurants = filterRestaurant
-    let set = NSSet(array: filterRestaurant)
+
+    let restaurantManagedObjectArray = filterRestaurant.map { Restaurant(restaurant: $0) }
+    let set = NSSet(array: restaurantManagedObjectArray)
     list.restaurants = set
     try? moc.save()
 
@@ -88,7 +95,9 @@ class BottomSheetViewModel {
   func updateList() {
     let currentSelectedRestaurants = restaurants.filter { $0.isSelected }
     restaurants = currentSelectedRestaurants
-    list?.restaurants = NSSet(array: restaurants)
+
+    let restaurantManagedObjectArray = currentSelectedRestaurants.map { Restaurant(restaurant: $0) }
+    list?.restaurants = NSSet(array: restaurantManagedObjectArray)
     try? moc.save()
 
     listState = .existed
@@ -99,7 +108,7 @@ class BottomSheetViewModel {
     guard let restaurantsSet = list.restaurants as? Set<Restaurant> else {
       return
     }
-    self.restaurants = Array(restaurantsSet)
+    self.restaurants = Array(restaurantsSet.map { RestaurantViewObject(restaurant: $0) })
     self.list = list
     self.listState = .existed
     isRefresh = true

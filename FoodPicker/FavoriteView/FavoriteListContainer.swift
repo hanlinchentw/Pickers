@@ -22,7 +22,8 @@ struct FavoriteListContainer: View {
     VStack(spacing: 16) {
       ForEach(listData, id: \.self) { restaurant in
         let actionBtnMode = viewModel.getActionButtonMode(isEditing: isEditing, restaurantId: restaurant.id)
-        let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionBtnMode)
+        let viewObject = RestaurantViewObject(restaurant: restaurant)
+        let presenter = RestaurantPresenter(restaurant: viewObject, actionButtonMode: actionBtnMode)
 
         RestaurantListItemView(presenter: presenter, actionButtonOnPress: {
           if isEditing {
