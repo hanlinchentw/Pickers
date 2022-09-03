@@ -41,7 +41,7 @@ struct RestaurantListItemView: View {
       VStack(alignment: .leading) {
         VStack(alignment: .leading, spacing: 6) {
           Text(presenter.name).en16Bold()
-          Text(presenter.thirdRowString).en14()
+          Text(presenter.priceCategoryDistanceText).en14()
         }
         HStack(spacing: 4, content: {
           Text("★").foregroundColor(Color.yellow)

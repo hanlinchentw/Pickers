@@ -30,7 +30,7 @@ struct RestaurantPresenter {
     return restaurant.imageUrl ?? Constants.defaultImageURL
   }
 
-  var thirdRowString: String {
+  var priceCategoryDistanceText: String {
     "\(restaurant.price)・\(restaurant.businessCategory)・\(distance) m"
   }
 

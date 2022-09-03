@@ -64,7 +64,7 @@ struct RestaurantCardView: View {
             .aspectRatio(contentMode: .fit)
             .frame(width: 48, height: 48)
           }
-          Text(presenter.thirdRowString).en14().foregroundColor(Color.gray.opacity(0.7))
+          Text(presenter.priceCategoryDistanceText).en14().foregroundColor(Color.gray.opacity(0.7))
         }
         HStack(spacing: 4, content: {
           Text("★").foregroundColor(Color.yellow)

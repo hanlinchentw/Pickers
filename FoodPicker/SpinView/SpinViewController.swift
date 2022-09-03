@@ -216,9 +216,8 @@ extension SpinViewController {
     resultView.anchor(top: self.view.topAnchor, paddingTop: offset)
     resultView.setDimension(width: resultViewWidth, height: resultViewHeight)
   }
+
   func configureResult(valueRelateToResult value: Int){
-    //        guard let restaurant = self.presenter?.restaurants[value-1] else { return }
-    //        self.resultView.restaurant = restaurant
-    //        self.resultView.delegate =  self
+    #warning("TODO: show result view when spin finish.")
   }
 }

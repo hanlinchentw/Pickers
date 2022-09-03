@@ -40,8 +40,7 @@ struct SearchFieldContainer: View {
   }
 
   func presentMapView() {
-    let mapView = MapView()
-    let mapVC = UIHostingController(rootView: mapView)
+    let mapVC = MapViewController()
     mapVC.modalPresentationStyle = .fullScreen
     mapVC.modalTransitionStyle = .flipHorizontal
     PresentHelper.topViewController?.present(mapVC, animated: true)

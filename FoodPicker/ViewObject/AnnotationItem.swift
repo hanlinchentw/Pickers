@@ -9,18 +9,15 @@
 import Foundation
 import MapKit
 
-struct AnnotationItem: Identifiable {
+class AnnotationItem: MKPointAnnotation {
   let id: String
+  var indexForCollectionView: Int? = nil
   let name: String
-  var coordinate: CLLocationCoordinate2D
-//  let imageURL : URL
-}
 
-
-extension AnnotationItem {
   init(restaurant: RestaurantViewObject) {
     self.id = restaurant.id
     self.name = restaurant.name
+    super.init()
     self.coordinate = CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude)
   }
 }

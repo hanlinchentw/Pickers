@@ -87,7 +87,7 @@ extension RestaurantListCell {
   func configure(){
     guard let presenter = presenter else { return }
     restaurantName.text = presenter.name
-    priceLabel.text = presenter.thirdRowString
+    priceLabel.text = presenter.priceCategoryDistanceText
     restaurantImageView.url = presenter.imageUrl
     actionButton.setImage(UIImage(named: presenter.actionButtonImage)?.withRenderingMode(.alwaysOriginal), for: .normal)
     composeRatedLabel(rating: presenter.ratingWithOneDecimal, reviewCount: presenter.reviewCount)

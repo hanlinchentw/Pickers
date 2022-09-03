@@ -26,7 +26,7 @@ extension UILabel {
     }
   }
 
-  convenience init(_ text: String, font: UIFont, color: UIColor) {
+  convenience init(_ text: String = "", font: UIFont, color: UIColor) {
     self.init(frame: .zero)
     self.text = text
     self.font = font

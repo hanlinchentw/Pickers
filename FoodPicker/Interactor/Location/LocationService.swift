@@ -58,5 +58,6 @@ extension LocationService: CLLocationManagerDelegate {
     guard let location = locations.last else { return }
     lastLocation = location
     print(#function, location)
+
   }
 }
