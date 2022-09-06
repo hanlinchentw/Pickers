@@ -11,12 +11,19 @@ import UIKit
 protocol CarouselViewDelegate: AnyObject {
   func itemTapSelectButton(restaurant: RestaurantViewObject)
   func itemTapLikeButton(restaurant: RestaurantViewObject)
-  func didEndScrolling(endAt indexPath: IndexPath)
+  func didEndScrolling(restaurantId: String)
 }
 
 class CarouselCollectionView: UICollectionView {
   //MARK: - Properties
-  var restaurants = [RestaurantViewObject]() { didSet{ self.reloadData()} }
+  var restaurants = [RestaurantViewObject]() {
+    didSet {
+      UIView.animate(withDuration: 0, animations: {
+        self.reloadSections(.init([0]))
+      })
+    }
+  }
+
   weak var carouselViewDelegate: CarouselViewDelegate?
   //MARK: - Lifecycle
   init() {
@@ -45,7 +52,7 @@ extension CarouselCollectionView: UICollectionViewDelegate, UICollectionViewData
     as! RestaurantCardCell
     let restaurant = restaurants[indexPath.row]
     let actionButtonmode: ActionButtonMode = restaurant.isSelected ? .select : .deselect
-    cell.presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonmode)
+    cell.presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonmode, isLiked: restaurant.isLiked)
     cell.delegate = self
     return cell
   }
@@ -69,7 +76,7 @@ extension CarouselCollectionView: UICollectionViewDelegateFlowLayout{
     visibleRect.size = self.bounds.size
     let point = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
     guard let indexPath = indexPathForItem(at: point) else { return }
-    carouselViewDelegate?.didEndScrolling(endAt: indexPath)
+    carouselViewDelegate?.didEndScrolling(restaurantId: restaurants[indexPath.row].id)
   }
 }
 

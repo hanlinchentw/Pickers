@@ -12,39 +12,32 @@ struct SavedListView: View {
   @Environment(\.presentationMode) var presentationMode
   @Environment(\.managedObjectContext) var viewContext
   @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) var savedLists: FetchedResults<List>
-
+  
   var applyList: (_ list: List) -> Void
-
+  
   var body: some View {
     NavigationView {
       ZStack {
         Color.listViewBackground.ignoresSafeArea()
-
+        
         VStack(alignment: .center) {
-
-          ScrollViewReader { proxy in
-            SavedListHeader(
-              back: {
-                presentationMode.wrappedValue.dismiss()
-              },
-              headerOnTap: {
-                proxy.scrollTo("SavedList", anchor: .top)
-              }
-            )
-            ScrollView(.vertical, showsIndicators: false) {
-              VStack {
-                ForEach(savedLists, id: \.self) { list in
-                  ListCardView(list: list)
-                    .onTapGesture {
-                      applyList(list)
-                      presentationMode.wrappedValue.dismiss()
-                    }
-                }
+          SavedListHeader(
+            back: {
+              presentationMode.wrappedValue.dismiss()
+            }
+          )
+          ScrollView(.vertical, showsIndicators: false) {
+            VStack {
+              ForEach(savedLists, id: \.self) { list in
+                ListCardView(list: list)
+                  .onTapGesture {
+                    applyList(list)
+                    presentationMode.wrappedValue.dismiss()
+                  }
               }
             }
-            .id("SavedList")
-            .safeAreaInset(edge: .top) { Spacer().height(20) }
           }
+          .safeAreaInset(edge: .top) { Spacer().height(20) }
           Spacer()
         }
       }
@@ -64,8 +57,7 @@ struct SavedListView_Previews: PreviewProvider {
 
 struct SavedListHeader: View {
   var back: () -> Void
-  var headerOnTap: () -> Void
-
+  
   var body: some View {
     HStack {
       RoundedRectangle(cornerRadius: 22)
@@ -81,9 +73,6 @@ struct SavedListHeader: View {
     .overlay(
       Text("Saved List").en16Bold()
     )
-    .onTapGesture {
-      headerOnTap()
-    }
     .padding(.top, SafeAreaUtils.top)
   }
 }

@@ -74,11 +74,15 @@ class RestaurantCardCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    self.restaurantImageView.image = nil
+  }
+
   @objc func handleSelectButtonTapped() {
     guard let presenter = presenter else {
       return
     }
-    
     delegate?.didTapSelectButton(restaurant: presenter.restaurant)
   }
 
@@ -86,7 +90,7 @@ class RestaurantCardCell: UICollectionViewCell {
     guard let presenter = presenter else {
       return
     }
-    delegate?.didTapSelectButton(restaurant: presenter.restaurant)
+    delegate?.didTapLikeButton(restaurant: presenter.restaurant)
   }
 
   func configure(){

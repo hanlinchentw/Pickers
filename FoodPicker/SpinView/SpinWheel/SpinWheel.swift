@@ -91,27 +91,14 @@ class SpinWheel: UIView {
       let currentRotation = (self.value(forKeyPath: zKeyPath) as? NSNumber)?.floatValue ?? 0.0
       let toArrow = (angleSize * CGFloat(selectdSection))
       let rotationAnimation = CAKeyframeAnimation(keyPath: "transform.rotation")
-      rotationAnimation.values = [currentRotation,
-                                  torad(toArrow) + 1.8 * .pi,
-                                  torad(toArrow) + 2.1 * .pi,
-                                  torad(toArrow) + 1.95 * .pi,
-                                  torad(toArrow) + 2.05 * .pi,
-                                  torad(toArrow) + 1.965 * .pi,
-                                  torad(toArrow) + 2.03 * .pi,
-                                  torad(toArrow) + 1.98 * .pi,
-                                  torad(toArrow) + 2.02 * .pi,
-                                  torad(toArrow) + 2 * .pi ]
-      rotationAnimation.keyTimes = [0, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]
-      rotationAnimation.duration = CFTimeInterval(1.3)
+      rotationAnimation.values = [currentRotation, torad(toArrow) + 2 * .pi ]
+      rotationAnimation.keyTimes = [0, 1]
+      rotationAnimation.duration = CFTimeInterval(1.5)
       rotationAnimation.fillMode = CAMediaTimingFillMode.forwards
       rotationAnimation.isRemovedOnCompletion = false
       layer.add(rotationAnimation, forKey: nil)
       rotationAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-
-      let aniamtedSection = selectdSection
-      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.6, execute: {
-        self.getSelectedSector(aniamtedSection)
-      })
+      self.getSelectedSector(selectdSection)
     }
   }
 }

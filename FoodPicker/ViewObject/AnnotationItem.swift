@@ -11,8 +11,8 @@ import MapKit
 
 class AnnotationItem: MKPointAnnotation {
   let id: String
-  var indexForCollectionView: Int? = nil
   let name: String
+  var indexForCollectionView: Int? = nil
 
   init(restaurant: RestaurantViewObject) {
     self.id = restaurant.id

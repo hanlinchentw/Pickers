@@ -19,67 +19,67 @@ struct ListCardView: View {
 
   var body: some View {
     VStack {
-      HStack {
-        VStack(alignment: .leading) {
-          VStack(alignment: .leading, spacing: 8) {
-            Text(viewModel.name).en16Bold()
-            Text(viewModel.date).en14()
-              .foregroundColor(.gray)
-          }
-          Spacer()
-          Text(viewModel.numOfRestaurantsDisplayText).en14()
-        }
-        .padding(.vertical, 16)
-        .padding(.leading, 16)
-
-        Spacer()
-
-        VStack() {
-          NavigationLink(destination: {
-            EditListView()
-          }, label: {
-            Image("icnEditSmall")
-              .frame(width: 40, height: 40)
-          })
-          Spacer()
-          Button {
-            withAnimation {
-              isExpand.toggle()
+      VStack {
+        HStack {
+          VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 8) {
+              Text(viewModel.name).en16Bold()
+              Text(viewModel.date).en14()
+                .foregroundColor(.gray)
             }
-          } label: {
-            isExpand ? Image("icnArrowUp") : Image("icnArrowDown")
+            Text(viewModel.numOfRestaurantsDisplayText).en14()
+              .padding(.top, 16)
           }
-          .animation(.easeInOut, value: isExpand)
-          .frame(width: 40, height: 40)
+          .padding(.vertical, 16)
+          .padding(.leading, 16)
+
+          Spacer()
+
+          VStack() {
+            NavigationLink(destination: {
+              EditListView()
+            }, label: {
+              Image("icnEditSmall")
+                .frame(width: 40, height: 40)
+            })
+
+            Button {
+              withAnimation {
+                isExpand.toggle()
+              }
+            } label: {
+              isExpand ? Image("icnArrowUp") : Image("icnArrowDown")
+            }
+            .padding(.top, 16)
+            .animation(.easeInOut, value: isExpand)
+            .frame(width: 40, height: 40)
+          }
+          .padding(.vertical, 16)
+          .padding(.trailing, 8)
+
         }
-        .padding(.vertical, 8)
-        .padding(.trailing, 8)
+        if isExpand {
+          Divider()
+            .foregroundColor(.black)
+          VStack {
+            ForEach(0 ..< viewModel.numOfRestaurants, id: \.self) { index in
+              let restaurant = viewModel.getRestaurantByIndex(index)
+              let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: .none)
+              RestaurantListItemView(presenter: presenter) {
+              }
+            }
+          }
+          .padding(.bottom, 16)
+        }
       }
-      .frame(height: 116)
       .roundedViewWithShadow(
         cornerRadius: 16,
         backgroundColor: .white,
         shadowColor: .gray.opacity(0.5),
         shadowRadius: 8
       )
-      .padding(.bottom, 8)
       .padding(.horizontal, 8)
-      .zIndex(1)
-
-      if isExpand {
-        VStack {
-          ForEach(0 ..< viewModel.numOfRestaurants, id: \.self) { index in
-            let restaurant = viewModel.getRestaurantByIndex(index)
-            let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: .none)
-            RestaurantListItemView(presenter: presenter) {
-            }
-          }
-        }
-        .height(CGFloat(viewModel.numOfRestaurants * 120))
-        .zIndex(0)
-      }
     }
-    
   }
 }
 

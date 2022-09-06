@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct SearchFieldContainer: View {
+  @EnvironmentObject var coordinator: MainCoordinator
+  @Environment(\.presentationMode) var presentationMode
   @State var inputText: String
 
   var body: some View {
@@ -23,27 +25,19 @@ struct SearchFieldContainer: View {
       Spacer()
 
       Button {
-        presentMapView()
+        coordinator.presentMapView()
       } label: {
         Image("btnGoogleMaps")
           .roundedViewWithShadow(cornerRadius: 8,
                                  backgroundColor: Color.white,
                                  shadowColor: Color.gray.opacity(0.3),
                                  shadowRadius: 3)
-
       }
-
+      
     }
     .padding(.top, 16)
     .padding(.leading, 16)
     .padding(.trailing, 8)
-  }
-
-  func presentMapView() {
-    let mapVC = MapViewController()
-    mapVC.modalPresentationStyle = .fullScreen
-    mapVC.modalTransitionStyle = .flipHorizontal
-    PresentHelper.topViewController?.present(mapVC, animated: true)
   }
 }
 

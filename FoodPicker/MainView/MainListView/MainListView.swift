@@ -18,6 +18,7 @@ enum LoadingState {
 }
 typealias ItemOnPress = (_ id: String) -> Void
 struct MainListView: View {
+  @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
 
   @State private var inputText: String = ""
@@ -35,7 +36,7 @@ struct MainListView: View {
         Color.listViewBackground.ignoresSafeArea()
         ScrollView(.vertical, showsIndicators: false) {
           VStack(spacing: 24) {
-            SearchFieldContainer(inputText: inputText)
+            SearchFieldContainer(inputText: inputText).environmentObject(coordinator)
 
             HorizontalSectionContainer().environment(\.managedObjectContext, viewContext)
 

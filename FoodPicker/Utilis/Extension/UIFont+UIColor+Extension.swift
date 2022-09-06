@@ -9,10 +9,10 @@
 import UIKit
 
 extension UIFont {
-    class var arialMT: UIFont {
+    static var arialMT: UIFont {
         return UIFont(name: "ArialMT", size: 14) ?? UIFont()
     }
-    class var arialBoldMT: UIFont {
+    static var arialBoldMT: UIFont {
         return UIFont(name: "Arial-BoldMT", size: 16) ?? UIFont()
     }
 }

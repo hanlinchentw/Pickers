@@ -14,99 +14,65 @@ import CoreLocation
 import Combine
 
 class MapViewController: UIViewController {
+  static let CAROUSEL_HEIGHT: CGFloat = 300
   //MARK: - Properties
+  weak var coordinator: MainCoordinator?
   private let viewModel = MapViewModel()
   let carouselView = CarouselCollectionView()
   private var mapView = MKMapView()
   private var set = Set<AnyCancellable>()
-  private let dismissButton: UIButton = {
-    let button = UIButton()
-    button.layer.cornerRadius = 12
-    button.backgroundColor = .white
-    button.setImage(UIImage(systemName: "line.3.horizontal"), for: .normal)
-    button.addTarget(self, action: #selector(dismissMapView), for: .touchUpInside)
-    button.tintColor = .butterscotch
-    return button
+
+  private let dismissButton: MapDismissButton = {
+    let btn = MapDismissButton()
+    btn.addTarget(self, action: #selector(dismissMapView), for: .touchUpInside)
+    return btn
   }()
   //MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
+    bindRefreshing()
+    bindUpdateAnnotation()
+    fetchRestaurantNearBy()
+
     configureMapView()
     configureCollectionView()
     configureDismissButton()
-    fetchRestaurantNearBy()
-    bindRefreshing()
-  }
-
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    collectionViewAnimateIn(delay: 0)
   }
 
   @objc func dismissMapView() {
-    OperationQueue.main.addOperation {
-      self.dismiss(animated: true)
-    }
+    self.coordinator?.presentListView()
   }
   //MARK: - Data fetching
   func fetchRestaurantNearBy() {
     Task {
-      MBProgressHUDHelper.showLoadingAnimation()
       await viewModel.fetchRestaurantNearby()
-      MBProgressHUDHelper.hideLoadingAnimation()
     }
   }
   // MARK: - Binding
   func bindRefreshing() {
-    viewModel.$isRefresh.combineLatest(viewModel.$restaurants)
-      .filter({ _, restaurants in
-        !restaurants.isEmpty
-      })
+    viewModel.$isRefresh
+      .receive(on: DispatchQueue.main)
       .sink { _ in
-        OperationQueue.main.addOperation {
-          self.addAnnotations(restaurants: self.viewModel.restaurants)
-          self.carouselView.restaurants = self.viewModel.restaurants
-        }
+        self.carouselView.restaurants = self.viewModel.restaurants
+      }
+      .store(in: &set)
+  }
+
+  func bindUpdateAnnotation() {
+    viewModel.$updateAnnotation
+      .receive(on: DispatchQueue.main)
+      .sink { _ in
+        self.addAnnotations(restaurants: self.viewModel.restaurants)
       }
       .store(in: &set)
   }
 }
-//MARK: - BottomSwipableCollectionViewControllerDelegate
-extension MapViewController {
-  func didScrollToItem(restaurantID: String) {
-    for anno in mapView.annotations {
-      guard let anno = anno as? AnnotationItem,
-            anno.id == restaurantID else { continue }
-      mapView.selectAnnotation(anno, animated: true)
-      break
-    }
-  }
-}
-//MARK: -  Map Helpers
-extension MapViewController {
-  func addAnnotations(restaurants : [RestaurantViewObject]){
-    self.mapView.removeAnnotations(self.mapView.annotations)
-    for (index, restaurant) in restaurants.enumerated() {
-      let anno = AnnotationItem(restaurant: restaurant)
-      anno.coordinate = CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude)
-      anno.title = restaurant.name
-      anno.indexForCollectionView = index
-      self.mapView.addAnnotation(anno)
-    }
-    self.makeVisibleRectFitAllAnnotations()
-  }
-}
 //MARK: -  Map Delegate
 @MainActor
-extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
-  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-    self.collectionViewAnimateOut(delay: 0.5)
-  }
-
+extension MapViewController: MKMapViewDelegate {
   func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
     guard let anno = view.annotation as? AnnotationItem,
           let index = anno.indexForCollectionView else { return }
-    self.collectionViewAnimateIn(delay: 0)
     self.carouselView.scrollToItem(at: .init(row: index, section: 0), at: .centeredHorizontally, animated: true)
     view.image = UIImage(named: "btnLocationSelected")
   }
@@ -123,7 +89,7 @@ extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
       view.canShowCallout = true
       view.calloutOffset = CGPoint(x: 0, y: 5)
       return view
-    }else{ return nil }
+    } else  { return nil }
   }
 
   @MainActor
@@ -134,41 +100,45 @@ extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
       let pointRect = MKMapRect(x: annotationPoint.x, y: annotationPoint.y, width: 0.01, height: 0.01)
       zoomRect = zoomRect.union(pointRect)
     }
-    self.mapView.setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50), animated: true)
+    self.mapView.setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 50, left: 50, bottom: Self.CAROUSEL_HEIGHT + 50, right: 50), animated: true)
+  }
+
+  @MainActor
+  func addAnnotations(restaurants : [RestaurantViewObject]){
+    self.mapView.removeAnnotations(self.mapView.annotations)
+    for (index, restaurant) in restaurants.enumerated() {
+      let anno = AnnotationItem(restaurant: restaurant)
+      anno.coordinate = CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude)
+      anno.title = restaurant.name
+      anno.indexForCollectionView = index
+      self.mapView.addAnnotation(anno)
+    }
+    self.makeVisibleRectFitAllAnnotations()
   }
 }
 // MARK: -
 extension MapViewController: CarouselViewDelegate {
   func itemTapSelectButton(restaurant: RestaurantViewObject) {
     viewModel.didTapSelectButton(restaurant)
+    let indexPaths = carouselView.indexPathsForVisibleItems
+    // 只有畫面中間那個物件可以操作：index 1
+    self.carouselView.reloadItems(at: [indexPaths[1]])
   }
 
   func itemTapLikeButton(restaurant: RestaurantViewObject) {
-
+    viewModel.didTapLikeButton(restaurant)
+    let indexPaths = carouselView.indexPathsForVisibleItems
+    // 只有畫面中間那個物件可以操作：index 1
+    self.carouselView.reloadItems(at: [indexPaths[1]])
   }
 
-  func didEndScrolling(endAt indexPath: IndexPath) {
-    let restaurant = viewModel.restaurants[indexPath.row]
-    guard let annotations = mapView.annotations as? Array<AnnotationItem>,
-          let annotation = annotations.first(where: { $0.id == restaurant.id }) else {
-      return
-    }
-    mapView.selectAnnotation(annotation, animated: true)
-  }
-}
-// MARK: - Bottom Collection View Animation
-extension MapViewController {
-  @MainActor
-  func collectionViewAnimateOut(delay: CGFloat) {
-    UIView.animate(withDuration: 0.7, delay: delay, options: .curveEaseInOut) {
-      self.carouselView.transform = .identity
-    }
-  }
-
-  @MainActor
-  func collectionViewAnimateIn(delay: CGFloat) {
-    UIView.animate(withDuration: 0.7, delay: delay, options: .curveEaseInOut) {
-      self.carouselView.transform = .init(translationX: 0, y: -350)
+  func didEndScrolling(restaurantId: String) {
+    for anno in mapView.annotations {
+      guard let anno = anno as? AnnotationItem,
+            anno.id == restaurantId else { continue }
+      mapView.selectAnnotation(anno, animated: true)
+      mapView.setRegion(MKCoordinateRegion(center: anno.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000), animated: true)
+      break
     }
   }
 }
@@ -176,28 +146,30 @@ extension MapViewController {
 extension MapViewController {
   func configureDismissButton() {
     view.addSubview(dismissButton)
-    dismissButton.anchor(top: view.topAnchor, right: view.rightAnchor, paddingTop: 32, paddingRight: 16)
+    dismissButton.anchor(top: view.topAnchor, right: view.rightAnchor, paddingTop: 15 + SafeAreaUtils.top, paddingRight: 8)
     dismissButton.setDimension(width: 44, height: 44)
+    dismissButton.bindBadgeNumber(badgeNumber: viewModel.$numOfSelectRestaurant)
   }
 
-  func configureMapView(){
+  func configureMapView() {
     mapView.frame = view.bounds
     view.addSubview(mapView)
     mapView.delegate = self
-    mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 240 + 16, right: 0)
     mapView.showsUserLocation = true
     mapView.userTrackingMode = .follow
+    mapView.mapType = .mutedStandard
+    mapView.pointOfInterestFilter = .excludingAll
     mapView.isZoomEnabled = true
   }
 
-  func configureCollectionView(){
+  func configureCollectionView() {
     carouselView.carouselViewDelegate = self
     view.addSubview(carouselView)
-    carouselView.anchor(top: mapView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor)
-    carouselView.setDimension(width: view.frame.width, height: 300)
+    carouselView.anchor(left: view.leftAnchor, right: view.rightAnchor, bottom: mapView.bottomAnchor, paddingBottom: 50)
+    carouselView.setDimension(width: view.frame.width, height: Self.CAROUSEL_HEIGHT)
   }
 
-  func configureNonAuthView(){
+  func configureNonAuthView() {
     let titleLabel = UILabel()
     titleLabel.text = "Where are you?"
     titleLabel.textColor = .butterscotch

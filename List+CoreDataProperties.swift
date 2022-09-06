@@ -42,11 +42,12 @@ extension List {
 }
 
 extension List : Identifiable {
-  convenience init(id: String, date: String, name: String, context: NSManagedObjectContext) {
+  convenience init(id: String, date: String, name: String, restaurants: Array<Restaurant> = [], context: NSManagedObjectContext) {
     let entity = NSEntityDescription.entity(forEntityName: "List", in: context)!
     self.init(entity: entity, insertInto: context)
     self.id = id
     self.name = name
     self.date = date
+    self.addToRestaurants(NSSet(array: restaurants))
   }
 }

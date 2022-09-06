@@ -17,7 +17,11 @@ final class MainTabBarConstants {
 
     var viewController: UIViewController {
       switch self {
-      case .main: return UIHostingController(rootView: MainListView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
+      case .main:
+        let nav = UINavigationController()
+        let coordinator = MainCoordinator(navigationController: nav)
+        coordinator.start()
+        return nav
       case .favorite: return UIHostingController(rootView: FavoriteView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
       case .spin: return UINavigationController(rootViewController: SpinViewController.init())
       }

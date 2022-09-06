@@ -1,0 +1,133 @@
+//
+//  MapViewModel.swift
+//  FoodPicker
+//
+//  Created by 陳翰霖 on 2022/9/3.
+//  Copyright © 2022 陳翰霖. All rights reserved.
+//
+import Foundation
+import Combine
+import CoreLocation
+import MapKit
+import CoreData
+
+class MapViewModel {
+  @Inject var locationService: LocationService
+  @Inject var selectService: SelectedCoreService
+  @Inject var likeService: LikedCoreService
+
+  @Published var isRefresh = false
+
+  @Published var updateAnnotation = false
+
+  @Published var restaurants: Array<RestaurantViewObject> = []
+
+  @Published var numOfSelectRestaurant: Int = 0
+
+  @Published var error: Error? = nil
+
+  var annotationItems: Array<AnnotationItem> = []
+
+  var set = Set<AnyCancellable>()
+
+  init() {
+    bindSearchResult()
+    observeSelectedRestaurantChange()
+  }
+
+  func refresh() {
+    if let numOfSelectRestaurant = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext).count {
+      self.numOfSelectRestaurant = numOfSelectRestaurant
+    }
+    isRefresh = true
+  }
+
+  func observeSelectedRestaurantChange() {
+    NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
+      .sink { notification in
+        guard let userInfo = notification.userInfo else { return }
+        let insert = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>
+        let delete = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>
+
+        if let insert = insert, let object = insert.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
+          if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
+            self.restaurants[index].isSelected = true
+          }
+        }
+        if let delete = delete, let object = delete.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
+          if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
+            self.restaurants[index].isSelected  = false
+          }
+        }
+        if let insert = insert, let object = insert.first(where: { $0 is LikedRestaurant}) as? LikedRestaurant {
+          if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
+            self.restaurants[index].isLiked = true
+          }
+        }
+        if let delete = delete, let object = delete.first(where: { $0 is LikedRestaurant}) as? LikedRestaurant {
+          if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
+            self.restaurants[index].isLiked  = false
+          }
+        }
+        self.refresh()
+      }
+      .store(in: &set)
+  }
+
+  func didTapSelectButton(_ target: RestaurantViewObject) {
+    guard let restaurant = restaurants.first(where: { $0.id == target.id }) else {
+      return
+    }
+    if restaurant.isSelected {
+      try? selectService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+    } else {
+      let restaurantManagedObject = Restaurant(restaurant: target)
+      try? selectService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: CoreDataManager.sharedInstance.managedObjectContext)
+    }
+  }
+
+  func didTapLikeButton(_ target: RestaurantViewObject) {
+    guard let restaurant = restaurants.first(where: { $0.id == target.id }) else {
+      return
+    }
+    if restaurant.isLiked {
+      try? likeService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+    } else {
+      let restaurantManagedObject = Restaurant(restaurant: target)
+      try? likeService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: CoreDataManager.sharedInstance.managedObjectContext)
+    }
+  }
+
+  func fetchRestaurantNearby() async  {
+    guard let latitude = locationService.latitude,
+          let longitude = locationService.longitude else {
+      error = LoactionError.locationNotFound(message: "Can't find business nearby.")
+      return
+    }
+    do {
+      let businesses = try await BusinessService.fetchBusinesses(lat: latitude, lon: longitude, option: .all, limit: 50)
+
+      var viewObjects = Array<RestaurantViewObject>()
+      for business in businesses {
+        var viewObject = RestaurantViewObject(business: business)
+        viewObject.isSelected = try selectService.exists(id: business.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+        viewObject.isLiked = try likeService.exists(id: business.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+        viewObjects.append(viewObject)
+      }
+      self.restaurants = viewObjects
+      self.refresh()
+      self.updateAnnotation = true
+    } catch {
+
+    }
+  }
+}
+// MARK: - Binding
+extension MapViewModel {
+  func bindSearchResult() {
+    $restaurants.sink { restaurants in
+      self.annotationItems = restaurants.map { AnnotationItem(restaurant: $0) }
+    }
+    .store(in: &set)
+  }
+}
