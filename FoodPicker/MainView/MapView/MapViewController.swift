@@ -12,9 +12,10 @@ import UIKit
 import MapKit
 import CoreLocation
 import Combine
+import Toast_Swift
 
 class MapViewController: UIViewController {
-  static let CAROUSEL_HEIGHT: CGFloat = 300
+  static let CAROUSEL_HEIGHT: CGFloat = 250
   //MARK: - Properties
   weak var coordinator: MainCoordinator?
   private let viewModel = MapViewModel()
@@ -27,26 +28,37 @@ class MapViewController: UIViewController {
     btn.addTarget(self, action: #selector(dismissMapView), for: .touchUpInside)
     return btn
   }()
+
+  private let locateButton: UIButton = {
+    let btn = UIButton()
+    btn.layer.cornerRadius = 26
+    btn.setImage(UIImage(systemName: "location.fill.viewfinder"), for: .normal)
+    btn.backgroundColor = .white
+    btn.tintColor = .butterscotch
+    btn.addTarget(self, action: #selector(relocateUser), for: .touchUpInside)
+    return btn
+  }()
   //MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
     bindRefreshing()
     bindUpdateAnnotation()
-    fetchRestaurantNearBy()
+    Task { await viewModel.fetchRestaurant(latitude: viewModel.userLatitude, longitude: viewModel.userLongitude) }
 
     configureMapView()
     configureCollectionView()
     configureDismissButton()
+    configureLocateButton()
   }
-
+  // MARK: - Selector
   @objc func dismissMapView() {
     self.coordinator?.presentListView()
   }
-  //MARK: - Data fetching
-  func fetchRestaurantNearBy() {
-    Task {
-      await viewModel.fetchRestaurantNearby()
-    }
+
+  @objc func relocateUser() {
+    let mapCenter = mapView.userLocation.coordinate
+    let visibleRegion = MKCoordinateRegion(center: mapCenter, latitudinalMeters: 1000, longitudinalMeters: 1000)
+    mapView.setRegion(visibleRegion, animated: true)
   }
   // MARK: - Binding
   func bindRefreshing() {
@@ -68,26 +80,34 @@ class MapViewController: UIViewController {
   }
 }
 //MARK: -  Map Delegate
-@MainActor
 extension MapViewController: MKMapViewDelegate {
+  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+    let centerCoordinate = mapView.centerCoordinate
+    PresentHelper.showTapToast(
+      on: self,
+      withMessage: "Search this area",
+      duration: .infinity,
+      position: .top,
+      makeStyle: { ToastStyle.searchThisArea })
+    { didTap in
+      if didTap {
+        Task { await self.viewModel.fetchRestaurant(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)}
+      }
+    }
+  }
+
   func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
     guard let anno = view.annotation as? AnnotationItem,
           let index = anno.indexForCollectionView else { return }
     self.carouselView.scrollToItem(at: .init(row: index, section: 0), at: .centeredHorizontally, animated: true)
-    view.image = UIImage(named: "btnLocationSelected")
-  }
-
-  func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-    view.image = UIImage(named: "btnLocationUnselect")
   }
 
   func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
     if let annotation = annotation as? AnnotationItem {
-      let view = MKAnnotationView(annotation: annotation, reuseIdentifier: NSStringFromClass(AnnotationItem.self))
-      view.image = UIImage(named: "btnLocationUnselect")
-      view.contentMode = .scaleAspectFit
-      view.canShowCallout = true
-      view.calloutOffset = CGPoint(x: 0, y: 5)
+      let view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: NSStringFromClass(AnnotationItem.self))
+      view.titleVisibility = .adaptive
+      view.glyphText = "Me"
+      view.markerTintColor = .butterscotch
       return view
     } else  { return nil }
   }
@@ -96,11 +116,12 @@ extension MapViewController: MKMapViewDelegate {
   func makeVisibleRectFitAllAnnotations() {
     var zoomRect = MKMapRect.null;
     for annotation in self.mapView.annotations {
+      if let _ = annotation as? MKUserLocation { continue }
       let annotationPoint = MKMapPoint(annotation.coordinate)
       let pointRect = MKMapRect(x: annotationPoint.x, y: annotationPoint.y, width: 0.01, height: 0.01)
       zoomRect = zoomRect.union(pointRect)
     }
-    self.mapView.setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 50, left: 50, bottom: Self.CAROUSEL_HEIGHT + 50, right: 50), animated: true)
+    self.mapView.setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50), animated: true)
   }
 
   @MainActor
@@ -108,15 +129,13 @@ extension MapViewController: MKMapViewDelegate {
     self.mapView.removeAnnotations(self.mapView.annotations)
     for (index, restaurant) in restaurants.enumerated() {
       let anno = AnnotationItem(restaurant: restaurant)
-      anno.coordinate = CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude)
-      anno.title = restaurant.name
       anno.indexForCollectionView = index
       self.mapView.addAnnotation(anno)
     }
     self.makeVisibleRectFitAllAnnotations()
   }
 }
-// MARK: -
+// MARK: - CarouselViewDelegate
 extension MapViewController: CarouselViewDelegate {
   func itemTapSelectButton(restaurant: RestaurantViewObject) {
     viewModel.didTapSelectButton(restaurant)
@@ -151,6 +170,12 @@ extension MapViewController {
     dismissButton.bindBadgeNumber(badgeNumber: viewModel.$numOfSelectRestaurant)
   }
 
+  func configureLocateButton() {
+    view.addSubview(locateButton)
+    locateButton.anchor(top: dismissButton.bottomAnchor, right: view.rightAnchor, paddingTop: 24, paddingRight: 8)
+    locateButton.setDimension(width: 52, height: 52)
+  }
+
   func configureMapView() {
     mapView.frame = view.bounds
     view.addSubview(mapView)
@@ -158,8 +183,9 @@ extension MapViewController {
     mapView.showsUserLocation = true
     mapView.userTrackingMode = .follow
     mapView.mapType = .mutedStandard
-    mapView.pointOfInterestFilter = .excludingAll
+    mapView.pointOfInterestFilter = .init(including: [.bakery, .bank, .cafe, .hospital, .police, .fireStation, .hospital, .restaurant])
     mapView.isZoomEnabled = true
+    mapView.showsCompass = false
   }
 
   func configureCollectionView() {

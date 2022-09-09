@@ -21,7 +21,7 @@ class MainViewController: UIViewController {
     }
   }
   // MARK: - State
-  @Published var mainPageMode: MainPageMode = .list
+  @Published var mainPageMode: MainPageMode = .map
   private var set = Set<AnyCancellable>()
   // MARK: - Lifecycle
   override func viewDidLoad() {
@@ -79,6 +79,7 @@ extension MainViewController {
     guard let mapView = mapVC.view else {
       return
     }
+    mapView.alpha = 0
     self.view.addSubview(mapView)
     mapView.fit(inView: self.view)
   }

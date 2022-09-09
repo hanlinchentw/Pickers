@@ -14,8 +14,9 @@ extension Attributes {
   static let systemYellow: Attributes = [NSAttributedString.Key.foregroundColor: UIColor.systemYellow]
   static let butterScotch: Attributes = [NSAttributedString.Key.foregroundColor: UIColor.butterscotch]
 
-  static let arial14: Attributes = [NSAttributedString.Key.font: UIFont.arialMT]
-  static let arial16Bold: Attributes = [NSAttributedString.Key.font: UIFont.arialBoldMT]
+  static let arial12: Attributes = [NSAttributedString.Key.font: UIFont.arial12MT]
+  static let arial14: Attributes = [NSAttributedString.Key.font: UIFont.arial14MT]
+  static let arial16Bold: Attributes = [NSAttributedString.Key.font: UIFont.arial16BoldMT]
 
   static func attributes(_ attributes: Array<Attributes>) -> Attributes {
     var result = Attributes()

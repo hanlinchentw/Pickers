@@ -24,11 +24,11 @@ class RestaurantCardCell: UICollectionViewCell {
 
   private let restaurantImageView = CachedImageView()
 
-  private let restaurantName: UILabel = .init(font: .arialBoldMT, color: .black)
+  private let restaurantName: UILabel = .init(font: .arial14BoldMT, color: .black)
 
   private let businessLabel : UILabel = .init(font: .boldSystemFont(ofSize: 14), color: .freshGreen)
 
-  private let priceLabel: UILabel = .init(font: .arialMT, color: .systemGray)
+  private let priceLabel: UILabel = .init(font: .arial12MT, color: .systemGray)
 
   private lazy var selectButton : UIButton = {
     let button = UIButton(type: .system)
@@ -111,9 +111,9 @@ class RestaurantCardCell: UICollectionViewCell {
   }
 
   func composeRatedLabel(rating: String, reviewCount: String) {
-    let attributedString = NSMutableAttributedString(string: "★", attributes: .systemYellow)
-    attributedString.append(NSAttributedString(string: " \(rating)", attributes: .attributes([.black, .arial14])))
-    attributedString.append(NSAttributedString(string: " \(reviewCount)", attributes: .attributes([.lightGray, .arial14])))
+    let attributedString = NSMutableAttributedString(string: "★", attributes: .attributes([.systemYellow, .arial12]))
+    attributedString.append(NSAttributedString(string: " \(rating)", attributes: .attributes([.black, .arial12])))
+    attributedString.append(NSAttributedString(string: " \(reviewCount)", attributes: .attributes([.lightGray, .arial12])))
 
     let paragraph = NSMutableParagraphStyle()
     paragraph.lineSpacing = 2

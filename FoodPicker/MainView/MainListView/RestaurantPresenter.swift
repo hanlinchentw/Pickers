@@ -55,7 +55,7 @@ struct RestaurantPresenter {
   }
 
   var distance : Int {
-    LocationService.shared.getDistanceFromCurrentLocation(restaurant.latitude, restaurant.longitude)
+    LocationService.shared.distanceFromCurrent(restaurant.latitude, restaurant.longitude)
   }
 
   var actionButtonImage: String {

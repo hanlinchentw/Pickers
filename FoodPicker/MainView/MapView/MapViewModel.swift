@@ -5,6 +5,7 @@
 //  Created by 陳翰霖 on 2022/9/3.
 //  Copyright © 2022 陳翰霖. All rights reserved.
 //
+
 import Foundation
 import Combine
 import CoreLocation
@@ -17,29 +18,34 @@ class MapViewModel {
   @Inject var likeService: LikedCoreService
 
   @Published var isRefresh = false
-
   @Published var updateAnnotation = false
-
-  @Published var restaurants: Array<RestaurantViewObject> = []
-
   @Published var numOfSelectRestaurant: Int = 0
-
   @Published var error: Error? = nil
+  @Published var requestUpdateSearchResult = false
 
-  var annotationItems: Array<AnnotationItem> = []
+  var restaurants: Array<RestaurantViewObject> = []
 
   var set = Set<AnyCancellable>()
 
+  var userLatitude: Double? {
+    return locationService.latitude
+  }
+
+  var userLongitude: Double? {
+    return locationService.longitude
+  }
+
   init() {
-    bindSearchResult()
     observeSelectedRestaurantChange()
   }
 
   func refresh() {
-    if let numOfSelectRestaurant = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext).count {
-      self.numOfSelectRestaurant = numOfSelectRestaurant
+    OperationQueue.main.addOperation {
+      if let numOfSelectRestaurant = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext).count {
+        self.numOfSelectRestaurant = numOfSelectRestaurant
+      }
+      self.isRefresh = true
     }
-    isRefresh = true
   }
 
   func observeSelectedRestaurantChange() {
@@ -98,10 +104,9 @@ class MapViewModel {
     }
   }
 
-  func fetchRestaurantNearby() async  {
-    guard let latitude = locationService.latitude,
-          let longitude = locationService.longitude else {
-      error = LoactionError.locationNotFound(message: "Can't find business nearby.")
+  func  fetchRestaurant(latitude: Double? = nil, longitude: Double?) async  {
+    guard let latitude = latitude, let longitude = longitude else {
+      error = LoactionError.locationNotFound(message: "Location not found")
       return
     }
     do {
@@ -118,16 +123,7 @@ class MapViewModel {
       self.refresh()
       self.updateAnnotation = true
     } catch {
-
+      self.error = error
     }
-  }
-}
-// MARK: - Binding
-extension MapViewModel {
-  func bindSearchResult() {
-    $restaurants.sink { restaurants in
-      self.annotationItems = restaurants.map { AnnotationItem(restaurant: $0) }
-    }
-    .store(in: &set)
   }
 }

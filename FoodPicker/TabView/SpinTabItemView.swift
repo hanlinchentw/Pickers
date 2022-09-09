@@ -32,7 +32,7 @@ class SpinTabItemView: UIImageView, SpinTabItemViewProps {
 
   private let numOfSelectedLabel : UILabel = {
     let label = UILabel()
-    label.font = UIFont.arialBoldMT
+    label.font = UIFont.arial16BoldMT
     label.textColor = .white
     return label
   }()

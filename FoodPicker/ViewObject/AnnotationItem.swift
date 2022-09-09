@@ -11,13 +11,12 @@ import MapKit
 
 class AnnotationItem: MKPointAnnotation {
   let id: String
-  let name: String
   var indexForCollectionView: Int? = nil
 
   init(restaurant: RestaurantViewObject) {
     self.id = restaurant.id
-    self.name = restaurant.name
     super.init()
+    self.title = restaurant.name
     self.coordinate = CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude)
   }
 }

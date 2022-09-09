@@ -22,14 +22,14 @@ class DetailCell : UICollectionViewCell {
   }()
   private let titleLabel : UILabel = {
     let label = UILabel()
-    label.font = UIFont.arialBoldMT
+    label.font = UIFont.arial16BoldMT
     label.textColor = .black
     return label
   }()
 
   private let contentLabel : UILabel = {
     let label = UILabel()
-    label.font = UIFont.arialMT
+    label.font = UIFont.arial14MT
     label.text = "No Providing"
     label.numberOfLines = 0
     label.textColor = .black

@@ -111,7 +111,7 @@ class SecondRowPresenter: DetailRowPresenter {
                                                      attributes: [NSAttributedString.Key.foregroundColor: isOpenColor])
     if isExpanded {
       attributedString.append(NSAttributedString(string: "\(expandedSheet)", attributes: [NSAttributedString.Key.foregroundColor : UIColor.customblack,
-                                                                                          NSAttributedString.Key.font : UIFont.arialMT]))
+                                                                                          NSAttributedString.Key.font : UIFont.arial14MT]))
     }else {
 
       attributedString.append(NSAttributedString(string: "\(getDayFromNum(weekDayNum))    \(getInterval(numofDayfromYelp: numofDayTransfromToYelp))", attributes: [NSAttributedString.Key.foregroundColor : UIColor.customblack,

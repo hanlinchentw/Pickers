@@ -29,7 +29,7 @@ class RestaurantListCell : UITableViewCell {
   private let priceLabel: UILabel = {
     let label = UILabel()
     label.textColor = .lightGray
-    label.font = .arialMT
+    label.font = .arial14MT
     return label
   }()
 

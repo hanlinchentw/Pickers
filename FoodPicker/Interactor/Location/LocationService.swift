@@ -26,7 +26,6 @@ class LocationService: NSObject, ObservableObject {
     LocationService.locationManager.delegate = self
     LocationService.locationManager.desiredAccuracy = kCLLocationAccuracyBest
     LocationService.locationManager.requestWhenInUseAuthorization()
-    LocationService.locationManager.pausesLocationUpdatesAutomatically = true
     LocationService.locationManager.startMonitoringSignificantLocationChanges()
   }
 
@@ -38,7 +37,7 @@ class LocationService: NSObject, ObservableObject {
     return lastLocation?.coordinate.longitude
   }
 
-  func getDistanceFromCurrentLocation(_ targetLatitude: Double, _ targetLongitude: Double) -> Int {
+  func distanceFromCurrent(_ targetLatitude: Double, _ targetLongitude: Double) -> Int {
     guard let latitude = latitude, let longitude = longitude else { return 1000 }
     let currentLocation = CLLocation(latitude: latitude, longitude: longitude)
     let targetLocation = CLLocation(latitude: targetLatitude, longitude: targetLongitude)
@@ -58,6 +57,5 @@ extension LocationService: CLLocationManagerDelegate {
     guard let location = locations.last else { return }
     lastLocation = location
     print(#function, location)
-
   }
 }

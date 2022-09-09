@@ -56,3 +56,9 @@ extension RestaurantViewObject {
     self.distance = business.distance ?? 0
   }
 }
+
+extension RestaurantViewObject: Equatable {
+  static func ==(lhs: RestaurantViewObject, rhs: RestaurantViewObject) -> Bool {
+    return lhs.id == rhs.id
+  }
+}

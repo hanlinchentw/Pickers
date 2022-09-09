@@ -22,7 +22,7 @@ class BottomSheetViewController : UIViewController {
   weak var delegate: BottomSheetViewControllerDelegate?
 
   private let notchView = NotchView()
-  private let titleLabel = UILabel("My selected list", font: .arialBoldMT, color: .black)
+  private let titleLabel = UILabel("My selected list", font: .arial16BoldMT, color: .black)
   private let saveButton = ListSaveButton()
   private let updateButton = ListUpdateButton()
   private let tableView = RestaurantsList()

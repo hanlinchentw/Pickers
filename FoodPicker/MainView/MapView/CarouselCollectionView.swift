@@ -63,7 +63,7 @@ extension CarouselCollectionView: UICollectionViewDelegate, UICollectionViewData
 //MARK: - UICollectionViewDelegateFlowLayout
 extension CarouselCollectionView: UICollectionViewDelegateFlowLayout{
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: 280, height: 240)
+    return CGSize(width: 260, height: 220)
   }
 
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

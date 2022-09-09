@@ -19,7 +19,7 @@ class ListUpdateButton: UIButton {
     layer.borderWidth = 0.75
     isHidden = true
     backgroundColor = .white
-    titleLabel?.font = UIFont.arialMT
+    titleLabel?.font = UIFont.arial14MT
   }
 
   required init?(coder: NSCoder) {

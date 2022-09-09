@@ -91,9 +91,9 @@ class SpinWheel: UIView {
       let currentRotation = (self.value(forKeyPath: zKeyPath) as? NSNumber)?.floatValue ?? 0.0
       let toArrow = (angleSize * CGFloat(selectdSection))
       let rotationAnimation = CAKeyframeAnimation(keyPath: "transform.rotation")
-      rotationAnimation.values = [currentRotation, torad(toArrow) + 2 * .pi ]
-      rotationAnimation.keyTimes = [0, 1]
-      rotationAnimation.duration = CFTimeInterval(1.5)
+      rotationAnimation.values = [currentRotation, torad(toArrow) + .pi, torad(toArrow) + 2 * .pi ]
+      rotationAnimation.keyTimes = [0, 0.4, 1]
+      rotationAnimation.duration = CFTimeInterval(1)
       rotationAnimation.fillMode = CAMediaTimingFillMode.forwards
       rotationAnimation.isRemovedOnCompletion = false
       layer.add(rotationAnimation, forKey: nil)
