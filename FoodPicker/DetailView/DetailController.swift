@@ -13,10 +13,6 @@ import Alamofire
 import AlamofireImage
 import Combine
 
-protocol DetailControllerDelegate: AnyObject {
-  func willPopViewController(_ controller: DetailController)
-}
-
 private let detailCellIdentifier = "DetailCell"
 private let headerIdentifier = "DetailHeader"
 
@@ -24,7 +20,6 @@ private let headerIdentifier = "DetailHeader"
 class DetailController : UICollectionViewController {
   //MARK: - Prorperties
   private var addButton = DetailAddButton()
-  weak var delegate: DetailControllerDelegate?
   var viewModel: DetailViewModel
   var set = Set<AnyCancellable>()
   //MARK: - Lifecycle
@@ -141,7 +136,7 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
 //MARK: - DetailHeaderDelegate
 extension DetailController : DetailHeaderDelegate {
   @objc func handleDismissDetailPage() {
-    delegate?.willPopViewController(self)
+    navigationController?.popViewController(animated: true)
   }
 
   func handleLikeRestaurant() {

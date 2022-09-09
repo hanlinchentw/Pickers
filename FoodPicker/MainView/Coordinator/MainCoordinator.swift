@@ -9,6 +9,7 @@
 import UIKit
 import SwiftUI
 
+
 final class MainCoordinator: Coordinator, ObservableObject {
   var childCoordinators = [Coordinator]()
   var navigationController: UINavigationController
@@ -24,16 +25,25 @@ final class MainCoordinator: Coordinator, ObservableObject {
     navigationController.pushViewController(self.mainVC!, animated: false)
   }
 
+  @MainActor
   func presentMapView() {
     self.mainVC!.mainPageMode = .map
   }
 
+  @MainActor
   func presentListView() {
     self.mainVC!.mainPageMode = .list
   }
 
-  func presentMoreListView() {
+  @MainActor
+  func pushToMoreListView() {
     let moreListVC = UIHostingController(rootView: MoreListView())
     navigationController.pushViewController(moreListVC, animated: true)
+  }
+
+  @MainActor
+  func pushToDetailView(id: String) {
+    let detailView = DetailController(id: id)
+    navigationController.pushViewController(detailView, animated: true)
   }
 }

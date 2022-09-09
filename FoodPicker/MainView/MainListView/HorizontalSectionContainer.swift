@@ -11,6 +11,7 @@ import SwiftUI
 struct HorizontalSectionContainer: View {
   @StateObject var dataStore = HorizontalSectionDataStore()
 
+  @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
   @FetchRequest(sortDescriptors: []) var likedRestaurants: FetchedResults<LikedRestaurant>
@@ -43,18 +44,15 @@ struct HorizontalSectionContainer: View {
                 let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
                 let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode, isLiked: isLiked)
 
-                NavigationLink {
-                  DetailContentView(id: restaurant.id)
-                    .navigationBarHidden(true)
-                    .ignoresSafeArea()
-                } label: {
-                  RestaurantCardView(presenter: presenter) {
-                    selectButtonOnPress(isSelected: isSelected, restaurant: restaurant)
-                  } _: {
-                    likeButtonOnPress(isLiked: isLiked, restaurant: restaurant)
-                  }
-                  .padding(.vertical, 8)
+                RestaurantCardView(presenter: presenter) {
+                  selectButtonOnPress(isSelected: isSelected, restaurant: restaurant)
+                } _: {
+                  likeButtonOnPress(isLiked: isLiked, restaurant: restaurant)
                 }
+                .onTapGesture {
+                  coordinator.pushToDetailView(id: restaurant.id)
+                }
+                .padding(.vertical, 8)
                 .buttonStyle(.plain)
               }
             }

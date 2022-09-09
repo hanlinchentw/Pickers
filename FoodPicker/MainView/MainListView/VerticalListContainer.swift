@@ -40,18 +40,17 @@ struct VerticalListContainer: View {
               let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
               let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
 
-              NavigationLink {
-                DetailContentView(id: restaurant.id).navigationBarHidden(true).ignoresSafeArea()
-              } label: {
-                RestaurantListItemView(presenter: presenter) {
-                  selectButtonOnPress(isSelected: isSelected, restaurant: restaurant)
-                }
+              RestaurantListItemView(presenter: presenter) {
+                selectButtonOnPress(isSelected: isSelected, restaurant: restaurant)
+              }
+              .onTapGesture {
+                coordinator.pushToDetailView(id: restaurant.id)
               }
               .buttonStyle(.plain)
             }
           }
           Button {
-            coordinator.presentMoreListView()
+            coordinator.pushToMoreListView()
           } label: {
             HStack {
               Text("More restaurants")
@@ -61,7 +60,6 @@ struct VerticalListContainer: View {
                 .foregroundColor(.butterScotch)
                 .frame(width: 32, height: 32)
             }
-            .padding(16)
           }
           .padding(.vertical, 16)
         }

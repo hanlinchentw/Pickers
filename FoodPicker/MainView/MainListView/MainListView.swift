@@ -38,7 +38,9 @@ struct MainListView: View {
           VStack(spacing: 24) {
             SearchFieldContainer(inputText: inputText).environmentObject(coordinator)
 
-            HorizontalSectionContainer().environment(\.managedObjectContext, viewContext)
+            HorizontalSectionContainer()
+              .environment(\.managedObjectContext, viewContext)
+              .environmentObject(coordinator)
 
             VerticalListContainer()
               .environment(\.managedObjectContext, viewContext)

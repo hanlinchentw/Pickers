@@ -45,41 +45,38 @@ struct RestaurantCardView: View {
       .padding(.top, 8)
       .padding(.horizontal, 8)
 
-      VStack(alignment: .leading) {
-        VStack(alignment: .leading) {
-          HStack {
-            VStack(alignment: .leading) {
-              Text(presenter.name)
-                .en16Bold()
-              Text(presenter.openOrCloseString)
-                .en14Bold()
-                .foregroundColor(presenter.openOrCloseColor)
-            }
-            Spacer()
-            ActionButton(imageName: presenter.likeButtonImage) {
-              likeButtonOnPress()
-            }
-            .animation(.easeInOut(duration: 0.25), value: presenter.likeButtonImage)
-            .clipped()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 48, height: 48)
-          }
+      Spacer()
+
+      HStack(alignment: .top) {
+        VStack(alignment: .leading, spacing: 4) {
+          Text(presenter.name)
+            .en16Bold()
+          Text(presenter.openOrCloseString)
+            .en14Bold()
+            .foregroundColor(presenter.openOrCloseColor)
           Text(presenter.priceCategoryDistanceText).en14().foregroundColor(Color.gray.opacity(0.7))
+          HStack(spacing: 4, content: {
+            Text("★").foregroundColor(Color.yellow)
+            Text("\(presenter.ratingWithOneDecimal)").en14()
+            Text("\("\(presenter.reviewCount)")").en14()
+              .foregroundColor(Color.gray.opacity(0.7))
+            Spacer()
+          })
         }
-        HStack(spacing: 4, content: {
-          Text("★").foregroundColor(Color.yellow)
-          Text("\(presenter.ratingWithOneDecimal)").en14()
-          Text("\("\(presenter.reviewCount)")").en14()
-            .foregroundColor(Color.gray.opacity(0.7))
-          Spacer()
-        })
+        Spacer()
+        ActionButton(imageName: presenter.likeButtonImage) {
+          likeButtonOnPress()
+        }
+        .animation(.easeInOut(duration: 0.25), value: presenter.likeButtonImage)
+        .clipped()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: 48, height: 48)
       }
-      .padding(.top, 8)
       .padding(.leading, 16)
       .padding(.trailing, 8)
-      Spacer()
+      .padding(.bottom, 12)
     }
-    .frame(width: 280, height: 250)
+    .frame(width: 280, height: 240)
     .roundedViewWithShadow(cornerRadius: 16,
                            backgroundColor: Color.white,
                            shadowColor: Color.gray.opacity(0.3),
