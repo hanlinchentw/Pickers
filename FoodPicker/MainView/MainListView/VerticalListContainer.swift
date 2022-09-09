@@ -11,6 +11,7 @@ import SwiftUI
 struct VerticalListContainer: View {
   @StateObject var dataStore = VerticalListDataStore()
 
+  @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
   
@@ -49,10 +50,24 @@ struct VerticalListContainer: View {
               .buttonStyle(.plain)
             }
           }
+          Button {
+            coordinator.presentMoreListView()
+          } label: {
+            HStack {
+              Text("More restaurants")
+                .foregroundColor(.black)
+                .en16Bold()
+              Image(systemName: "arrow.right")
+                .foregroundColor(.butterScotch)
+                .frame(width: 32, height: 32)
+            }
+            .padding(16)
+          }
+          .padding(.vertical, 16)
         }
         .padding(.top, 16)
         .background(Color.white)
-        .cornerRadius(24, corners: [.topLeft, .topRight])
+        .cornerRadius(24)
         Spacer()
       }
     }

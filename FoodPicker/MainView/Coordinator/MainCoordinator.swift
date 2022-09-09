@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 final class MainCoordinator: Coordinator, ObservableObject {
   var childCoordinators = [Coordinator]()
@@ -29,5 +30,10 @@ final class MainCoordinator: Coordinator, ObservableObject {
 
   func presentListView() {
     self.mainVC!.mainPageMode = .list
+  }
+
+  func presentMoreListView() {
+    let moreListVC = UIHostingController(rootView: MoreListView())
+    navigationController.pushViewController(moreListVC, animated: true)
   }
 }

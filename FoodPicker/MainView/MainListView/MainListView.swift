@@ -40,7 +40,9 @@ struct MainListView: View {
 
             HorizontalSectionContainer().environment(\.managedObjectContext, viewContext)
 
-            VerticalListContainer().environment(\.managedObjectContext, viewContext)
+            VerticalListContainer()
+              .environment(\.managedObjectContext, viewContext)
+              .environmentObject(coordinator)
           }
         }
       }
