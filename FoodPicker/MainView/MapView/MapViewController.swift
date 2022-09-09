@@ -137,6 +137,10 @@ extension MapViewController: MKMapViewDelegate {
 }
 // MARK: - CarouselViewDelegate
 extension MapViewController: CarouselViewDelegate {
+  func itemDidTap(restaurant: RestaurantViewObject) {
+    coordinator?.pushToDetailView(id: restaurant.id)
+  }
+
   func itemTapSelectButton(restaurant: RestaurantViewObject) {
     viewModel.didTapSelectButton(restaurant)
     let indexPaths = carouselView.indexPathsForVisibleItems

@@ -12,6 +12,7 @@ protocol CarouselViewDelegate: AnyObject {
   func itemTapSelectButton(restaurant: RestaurantViewObject)
   func itemTapLikeButton(restaurant: RestaurantViewObject)
   func didEndScrolling(restaurantId: String)
+  func itemDidTap(restaurant: RestaurantViewObject)
 }
 
 class CarouselCollectionView: UICollectionView {
@@ -57,7 +58,8 @@ extension CarouselCollectionView: UICollectionViewDelegate, UICollectionViewData
     return cell
   }
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    //        self.cardDelegate?.pushToDetailVC(self.restaurants[indexPath.row])
+    let restaurant = restaurants[indexPath.row]
+    carouselViewDelegate?.itemDidTap(restaurant: restaurant)
   }
 }
 //MARK: - UICollectionViewDelegateFlowLayout
