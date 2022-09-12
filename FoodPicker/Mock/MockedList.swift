@@ -9,7 +9,7 @@
 import Foundation
 
 class MockedList {
-  static let mock_list_1 = List(id: "123", date: "1249019501", name: "MOCK_1", restaurants: [TestRestaurantData.TEST_RESTAURANT_1, TestRestaurantData.TEST_RESTAURANT_2], context: CoreDataManager.sharedInstance.managedObjectContext)
+  static let mock_list_1 = List(id: "123", date: "1249019501", name: "MOCK_1", restaurants: [MockedRestaurant.TEST_RESTAURANT_1, MockedRestaurant.TEST_RESTAURANT_2], context: CoreDataManager.sharedInstance.managedObjectContext)
   static let mock_list_2 = List(id: "123", date: "1249019121", name: "MOCK_2", context: CoreDataManager.sharedInstance.managedObjectContext)
   static let mock_list_3 = List(id: "123", date: "1249011124", name: "MOCK_3", context: CoreDataManager.sharedInstance.managedObjectContext)
 

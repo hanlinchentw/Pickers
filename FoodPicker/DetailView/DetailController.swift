@@ -46,12 +46,6 @@ class DetailController : UICollectionViewController {
     self.tabBarController?.tabBar.isHidden = true
     self.navigationController?.navigationBar.isTranslucent = true
   }
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    self.tabBarController?.tabBar.isHidden = false
-    self.navigationController?.navigationBar.isTranslucent = false
-  }
   // MARK: - Binding
   func bindCollectionView() {
     viewModel.$detail

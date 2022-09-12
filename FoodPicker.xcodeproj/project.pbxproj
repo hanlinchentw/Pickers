@@ -364,7 +364,6 @@
 				B615FFA328CAFCC2000BD3A0 /* Coordinator */,
 				B6C40F3728BE68EC0086DDBD /* MapView */,
 				B65A3CC128A56D1100B15966 /* MainListView */,
-				B615FFA428CAFD52000BD3A0 /* MoreListView */,
 				B60CC1B728C63E7100AF2B53 /* MainViewController.swift */,
 			);
 			path = MainView;
@@ -395,12 +394,13 @@
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
-		B615FFA428CAFD52000BD3A0 /* MoreListView */ = {
+		B615FFA728CB7E69000BD3A0 /* Mock */ = {
 			isa = PBXGroup;
 			children = (
-				B615FFA528CAFD60000BD3A0 /* MoreListView.swift */,
+				B634A71E28A8C0E200796D63 /* TestRestaurantData.swift */,
+				B63E497D28BA6D4200714F94 /* MockedList.swift */,
 			);
-			path = MoreListView;
+			path = Mock;
 			sourceTree = "<group>";
 		};
 		B619CBBF28A2B23100376348 /* Deprecated */ = {
@@ -503,14 +503,6 @@
 			path = FoodPickerTests;
 			sourceTree = "<group>";
 		};
-		B63E497C28BA6D2E00714F94 /* Mock */ = {
-			isa = PBXGroup;
-			children = (
-				B63E497D28BA6D4200714F94 /* MockedList.swift */,
-			);
-			path = Mock;
-			sourceTree = "<group>";
-		};
 		B647A4C024B1F7BA0098B7A2 = {
 			isa = PBXGroup;
 			children = (
@@ -550,6 +542,7 @@
 				B60CC1BB28C6425500AF2B53 /* Coordinator */,
 				B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
+				B615FFA728CB7E69000BD3A0 /* Mock */,
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
 				B647A4DA24B1F7BE0098B7A2 /* Info.plist */,
 				B647A4D224B1F7BA0098B7A2 /* Main.storyboard */,
@@ -598,7 +591,6 @@
 			children = (
 				B6B84D492665D4A5002E418D /* Extension */,
 				B685484B24B6D390009BC800 /* Constants.swift */,
-				B634A71E28A8C0E200796D63 /* TestRestaurantData.swift */,
 				B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */,
 				B6F789892899883800829ED4 /* ViewModelType.swift */,
 				B6F789A82675DC440003ED5C /* Validators.swift */,
@@ -631,6 +623,7 @@
 				B6E0D79028A61C4600B8CAE1 /* RestaurantCardView.swift */,
 				B634A71828A76B4800796D63 /* VerticalListContainer.swift */,
 				B634A71C28A8BFC700796D63 /* RestaurantListItemView.swift */,
+				B615FFA528CAFD60000BD3A0 /* MoreListView.swift */,
 			);
 			path = MainListView;
 			sourceTree = "<group>";
@@ -686,7 +679,6 @@
 		B6A2FA8D2533E6C6005CB171 /* SpinView */ = {
 			isa = PBXGroup;
 			children = (
-				B63E497C28BA6D2E00714F94 /* Mock */,
 				B6B9976928B9FA76007C3D1D /* ViewModel */,
 				B69E3B1D28B9267000014AA3 /* View */,
 				B67414A128A5693800C545D2 /* Presenter */,

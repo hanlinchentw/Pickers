@@ -26,6 +26,11 @@ final class MainCoordinator: Coordinator, ObservableObject {
   }
 
   @MainActor
+  func pop() {
+    self.navigationController.popViewController(animated: true)
+  }
+
+  @MainActor
   func presentMapView() {
     self.mainVC!.mainPageMode = .map
   }
@@ -37,7 +42,11 @@ final class MainCoordinator: Coordinator, ObservableObject {
 
   @MainActor
   func pushToMoreListView() {
-    let moreListVC = UIHostingController(rootView: MoreListView())
+    let moreListVC = UIHostingController(rootView: MoreListView()
+      .environmentObject(self)
+      .environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
+    )
+    navigationController.tabBarController?.tabBar.isHidden = true
     navigationController.pushViewController(moreListVC, animated: true)
   }
 
