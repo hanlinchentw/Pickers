@@ -10,10 +10,12 @@ import SwiftUI
 
 struct ListCardView: View {
   var viewModel: ListCardViewModel
+  var navigateToEditView: () -> Void
   @State var isExpand: Bool = false
   @State var showEditOption: Bool = false
 
-  init(list: List) {
+  init(list: List, navigateToEditView: @escaping () -> Void) {
+    self.navigateToEditView = navigateToEditView
     self.viewModel = ListCardViewModel(list: list)
   }
 
@@ -36,13 +38,13 @@ struct ListCardView: View {
           Spacer()
 
           VStack() {
-            NavigationLink(destination: {
-              EditListView()
-            }, label: {
+            Button {
+              navigateToEditView()
+            } label: {
               Image("icnEditSmall")
                 .frame(width: 40, height: 40)
-            })
-
+            }
+            
             Button {
               withAnimation {
                 isExpand.toggle()
@@ -85,6 +87,8 @@ struct ListCardView: View {
 
 struct ListCardView_Previews: PreviewProvider {
   static var previews: some View {
-    ListCardView(list: MockedList.mock_list_1)
+    ListCardView(list: MockedList.mock_list_1, navigateToEditView: {
+      
+    })
   }
 }

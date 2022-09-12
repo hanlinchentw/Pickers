@@ -9,41 +9,43 @@
 import SwiftUI
 
 struct SavedListView: View {
+
   @Environment(\.presentationMode) var presentationMode
   @Environment(\.managedObjectContext) var viewContext
+  @EnvironmentObject var coordinator: SavedListCoordinator
   @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) var savedLists: FetchedResults<List>
   
   var applyList: (_ list: List) -> Void
   
   var body: some View {
-    NavigationView {
-      ZStack {
-        Color.listViewBackground.ignoresSafeArea()
-        
-        VStack(alignment: .center) {
-          SavedListHeader(
-            back: {
-              presentationMode.wrappedValue.dismiss()
-            }
-          )
-          ScrollView(.vertical, showsIndicators: false) {
-            VStack {
-              ForEach(savedLists, id: \.self) { list in
-                ListCardView(list: list)
-                  .onTapGesture {
-                    applyList(list)
-                    presentationMode.wrappedValue.dismiss()
-                  }
+    ZStack {
+      Color.listViewBackground.ignoresSafeArea()
+
+      VStack(alignment: .center) {
+        SavedListHeader(
+          back: {
+            presentationMode.wrappedValue.dismiss()
+          }
+        )
+        ScrollView(.vertical, showsIndicators: false) {
+          VStack {
+            ForEach(savedLists, id: \.self) { list in
+              ListCardView(list: list, navigateToEditView: {
+                coordinator.pushToEditListView(list: list)
+              })
+              .onTapGesture {
+                applyList(list)
+                presentationMode.wrappedValue.dismiss()
               }
             }
           }
-          .safeAreaInset(edge: .top) { Spacer().height(20) }
-          Spacer()
         }
+        .safeAreaInset(edge: .top) { Spacer().height(20) }
+        Spacer()
       }
-      .ignoresSafeArea()
-      .navigationBarHidden(true)
     }
+    .ignoresSafeArea()
+    .navigationBarHidden(true)
   }
 }
 

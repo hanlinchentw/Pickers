@@ -41,8 +41,7 @@ struct MoreListView: View {
                 coordinator.pushToDetailView(id: restaurant.id)
               }
               .onAppear {
-                print("index >>> \(index)")
-                shouldLoadMore = index == dataStore.data.count - 2
+                shouldLoadMore = index == dataStore.data.count - 5
               }
             }
           }

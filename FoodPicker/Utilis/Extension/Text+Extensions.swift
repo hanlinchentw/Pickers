@@ -9,6 +9,10 @@
 import SwiftUI
 
 extension Text {
+  func en12() -> Text {
+    return self.font(Font.custom("ArialMT", fixedSize: 12))
+  }
+
   func en14() -> Text {
     return self.font(Font.custom("ArialMT", fixedSize: 14))
   }

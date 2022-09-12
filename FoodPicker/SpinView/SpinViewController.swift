@@ -17,7 +17,7 @@ class SpinViewController: UIViewController {
   //MARK: - Properties
   let presenter = SpinWheelPresenter()
 
-  private var startButton: UIButton = {
+  private lazy var startButton: UIButton = {
     let button = UIButton(type: .system)
     button.setImage(UIImage(named: "btnSpin")?.withRenderingMode(.alwaysOriginal), for: .normal)
     button.imageView?.contentMode = .scaleAspectFit
@@ -26,16 +26,16 @@ class SpinViewController: UIViewController {
     return button
   }()
 
-  private let listButton: UIButton = {
+  private lazy var listButton: UIButton = {
     let button = UIButton(type: .system)
     button.setImage(UIImage(named: "btnNote")?.withRenderingMode(.alwaysOriginal), for: .normal)
     button.addTarget(self, action: #selector(handleListButtonTapped), for: .touchUpInside)
     return button
   }()
 
-  private let cleanButton: UIButton = {
+  private lazy var cleanButton: UIButton = {
     let button = UIButton()
-    button.layer.cornerRadius = 8
+    button.layer.cornerRadius = 12
     button.backgroundColor = .white
     button.setImage(UIImage(systemName: "minus.circle"), for: .normal)
     button.tintColor = .butterscotch
@@ -89,7 +89,7 @@ class SpinViewController: UIViewController {
     self.resultView.alpha = 1
   }
 
-  func wheelSpin(targetIndex: Int){
+  func wheelSpin(targetIndex: Int) {
     self.spinWheel.setTarget(section: targetIndex)
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
       self.spinWheel.manualRotation(aCircleTime: 0.15)
@@ -99,17 +99,15 @@ class SpinViewController: UIViewController {
     }
   }
 
-  @objc func handleListButtonTapped(){
-    let savedListView = SavedListView(
-      applyList: { list in
-        print("Apply list >>> \(list)")
-        self.presenter.applyList(list)
-        self.bottomSheetVC.applyList(list)
-      })
-      .environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
-    let savedListVC = UIHostingController(rootView: savedListView)
-    self.navigationController?.pushViewController(savedListVC, animated: true)
-    self.tabBarController?.tabBar.isHidden = true
+  @objc func handleListButtonTapped() {
+    guard let nav = self.navigationController else {
+      return
+    }
+    let coordinator = SavedListCoordinator(navigationController: nav)
+    coordinator.pushToSavedListView { list in
+      self.presenter.applyList(list)
+      self.bottomSheetVC.applyList(list)
+    }
   }
 
   @objc func handleCleanButtonTapped() {
@@ -131,10 +129,11 @@ class SpinViewController: UIViewController {
   }
 }
 //MARK: - LuckyWheelDelegate, LuckyWheelDataSource
-extension SpinViewController : SpinWheelDelegate, SpinWheelDataSource {
+extension SpinViewController: SpinWheelDelegate, SpinWheelDataSource {
   func wheelDidChangeValue(_ newValue: Int) {
     self.configureResult(valueRelateToResult: newValue)
   }
+
   func numberOfSections() -> Int {
     return presenter.numOfSection
   }

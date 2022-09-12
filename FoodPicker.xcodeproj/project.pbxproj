@@ -134,6 +134,7 @@
 		B6EF13B128B23366009345D6 /* FavoriteSearchContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6EF13B028B23366009345D6 /* FavoriteSearchContainer.swift */; };
 		B6EF13B328B233ED009345D6 /* FavoriteEditButtonContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6EF13B228B233ED009345D6 /* FavoriteEditButtonContainer.swift */; };
 		B6F2351928BD04AE00344B8D /* ListCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F2351828BD04AE00344B8D /* ListCardViewModel.swift */; };
+		B6F5DF0428CF0EED00D4621C /* SavedListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F5DF0328CF0EED00D4621C /* SavedListCoordinator.swift */; };
 		B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F7618B24D3EE2300318AB1 /* DetailHeader.swift */; };
 		B6F7898A2899883800829ED4 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789892899883800829ED4 /* ViewModelType.swift */; };
 		B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */; };
@@ -299,6 +300,7 @@
 		B6EF13B028B23366009345D6 /* FavoriteSearchContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteSearchContainer.swift; sourceTree = "<group>"; };
 		B6EF13B228B233ED009345D6 /* FavoriteEditButtonContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEditButtonContainer.swift; sourceTree = "<group>"; };
 		B6F2351828BD04AE00344B8D /* ListCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCardViewModel.swift; sourceTree = "<group>"; };
+		B6F5DF0328CF0EED00D4621C /* SavedListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListCoordinator.swift; sourceTree = "<group>"; };
 		B6F7618B24D3EE2300318AB1 /* DetailHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeader.swift; sourceTree = "<group>"; };
 		B6F789892899883800829ED4 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBProgressHUDProtocol.swift; sourceTree = "<group>"; };
@@ -684,6 +686,7 @@
 				B67414A128A5693800C545D2 /* Presenter */,
 				B650ECCF257F2648004A4049 /* SpinWheel */,
 				B647A4F024B22B010098B7A2 /* SpinViewController.swift */,
+				B6F5DF0328CF0EED00D4621C /* SavedListCoordinator.swift */,
 				B6AE009C24DD188400423D72 /* BottomSheetViewController.swift */,
 				B63E497A28BA669700714F94 /* SavedListView.swift */,
 				B6C40F3328BD227C0086DDBD /* EditListView.swift */,
@@ -1015,6 +1018,7 @@
 				B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */,
 				B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */,
 				B6EF13B328B233ED009345D6 /* FavoriteEditButtonContainer.swift in Sources */,
+				B6F5DF0428CF0EED00D4621C /* SavedListCoordinator.swift in Sources */,
 				B634A72C28A8D45B00796D63 /* SelectedAddBehavior.swift in Sources */,
 				B6AE009D24DD188400423D72 /* BottomSheetViewController.swift in Sources */,
 				B6EF13AD28B21AD9009345D6 /* FavoriteListContainer.swift in Sources */,
