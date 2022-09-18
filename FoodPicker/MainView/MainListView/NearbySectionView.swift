@@ -12,13 +12,12 @@ struct NearbySectionView: View {
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
-  
-  @Inject var selectedCoreService: SelectedCoreService
-  @Inject var locationService: LocationService
-  
+  // MARK: - Property
   @Binding var data: MainListViewModel.ListSectionData
   var showContent: (_ data: MainListViewModel.ListSectionData) -> Bool
   var dataCount: (_ data: MainListViewModel.ListSectionData) -> Int
+  // MARK: - Use case
+  var selectUsecase = SelectRestaurantUsecase()
   
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
@@ -34,13 +33,12 @@ struct NearbySectionView: View {
                 .shimmer()
             } else {
               let restaurant = data.viewObjects[index]
-              let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
-              let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
+              let actionButtonMode: ActionButtonMode = selectUsecase.checkIsRestaurantSelected(restaurant.id) ? .select : .deselect
               let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
               
-              RestaurantListItemView(presenter: presenter) {
-                selectButtonOnPress(isSelected: isSelected, restaurant: restaurant)
-              }
+              RestaurantListItemView(presenter: presenter, actionButtonOnPress: {
+                selectUsecase.toggleSelectState(restaurant: restaurant)
+              })
               .onTapGesture {
                 coordinator.pushToDetailView(id: restaurant.id)
               }
@@ -66,15 +64,6 @@ struct NearbySectionView: View {
         .cornerRadius(24)
         Spacer()
       }
-    }
-  }
-  
-  func selectButtonOnPress(isSelected: Bool, restaurant: RestaurantViewObject) {
-    if (isSelected) {
-      try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: viewContext)
-    } else {
-      let restaurantManagedObject = Restaurant(restaurant: restaurant)
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: viewContext)
     }
   }
 }

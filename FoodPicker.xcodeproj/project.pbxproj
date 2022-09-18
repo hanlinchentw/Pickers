@@ -119,6 +119,8 @@
 		B6C9752128D370D500287369 /* TwoHorizontalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9752028D370D500287369 /* TwoHorizontalButton.swift */; };
 		B6C9752328D3750A00287369 /* EditListContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9752228D3750A00287369 /* EditListContainer.swift */; };
 		B6CA846A28D738B200B85453 /* MainListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CA846928D738B200B85453 /* MainListViewModel.swift */; };
+		B6CA846D28D748C700B85453 /* SelectRestaurantUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CA846C28D748C700B85453 /* SelectRestaurantUsecase.swift */; };
+		B6CA847028D74B2D00B85453 /* LikeRestaurantUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CA846F28D74B2D00B85453 /* LikeRestaurantUsecase.swift */; };
 		B6CB5FE428B0A2220042C34C /* FourthRowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB5FE328B0A2220042C34C /* FourthRowPresenter.swift */; };
 		B6CBE88E28D37DD9005BCA7D /* HeightPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBE88D28D37DD9005BCA7D /* HeightPreferenceKey.swift */; };
 		B6CBE89528D5EE5E005BCA7D /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBE89428D5EE5E005BCA7D /* KeyboardHelper.swift */; };
@@ -292,6 +294,8 @@
 		B6C9752028D370D500287369 /* TwoHorizontalButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoHorizontalButton.swift; sourceTree = "<group>"; };
 		B6C9752228D3750A00287369 /* EditListContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditListContainer.swift; sourceTree = "<group>"; };
 		B6CA846928D738B200B85453 /* MainListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListViewModel.swift; sourceTree = "<group>"; };
+		B6CA846C28D748C700B85453 /* SelectRestaurantUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectRestaurantUsecase.swift; sourceTree = "<group>"; };
+		B6CA846F28D74B2D00B85453 /* LikeRestaurantUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeRestaurantUsecase.swift; sourceTree = "<group>"; };
 		B6CB5FE328B0A2220042C34C /* FourthRowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthRowPresenter.swift; sourceTree = "<group>"; };
 		B6CBE88D28D37DD9005BCA7D /* HeightPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightPreferenceKey.swift; sourceTree = "<group>"; };
 		B6CBE89428D5EE5E005BCA7D /* KeyboardHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHelper.swift; sourceTree = "<group>"; };
@@ -548,6 +552,7 @@
 				B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */,
 				B647A4E224B203600098B7A2 /* Model */,
 				B68551AF28C30D3A0077C47E /* ViewObject */,
+				B6CA846E28D74B0600B85453 /* Usecase */,
 				B67414A028A568C700C545D2 /* TabView */,
 				B60CC1B428C63E2800AF2B53 /* MainView */,
 				B6A2FA8D2533E6C6005CB171 /* SpinView */,
@@ -832,6 +837,15 @@
 			path = Component;
 			sourceTree = "<group>";
 		};
+		B6CA846E28D74B0600B85453 /* Usecase */ = {
+			isa = PBXGroup;
+			children = (
+				B6CA846C28D748C700B85453 /* SelectRestaurantUsecase.swift */,
+				B6CA846F28D74B2D00B85453 /* LikeRestaurantUsecase.swift */,
+			);
+			path = Usecase;
+			sourceTree = "<group>";
+		};
 		B6CBE88C28D37DBE005BCA7D /* PreferenceKey */ = {
 			isa = PBXGroup;
 			children = (
@@ -1072,6 +1086,7 @@
 				B6EF13A428B0BE62009345D6 /* DummyRestaurantCardView.swift in Sources */,
 				B64BE92428B28D3F0072F6A0 /* Alert.swift in Sources */,
 				B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */,
+				B6CA847028D74B2D00B85453 /* LikeRestaurantUsecase.swift in Sources */,
 				B6B9976F28BA0B21007C3D1D /* ListUpdateButton.swift in Sources */,
 				B6D4505928A9490F0076DE9A /* CoreDataManager.swift in Sources */,
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
@@ -1098,6 +1113,7 @@
 				B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */,
 				B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */,
 				B6EF13B328B233ED009345D6 /* FavoriteEditButtonContainer.swift in Sources */,
+				B6CA846D28D748C700B85453 /* SelectRestaurantUsecase.swift in Sources */,
 				B6F5DF0428CF0EED00D4621C /* SavedListCoordinator.swift in Sources */,
 				B634A72C28A8D45B00796D63 /* SelectedAddBehavior.swift in Sources */,
 				B6AE009D24DD188400423D72 /* BottomSheetViewController.swift in Sources */,
