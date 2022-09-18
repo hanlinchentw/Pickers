@@ -13,26 +13,24 @@ struct MainListHeader: View {
   @Environment(\.presentationMode) var presentationMode
   @Binding var searchText: String
   @Binding var isSearching: Bool
-
+  
   var body: some View {
     HStack(alignment: .center) {
-      TextField("", text: $searchText, onEditingChanged: { changed in
-        isSearching = changed
-      })
-        .placeholder(when: searchText.isEmpty) {
-          HStack {
-            Image(systemName: "magnifyingglass")
-            Text("Search in my favorite")
-          }
-          .foregroundColor(.gray.opacity(0.5))
+      TextField("", text: $searchText, onEditingChanged: { isSearching = $0 })
+      .placeholder(when: searchText.isEmpty) {
+        HStack {
+          Image(systemName: "magnifyingglass")
+          Text("Search in my favorite")
         }
-        .padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 0))
-        .height(40)
-        .roundedViewWithShadow(cornerRadius: 8,
-                               backgroundColor: Color.white,
-                               shadowColor: Color.gray.opacity(0.3),
-                               shadowRadius: 3)
-
+        .foregroundColor(.gray.opacity(0.5))
+      }
+      .padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 0))
+      .height(40)
+      .roundedViewWithShadow(cornerRadius: 8,
+                             backgroundColor: Color.white,
+                             shadowColor: Color.gray.opacity(0.3),
+                             shadowRadius: 3)
+      
       Button {
         coordinator.presentMapView()
       } label: {

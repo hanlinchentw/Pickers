@@ -13,11 +13,8 @@ enum LoadingState {
   case idle
   case loading
   case loaded
-  case empty
   case error
 }
-
-typealias ItemOnPress = (_ id: String) -> Void
 
 struct MainListView: View {
   @EnvironmentObject var coordinator: MainCoordinator
@@ -27,37 +24,37 @@ struct MainListView: View {
   @ObservedObject var viewModel = MainListViewModel()
 
   var body: some View {
-    NavigationView {
-      ZStack {
-        Color.listViewBackground.ignoresSafeArea()
-        ScrollView(.vertical, showsIndicators: false) {
-          VStack(spacing: 24) {
-            MainListHeader(searchText: $searchText, isSearching: $isSearching).environmentObject(coordinator)
-            
-            HorizontalSectionContainer(
-              data: $viewModel.popularDataSource
-            )
-            .environment(\.managedObjectContext, viewContext)
-            .environmentObject(coordinator)
+    ZStack {
+      Color.listViewBackground.ignoresSafeArea()
+      ScrollView(.vertical, showsIndicators: false) {
+        VStack(spacing: 24) {
+          MainListHeader(
+            searchText: $searchText,
+            isSearching: $isSearching
+          )
+          .environmentObject(coordinator)
 
-            VerticalListContainer(
-              data: $viewModel.nearybyDataSource
-            )
-            .environment(\.managedObjectContext, viewContext)
-            .environmentObject(coordinator)
-          }
+          PopularSectionView(
+            data: $viewModel.popularDataSource,
+            showContent: viewModel.showContent,
+            dataCount: viewModel.dataCount
+          )
+          .environment(\.managedObjectContext, viewContext)
+          .environmentObject(coordinator)
+
+          NearbySectionView(
+            data: $viewModel.nearybyDataSource,
+            showContent: viewModel.showContent,
+            dataCount: viewModel.dataCount
+          )
+          .environment(\.managedObjectContext, viewContext)
+          .environmentObject(coordinator)
         }
-
       }
-      .task {
-        await viewModel.fetchData()
-      }
-      .navigationBarHidden(true)
-      Spacer()
     }
-    .onTapGesture {
-      UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
+    .task { await viewModel.fetchData() }
+    .navigationBarHidden(true)
+    .onTapToResign()
   }
 }
 

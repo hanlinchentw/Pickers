@@ -93,11 +93,11 @@ class MoreListDataStore: ObservableObject {
       guard let latitude = lat, let longitude = lon else {
         throw LoactionError.locationNotFound(message: "Coordinate found nil.")
       }
-      let result = try await BusinessService.createDataTask(lat: latitude, lon: longitude, option: BusinessService.RestaurantSorting.all, limit: 50, offset: pageIndex * 50).value
+      let result = try await BusinessService.createDataTask(lat: latitude, lon: longitude, option: BusinessService.SearchOption.nearyby, limit: 50, offset: pageIndex * 50).value
       pageIndex += 1
       DispatchQueue.main.async {
         self.data += result.map { RestaurantViewObject.init(business: $0)}
-        self.loadState = result.isEmpty ? LoadingState.empty : LoadingState.loaded
+        self.loadState = LoadingState.loaded
       }
     } catch {
       loadState = LoadingState.error

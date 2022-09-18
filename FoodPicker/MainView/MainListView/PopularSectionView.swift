@@ -1,5 +1,5 @@
 //
-//  HorizontalRestaurantCollectionContainer.swift
+//  PopularSectionView.swift
 //  FoodPicker
 //
 //  Created by 陳翰霖 on 2022/8/13.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct HorizontalSectionContainer: View {
+struct PopularSectionView: View {
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
@@ -18,29 +18,23 @@ struct HorizontalSectionContainer: View {
   @Inject var likedCoreService: LikedCoreService
 
   @Binding var data: MainListViewModel.ListSectionData
-
-  var showContent: Bool {
-    data.loadingState != LoadingState.empty && data.loadingState != LoadingState.error
-  }
-
-  var dataCount: Int {
-    return data.loadingState != LoadingState.loaded ? 10 : data.dataSource.count
-  }
+  var showContent: (_ data: MainListViewModel.ListSectionData) -> Bool
+  var dataCount: (_ data: MainListViewModel.ListSectionData) -> Int
 
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
-      if (showContent) {
-        Text(BusinessService.RestaurantSorting.popular.description)
+      if (showContent(data)) {
+        Text("Popular")
           .en24Bold()
           .padding(.leading, 16)
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 16) {
-            ForEach(0 ..< dataCount, id: \.self) { index in
+            ForEach(0 ..< dataCount(data), id: \.self) { index in
               if data.loadingState != LoadingState.loaded {
                 DummyRestaurantCardView()
                   .padding(.vertical, 8)
               } else {
-                let restaurant = data.dataSource[index]
+                let restaurant = data.viewObjects[index]
                 let isLiked = likedRestaurants.contains(where: { $0.id == restaurant.id })
                 let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
                 let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect

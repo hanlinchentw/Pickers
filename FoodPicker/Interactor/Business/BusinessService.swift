@@ -11,7 +11,7 @@ import Foundation
 class BusinessService {
   static let sharedInstance: BusinessService = .init()
 
-  static func fetchBusinesses(lat: Double, lon: Double, option: RestaurantSorting? = nil, limit: Int, offset: Int = 0) async throws -> Array<Business> {
+  static func fetchBusinesses(lat: Double, lon: Double, option: SearchOption? = nil, limit: Int, offset: Int = 0) async throws -> Array<Business> {
     if !NetworkMonitor.shared.isConnected { throw URLRequestError.noInternet }
     let service = BusinessProvider.search(lat, lon, sortBy: option?.sortBy ?? "distance", offset: offset, limit: limit)
     let decoder = JSONDecoder()
@@ -25,7 +25,7 @@ class BusinessService {
     }
   }
 
-  static func createDataTask(lat: Double, lon: Double, option: RestaurantSorting, limit: Int = 20, offset: Int = 0) -> Task<Array<Business>, Error> {
+  static func createDataTask(lat: Double, lon: Double, option: SearchOption, limit: Int = 20, offset: Int = 0) -> Task<Array<Business>, Error> {
     return Task.init {
       let result = try await BusinessService.fetchBusinesses(lat: lat, lon: lon, option: option, limit: limit, offset: offset)
       if result.isEmpty {
@@ -51,20 +51,13 @@ class BusinessService {
 }
 
 extension BusinessService {
-  enum RestaurantSorting {
-    case all
+  enum SearchOption {
+    case nearyby
     case popular
-
-    var description: String {
-      switch self {
-      case .all: return "Restaurant nearby"
-      case .popular: return "Popular"
-      }
-    }
 
     var sortBy: String {
       switch self {
-      case .all: return "distance"
+      case .nearyby: return "distance"
       case .popular: return "rating"
       }
     }

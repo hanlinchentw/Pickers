@@ -110,7 +110,7 @@ class MapViewModel {
       return
     }
     do {
-      let businesses = try await BusinessService.fetchBusinesses(lat: latitude, lon: longitude, option: .all, limit: 50)
+      let businesses = try await BusinessService.fetchBusinesses(lat: latitude, lon: longitude, option: .nearyby, limit: 50)
 
       var viewObjects = Array<RestaurantViewObject>()
       for business in businesses {
