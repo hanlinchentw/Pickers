@@ -12,7 +12,7 @@ import CoreData
 
 class BottomSheetViewModel {
   let moc = CoreDataManager.sharedInstance.managedObjectContext
-  @Inject var coreService: SelectedCoreService
+  @Inject var selectService: SelectedCoreService
 
   var list: List?
   var restaurants: Array<RestaurantViewObject> = []
@@ -61,16 +61,7 @@ class BottomSheetViewModel {
   }
 
   func didTapActionButton(_ target: RestaurantViewObject) {
-    guard let restaurant = restaurants.first(where: { $0.id == target.id }) else {
-      return
-    }
-
-    if restaurant.isSelected {
-      try? coreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-    } else {
-      let restaurantManagedObject = Restaurant(restaurant: target)
-      try? coreService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: CoreDataManager.sharedInstance.managedObjectContext)
-    }
+    selectService.toggleSelectState(isSelected: target.isSelected, restaurant: target)
     listState = listState == .temp ? .temp : .edited
   }
 

@@ -81,30 +81,14 @@ class MapViewModel {
   }
 
   func didTapSelectButton(_ target: RestaurantViewObject) {
-    guard let restaurant = restaurants.first(where: { $0.id == target.id }) else {
-      return
-    }
-    if restaurant.isSelected {
-      try? selectService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-    } else {
-      let restaurantManagedObject = Restaurant(restaurant: target)
-      try? selectService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: CoreDataManager.sharedInstance.managedObjectContext)
-    }
+    selectService.toggleSelectState(isSelected: target.isSelected, restaurant: target)
   }
 
   func didTapLikeButton(_ target: RestaurantViewObject) {
-    guard let restaurant = restaurants.first(where: { $0.id == target.id }) else {
-      return
-    }
-    if restaurant.isLiked {
-      try? likeService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-    } else {
-      let restaurantManagedObject = Restaurant(restaurant: target)
-      try? likeService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: CoreDataManager.sharedInstance.managedObjectContext)
-    }
+    likeService.toggleLikeState(isLiked: target.isLiked, restaurant: target)
   }
 
-  func  fetchRestaurant(latitude: Double? = nil, longitude: Double?) async  {
+  func fetchRestaurant(latitude: Double? = nil, longitude: Double?) async  {
     guard let latitude = latitude, let longitude = longitude else {
       error = LoactionError.locationNotFound(message: "Location not found")
       return

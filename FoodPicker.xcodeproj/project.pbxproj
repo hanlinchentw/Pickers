@@ -550,7 +550,7 @@
 				B6FD55A92896CAEC00B659F4 /* Injector */,
 				B647A4E224B203600098B7A2 /* Model */,
 				B68551AF28C30D3A0077C47E /* ViewObject */,
-				B6CA847428D7513200B85453 /* VIewModel */,
+				B6CA847428D7513200B85453 /* ViewModel */,
 				B67414A028A568C700C545D2 /* TabView */,
 				B60CC1B428C63E2800AF2B53 /* MainView */,
 				B6A2FA8D2533E6C6005CB171 /* SpinView */,
@@ -835,12 +835,12 @@
 			path = Component;
 			sourceTree = "<group>";
 		};
-		B6CA847428D7513200B85453 /* VIewModel */ = {
+		B6CA847428D7513200B85453 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				B6CA847528D7513C00B85453 /* RestaurantViewModel.swift */,
 			);
-			path = VIewModel;
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		B6CBE88C28D37DBE005BCA7D /* PreferenceKey */ = {

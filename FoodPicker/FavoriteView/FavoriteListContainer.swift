@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct FavoriteListContainer: View {
   @Environment(\.managedObjectContext) private var viewContext
@@ -39,22 +40,21 @@ struct FavoriteListContainer: View {
 }
 
 class FavoriteListViewModel: ObservableObject {
-  @Inject var selectedCoreService: SelectedCoreService
-  static let viewContext = CoreDataManager.sharedInstance.managedObjectContext
+  @Inject var selectService: SelectedCoreService
+  private var viewContext: NSManagedObjectContext {
+    return CoreDataManager.sharedInstance.managedObjectContext
+  }
 
   func selectButtonOnPress(restaurant: Restaurant) {
-    let isSelected = try? selectedCoreService.exists(id: restaurant.id, in: Self.viewContext)
-    if let isSelected = isSelected, isSelected {
-      try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: Self.viewContext)
-    } else {
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: Self.viewContext)
+    if let isSelected = try? selectService.exists(id: restaurant.id, in: viewContext) {
+      selectService.toggleSelectState(isSelected: isSelected, restaurant: .init(restaurant: restaurant))
     }
   }
 
   func getActionButtonMode(isEditing: Bool, restaurantId: String) -> ActionButtonMode {
     if isEditing { return .edit }
 
-    guard let isSelected = try? selectedCoreService.exists(id: restaurantId, in: Self.viewContext) else {
+    guard let isSelected = try? selectService.exists(id: restaurantId, in: viewContext) else {
       return .deselect
     }
 
