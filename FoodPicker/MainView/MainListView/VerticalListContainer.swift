@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct VerticalListContainer: View {
-  @StateObject var dataStore = VerticalListDataStore()
-
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
@@ -18,8 +16,14 @@ struct VerticalListContainer: View {
   @Inject var selectedCoreService: SelectedCoreService
   @Inject var locationService: LocationService
 
+  @Binding var data: MainListViewModel.ListSectionData
+
   var showContent: Bool {
-    dataStore.loadState != LoadingState.empty && dataStore.loadState != LoadingState.error
+    data.loadingState != LoadingState.empty && data.loadingState != LoadingState.error
+  }
+
+  var dataCount: Int {
+    return data.loadingState != LoadingState.loaded ? 10 : data.dataSource.count
   }
 
   var body: some View {
@@ -29,13 +33,13 @@ struct VerticalListContainer: View {
           .en24Bold()
           .padding(.leading, 16)
         VStack(spacing: 16) {
-          ForEach(0 ..< dataStore.dataCount, id: \.self) { index in
-            if dataStore.loadState != LoadingState.loaded {
+          ForEach(0 ..< dataCount, id: \.self) { index in
+            if data.loadingState != LoadingState.loaded {
               IdleRestaurantListItemView()
                 .padding(.vertical, 8)
                 .shimmer()
             } else {
-              let restaurant = dataStore.data[index]
+              let restaurant = data.dataSource[index]
               let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
               let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
               let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
@@ -68,10 +72,6 @@ struct VerticalListContainer: View {
         .cornerRadius(24)
         Spacer()
       }
-    }
-    .task {
-      if (dataStore.loadState == LoadingState.loaded) { return }
-      await dataStore.fetchData(lat: locationService.latitude, lon: locationService.longitude)
     }
   }
   

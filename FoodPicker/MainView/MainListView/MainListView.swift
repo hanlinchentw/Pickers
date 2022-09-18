@@ -16,12 +16,15 @@ enum LoadingState {
   case empty
   case error
 }
+
 typealias ItemOnPress = (_ id: String) -> Void
+
 struct MainListView: View {
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @State var isSearching = false
   @State var searchText = ""
+  @ObservedObject var viewModel = MainListViewModel()
 
   var body: some View {
     NavigationView {
@@ -31,15 +34,23 @@ struct MainListView: View {
           VStack(spacing: 24) {
             MainListHeader(searchText: $searchText, isSearching: $isSearching).environmentObject(coordinator)
             
-            HorizontalSectionContainer()
-              .environment(\.managedObjectContext, viewContext)
-              .environmentObject(coordinator)
+            HorizontalSectionContainer(
+              data: $viewModel.popularDataSource
+            )
+            .environment(\.managedObjectContext, viewContext)
+            .environmentObject(coordinator)
 
-            VerticalListContainer()
-              .environment(\.managedObjectContext, viewContext)
-              .environmentObject(coordinator)
+            VerticalListContainer(
+              data: $viewModel.nearybyDataSource
+            )
+            .environment(\.managedObjectContext, viewContext)
+            .environmentObject(coordinator)
           }
         }
+
+      }
+      .task {
+        await viewModel.fetchData()
       }
       .navigationBarHidden(true)
       Spacer()

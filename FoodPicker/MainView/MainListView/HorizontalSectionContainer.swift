@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct HorizontalSectionContainer: View {
-  @StateObject var dataStore = HorizontalSectionDataStore()
-
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
@@ -18,27 +16,31 @@ struct HorizontalSectionContainer: View {
 
   @Inject var selectedCoreService: SelectedCoreService
   @Inject var likedCoreService: LikedCoreService
-  @Inject var locationService: LocationService
-  
+
+  @Binding var data: MainListViewModel.ListSectionData
+
   var showContent: Bool {
-    dataStore.loadState != LoadingState.empty && dataStore.loadState != LoadingState.error
+    data.loadingState != LoadingState.empty && data.loadingState != LoadingState.error
+  }
+
+  var dataCount: Int {
+    return data.loadingState != LoadingState.loaded ? 10 : data.dataSource.count
   }
 
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
-
       if (showContent) {
         Text(BusinessService.RestaurantSorting.popular.description)
           .en24Bold()
           .padding(.leading, 16)
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 16) {
-            ForEach(0 ..< dataStore.dataCount, id: \.self) { index in
-              if dataStore.loadState != LoadingState.loaded {
+            ForEach(0 ..< dataCount, id: \.self) { index in
+              if data.loadingState != LoadingState.loaded {
                 DummyRestaurantCardView()
                   .padding(.vertical, 8)
               } else {
-                let restaurant = dataStore.data[index]
+                let restaurant = data.dataSource[index]
                 let isLiked = likedRestaurants.contains(where: { $0.id == restaurant.id })
                 let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
                 let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
@@ -61,10 +63,6 @@ struct HorizontalSectionContainer: View {
         }
       }
     }
-    .task {
-      if (dataStore.loadState == LoadingState.loaded) { return }
-      await dataStore.fetchData(lat: locationService.latitude, lon: locationService.longitude)
-    }
   }
 
   func selectButtonOnPress(isSelected: Bool, restaurant: RestaurantViewObject) {
@@ -82,35 +80,6 @@ struct HorizontalSectionContainer: View {
     } else {
       let restaurantManagedObject = Restaurant(restaurant: restaurant)
       try! likedCoreService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: viewContext)
-    }
-  }
-}
-
-class HorizontalSectionDataStore: ObservableObject {
-  @Inject var restaurantCoreService: RestaurantCoreService
-
-  @Published var data: Array<RestaurantViewObject> = []
-  @Published var loadState: LoadingState = .idle
-
-  var dataCount: Int {
-    return loadState != LoadingState.loaded ? 10 : data.count
-  }
-
-  @MainActor func fetchData(lat: Double?, lon: Double?) async {
-    loadState = LoadingState.loading
-    do {
-      guard let latitude = lat, let longitude = lon else {
-        throw LoactionError.locationNotFound(message: "Coordinate found nil.")
-      }
-      let task = BusinessService.createDataTask(lat: latitude, lon: longitude, option: BusinessService.RestaurantSorting.popular, limit: 10)
-      let result = try await task.value
-      DispatchQueue.main.async {
-        self.data = result.map { RestaurantViewObject.init(business: $0) }
-        self.loadState = result.isEmpty ? LoadingState.empty : LoadingState.loaded
-      }
-    } catch {
-      loadState = LoadingState.error
-      print("HorizontalSectionDataStore.fetchSectionData >>> \(error.localizedDescription)")
     }
   }
 }
