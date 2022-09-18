@@ -20,15 +20,8 @@ typealias ItemOnPress = (_ id: String) -> Void
 struct MainListView: View {
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
-
-  @State private var inputText: String = ""
-
-  init() {
-    let newAppearance = UITabBarAppearance()
-    newAppearance.configureWithOpaqueBackground()
-    newAppearance.backgroundColor = UIColor(Color.white)
-    UITabBar.appearance().standardAppearance = newAppearance
-  }
+  @State var isSearching = false
+  @State var searchText = ""
 
   var body: some View {
     NavigationView {
@@ -36,8 +29,8 @@ struct MainListView: View {
         Color.listViewBackground.ignoresSafeArea()
         ScrollView(.vertical, showsIndicators: false) {
           VStack(spacing: 24) {
-            SearchFieldContainer(inputText: inputText).environmentObject(coordinator)
-
+            MainListHeader(searchText: $searchText, isSearching: $isSearching).environmentObject(coordinator)
+            
             HorizontalSectionContainer()
               .environment(\.managedObjectContext, viewContext)
               .environmentObject(coordinator)
