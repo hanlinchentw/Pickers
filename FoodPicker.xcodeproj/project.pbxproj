@@ -75,7 +75,6 @@
 		B674149D28A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149928A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift */; };
 		B674149E28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149A28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift */; };
 		B674149F28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149B28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift */; };
-		B68453F528D2309700BB7956 /* EditListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68453F428D2309700BB7956 /* EditListViewModel.swift */; };
 		B68453F828D2320A00BB7956 /* EditNameContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68453F728D2320A00BB7956 /* EditNameContainer.swift */; };
 		B684CA7028A54E4500320DE0 /* RestaurantCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */; };
 		B685484424B44938009BC800 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484324B44938009BC800 /* LocationService.swift */; };
@@ -122,6 +121,9 @@
 		B6C9752328D3750A00287369 /* EditListContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C9752228D3750A00287369 /* EditListContainer.swift */; };
 		B6CB5FE428B0A2220042C34C /* FourthRowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CB5FE328B0A2220042C34C /* FourthRowPresenter.swift */; };
 		B6CBE88E28D37DD9005BCA7D /* HeightPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBE88D28D37DD9005BCA7D /* HeightPreferenceKey.swift */; };
+		B6CBE89528D5EE5E005BCA7D /* KeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBE89428D5EE5E005BCA7D /* KeyboardHelper.swift */; };
+		B6CBE89928D5FF58005BCA7D /* EditListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBE89828D5FF58005BCA7D /* EditListHeader.swift */; };
+		B6CBE89C28D5FFE9005BCA7D /* EditListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CBE89B28D5FFE9005BCA7D /* EditListViewModel.swift */; };
 		B6D1306124C01E2800040F85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6D1306024C01E2800040F85 /* GoogleService-Info.plist */; };
 		B6D1306A24C4183300040F85 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1306924C4183300040F85 /* DetailController.swift */; };
 		B6D1307024CBC16200040F85 /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D1306F24CBC16200040F85 /* DetailCell.swift */; };
@@ -246,7 +248,6 @@
 		B674149928A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedRestaurant+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		B674149A28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LikedRestaurant+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		B674149B28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LikedRestaurant+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		B68453F428D2309700BB7956 /* EditListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditListViewModel.swift; sourceTree = "<group>"; };
 		B68453F728D2320A00BB7956 /* EditNameContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameContainer.swift; sourceTree = "<group>"; };
 		B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCore.swift; sourceTree = "<group>"; };
 		B685484324B44938009BC800 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -293,6 +294,9 @@
 		B6C9752228D3750A00287369 /* EditListContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditListContainer.swift; sourceTree = "<group>"; };
 		B6CB5FE328B0A2220042C34C /* FourthRowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthRowPresenter.swift; sourceTree = "<group>"; };
 		B6CBE88D28D37DD9005BCA7D /* HeightPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightPreferenceKey.swift; sourceTree = "<group>"; };
+		B6CBE89428D5EE5E005BCA7D /* KeyboardHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHelper.swift; sourceTree = "<group>"; };
+		B6CBE89828D5FF58005BCA7D /* EditListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditListHeader.swift; sourceTree = "<group>"; };
+		B6CBE89B28D5FFE9005BCA7D /* EditListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditListViewModel.swift; sourceTree = "<group>"; };
 		B6D1306024C01E2800040F85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		B6D1306924C4183300040F85 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		B6D1306F24CBC16200040F85 /* DetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCell.swift; sourceTree = "<group>"; };
@@ -612,6 +616,7 @@
 				B6EF139E28B0AEC0009345D6 /* PresentHelper.swift */,
 				B6D407C128AD3DF500E59CE3 /* SafeAreaUtils.swift */,
 				B6413B3228BB2C7A0071F5B3 /* DateUtils.swift */,
+				B6CBE89428D5EE5E005BCA7D /* KeyboardHelper.swift */,
 			);
 			path = Utilis;
 			sourceTree = "<group>";
@@ -701,9 +706,7 @@
 				B6F5DF0328CF0EED00D4621C /* SavedListCoordinator.swift */,
 				B6AE009C24DD188400423D72 /* BottomSheetViewController.swift */,
 				B63E497A28BA669700714F94 /* SavedListView.swift */,
-				B6C40F3328BD227C0086DDBD /* EditListMainContainer.swift */,
-				B6C9752228D3750A00287369 /* EditListContainer.swift */,
-				B68453F728D2320A00BB7956 /* EditNameContainer.swift */,
+				B6CBE89628D5FF35005BCA7D /* EditVIew */,
 			);
 			path = SpinView;
 			sourceTree = "<group>";
@@ -775,7 +778,6 @@
 			children = (
 				B69E3B1B28B9223300014AA3 /* BottomSheetViewModel.swift */,
 				B6F2351828BD04AE00344B8D /* ListCardViewModel.swift */,
-				B68453F428D2309700BB7956 /* EditListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -812,6 +814,34 @@
 				B6CBE88D28D37DD9005BCA7D /* HeightPreferenceKey.swift */,
 			);
 			path = PreferenceKey;
+			sourceTree = "<group>";
+		};
+		B6CBE89628D5FF35005BCA7D /* EditVIew */ = {
+			isa = PBXGroup;
+			children = (
+				B6CBE89A28D5FFD6005BCA7D /* ViewModel */,
+				B6CBE89728D5FF43005BCA7D /* Component */,
+				B6C40F3328BD227C0086DDBD /* EditListMainContainer.swift */,
+				B6C9752228D3750A00287369 /* EditListContainer.swift */,
+				B68453F728D2320A00BB7956 /* EditNameContainer.swift */,
+			);
+			path = EditVIew;
+			sourceTree = "<group>";
+		};
+		B6CBE89728D5FF43005BCA7D /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				B6CBE89828D5FF58005BCA7D /* EditListHeader.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		B6CBE89A28D5FFD6005BCA7D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				B6CBE89B28D5FFE9005BCA7D /* EditListViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		B6EF13A028B0B8E4009345D6 /* View */ = {
@@ -1057,6 +1087,7 @@
 				B60CC1B328C33D2000AF2B53 /* RestaurantCardCell.swift in Sources */,
 				B647A4CF24B1F7BA0098B7A2 /* SceneDelegate.swift in Sources */,
 				B650ECD4257F2655004A4049 /* WheelItem.swift in Sources */,
+				B6CBE89928D5FF58005BCA7D /* EditListHeader.swift in Sources */,
 				B634A70D28A6C0CA00796D63 /* RoundedCorner.swift in Sources */,
 				B647A4F124B22B010098B7A2 /* SpinViewController.swift in Sources */,
 				B647A4E124B1FA640098B7A2 /* MainTabBarController.swift in Sources */,
@@ -1095,10 +1126,11 @@
 				B6C9752328D3750A00287369 /* EditListContainer.swift in Sources */,
 				B6D407C228AD3DF500E59CE3 /* SafeAreaUtils.swift in Sources */,
 				B606C0822894EDCB00139907 /* MainTabBarConstants.swift in Sources */,
+				B6CBE89528D5EE5E005BCA7D /* KeyboardHelper.swift in Sources */,
 				B6B9976B28BA0A2A007C3D1D /* NotchView.swift in Sources */,
 				B60CC1B628C63E4400AF2B53 /* RestaurantPresenter.swift in Sources */,
-				B68453F528D2309700BB7956 /* EditListViewModel.swift in Sources */,
 				B63E497928BA20FB00714F94 /* UITableView+Extensions.swift in Sources */,
+				B6CBE89C28D5FFE9005BCA7D /* EditListViewModel.swift in Sources */,
 				B6AA6C3A28A55C6000444F0A /* LikedCoreService.swift in Sources */,
 				B634A72828A8D38500796D63 /* RestaurantManagedObject.swift in Sources */,
 				B63E497E28BA6D4200714F94 /* MockedList.swift in Sources */,

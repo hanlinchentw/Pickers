@@ -12,12 +12,12 @@ struct TwoHorizontalButton: View {
   let leftButtonText: String
   let rightButtonText: String
 
+  var rightButtonDisabled: Bool = false
+
   let buttonSize: CGSize
 
   var onPressLeftButton: () -> Void
   var onPressRightButton: () -> Void
-
-  var rightButtonDisabled: Bool = false
 
   var body: some View {
     HStack {
@@ -26,8 +26,8 @@ struct TwoHorizontalButton: View {
         onPressLeftButton()
       } label: {
         Text(leftButtonText)
-          .foregroundColor(.black)
           .en16()
+          .foregroundColor(.black)
       }
       .frame(width: buttonSize.width, height: buttonSize.height)
       .background(RoundedRectangle(cornerRadius: 16).stroke(.gray))
@@ -42,7 +42,10 @@ struct TwoHorizontalButton: View {
           .en16Bold()
       }
       .frame(width: buttonSize.width, height: buttonSize.height)
-      .background(RoundedRectangle(cornerRadius: 16).fill(.black))
+      .background(
+        RoundedRectangle(cornerRadius: 16)
+        .fill(rightButtonDisabled ? Color.gray : Color.black)
+      )
       .disabled(rightButtonDisabled)
       Spacer()
     }
@@ -52,6 +55,6 @@ struct TwoHorizontalButton: View {
 
 struct TwoHorizontalButton_Previews: PreviewProvider {
   static var previews: some View {
-    TwoHorizontalButton(leftButtonText: "Cancel", rightButtonText: "Save", buttonSize: .init(width: 160, height: 48), onPressLeftButton: {}, onPressRightButton: {}, rightButtonDisabled: false)
+    TwoHorizontalButton(leftButtonText: "Cancel", rightButtonText: "Save", rightButtonDisabled: false, buttonSize: .init(width: 160, height: 48), onPressLeftButton: {}, onPressRightButton: {})
   }
 }

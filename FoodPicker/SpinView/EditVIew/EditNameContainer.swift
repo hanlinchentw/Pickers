@@ -11,8 +11,8 @@ import SwiftUI
 struct EditNameContainer: View {
   @Binding var editListName: String
 
-  var errorMessage: String? {
-    return editListName.isEmpty ? "List can't not be empty" : nil
+  var isListNameEmpty: Bool {
+    return editListName.isEmpty
   }
 
   var numOfCharDisplayText: String {
@@ -26,12 +26,12 @@ struct EditNameContainer: View {
         .height(40)
         .background(
           RoundedRectangle(cornerRadius: 12)
-            .stroke(errorMessage == nil ? .gray : .red, lineWidth: 0.3)
+            .stroke(isListNameEmpty ? .red : .gray, lineWidth: 0.3)
         )
 
       HStack {
-        if let message = errorMessage {
-          Text(message).en14().foregroundColor(.red)
+        if isListNameEmpty {
+          Text("List can't not be empty").en14().foregroundColor(.red)
         }
         Spacer()
         Text(numOfCharDisplayText)

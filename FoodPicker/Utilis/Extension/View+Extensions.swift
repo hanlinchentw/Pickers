@@ -52,4 +52,10 @@ extension View {
   func `showAlert`<Content: View>(when shouldShow: Bool, alert: () -> Alert<Content>) -> some View {
     showCover(when: shouldShow, content: alert)
   }
+
+  func onTapToResign() -> some View {
+    self.onTapGesture {
+      UIResponder.resign()
+    }
+  }
 }

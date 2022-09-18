@@ -31,7 +31,7 @@ class SavedListCoordinator: Coordinator, ObservableObject {
   }
 
   func pushToEditListView(list: List) {
-    let editListView = EditListView(viewModel: EditListViewModel(list: list))
+    let editListView = EditListView(list: list).environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
     let editListVC = UIHostingController(rootView: editListView)
     navigationController.pushViewController(editListVC, animated: true)
   }

@@ -62,3 +62,5 @@ extension RestaurantViewObject: Equatable {
     return lhs.id == rhs.id
   }
 }
+
+extension RestaurantViewObject: Hashable {}
