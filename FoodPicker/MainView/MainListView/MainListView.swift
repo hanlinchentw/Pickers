@@ -21,7 +21,8 @@ struct MainListView: View {
   @Environment(\.managedObjectContext) private var viewContext
   @State var isSearching = false
   @State var searchText = ""
-  @ObservedObject var viewModel = MainListViewModel()
+  @StateObject var popularViewModel = RestaurantViewModel(option: .popular)
+  @StateObject var nearbyViewModel = RestaurantViewModel(option: .nearyby)
 
   var body: some View {
     ZStack {
@@ -34,25 +35,22 @@ struct MainListView: View {
           )
           .environmentObject(coordinator)
 
-          PopularSectionView(
-            data: $viewModel.popularDataSource,
-            showContent: viewModel.showContent,
-            dataCount: viewModel.dataCount
-          )
+          PopularSectionView()
           .environment(\.managedObjectContext, viewContext)
           .environmentObject(coordinator)
+          .environmentObject(popularViewModel)
 
-          NearbySectionView(
-            data: $viewModel.nearybyDataSource,
-            showContent: viewModel.showContent,
-            dataCount: viewModel.dataCount
-          )
+          NearbySectionView()
           .environment(\.managedObjectContext, viewContext)
           .environmentObject(coordinator)
+          .environmentObject(nearbyViewModel)
         }
       }
     }
-    .task { await viewModel.fetchData() }
+    .task {
+      await popularViewModel.fetchData(resultCount: 10)
+      await nearbyViewModel.fetchData(resultCount: 30)
+    }
     .navigationBarHidden(true)
     .onTapToResign()
   }

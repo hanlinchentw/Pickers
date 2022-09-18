@@ -11,4 +11,14 @@ import CoreData
 
 class SelectedCoreService: BaseCoreService<SelectedRestaurant, SelectedAddBehavior, SelectedDeleteBehavior> {
   static let sharedInstance = SelectedCoreService()
+
+  func toggleSelectState(isSelected: Bool, restaurant: RestaurantViewObject) {
+    let viewContext = CoreDataManager.sharedInstance.managedObjectContext
+    if (isSelected) {
+      try! deleteRestaurant(id: restaurant.id, in: viewContext)
+    } else {
+      let restaurantManagedObject = Restaurant(restaurant: restaurant)
+      try! addRestaurant(data: ["restaurant": restaurantManagedObject], in: viewContext)
+    }
+  }
 }

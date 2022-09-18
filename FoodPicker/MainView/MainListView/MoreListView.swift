@@ -9,13 +9,10 @@
 import SwiftUI
 
 struct MoreListView: View {
-  @StateObject var dataStore = MoreListDataStore()
+  @StateObject var viewModel = RestaurantViewModel(option: .nearyby)
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
-
-  @Inject var selectedCoreService: SelectedCoreService
-  @Inject var locationService: LocationService
 
   @State var shouldLoadMore: Bool = true
 
@@ -28,20 +25,20 @@ struct MoreListView: View {
 
         ScrollView(.vertical, showsIndicators: false) {
           LazyVStack {
-            ForEach(0 ..< dataStore.data.count, id: \.self) { index in
-              let restaurant = dataStore.data[index]
-              let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
+            ForEach(0 ..< viewModel.dataSource.viewObjects.count, id: \.self) { index in
+              let restaurant = viewModel.dataSource.viewObjects[index]
+              let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
               let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
               let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
               RestaurantListItemView(presenter: presenter) {
-                selectButtonOnPress(isSelected: isSelected, restaurant: restaurant)
+                viewModel.selectRestaurant(isSelected: isSelected, restaurant: restaurant)
               }
               .padding(.horizontal, 8)
               .onTapGesture {
                 coordinator.pushToDetailView(id: restaurant.id)
               }
               .onAppear {
-                shouldLoadMore = index == dataStore.data.count - 5
+                shouldLoadMore = index == viewModel.dataSource.viewObjects.count - 5
               }
             }
           }
@@ -51,7 +48,7 @@ struct MoreListView: View {
             ProgressView().progressViewStyle(.circular)
               .foregroundColor(.gray)
               .task {
-                await dataStore.fetchData(lat: locationService.latitude, lon: locationService.longitude)
+                await viewModel.fetchData(resultCount: 50)
                 shouldLoadMore = false
               }
           }
@@ -63,46 +60,13 @@ struct MoreListView: View {
         .edgesIgnoringSafeArea(.bottom)
       }
     }
-  }
-
-  func selectButtonOnPress(isSelected: Bool, restaurant: RestaurantViewObject) {
-    if (isSelected) {
-      try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: viewContext)
-    } else {
-      let restaurantManagedObject = Restaurant(restaurant: restaurant)
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurantManagedObject], in: viewContext)
-    }
+    .navigationBarHidden(true)
   }
 }
 
 struct MoreListView_Previews: PreviewProvider {
   static var previews: some View {
     MoreListView()
-  }
-}
-
-class MoreListDataStore: ObservableObject {
-  @Published var data: Array<RestaurantViewObject> = []
-  @Published var loadState: LoadingState = .idle
-  @Published var pageIndex = 0
-
-  @MainActor func fetchData(lat: Double?, lon: Double?) async {
-    print("pageIndex >>> \(pageIndex)")
-    loadState = LoadingState.loading
-    do {
-      guard let latitude = lat, let longitude = lon else {
-        throw LoactionError.locationNotFound(message: "Coordinate found nil.")
-      }
-      let result = try await BusinessService.createDataTask(lat: latitude, lon: longitude, option: BusinessService.SearchOption.nearyby, limit: 50, offset: pageIndex * 50).value
-      pageIndex += 1
-      DispatchQueue.main.async {
-        self.data += result.map { RestaurantViewObject.init(business: $0)}
-        self.loadState = LoadingState.loaded
-      }
-    } catch {
-      loadState = LoadingState.error
-      print("MoreListDataStore.fetchSectionData >>> \(error.localizedDescription)")
-    }
   }
 }
 

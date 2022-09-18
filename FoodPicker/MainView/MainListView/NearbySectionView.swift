@@ -9,35 +9,31 @@
 import SwiftUI
 
 struct NearbySectionView: View {
+  @EnvironmentObject var viewModel: RestaurantViewModel
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
-  // MARK: - Property
-  @Binding var data: MainListViewModel.ListSectionData
-  var showContent: (_ data: MainListViewModel.ListSectionData) -> Bool
-  var dataCount: (_ data: MainListViewModel.ListSectionData) -> Int
-  // MARK: - Use case
-  var selectUsecase = SelectRestaurantUsecase()
   
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
-      if showContent(data) {
+      if viewModel.showContent() {
         Text("Restaurant nearby")
           .en24Bold()
           .padding(.leading, 16)
         VStack(spacing: 16) {
-          ForEach(0 ..< dataCount(data), id: \.self) { index in
-            if data.loadingState != LoadingState.loaded {
+          ForEach(0 ..< viewModel.dataCount(), id: \.self) { index in
+            if viewModel.dataSource.loadingState != LoadingState.loaded {
               IdleRestaurantListItemView()
                 .padding(.vertical, 8)
                 .shimmer()
             } else {
-              let restaurant = data.viewObjects[index]
-              let actionButtonMode: ActionButtonMode = selectUsecase.checkIsRestaurantSelected(restaurant.id) ? .select : .deselect
+              let restaurant = viewModel.dataSource.viewObjects[index]
+              let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
+              let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
               let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
               
               RestaurantListItemView(presenter: presenter, actionButtonOnPress: {
-                selectUsecase.toggleSelectState(restaurant: restaurant)
+                viewModel.selectRestaurant(isSelected: isSelected, restaurant: restaurant)
               })
               .onTapGesture {
                 coordinator.pushToDetailView(id: restaurant.id)
