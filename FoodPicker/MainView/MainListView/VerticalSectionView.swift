@@ -8,32 +8,35 @@
 
 import SwiftUI
 
-struct NearbySectionView: View {
-  @EnvironmentObject var viewModel: RestaurantViewModel
+struct VerticalSectionView: View, Selectable {
+	@Inject var selectService: SelectedCoreService
+	@Inject var likeService: LikedCoreService
+	
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
-  
+	@ObservedObject var vm = MainListSectionViewModel()
+
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
-      if viewModel.showContent() {
+			if vm.loadingState != .error {
         Text("Restaurant nearby")
           .en24Bold()
           .padding(.leading, 16)
         VStack(spacing: 16) {
-          ForEach(0 ..< viewModel.dataCount(), id: \.self) { index in
-            if viewModel.dataSource.loadingState != LoadingState.loaded {
+					ForEach(0 ..< vm.dataCount, id: \.self) { index in
+						if vm.loadingState != LoadingState.loaded {
               IdleRestaurantListItemView()
                 .padding(.vertical, 8)
                 .shimmer()
             } else {
-              let restaurant = viewModel.dataSource.viewObjects[index]
+							let restaurant = vm.viewObjects[index]
               let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
               let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
               let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
               
               RestaurantListItemView(presenter: presenter, actionButtonOnPress: {
-                viewModel.selectRestaurant(isSelected: isSelected, restaurant: restaurant)
+								selectRestaurant(isSelected: isSelected, restaurant: restaurant)
               })
               .onTapGesture {
                 coordinator.pushToDetailView(id: restaurant.id)
@@ -61,5 +64,9 @@ struct NearbySectionView: View {
         Spacer()
       }
     }
+		.task {
+			if vm.loadingState == .loaded { return }
+			await vm.fetchData(section: .nearby)
+		}
   }
 }

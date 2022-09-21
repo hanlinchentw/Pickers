@@ -10,7 +10,7 @@ import Foundation
 import Combine
 import CoreData
 
-class BottomSheetViewModel {
+class BottomSheetViewModel: Selectable {
   let moc = CoreDataManager.sharedInstance.managedObjectContext
   @Inject var selectService: SelectedCoreService
 
@@ -61,7 +61,7 @@ class BottomSheetViewModel {
   }
 
   func didTapActionButton(_ target: RestaurantViewObject) {
-    selectService.toggleSelectState(isSelected: target.isSelected, restaurant: target)
+		selectRestaurant(isSelected: target.isSelected, restaurant: target)
     listState = listState == .temp ? .temp : .edited
   }
 

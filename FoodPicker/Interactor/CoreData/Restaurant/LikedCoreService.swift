@@ -11,15 +11,5 @@ import CoreData
 
 class LikedCoreService: BaseCoreService<LikedRestaurant, LikedAddBehavior, LikedDeleteBehavior> {
   static let sharedInstance = LikedCoreService()
-
-  func toggleLikeState(isLiked: Bool, restaurant: RestaurantViewObject) {
-    let viewContext = CoreDataManager.sharedInstance.managedObjectContext
-    if (isLiked) {
-      try! deleteRestaurant(id: restaurant.id, in: viewContext)
-    } else {
-      let restaurantManagedObject = Restaurant(restaurant: restaurant)
-      try! addRestaurant(data: ["restaurant": restaurantManagedObject], in: viewContext)
-    }
-  }
 }
 

@@ -9,8 +9,8 @@
 import Foundation
 
 struct RestaurantViewObject: Identifiable {
-  var businessCategory: String
   var id: String
+	var businessCategory: String
   var imageUrl: String?
   var latitude: Double
   var longitude: Double
@@ -19,6 +19,7 @@ struct RestaurantViewObject: Identifiable {
   var price: String
   var rating: Double
   var reviewCount: Int
+
   var isLiked: Bool = false
   var isSelected: Bool = false
   var isClosed: Bool = false

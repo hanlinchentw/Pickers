@@ -41,3 +41,10 @@ extension CLLocationCoordinate2D: Decodable{
         self.init(latitude:lat, longitude:lon)
     }
 }
+
+extension Business: Equatable {
+	static func == (lhs: Business, rhs: Business) -> Bool {
+		lhs.id == rhs.id
+	}
+
+}

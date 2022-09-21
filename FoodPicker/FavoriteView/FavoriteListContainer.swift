@@ -39,7 +39,7 @@ struct FavoriteListContainer: View {
   }
 }
 
-class FavoriteListViewModel: ObservableObject {
+class FavoriteListViewModel: ObservableObject, Selectable {
   @Inject var selectService: SelectedCoreService
   private var viewContext: NSManagedObjectContext {
     return CoreDataManager.sharedInstance.managedObjectContext
@@ -47,7 +47,7 @@ class FavoriteListViewModel: ObservableObject {
 
   func selectButtonOnPress(restaurant: Restaurant) {
     if let isSelected = try? selectService.exists(id: restaurant.id, in: viewContext) {
-      selectService.toggleSelectState(isSelected: isSelected, restaurant: .init(restaurant: restaurant))
+			selectRestaurant(isSelected: isSelected, restaurant: .init(restaurant: restaurant))
     }
   }
 

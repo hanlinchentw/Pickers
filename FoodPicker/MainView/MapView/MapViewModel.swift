@@ -12,7 +12,7 @@ import CoreLocation
 import MapKit
 import CoreData
 
-class MapViewModel {
+class MapViewModel: Likable, Selectable {
   @Inject var locationService: LocationService
   @Inject var selectService: SelectedCoreService
   @Inject var likeService: LikedCoreService
@@ -80,21 +80,10 @@ class MapViewModel {
       .store(in: &set)
   }
 
-  func didTapSelectButton(_ target: RestaurantViewObject) {
-    selectService.toggleSelectState(isSelected: target.isSelected, restaurant: target)
-  }
-
-  func didTapLikeButton(_ target: RestaurantViewObject) {
-    likeService.toggleLikeState(isLiked: target.isLiked, restaurant: target)
-  }
-
   func fetchRestaurant(latitude: Double? = nil, longitude: Double?) async  {
-    guard let latitude = latitude, let longitude = longitude else {
-      error = LoactionError.locationNotFound(message: "Location not found")
-      return
-    }
     do {
-      let businesses = try await BusinessService.fetchBusinesses(lat: latitude, lon: longitude, option: .nearyby, limit: 50)
+			let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: .nearyby, limit: 50, offset: 0)
+      let businesses = try await BusinessService.fetchBusinesses(query: query)
 
       var viewObjects = Array<RestaurantViewObject>()
       for business in businesses {

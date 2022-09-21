@@ -10,54 +10,53 @@ import SwiftUI
 import CoreData
 
 enum LoadingState {
-  case idle
-  case loading
-  case loaded
-  case error
+	case idle
+	case loading
+	case loaded
+	case error
 }
 
 struct MainListView: View {
-  @EnvironmentObject var coordinator: MainCoordinator
-  @Environment(\.managedObjectContext) private var viewContext
-  @State var isSearching = false
-  @State var searchText = ""
-  @StateObject var popularViewModel = RestaurantViewModel(option: .popular)
-  @StateObject var nearbyViewModel = RestaurantViewModel(option: .nearyby)
+	@EnvironmentObject var coordinator: MainCoordinator
+	@Environment(\.managedObjectContext) private var viewContext
+	@State var isSearching = false
+	@StateObject var searchViewModel = SearchListViewModel()
+	
+	var body: some View {
+		ZStack {
+			Color.listViewBackground.ignoresSafeArea()
+			ScrollView(.vertical, showsIndicators: false) {
+				VStack(spacing: 24) {
+					MainListHeader(
+						searchText: $searchViewModel.searchText,
+						searchState: $searchViewModel.searchState
+					)
+					.environmentObject(coordinator)
 
-  var body: some View {
-    ZStack {
-      Color.listViewBackground.ignoresSafeArea()
-      ScrollView(.vertical, showsIndicators: false) {
-        VStack(spacing: 24) {
-          MainListHeader(
-            searchText: $searchText,
-            isSearching: $isSearching
-          )
-          .environmentObject(coordinator)
-
-          PopularSectionView()
-          .environment(\.managedObjectContext, viewContext)
-          .environmentObject(coordinator)
-          .environmentObject(popularViewModel)
-
-          NearbySectionView()
-          .environment(\.managedObjectContext, viewContext)
-          .environmentObject(coordinator)
-          .environmentObject(nearbyViewModel)
-        }
-      }
-    }
-    .task {
-      await popularViewModel.fetchData(resultCount: 10)
-      await nearbyViewModel.fetchData(resultCount: 30)
-    }
-    .navigationBarHidden(true)
-    .onTapToResign()
-  }
-}
-
-struct MainListView_Previews: PreviewProvider {
-  static var previews: some View {
-    MainListView()
-  }
+					if isSearching {
+						SearchListView(searchResult: $searchViewModel.searchResult)
+					} else {
+						sectionView
+					}
+				}
+			}
+		}
+		.navigationBarHidden(true)
+		.onTapToResign()
+	}
+	
+	var sectionView: some View {
+		ForEach(0 ..< MainListSection.allCases.count, id: \.self) { index in
+			let section = MainListSection.init(rawValue: index)!
+			if section != MainListSection.nearby {
+				HorizontalSectionView(section: section)
+				.environment(\.managedObjectContext, viewContext)
+				.environmentObject(coordinator)
+			} else {
+				VerticalSectionView()
+				.environment(\.managedObjectContext, viewContext)
+				.environmentObject(coordinator)
+			}
+		}
+	}
 }

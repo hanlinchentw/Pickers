@@ -8,8 +8,39 @@
 
 import SwiftUI
 
+class MoreListViewModel: ObservableObject, Selectable {
+	@Inject var locationService: LocationService
+	@Inject var selectService: SelectedCoreService
+	@Inject var likeService: LikedCoreService
+
+	@Published var loadingState: LoadingState = .idle
+	@Published var viewObjects: Array<RestaurantViewObject> = []
+	@Published var locationError: Error? = nil
+	
+	func fetchData() async {
+		OperationQueue.main.addOperation {
+			self.loadingState = .loading
+		}
+		do {
+			let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: .nearyby, limit: 50, offset: 0)
+			let result = try await BusinessService.fetchBusinesses(query: query)
+			OperationQueue.main.addOperation {
+				self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }
+				self.loadingState = .loaded
+			}
+		} catch {
+			print("MainListViewModel.fetchData, error=\(error.localizedDescription)")
+			OperationQueue.main.addOperation {
+				self.viewObjects = []
+				self.loadingState = .error
+			}
+		}
+	}
+	
+}
+
 struct MoreListView: View {
-  @StateObject var viewModel = RestaurantViewModel(option: .nearyby)
+	@StateObject var viewModel = MoreListViewModel()
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
@@ -25,8 +56,8 @@ struct MoreListView: View {
 
         ScrollView(.vertical, showsIndicators: false) {
           LazyVStack {
-            ForEach(0 ..< viewModel.dataSource.viewObjects.count, id: \.self) { index in
-              let restaurant = viewModel.dataSource.viewObjects[index]
+            ForEach(0 ..< viewModel.viewObjects.count, id: \.self) { index in
+              let restaurant = viewModel.viewObjects[index]
               let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
               let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
               let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
@@ -38,7 +69,7 @@ struct MoreListView: View {
                 coordinator.pushToDetailView(id: restaurant.id)
               }
               .onAppear {
-                shouldLoadMore = index == viewModel.dataSource.viewObjects.count - 5
+                shouldLoadMore = index == viewModel.viewObjects.count - 5
               }
             }
           }
@@ -48,7 +79,7 @@ struct MoreListView: View {
             ProgressView().progressViewStyle(.circular)
               .foregroundColor(.gray)
               .task {
-                await viewModel.fetchData(resultCount: 50)
+								await viewModel.fetchData()
                 shouldLoadMore = false
               }
           }

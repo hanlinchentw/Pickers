@@ -29,8 +29,22 @@ class LocationService: NSObject, ObservableObject {
     LocationService.locationManager.startMonitoringSignificantLocationChanges()
   }
 
+	func getLatitude() throws -> Double {
+		guard let latitude = lastLocation?.coordinate.latitude else {
+			throw LoactionError.locationNotFound(message: "\(#function) not found")
+		}
+		return latitude
+	}
+
+	func getLongitude() throws -> Double {
+		guard let longitude = lastLocation?.coordinate.longitude else {
+			throw LoactionError.locationNotFound(message: "\(#function) not found")
+		}
+		return longitude
+	}
+
   var latitude: Double? {
-    return lastLocation?.coordinate.latitude
+		return lastLocation?.coordinate.latitude
   }
 
   var longitude: Double? {

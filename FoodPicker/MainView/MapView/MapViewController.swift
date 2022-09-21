@@ -142,14 +142,14 @@ extension MapViewController: CarouselViewDelegate {
   }
 
   func itemTapSelectButton(restaurant: RestaurantViewObject) {
-    viewModel.didTapSelectButton(restaurant)
+		viewModel.selectRestaurant(isSelected: restaurant.isSelected, restaurant: restaurant)
     let indexPaths = carouselView.indexPathsForVisibleItems
     // 只有畫面中間那個物件可以操作：index 1
     self.carouselView.reloadItems(at: [indexPaths[1]])
   }
 
   func itemTapLikeButton(restaurant: RestaurantViewObject) {
-    viewModel.didTapLikeButton(restaurant)
+		viewModel.likeRestaurant(isLiked: restaurant.isLiked, restaurant: restaurant)
     let indexPaths = carouselView.indexPathsForVisibleItems
     // 只有畫面中間那個物件可以操作：index 1
     self.carouselView.reloadItems(at: [indexPaths[1]])

@@ -12,11 +12,17 @@ struct MainListHeader: View {
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.presentationMode) var presentationMode
   @Binding var searchText: String
-  @Binding var isSearching: Bool
+  @Binding var searchState: SearchState
   
   var body: some View {
     HStack(alignment: .center) {
-      TextField("", text: $searchText, onEditingChanged: { isSearching = $0 })
+      TextField("", text: $searchText, onEditingChanged: { isEditing in
+				withAnimation(.spring()) {
+					searchState = .searching
+				}
+			}, onCommit: {
+				searchState = .submit
+			})
       .placeholder(when: searchText.isEmpty) {
         HStack {
           Image(systemName: "magnifyingglass")
@@ -51,6 +57,6 @@ struct MainListHeader: View {
 
 struct SearchFieldContainer_Previews: PreviewProvider {
   static var previews: some View {
-    MainListHeader(searchText: .constant(""), isSearching: .constant(false))
+		MainListHeader(searchText: .constant(""), searchState: .constant(.idle))
   }
 }
