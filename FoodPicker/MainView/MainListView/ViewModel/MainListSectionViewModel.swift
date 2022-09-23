@@ -40,9 +40,13 @@ class MainListSectionViewModel: ObservableObject, Selectable, Likable {
 	@Inject var selectService: SelectedCoreService
 	@Inject var likeService: LikedCoreService
 	
-	@Published var loadingState: LoadingState = .idle
+	@Published var loadingState: LoadingState = .idle {
+		didSet {
+			print(">>> loadingStata = \(loadingState)")
+		}
+	}
 	@Published var viewObjects: Array<RestaurantViewObject> = []
-
+	
 	var dataCount: Int {
 		if self.loadingState == .loaded {
 			return self.viewObjects.count
@@ -53,17 +57,24 @@ class MainListSectionViewModel: ObservableObject, Selectable, Likable {
 		return 0
 	}
 	
+	let section: MainListSection
 	
-	func fetchData(section: MainListSection) async {
+	init(section: MainListSection) {
+		self.section = section
+	}
+	
+	func fetchData() {
 		OperationQueue.main.addOperation {
 			self.loadingState = .loading
 		}
 		do {
 			let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: section.searchOption, limit: section.count, offset: 0)
-			let result = try await BusinessService.fetchBusinesses(query: query)
-			OperationQueue.main.addOperation {
-				self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }
-				self.loadingState = .loaded
+			Task {
+				let result = try await BusinessService.fetchBusinesses(query: query)
+				OperationQueue.main.addOperation {
+					self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }
+					self.loadingState = .loaded
+				}
 			}
 		} catch {
 			print("MainListViewModel.\(#function), error=\(error.localizedDescription)")

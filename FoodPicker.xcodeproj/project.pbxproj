@@ -19,6 +19,8 @@
 		B60CC1BD28C6426200AF2B53 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1BC28C6426200AF2B53 /* Coordinator.swift */; };
 		B60CC1BF28C7A64500AF2B53 /* MapDismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1BE28C7A64500AF2B53 /* MapDismissButton.swift */; };
 		B60E87E628A54BFE0062A2B2 /* BaseCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60E87E528A54BFE0062A2B2 /* BaseCoreService.swift */; };
+		B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */; };
+		B612E3FD28DE03D6005721E3 /* TypeAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E3FC28DE03D6005721E3 /* TypeAlias.swift */; };
 		B615FF9E28CADCAD000BD3A0 /* ToastStyleTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615FF9D28CADCAD000BD3A0 /* ToastStyleTheme.swift */; };
 		B615FFA628CAFD60000BD3A0 /* MoreListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615FFA528CAFD60000BD3A0 /* MoreListView.swift */; };
 		B630C32D28DA0C35004B9595 /* SearchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630C32C28DA0C35004B9595 /* SearchListView.swift */; };
@@ -35,7 +37,7 @@
 		B634A71528A74E8600796D63 /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71428A74E8600796D63 /* Int+Extensions.swift */; };
 		B634A71728A76B2E00796D63 /* HorizontalSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71628A76B2E00796D63 /* HorizontalSectionView.swift */; };
 		B634A71928A76B4800796D63 /* VerticalSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71828A76B4800796D63 /* VerticalSectionView.swift */; };
-		B634A71B28A76B7300796D63 /* MainListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71A28A76B7300796D63 /* MainListHeader.swift */; };
+		B634A71B28A76B7300796D63 /* MainListSearchHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71A28A76B7300796D63 /* MainListSearchHeader.swift */; };
 		B634A71D28A8BFC700796D63 /* RestaurantListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71C28A8BFC700796D63 /* RestaurantListItemView.swift */; };
 		B634A71F28A8C0E200796D63 /* TestRestaurantData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71E28A8C0E200796D63 /* TestRestaurantData.swift */; };
 		B634A72228A8D0A000796D63 /* Restaurant+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A72028A8D0A000796D63 /* Restaurant+CoreDataClass.swift */; };
@@ -186,6 +188,8 @@
 		B60CC1BC28C6426200AF2B53 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		B60CC1BE28C7A64500AF2B53 /* MapDismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDismissButton.swift; sourceTree = "<group>"; };
 		B60E87E528A54BFE0062A2B2 /* BaseCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoreService.swift; sourceTree = "<group>"; };
+		B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
+		B612E3FC28DE03D6005721E3 /* TypeAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAlias.swift; sourceTree = "<group>"; };
 		B615FF9D28CADCAD000BD3A0 /* ToastStyleTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastStyleTheme.swift; sourceTree = "<group>"; };
 		B615FFA528CAFD60000BD3A0 /* MoreListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreListView.swift; sourceTree = "<group>"; };
 		B630C32C28DA0C35004B9595 /* SearchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListView.swift; sourceTree = "<group>"; };
@@ -203,7 +207,7 @@
 		B634A71428A74E8600796D63 /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		B634A71628A76B2E00796D63 /* HorizontalSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalSectionView.swift; sourceTree = "<group>"; };
 		B634A71828A76B4800796D63 /* VerticalSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalSectionView.swift; sourceTree = "<group>"; };
-		B634A71A28A76B7300796D63 /* MainListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListHeader.swift; sourceTree = "<group>"; };
+		B634A71A28A76B7300796D63 /* MainListSearchHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListSearchHeader.swift; sourceTree = "<group>"; };
 		B634A71C28A8BFC700796D63 /* RestaurantListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantListItemView.swift; sourceTree = "<group>"; };
 		B634A71E28A8C0E200796D63 /* TestRestaurantData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRestaurantData.swift; sourceTree = "<group>"; };
 		B634A72028A8D0A000796D63 /* Restaurant+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Restaurant+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -416,6 +420,14 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		B612E3F928DCC98F005721E3 /* ViewModifier */ = {
+			isa = PBXGroup;
+			children = (
+				B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */,
+			);
+			path = ViewModifier;
+			sourceTree = "<group>";
+		};
 		B615FFA328CAFCC2000BD3A0 /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
@@ -615,6 +627,7 @@
 		B647A4E524B203650098B7A2 /* Utilis */ = {
 			isa = PBXGroup;
 			children = (
+				B612E3F928DCC98F005721E3 /* ViewModifier */,
 				B6B84D492665D4A5002E418D /* Extension */,
 				B685484B24B6D390009BC800 /* Constants.swift */,
 				B6F789A4267351230003ED5C /* MBProgressHUDProtocol.swift */,
@@ -625,6 +638,7 @@
 				B6D407C128AD3DF500E59CE3 /* SafeAreaUtils.swift */,
 				B6413B3228BB2C7A0071F5B3 /* DateUtils.swift */,
 				B6CBE89428D5EE5E005BCA7D /* KeyboardHelper.swift */,
+				B612E3FC28DE03D6005721E3 /* TypeAlias.swift */,
 			);
 			path = Utilis;
 			sourceTree = "<group>";
@@ -825,7 +839,7 @@
 			isa = PBXGroup;
 			children = (
 				B6EF13A728B0D2B0009345D6 /* Idle */,
-				B634A71A28A76B7300796D63 /* MainListHeader.swift */,
+				B634A71A28A76B7300796D63 /* MainListSearchHeader.swift */,
 				B6E0D79028A61C4600B8CAE1 /* RestaurantCardView.swift */,
 				B634A71C28A8BFC700796D63 /* RestaurantListItemView.swift */,
 			);
@@ -1065,6 +1079,7 @@
 				B650ECD5257F2655004A4049 /* SpinWheelItemText.swift in Sources */,
 				B685484C24B6D390009BC800 /* Constants.swift in Sources */,
 				B6B9976828B9F1A1007C3D1D /* NSAttributedString+Extensions.swift in Sources */,
+				B612E3FD28DE03D6005721E3 /* TypeAlias.swift in Sources */,
 				B6ABC1ED28B09550007398F4 /* ThirdRowPresenter.swift in Sources */,
 				B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */,
 				B685484424B44938009BC800 /* LocationService.swift in Sources */,
@@ -1158,7 +1173,7 @@
 				B68551B128C30EEF0077C47E /* RestaurantViewObject.swift in Sources */,
 				B60CC1AF28C3312400AF2B53 /* CarouselCollectionView.swift in Sources */,
 				B634A72E28A8D46500796D63 /* LikedAddBehavior.swift in Sources */,
-				B634A71B28A76B7300796D63 /* MainListHeader.swift in Sources */,
+				B634A71B28A76B7300796D63 /* MainListSearchHeader.swift in Sources */,
 				B6CA847628D7513C00B85453 /* RestaurantViewModel.swift in Sources */,
 				B634A72628A8D32D00796D63 /* AddBehavior.swift in Sources */,
 				B634A73728A9214D00796D63 /* LikedDeleteBehavior.swift in Sources */,
@@ -1178,6 +1193,7 @@
 				B6EF13B128B23366009345D6 /* FavoriteSearchContainer.swift in Sources */,
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B69E3B1C28B9223300014AA3 /* BottomSheetViewModel.swift in Sources */,
+				B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */,
 				B685484624B4511A009BC800 /* RestaurantListCell.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */,

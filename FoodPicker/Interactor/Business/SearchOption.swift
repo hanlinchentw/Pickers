@@ -11,11 +11,13 @@ import Foundation
 enum SearchOption {
 	case nearyby
 	case popular
+	case bestMatch
 
 	var sortBy: String {
 		switch self {
 		case .nearyby: return "distance"
 		case .popular: return "rating"
+		case .bestMatch: return "best_match"
 		}
 	}
 }

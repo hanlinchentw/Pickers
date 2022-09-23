@@ -19,44 +19,46 @@ enum LoadingState {
 struct MainListView: View {
 	@EnvironmentObject var coordinator: MainCoordinator
 	@Environment(\.managedObjectContext) private var viewContext
-	@State var isSearching = false
 	@StateObject var searchViewModel = SearchListViewModel()
+	@StateObject var popularViewModel = MainListSectionViewModel(section: .popular)
+	@StateObject var nearbyViewModel = MainListSectionViewModel(section: .nearby)
 	
 	var body: some View {
 		ZStack {
 			Color.listViewBackground.ignoresSafeArea()
 			ScrollView(.vertical, showsIndicators: false) {
 				VStack(spacing: 24) {
-					MainListHeader(
+					MainListSearchHeader(
 						searchText: $searchViewModel.searchText,
-						searchState: $searchViewModel.searchState
+						shouldMapButtonHide: $searchViewModel.isSearching,
+						onEditing: searchViewModel.onEditing,
+						onSubmit: searchViewModel.onSubmit,
+						onClear: searchViewModel.onClear,
+						mapButtonOnPress: { coordinator.presentMapView() }
 					)
-					.environmentObject(coordinator)
 
-					if isSearching {
-						SearchListView(searchResult: $searchViewModel.searchResult)
+					if searchViewModel.isSearching {
+						SearchListView(vm: searchViewModel)
+							.environment(\.managedObjectContext, viewContext)
+							.environmentObject(coordinator)
 					} else {
-						sectionView
+						VStack {
+							HorizontalSectionView(vm: popularViewModel)
+								.environment(\.managedObjectContext, viewContext)
+								.environmentObject(nearbyViewModel)
+							VerticalSectionView(vm: nearbyViewModel)
+								.environment(\.managedObjectContext, viewContext)
+								.environmentObject(coordinator)
+						}
 					}
 				}
 			}
 		}
+		.onAppear {
+			if popularViewModel.loadingState != .loaded { popularViewModel.fetchData() }
+			if nearbyViewModel.loadingState != .loaded { nearbyViewModel.fetchData() }
+		}
 		.navigationBarHidden(true)
 		.onTapToResign()
-	}
-	
-	var sectionView: some View {
-		ForEach(0 ..< MainListSection.allCases.count, id: \.self) { index in
-			let section = MainListSection.init(rawValue: index)!
-			if section != MainListSection.nearby {
-				HorizontalSectionView(section: section)
-				.environment(\.managedObjectContext, viewContext)
-				.environmentObject(coordinator)
-			} else {
-				VerticalSectionView()
-				.environment(\.managedObjectContext, viewContext)
-				.environmentObject(coordinator)
-			}
-		}
 	}
 }

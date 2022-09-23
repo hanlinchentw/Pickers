@@ -12,17 +12,16 @@ struct HorizontalSectionView: View, Selectable, Likable {
 	@Inject var selectService: SelectedCoreService
 	@Inject var likeService: LikedCoreService
 	
+	@ObservedObject var vm: MainListSectionViewModel
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
   @FetchRequest(sortDescriptors: []) var likedRestaurants: FetchedResults<LikedRestaurant>
-	let section: MainListSection
-	@ObservedObject var vm = MainListSectionViewModel()
-
+	
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
 			if (vm.loadingState != .error) {
-				Text(section.description)
+				Text(vm.section.description)
           .en24Bold()
           .padding(.leading, 16)
         ScrollView(.horizontal, showsIndicators: false) {
@@ -55,9 +54,5 @@ struct HorizontalSectionView: View, Selectable, Likable {
         }
       }
     }
-		.task {
-			if vm.loadingState == .loaded { return }
-			await vm.fetchData(section: section)
-		}
   }
 }

@@ -12,10 +12,10 @@ struct VerticalSectionView: View, Selectable {
 	@Inject var selectService: SelectedCoreService
 	@Inject var likeService: LikedCoreService
 	
+	@ObservedObject var vm: MainListSectionViewModel
   @EnvironmentObject var coordinator: MainCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
-	@ObservedObject var vm = MainListSectionViewModel()
 
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
@@ -64,9 +64,5 @@ struct VerticalSectionView: View, Selectable {
         Spacer()
       }
     }
-		.task {
-			if vm.loadingState == .loaded { return }
-			await vm.fetchData(section: .nearby)
-		}
   }
 }
