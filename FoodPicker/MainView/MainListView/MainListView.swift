@@ -37,7 +37,7 @@ struct MainListView: View {
 						mapButtonOnPress: { coordinator.presentMapView() }
 					)
 
-					if searchViewModel.isSearching {
+					if searchViewModel.shouldSearchResultShow {
 						SearchListView(vm: searchViewModel)
 							.environment(\.managedObjectContext, viewContext)
 							.environmentObject(coordinator)

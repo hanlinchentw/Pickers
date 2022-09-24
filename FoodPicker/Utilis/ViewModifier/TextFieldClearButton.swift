@@ -9,7 +9,8 @@
 import SwiftUI
 
 struct TextFieldClearButton: ViewModifier {
-	var onClear: () -> Void
+	@Binding var text: String
+	var onClear: (() -> Void)?
 	
 	func body(content: Content) -> some View {
 		content.overlay {
@@ -17,7 +18,7 @@ struct TextFieldClearButton: ViewModifier {
 				 HStack {
 					 Spacer()
 					 Button {
-						 onClear()
+						 onClear?()
 					 } label: {
 						 Image(systemName: "multiply.circle.fill")
 					 }
@@ -30,8 +31,8 @@ struct TextFieldClearButton: ViewModifier {
 }
 
 extension View {
-	func showClearButton(onClear: @escaping () -> Void) -> some View {
-		self.modifier(TextFieldClearButton(onClear: onClear))
+	func showClearButton(text: Binding<String>, onClear: (() -> Void)?) -> some View {
+		self.modifier(TextFieldClearButton(text: text, onClear: onClear))
 	}
 }
 

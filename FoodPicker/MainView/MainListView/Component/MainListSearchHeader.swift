@@ -35,7 +35,7 @@ struct MainListSearchHeader: View {
 				}
 				.foregroundColor(.gray.opacity(0.5))
 			}
-			.showClearButton(onClear: onClear)
+			.showClearButton(text: $searchText, onClear: onClear)
 			.padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 0))
 			.height(40)
 			.roundedViewWithShadow(cornerRadius: 8,
@@ -66,7 +66,7 @@ struct MainListSearchHeader: View {
 struct SearchFieldContainer_Previews: PreviewProvider {
 	static var previews: some View {
 		
-		MainListHeader(searchText: .constant("")) { isEditing in
+		MainListSearchHeader(searchText: .constant(""), shouldMapButtonHide: .constant(false)) { isEditing in
 			
 		} onSubmit: {
 			

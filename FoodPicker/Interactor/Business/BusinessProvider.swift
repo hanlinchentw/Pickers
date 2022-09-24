@@ -49,7 +49,6 @@ enum BusinessProvider: NetworkProvider {
               "locale":"zh_TW"]
     case let .searchByTerm(lat, lon, term):
       return ["latitude":lat, "longitude": lon,
-              "sort_by": "distance",
               "limit" : 50,
               "categories": "food",
               "term": term,

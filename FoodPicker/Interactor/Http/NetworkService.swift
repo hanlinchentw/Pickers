@@ -11,25 +11,27 @@ import Alamofire
 import Combine
 
 enum URLRequestError: Error {
-  case noInternet
-  case serverFailure
-  case clientFailure
-  case noResponse(message: String)
+	case noInternet
+	case serverFailure
+	case clientFailure
+	case noResponse(message: String)
+	case emptyResponse
 }
 
 protocol NetworkProvider {
-  var baseURL: String { get }
-  var headers: HTTPHeaders? { get }
-  var method: HTTPMethod { get }
-  var path: String { get }
-  var parameters: [String: Any] { get }
+	var baseURL: String { get }
+	var headers: HTTPHeaders? { get }
+	var method: HTTPMethod { get }
+	var path: String { get }
+	var parameters: [String: Any] { get }
 }
 
 class NetworkService {
-  typealias DataResponseHandler = ((AFDataResponse<Data?>) -> Void)
-
-  static func createHttpRequest(service: NetworkProvider) -> DataRequest {
-    let urlPath = URL(string: "\(service.baseURL)\(service.path)")!
-    return AF.request(urlPath, method: service.method, parameters: service.parameters, headers: service.headers)
-  }
+	typealias DataResponseHandler = ((AFDataResponse<Data?>) -> Void)
+	
+	static func createHttpRequest(service: NetworkProvider) -> DataRequest {
+		let urlPath = URL(string: "\(service.baseURL)\(service.path)")!
+		let request = AF.request(urlPath, method: service.method, parameters: service.parameters, headers: service.headers)
+		return request
+	}
 }

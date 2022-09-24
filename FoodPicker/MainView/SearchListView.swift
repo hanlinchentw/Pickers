@@ -19,9 +19,10 @@ struct SearchListView: View, Selectable {
 	var body: some View {
 		ZStack {
 			Color.listViewBackground
-			if vm.dataCount == 0 {
-				ProgressView().progressViewStyle(.circular)
-					.foregroundColor(.gray)
+			if vm.isSearching {
+				ProgressView()
+					.progressViewStyle(.circular)
+					.foregroundColor(.butterScotch)
 			} else {
 				VStack {
 					Button {
@@ -39,7 +40,7 @@ struct SearchListView: View, Selectable {
 
 					ScrollView(showsIndicators: false) {
 						VStack(spacing: 16) {
-							ForEach(0 ..< vm.dataCount, id: \.self) { index in
+							ForEach(vm.viewObjects.indices, id: \.self) { index in
 								let restaurant = vm.viewObjects[index]
 								let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
 								let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
