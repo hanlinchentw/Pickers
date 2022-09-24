@@ -43,13 +43,17 @@ class MapViewController: UIViewController {
     super.viewDidLoad()
     bindRefreshing()
     bindUpdateAnnotation()
-    Task { await viewModel.fetchRestaurant(latitude: viewModel.userLatitude, longitude: viewModel.userLongitude) }
 
     configureMapView()
     configureCollectionView()
     configureDismissButton()
     configureLocateButton()
   }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		Task { await viewModel.fetchRestaurant(latitude: viewModel.userLatitude, longitude: viewModel.userLongitude) }
+	}
   // MARK: - Selector
   @objc func dismissMapView() {
     self.coordinator?.presentListView()
@@ -83,18 +87,20 @@ class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
   func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
     let centerCoordinate = mapView.centerCoordinate
-		print("centerCoordinate >>> \(centerCoordinate)")
+
     PresentHelper.showTapToast(
       on: self,
       withMessage: "Search this area",
       duration: .infinity,
       position: .top,
       makeStyle: { ToastStyle.searchThisArea })
-    { didTap in
-      if didTap {
-        Task { await self.viewModel.fetchRestaurant(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)}
-      }
-    }
+		{
+			if $0 {
+				Task {
+					await self.viewModel.fetchRestaurant(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
+				}
+			}
+		}
   }
 
   func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {

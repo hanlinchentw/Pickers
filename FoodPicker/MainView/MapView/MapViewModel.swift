@@ -81,21 +81,27 @@ class MapViewModel: Likable, Selectable {
   }
 
   func fetchRestaurant(latitude: Double? = nil, longitude: Double?) async  {
+		print("fetchRestaurant >>> ")
     do {
-			let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: .nearyby, limit: 50, offset: 0)
-      let businesses = try await BusinessService.fetchBusinesses(query: query)
-
-      var viewObjects = Array<RestaurantViewObject>()
-      for business in businesses {
-        var viewObject = RestaurantViewObject(business: business)
-        viewObject.isSelected = try selectService.exists(id: business.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-        viewObject.isLiked = try likeService.exists(id: business.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-        viewObjects.append(viewObject)
-      }
+			guard let latitude = latitude, let longitude = longitude else {
+				throw LoactionError.locationNotFound(message: "Location not found")
+			}
+			var viewObjects = Array<RestaurantViewObject>()
+			for offset in 0 ..< 2 {
+				let query = BusinessService.Query.init(lat: latitude, lon: longitude, option: .nearyby, limit: 50, offset: offset)
+				let businesses = try await BusinessService.fetchBusinesses(query: query)
+				for business in businesses {
+					var viewObject = RestaurantViewObject(business: business)
+					viewObject.isSelected = try selectService.exists(id: business.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+					viewObject.isLiked = try likeService.exists(id: business.id, in: CoreDataManager.sharedInstance.managedObjectContext)
+					viewObjects.append(viewObject)
+				}
+			}
       self.restaurants = viewObjects
       self.refresh()
       self.updateAnnotation = true
     } catch {
+			print(">>> MapViewModel.\(#function), error=\(error)")
       self.error = error
     }
   }
