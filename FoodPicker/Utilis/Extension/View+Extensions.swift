@@ -12,7 +12,9 @@ import SwiftUI
 extension View {
 	@ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
 		if condition {
-			transform(self)
+			withAnimation {
+				transform(self)
+			}
 		} else {
 			self
 		}
@@ -22,7 +24,7 @@ extension View {
 		return self.frame(height: height)
 	}
 	
-	func roundedViewWithShadow(cornerRadius: CGFloat, backgroundColor: Color, shadowColor: Color, shadowRadius: CGFloat) -> some View {
+	func roundedWithShadow(cornerRadius: CGFloat, backgroundColor: Color = .white, shadowColor: Color = .gray.opacity(0.3), shadowRadius: CGFloat = 3) -> some View {
 		return self.background(
 			RoundedRectangle(cornerRadius: cornerRadius)
 				.fill(backgroundColor)

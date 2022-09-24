@@ -28,9 +28,9 @@ struct RestaurantCardView: View {
         case .success(let image):
           image.resizable()
         case .failure(_):
-          Image("spinActive")
+          Image(systemName: "photo.artframe")
         @unknown default:
-          Image("spinActive")
+					Image(systemName: "photo.artframe")
         }
       })
       .aspectRatio(contentMode: .fill)
@@ -77,10 +77,7 @@ struct RestaurantCardView: View {
       .padding(.bottom, 12)
     }
     .frame(width: 280, height: 240)
-    .roundedViewWithShadow(cornerRadius: 16,
-                           backgroundColor: Color.white,
-                           shadowColor: Color.gray.opacity(0.3),
-                           shadowRadius: 3)
+    .roundedWithShadow(cornerRadius: 16)
   }
 }
 

@@ -83,6 +83,7 @@ class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
   func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
     let centerCoordinate = mapView.centerCoordinate
+		print("centerCoordinate >>> \(centerCoordinate)")
     PresentHelper.showTapToast(
       on: self,
       withMessage: "Search this area",
@@ -106,7 +107,8 @@ extension MapViewController: MKMapViewDelegate {
     if let annotation = annotation as? AnnotationItem {
       let view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: NSStringFromClass(AnnotationItem.self))
       view.titleVisibility = .adaptive
-      view.glyphText = "Me"
+			view.animatesWhenAdded = true
+			view.glyphImage = UIImage(named: "icon56PickerLogo")
       view.markerTintColor = .butterscotch
       return view
     } else  { return nil }

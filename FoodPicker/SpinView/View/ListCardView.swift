@@ -74,12 +74,7 @@ struct ListCardView: View {
           .padding(.bottom, 16)
         }
       }
-      .roundedViewWithShadow(
-        cornerRadius: 16,
-        backgroundColor: .white,
-        shadowColor: .gray.opacity(0.5),
-        shadowRadius: 8
-      )
+      .roundedWithShadow(cornerRadius: 16)
       .padding(.horizontal, 8)
     }
   }

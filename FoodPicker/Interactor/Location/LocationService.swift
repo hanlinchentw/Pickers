@@ -20,7 +20,7 @@ class LocationService: NSObject, ObservableObject {
   static let locationManager = CLLocationManager()
 
   @Published var lastLocation: CLLocation?
-
+	
   override init() {
     super.init()
     LocationService.locationManager.delegate = self
@@ -62,14 +62,11 @@ class LocationService: NSObject, ObservableObject {
 
 //MARK: - CLLocationManagerDelegate
 extension LocationService: CLLocationManagerDelegate {
-  func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-    if manager.authorizationStatus == .denied {
-    }
-  }
-
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     guard let location = locations.last else { return }
-    lastLocation = location
+		OperationQueue.main.addOperation {
+			self.lastLocation = location
+		}
     print(#function, location)
   }
 }

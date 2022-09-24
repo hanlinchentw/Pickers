@@ -9,72 +9,49 @@
 import SwiftUI
 
 struct MainListSearchHeader: View {
-	@EnvironmentObject var coordinator: MainCoordinator
-	@Environment(\.presentationMode) var presentationMode
-
 	@Binding var searchText: String
-	@Binding var shouldMapButtonHide: Bool
-
-	var onEditing: (_ isEditing: Bool) -> Void
-	var onSubmit: () -> Void
-	var onClear: () -> Void
 	var mapButtonOnPress: () -> Void
-
+	
 	var body: some View {
 		HStack(alignment: .center) {
-			TextField(
-				"",
-				text: $searchText,
-				onEditingChanged: onEditing,
-				onCommit: onSubmit
-			)
+			TextField("", text: $searchText)
 			.placeholder(when: searchText.isEmpty) {
 				HStack {
 					Image(systemName: "magnifyingglass")
-					Text("Search in my favorite")
+					Text("Search for restaurants")
 				}
 				.foregroundColor(.gray.opacity(0.5))
 			}
-			.showClearButton(text: $searchText, onClear: onClear)
+			.showClearButton(text: $searchText)
 			.padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 0))
 			.height(40)
-			.roundedViewWithShadow(cornerRadius: 8,
-														 backgroundColor: Color.white,
-														 shadowColor: Color.gray.opacity(0.3),
-														 shadowRadius: 3)
-			
-			if !shouldMapButtonHide {
-				Button {
-					mapButtonOnPress()
-				} label: {
-					Image(systemName: "map.circle.fill")
-						.frame(width: 40, height: 40)
-						.foregroundColor(.butterScotch)
-						.roundedViewWithShadow(cornerRadius: 8,
-																	 backgroundColor: Color.white,
-																	 shadowColor: Color.gray.opacity(0.3),
-																	 shadowRadius: 3)
-				}
+			.roundedWithShadow(cornerRadius: 8)
+
+			Button {
+				mapButtonOnPress()
+			} label: {
+				Image(systemName: "map.circle.fill")
+					.foregroundColor(.butterScotch)
+					.frame(width: searchText.isEmpty ? 40 : 0, height: searchText.isEmpty ? 40 : 0)
 			}
+			.roundedWithShadow(cornerRadius: 8)
+			.opacity(searchText.isEmpty ? 1 : 0)
+			.animation(.easeInOut(duration: 0.2), value: searchText.isEmpty)
 		}
 		.padding(.top, 16)
 		.padding(.leading, 16)
-		.padding(.trailing, 8)
+		.padding(.trailing, 12)
 	}
 }
 
 struct SearchFieldContainer_Previews: PreviewProvider {
 	static var previews: some View {
 		
-		MainListSearchHeader(searchText: .constant(""), shouldMapButtonHide: .constant(false)) { isEditing in
+		MainListSearchHeader(
+			searchText: .constant(""),
+			mapButtonOnPress: {
 			
-		} onSubmit: {
-			
-		} onClear: {
-			
-		} mapButtonOnPress: {
-
-		}
-
+			}
+		)
 	}
 }

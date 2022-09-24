@@ -19,53 +19,64 @@ struct SearchListView: View, Selectable {
 	var body: some View {
 		ZStack {
 			Color.listViewBackground
-			if vm.isSearching {
+			switch vm.searchState {
+			case .searching:
 				ProgressView()
 					.progressViewStyle(.circular)
 					.foregroundColor(.butterScotch)
-			} else {
-				VStack {
-					Button {
-						withAnimation {
-							vm.isSearching = false
-							vm.searchText = ""
-							vm.searchState = .idle
-						}
-					} label: {
-						Text("Clean search results")
-							.foregroundColor(.butterScotch)
-					}
-					.frame(width: 170, height: 44)
-					.buttonStyle(.plain)
-
-					ScrollView(showsIndicators: false) {
-						VStack(spacing: 16) {
-							ForEach(vm.viewObjects.indices, id: \.self) { index in
-								let restaurant = vm.viewObjects[index]
-								let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
-								let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
-								let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
-								
-								RestaurantListItemView(presenter: presenter, actionButtonOnPress: {
-									selectRestaurant(isSelected: isSelected, restaurant: restaurant)
-								})
-								.onTapGesture {
-									coordinator.pushToDetailView(id: restaurant.id)
+			case .done(let result):
+				switch result {
+				case .success(let viewObjects):
+					VStack {
+						ScrollView(showsIndicators: false) {
+							VStack(spacing: 16) {
+								ForEach(viewObjects.indices, id: \.self) { index in
+									let restaurant = viewObjects[index]
+									let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
+									let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
+									let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
+									
+									RestaurantListItemView(presenter: presenter, actionButtonOnPress: {
+										selectRestaurant(isSelected: isSelected, restaurant: restaurant)
+									})
+									.onTapGesture {
+										coordinator.pushToDetailView(id: restaurant.id)
+									}
+									.buttonStyle(.plain)
 								}
-								.buttonStyle(.plain)
 							}
+							.padding(.trailing, 8)
+							.padding(.top, 16)
+							.background(Color.white)
+							.cornerRadius(24)
 						}
-						.padding(.trailing, 8)
-						.padding(.top, 16)
-						.background(Color.white)
-						.cornerRadius(24)
+						Spacer()
 					}
-					Spacer()
+				case .failure(_):
+					errorView
 				}
-				
+			case .idle:
+				Spacer().height(0)
 			}
 		}
 		.ignoresSafeArea()
+	}
+	
+	var errorView: some View {
+		VStack {
+			Text("I'm sorry ... 🥲")
+				.en24Bold()
+				.foregroundColor(.black)
+			Text("We can't find a match of\n'\(vm.searchText)'\nTry searching for something else instead.")
+				.en16()
+				.multilineTextAlignment(.center)
+				.lineSpacing(2)
+				.foregroundColor(.gray.opacity(0.5))
+				.padding(.top, 16)
+			Image("illustrationSearchXresult")
+				.frame(width: 320, height: 320)
+		}
+		.padding(.top, 44)
 	}
 }
 

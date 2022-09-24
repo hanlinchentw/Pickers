@@ -30,10 +30,7 @@ struct FavoriteSearchContainer: View {
         }
         .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
         .height(40)
-        .roundedViewWithShadow(cornerRadius: 8,
-                               backgroundColor: Color.white,
-                               shadowColor: Color.gray.opacity(0.1),
-                               shadowRadius: 1)
+        .roundedWithShadow(cornerRadius: 8)
         .animation(.easeInOut, value: isEditing)
         .if(isEditing, transform: { $0.opacity(0) })
     }

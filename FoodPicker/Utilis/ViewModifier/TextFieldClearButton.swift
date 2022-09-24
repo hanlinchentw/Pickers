@@ -18,6 +18,7 @@ struct TextFieldClearButton: ViewModifier {
 				 HStack {
 					 Spacer()
 					 Button {
+						 text = ""
 						 onClear?()
 					 } label: {
 						 Image(systemName: "multiply.circle.fill")
@@ -31,7 +32,7 @@ struct TextFieldClearButton: ViewModifier {
 }
 
 extension View {
-	func showClearButton(text: Binding<String>, onClear: (() -> Void)?) -> some View {
+	func showClearButton(text: Binding<String>, onClear: (() -> Void)? = nil) -> some View {
 		self.modifier(TextFieldClearButton(text: text, onClear: onClear))
 	}
 }

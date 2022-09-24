@@ -10,50 +10,40 @@ import Foundation
 import Combine
 import Alamofire
 
+enum SearchError: Error {
+	case empty
+}
+
 enum SearchState {
 	case idle
 	case searching
-	case submit
-	
+	case done(result: Result<Array<RestaurantViewObject>, Error>)
 }
 
 class SearchListViewModel: ObservableObject {
 	static let DEBOUNCE_MILLISECOND = 500
-
+	
 	@Inject var locationService: LocationService
-	@Published var isSearching = false
 	@Published var searchState: SearchState = .idle
 	@Published var searchText: String = ""
 	@Published var viewObjects: Array<RestaurantViewObject> = []
 	
 	var set = Set<AnyCancellable>()
 	
-	var shouldSearchResultShow: Bool {
-		viewObjects.count > 0
-	}
-	
 	let searchTaskHolder = DataTaskHolder()
-
+	
 	init() {
 		bindSearchText()
 	}
-}
-// MARK: - TextField Event
-extension SearchListViewModel {
-	var onEditing: (_ isEditing: Bool) -> Void {
-		{ isEditing in
-			self.searchState = isEditing ? .searching : .idle
-		}
-	}
 	
-	var onSubmit: VoidClosure {
-		{ self.searchState = .submit }
-	}
-	
-	var onClear: VoidClosure {
-		{
-			self.searchText = ""
-			self.isSearching = false
+	var showSearchResult: Bool {
+		if searchText.isEmpty { return false }
+
+		switch searchState {
+		case .idle:
+			return false
+		default:
+			return true
 		}
 	}
 }
@@ -66,13 +56,14 @@ extension SearchListViewModel {
 			task?.cancel()
 		}
 	}
-
+	
 	func bindSearchText() {
 		$searchText
 			.debounce(for: .milliseconds(Self.DEBOUNCE_MILLISECOND), scheduler: RunLoop.main)
+			.removeDuplicates()
 			.filter { !$0.isEmpty }
 			.sink { text in
-				print("serachFor >>> \(text)")
+				self.searchState = .searching
 				Task {
 					await self.searchFor(text: text)
 				}
@@ -81,24 +72,29 @@ extension SearchListViewModel {
 	}
 	
 	func searchFor(text: String) async {
-		OperationQueue.main.addOperation { self.isSearching = true }
-		searchTaskHolder.cancel()
+		searchTaskHolder.cancel() // cancel current task
 		do {
 			let query = try BusinessService.Query(searchText: text, lat: locationService.getLatitude(), lon: locationService.getLongitude())
 			let task: DataTask<Root> = try BusinessService.createSearchDataTask(query: query)
 			searchTaskHolder.task = task
+			try await Task.sleep(seconds: 1)
 			let response = await task.response
-			switch response.result {
-			case .success(let root):
-				OperationQueue.main.addOperation {
+			OperationQueue.main.addOperation {
+				switch response.result {
+				case .success(let root):
 					self.viewObjects = root.businesses.map { RestaurantViewObject.init(business: $0) }
-					self.isSearching = false
-					print("viewObjects >>> \(self.viewObjects)")
+					if self.viewObjects.isEmpty {
+						self.searchState = .done(result: Result.failure(SearchError.empty))
+					} else {
+						self.searchState = .done(result: Result.success(self.viewObjects))
+					}
+					
+				case .failure(let error):
+					self.searchState = .done(result: Result.failure(error))
 				}
-			case .failure(let error):
-				throw error
 			}
 		} catch {
+			self.searchState = .done(result: Result.failure(error))
 			print("MainListViewModel.\(#function), error=\(error.localizedDescription)")
 		}
 	}

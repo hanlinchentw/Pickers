@@ -62,7 +62,7 @@ extension MainViewController {
 extension MainViewController {
   func setupListView(coordinator: MainCoordinator) {
     listVC = UIHostingController(
-      rootView: MainListView()
+			rootView: MainListView(locationService: LocationService.shared)
         .environmentObject(coordinator)
         .environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
     )

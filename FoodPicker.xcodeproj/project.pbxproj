@@ -21,6 +21,8 @@
 		B60E87E628A54BFE0062A2B2 /* BaseCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60E87E528A54BFE0062A2B2 /* BaseCoreService.swift */; };
 		B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */; };
 		B612E3FD28DE03D6005721E3 /* TypeAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E3FC28DE03D6005721E3 /* TypeAlias.swift */; };
+		B612E3FF28DEFC3A005721E3 /* LocationNotFoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E3FE28DEFC3A005721E3 /* LocationNotFoundView.swift */; };
+		B612E40128DEFE05005721E3 /* AppSettingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E40028DEFE05005721E3 /* AppSettingHelper.swift */; };
 		B615FF9E28CADCAD000BD3A0 /* ToastStyleTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615FF9D28CADCAD000BD3A0 /* ToastStyleTheme.swift */; };
 		B615FFA628CAFD60000BD3A0 /* MoreListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615FFA528CAFD60000BD3A0 /* MoreListView.swift */; };
 		B630C32D28DA0C35004B9595 /* SearchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630C32C28DA0C35004B9595 /* SearchListView.swift */; };
@@ -190,6 +192,8 @@
 		B60E87E528A54BFE0062A2B2 /* BaseCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoreService.swift; sourceTree = "<group>"; };
 		B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		B612E3FC28DE03D6005721E3 /* TypeAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAlias.swift; sourceTree = "<group>"; };
+		B612E3FE28DEFC3A005721E3 /* LocationNotFoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationNotFoundView.swift; sourceTree = "<group>"; };
+		B612E40028DEFE05005721E3 /* AppSettingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingHelper.swift; sourceTree = "<group>"; };
 		B615FF9D28CADCAD000BD3A0 /* ToastStyleTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastStyleTheme.swift; sourceTree = "<group>"; };
 		B615FFA528CAFD60000BD3A0 /* MoreListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreListView.swift; sourceTree = "<group>"; };
 		B630C32C28DA0C35004B9595 /* SearchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListView.swift; sourceTree = "<group>"; };
@@ -639,6 +643,7 @@
 				B6413B3228BB2C7A0071F5B3 /* DateUtils.swift */,
 				B6CBE89428D5EE5E005BCA7D /* KeyboardHelper.swift */,
 				B612E3FC28DE03D6005721E3 /* TypeAlias.swift */,
+				B612E40028DEFE05005721E3 /* AppSettingHelper.swift */,
 			);
 			path = Utilis;
 			sourceTree = "<group>";
@@ -662,6 +667,7 @@
 				B634A71628A76B2E00796D63 /* HorizontalSectionView.swift */,
 				B634A71828A76B4800796D63 /* VerticalSectionView.swift */,
 				B615FFA528CAFD60000BD3A0 /* MoreListView.swift */,
+				B612E3FE28DEFC3A005721E3 /* LocationNotFoundView.swift */,
 			);
 			path = MainListView;
 			sourceTree = "<group>";
@@ -1097,6 +1103,7 @@
 				B6EF13A428B0BE62009345D6 /* DummyRestaurantCardView.swift in Sources */,
 				B64BE92428B28D3F0072F6A0 /* Alert.swift in Sources */,
 				B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */,
+				B612E3FF28DEFC3A005721E3 /* LocationNotFoundView.swift in Sources */,
 				B6B9976F28BA0B21007C3D1D /* ListUpdateButton.swift in Sources */,
 				B6D4505928A9490F0076DE9A /* CoreDataManager.swift in Sources */,
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
@@ -1198,6 +1205,7 @@
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */,
 				B6B9976D28BA0AAD007C3D1D /* ListSaveButton.swift in Sources */,
+				B612E40128DEFE05005721E3 /* AppSettingHelper.swift in Sources */,
 				B60CC1B828C63E7100AF2B53 /* MainViewController.swift in Sources */,
 				B6FCEC0028BB1121007A8041 /* ListCardView.swift in Sources */,
 				B6EF139F28B0AEC0009345D6 /* PresentHelper.swift in Sources */,

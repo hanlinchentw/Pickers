@@ -40,11 +40,7 @@ class MainListSectionViewModel: ObservableObject, Selectable, Likable {
 	@Inject var selectService: SelectedCoreService
 	@Inject var likeService: LikedCoreService
 	
-	@Published var loadingState: LoadingState = .idle {
-		didSet {
-			print(">>> loadingStata = \(loadingState)")
-		}
-	}
+	@Published var loadingState: LoadingState = .loading
 	@Published var viewObjects: Array<RestaurantViewObject> = []
 	
 	var dataCount: Int {
@@ -63,24 +59,22 @@ class MainListSectionViewModel: ObservableObject, Selectable, Likable {
 		self.section = section
 	}
 	
-	func fetchData() {
+	func fetchData() async throws {
+		let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: section.searchOption, limit: section.count, offset: 0)
+		let result = try await BusinessService.fetchBusinesses(query: query)
 		OperationQueue.main.addOperation {
-			self.loadingState = .loading
+			self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }
 		}
-		do {
-			let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: section.searchOption, limit: section.count, offset: 0)
-			Task {
-				let result = try await BusinessService.fetchBusinesses(query: query)
-				OperationQueue.main.addOperation {
-					self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }
-					self.loadingState = .loaded
-				}
-			}
-		} catch {
-			print("MainListViewModel.\(#function), error=\(error.localizedDescription)")
-			OperationQueue.main.addOperation {
-				self.viewObjects = []
-				self.loadingState = .error
+	}
+
+	@MainActor
+	func refresh() {
+		Task {
+			loadingState = .loading
+			if let _ = try? await fetchData() {
+				loadingState = viewObjects.isEmpty ? .error : .loaded
+			} else {
+				loadingState = .error
 			}
 		}
 	}

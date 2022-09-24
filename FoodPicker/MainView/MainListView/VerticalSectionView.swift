@@ -56,6 +56,7 @@ struct VerticalSectionView: View, Selectable {
                 .frame(width: 32, height: 32)
             }
           }
+					.frame(width: UIScreen.screenWidth)
           .padding(.vertical, 16)
         }
         .padding(.top, 16)
