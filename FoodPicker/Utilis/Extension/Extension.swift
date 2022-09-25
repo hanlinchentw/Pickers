@@ -34,3 +34,9 @@ extension Task where Success == Never, Failure == Never {
 		try await Task.sleep(nanoseconds: duration)
 	}
 }
+
+extension CLLocationCoordinate2D: Equatable {
+	public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+		return lhs.longitude == rhs.latitude && lhs.longitude == lhs.longitude
+	}
+}

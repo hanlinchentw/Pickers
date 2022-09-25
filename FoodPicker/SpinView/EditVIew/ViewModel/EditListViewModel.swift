@@ -15,7 +15,7 @@ class EditListViewModel: ObservableObject {
 
   @Published var editListName: String = ""
   @Published var viewObjects: Array<RestaurantViewObject> = []
-  @Published var showAlert: Bool = false
+  @Published var alert: EditAlertType? = nil
 
   var saveButtonDisabled: Bool {
     return editListName.isEmpty
@@ -28,7 +28,7 @@ class EditListViewModel: ObservableObject {
 
   func saveList(completion: @escaping () -> Void) {
     if viewObjects.isEmpty {
-      showAlert = true
+			alert = .emptyList
       return
     }
     list?.name = editListName
@@ -47,3 +47,9 @@ extension EditListViewModel {
   }
 }
 
+extension EditListViewModel {
+	enum EditAlertType: Int {
+		case emptyList = 0
+		case deleteList
+	}
+}

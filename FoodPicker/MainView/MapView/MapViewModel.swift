@@ -80,9 +80,9 @@ class MapViewModel: Likable, Selectable {
       .store(in: &set)
   }
 
-  func fetchRestaurant(latitude: Double? = nil, longitude: Double?) async  {
-		print("fetchRestaurant >>> ")
+  func fetchRestaurant(latitude: Double?, longitude: Double?) async  {
     do {
+			print("lastLocation >>> \(locationService.lastLocation)")
 			guard let latitude = latitude, let longitude = longitude else {
 				throw LoactionError.locationNotFound(message: "Location not found")
 			}

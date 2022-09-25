@@ -19,7 +19,6 @@ struct EditListContainer: View {
   
   var body: some View {
     VStack {
-
       HStack {
         Text(numOfRestaurantsDisplayText)
           .en14()

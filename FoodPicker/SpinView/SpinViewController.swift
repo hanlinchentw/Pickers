@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 import Combine
 import SwiftUI
+import CoreLocation
+import MapKit
 
 class SpinViewController: UIViewController {
 	static let wheelWidth: CGFloat = 330
@@ -59,10 +61,10 @@ class SpinViewController: UIViewController {
 		presenter.refresh()
 		bindRefresh()
 		bindResult()
+		configureBottomSheetView()
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		configureBottomSheetView()
 		presenter.refresh()
 		view.backgroundColor = .backgroundColor
 		navigationController?.navigationBar.isHidden = true
@@ -113,6 +115,7 @@ class SpinViewController: UIViewController {
 	@objc func handleCleanButtonTapped() {
 		PresentHelper.showAlert(model:
 				.init(
+					title: "Reset Picker",
 					rightButtonText: "OK",
 					leftButtonText: "Cancel",
 					rightButtonOnPress: {
@@ -121,15 +124,10 @@ class SpinViewController: UIViewController {
 						self.resultView.restaurant = nil
 					}
 				)
-		) {
-			Text("Reset Picker")
-				.en18Bold()
-				.foregroundColor(.butterScotch)
-				.padding(.top, 16)
-		}
+		)
 	}
 }
-//MARK: - LuckyWheelDelegate, LuckyWheelDataSource
+//MARK: - SpinWheelDelegate, SpinWheelDataSource
 extension SpinViewController: SpinWheelDelegate, SpinWheelDataSource {
 	func wheelDidChangeValue(_ newValue: Int) {
 		presenter.resultDidChanged(newValue)
@@ -154,6 +152,17 @@ extension SpinViewController: BottomSheetViewControllerDelegate{
 				self.resultView.alpha = 1
 			}
 		}
+	}
+}
+// MARK: - ResultViewDelegate
+extension SpinViewController: SpinResultViewDelegate {
+	func pushToDetailVC(_ restaurant: RestaurantViewObject) {
+		let detailView = DetailController(id: restaurant.id)
+		navigationController?.pushViewController(detailView, animated: true)
+	}
+	
+	func openMap(_ restaurant: RestaurantViewObject) {
+		MKMapView.openMapForPlace(name: restaurant.name, coordinate:  CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude) )
 	}
 }
 //MARK: - Auto layout
@@ -200,12 +209,11 @@ extension SpinViewController {
 		self.view.addSubview(bottomSheetVC.view)
 		let height = view.frame.height
 		let width  = view.frame.width
-		let offset = 72 * view.widthMultiplier + Self.wheelHeight + 24
-		
-		bottomSheetVC.view.frame = CGRect(x: 0, y: offset, width: width, height: height)
+		bottomSheetVC.view.frame = CGRect(x: 0, y: 100 + 330, width: width, height: height)
 	}
 	
 	func configureResultView() {
+		resultView.delegate = self
 		view.addSubview(resultView)
 		resultView.centerX(inView: self.view)
 		resultView.anchor(top: self.spinWheel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)

@@ -15,8 +15,8 @@ final class PresentHelper {
     return UIApplication.shared.keyWindow?.rootViewController
   }
 
-  static func showAlert<Content: View>(model: AlertPresentationModel, content: (() -> Content)? = nil) {
-    let alertView = Alert(model: model, content: content)
+  static func showAlert(model: AlertPresentationModel) {
+    let alertView = Alert(model: model)
     let alertVC = UIHostingController(rootView: alertView)
     alertVC.modalPresentationStyle = .overCurrentContext
     alertVC.modalTransitionStyle = .crossDissolve

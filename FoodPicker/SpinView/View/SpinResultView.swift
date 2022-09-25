@@ -41,24 +41,25 @@ class SpinResultView : UIView {
 		return stack
 	}()
 	
-	private lazy var mapButton: UIButton = {
-		let btn = UIButton()
-		btn.setImage(UIImage(named: "btnGoogleMaps"), for: .normal)
-		btn.layer.masksToBounds = false
-		btn.layer.shadowColor = UIColor(white: 0, alpha: 0.7).cgColor
-		btn.layer.shadowOffset = CGSize(width: 0, height: 0)
-		btn.layer.shadowOpacity = 0.3
-		btn.layer.shadowRadius = 3
-		btn.addTarget(self, action: #selector(handleMapButtonOnPressed), for: .touchUpInside)
+	private lazy var mapButton: UIImageView = {
+		let view = UIImageView()
+		view.layer.masksToBounds = false
+		view.layer.shadowColor = UIColor(white: 0, alpha: 0.7).cgColor
+		view.layer.shadowOpacity = 0.3
+		view.layer.shadowOffset = CGSize(width: 0, height: 0)
+		view.layer.shadowRadius = 3
+		view.image = UIImage(named: "btnGoogleMaps")
+		let shadowView = UIView()
+		shadowView.backgroundColor = .clear
+		shadowView.layer.cornerRadius = 12
+		shadowView.layer.masksToBounds = true
 
-		let roundedTransparentView = UIView()
-		roundedTransparentView.backgroundColor = .clear
-		roundedTransparentView.layer.cornerRadius = 12
-		roundedTransparentView.layer.masksToBounds = true
-
-		btn.addSubview(roundedTransparentView)
-		roundedTransparentView.fit(inView: btn)
-		return btn
+		view.addSubview(shadowView)
+		shadowView.fit(inView: view)
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleMapButtonOnPressed))
+		view.addGestureRecognizer(tap)
+		view.isUserInteractionEnabled = true
+		return view
 	}()
 	
 	private lazy var containerView: UIView = {
@@ -70,6 +71,10 @@ class SpinResultView : UIView {
 		labelStack.anchor(top: restaurantImageView.bottomAnchor, left: view.leftAnchor, paddingTop: 8, paddingLeft: 16)
 		view.addSubview(mapButton)
 		mapButton.anchor(right: view.rightAnchor, bottom: view.bottomAnchor, paddingRight: 12, paddingBottom: 12)
+		
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleResultViewTapped))
+		view.addGestureRecognizer(tap)
+		view.isUserInteractionEnabled = true
 		return view
 	}()
 	

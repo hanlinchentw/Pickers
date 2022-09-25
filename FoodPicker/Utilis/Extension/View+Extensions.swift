@@ -51,7 +51,7 @@ extension View {
 		.animation(.easeInOut(duration: 0.3), value: shouldShow)
 	}
 	
-	func `showAlert`<Content: View>(when shouldShow: Bool, alert: () -> Alert<Content>) -> some View {
+	func `showAlert`(when shouldShow: Bool, alert: () -> Alert) -> some View {
 		showCover(when: shouldShow, content: alert)
 	}
 	

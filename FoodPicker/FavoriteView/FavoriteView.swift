@@ -45,17 +45,13 @@ struct FavoriteView: View {
       Alert(model:
           .init(
             title: "Remove from My Favorite",
+						content: editUsecase.deletionAlertText,
             rightButtonText: "Remove",
             leftButtonText: "Cancel",
             rightButtonOnPress: editUsecase.removeItem,
             leftButtonOnPress: editUsecase.cancel
           )
-      ) {
-        Text(editUsecase.deletionAlertText)
-          .en16()
-          .multilineTextAlignment(.center)
-          .lineLimit(3)
-      }
+      )
     })
     .navigationBarHidden(true)
     .onTapGesture {

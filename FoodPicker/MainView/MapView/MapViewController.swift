@@ -17,6 +17,7 @@ import Toast_Swift
 class MapViewController: UIViewController {
 	static let CAROUSEL_HEIGHT: CGFloat = 250
 	//MARK: - Properties
+	@Inject var locationService: LocationService
 	weak var coordinator: MainCoordinator?
 	private let viewModel = MapViewModel()
 	let carouselView = CarouselCollectionView()
@@ -48,11 +49,15 @@ class MapViewController: UIViewController {
 		configureCollectionView()
 		configureDismissButton()
 		configureLocateButton()
-	}
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		Task { await viewModel.fetchRestaurant(latitude: viewModel.userLatitude, longitude: viewModel.userLongitude) }
+		
+		Task {
+			/*
+			 User's location is updated at main thread (it takes some time).
+			 workaround: give 1 second delay before fetch data.
+			 */
+			try? await Task.sleep(seconds: 1)
+			await viewModel.fetchRestaurant(latitude: viewModel.userLatitude, longitude: viewModel.userLongitude)
+		}
 	}
 	// MARK: - Selector
 	@objc func dismissMapView() {
@@ -87,7 +92,6 @@ class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
 	func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
 		let centerCoordinate = mapView.centerCoordinate
-		
 		PresentHelper.showTapToast(
 			on: self,
 			withMessage: "Search this area",

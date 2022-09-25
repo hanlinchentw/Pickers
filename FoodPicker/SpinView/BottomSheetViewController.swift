@@ -91,14 +91,10 @@ class BottomSheetViewController : UIViewController {
   }
 
   @objc func handleUpdateButtonTapped() {
-    PresentHelper.showAlert(model: .init(title: "Warning", rightButtonText: "OK", leftButtonText: "Cancel", rightButtonOnPress: {
+    PresentHelper.showAlert(model: .init(title: "Warning",  content: "Unselected restaurants will be deleted.", rightButtonText: "OK", leftButtonText: "Cancel", rightButtonOnPress: {
       self.viewModel.updateList()
       self.tableView.reloadData()
-    })) {
-      Text("Unselected restaurants will be deleted.")
-        .en16()
-        .foregroundColor(.black)
-    }
+    }))
   }
 
   func applyList(_ list: List) {

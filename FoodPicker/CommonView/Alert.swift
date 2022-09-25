@@ -10,6 +10,8 @@ import SwiftUI
 
 struct AlertPresentationModel {
   var title: String? = nil
+	var content: String? = nil
+
   var rightButtonText: String? = nil
   var leftButtonText: String? = nil
 
@@ -20,11 +22,10 @@ struct AlertPresentationModel {
   var leftButtonColor: Color = .black
 }
 
-struct Alert<Content: View>: View {
+struct Alert: View {
   @Environment(\.presentationMode) var presentaionMode
 
   var model: AlertPresentationModel
-  var content: (() -> Content)?
 
   var body: some View {
     ZStack {
@@ -44,9 +45,12 @@ struct Alert<Content: View>: View {
             .multilineTextAlignment(.center)
             .padding(.top, 24)
         }
-        if let content = content {
-          content()
+				if let content = model.content {
+          Text(content)
+						.en14()
+						.foregroundColor(.black)
             .padding(.horizontal, 28)
+						.multilineTextAlignment(.center)
             .padding(.top, 8)
         }
         HStack {
@@ -88,13 +92,11 @@ struct Alert<Content: View>: View {
 
 struct Alert_Previews<Content: View>: PreviewProvider {
   static var previews: some View {
-    Alert(model: .init(title: "", rightButtonText: "", leftButtonText: "", rightButtonOnPress: {
+		Alert(model: .init(title: "", content: "",rightButtonText: "", leftButtonText: "", rightButtonOnPress: {
 
     }, leftButtonOnPress: {
 
-    })) {
-      Text("123")
-    }
+    }))
   }
 }
 
