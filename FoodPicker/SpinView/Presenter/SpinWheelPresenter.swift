@@ -15,6 +15,7 @@ class SpinWheelPresenter  {
 
   @Published var restaurants: Array<RestaurantViewObject> = []
   @Published var isRefresh: Bool = false
+	@Published var result: RestaurantViewObject?
 
   private var set = Set<AnyCancellable>()
 
@@ -24,7 +25,7 @@ class SpinWheelPresenter  {
 
   var numOfSection: Int {
     if restaurants.isEmpty { return 4 }
-    return restaurants.count * 2
+		return restaurants.count * 2
   }
 
   var isSpinButtonEnabled: Bool {
@@ -33,14 +34,13 @@ class SpinWheelPresenter  {
 
   var itemForSection : [WheelItem] {
     if restaurants.isEmpty { return Self.defaultItems }
-
     var items1 = [WheelItem]()
     var items2 = [WheelItem]()
 
     if restaurants.count % 2 == 0 {
       for (index, item) in restaurants.enumerated(){
         let itemColor : UIColor = index % 2 != 0 ? .white : .pale
-        let wheelItem1 = WheelItem(title: item.name, titleColor: .customblack, itemColor: itemColor)
+				let wheelItem1 = WheelItem(id: item.id, title: item.name, titleColor: .customblack, itemColor: itemColor)
         items1.append(wheelItem1)
         items2 = items1
       }
@@ -48,8 +48,8 @@ class SpinWheelPresenter  {
       for (index, item) in self.restaurants.enumerated(){
         let itemColor : UIColor = index % 2 != 0 ? .white : .pale
         let oppsiteColor : UIColor = itemColor == .white ? .pale : .white
-        let wheelItem1 = WheelItem(title: item.name, titleColor: .customblack, itemColor: itemColor)
-        let wheelItem2 = WheelItem(title: item.name, titleColor: .customblack, itemColor: oppsiteColor)
+        let wheelItem1 = WheelItem(id: item.id, title: item.name, titleColor: .customblack, itemColor: itemColor)
+        let wheelItem2 = WheelItem(id: item.id, title: item.name, titleColor: .customblack, itemColor: oppsiteColor)
         items1.append(wheelItem1)
         items2.append(wheelItem2)
       }
@@ -86,12 +86,17 @@ class SpinWheelPresenter  {
     try? SelectedRestaurant.deleteAll(in: moc)
     try? moc.save()
   }
+	
+	func resultDidChanged(_ index: Int) {
+		let wheelItem = itemForSection[index]
+		self.result = restaurants.first(where: { $0.id == wheelItem.id })
+	}
 }
 
 extension SpinWheelPresenter {
-  static let item1 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .white)
-  static let item2 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .pale)
-  static let item3 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .white)
-  static let item4 = WheelItem(title: "Picker!", titleColor: .customblack, itemColor: .pale)
+	static let item1 = WheelItem(id: UUID().uuidString, title: "Picker!", titleColor: .customblack, itemColor: .white)
+  static let item2 = WheelItem(id: UUID().uuidString, title: "Picker!", titleColor: .customblack, itemColor: .pale)
+  static let item3 = WheelItem(id: UUID().uuidString, title: "Picker!", titleColor: .customblack, itemColor: .white)
+  static let item4 = WheelItem(id: UUID().uuidString, title: "Picker!", titleColor: .customblack, itemColor: .pale)
   static let defaultItems = [item1, item2, item3, item4]
 }

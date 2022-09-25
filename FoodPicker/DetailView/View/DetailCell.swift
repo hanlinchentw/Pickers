@@ -30,7 +30,6 @@ class DetailCell : UICollectionViewCell {
   private let contentLabel : UILabel = {
     let label = UILabel()
     label.font = UIFont.arial14MT
-    label.text = "No Providing"
     label.numberOfLines = 0
     label.textColor = .black
     return label
@@ -40,10 +39,10 @@ class DetailCell : UICollectionViewCell {
   private lazy var actionButton : UIImageView = {
     let view = UIImageView()
     view.layer.masksToBounds = false
-    view.layer.shadowColor = UIColor.customblack.cgColor
-    view.layer.shadowOpacity = 0.5
+		view.layer.shadowColor = UIColor(white: 0, alpha: 0.7).cgColor
+    view.layer.shadowOpacity = 0.3
     view.layer.shadowOffset = CGSize(width: 0, height: 0)
-    view.layer.shadowRadius = 5
+    view.layer.shadowRadius = 3
 
     let shadowView = UIView()
     shadowView.backgroundColor = .clear
@@ -74,8 +73,8 @@ class DetailCell : UICollectionViewCell {
   }
   //MARK: - Helpers
   func configureCellInformation(){
-//    guard let viewModel = viewModel else { return }
     guard let presenter = presenter else {
+			contentLabel.text = "No Providing"
       return
     }
     titleLabel.text = presenter.title

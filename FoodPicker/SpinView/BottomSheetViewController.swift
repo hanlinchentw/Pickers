@@ -197,8 +197,8 @@ extension BottomSheetViewController {
     var yPosition: CGFloat {
       switch self {
       case .top: return 100
-      case .middle: return 72 + 330 + 24
-      case .bottom: return 330 + 240 + 100
+      case .middle: return 100 + 330
+			case .bottom: return UIScreen.screenHeight - 100
       }
     }
   }

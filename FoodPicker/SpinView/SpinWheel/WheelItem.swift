@@ -10,12 +10,14 @@ import Foundation
 import UIKit
 
 @objc public class WheelItem: NSObject{
-    var title :String?
-    var titleColor :UIColor?
-    var itemColor :UIColor?
-    public init (title :String ,titleColor:UIColor ,itemColor:UIColor){
-        self.title = title
-        self.titleColor = titleColor
-        self.itemColor = itemColor
-    }
+	var id : String
+	var title :String?
+	var titleColor :UIColor?
+	var itemColor :UIColor?
+	public init (id: String, title :String ,titleColor:UIColor ,itemColor:UIColor){
+		self.id = id
+		self.title = title
+		self.titleColor = titleColor
+		self.itemColor = itemColor
+	}
 }

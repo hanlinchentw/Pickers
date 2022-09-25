@@ -8,6 +8,7 @@
 
 import SwiftUI
 import CoreData
+import Toast_Swift
 
 enum LoadingState {
 	case idle
@@ -33,19 +34,20 @@ struct MainListView: View {
 						searchText: $searchViewModel.searchText,
 						mapButtonOnPress: { coordinator.presentMapView() }
 					)
-
+					
 					if locationService.lastLocation != nil {
 						VStack {
 							if searchViewModel.showSearchResult {
 								SearchListView(vm: searchViewModel)
+							} else if popularViewModel.loadingState == .error && nearbyViewModel.loadingState == .error {
+								emptyView
 							} else {
 								HorizontalSectionView(vm: popularViewModel)
 								VerticalSectionView(vm: nearbyViewModel)
 							}
 						}
 						.onAppear {
-							popularViewModel.refresh()
-							nearbyViewModel.refresh()
+							refreshList()
 						}
 					} else {
 						LocationNotFoundView().padding(.top, 50)
@@ -59,5 +61,25 @@ struct MainListView: View {
 		}
 		.navigationBarHidden(true)
 		.onTapToResign()
+	}
+	
+	var emptyView: some View {
+		Button {
+			refreshList()
+		} label: {
+			HStack {
+				Text("Please try again")
+					.en16()
+					.foregroundColor(.black.opacity(0.6))
+				Image(systemName:"arrow.triangle.2.circlepath")
+					.frame(width: 56, height: 56)
+					.foregroundColor(.butterScotch)
+			}
+		}
+	}
+	
+	func refreshList() {
+		popularViewModel.refresh()
+		nearbyViewModel.refresh()
 	}
 }

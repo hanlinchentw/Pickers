@@ -25,19 +25,31 @@ final class PresentHelper {
   }
 
   static func showTapToast(
-    on vc: UIViewController,
+		on vc: UIViewController? = topViewController,
     withTitle title: String? = nil,
     withMessage message: String,
     duration: TimeInterval,
     position: ToastPosition,
-    makeStyle: @escaping () -> ToastStyle,
+    style: ToastStyle,
     tap: @escaping (Bool) -> Void
   ) {
     ToastManager.shared.isTapToDismissEnabled = true
-    let point = CGPoint(x: vc.view.bounds.size.width / 2.0, y: SafeAreaUtils.top + 32)
-
-		vc.view.hideAllToasts()
-    vc.view.makeToast(message, duration: duration, point: point, title: title, image: nil, style: makeStyle(), completion: tap)
-
+		let point = CGPoint(x: UIScreen.screenWidth / 2, y: SafeAreaUtils.top + 32)
+		vc?.view?.hideAllToasts()
+		vc?.view?.makeToast(message, duration: duration, point: point, title: title, image: nil, style: style, completion: tap)
   }
+	
+	static func showToast(
+		on vc: UIViewController? = topViewController,
+		withTitle title: String? = nil,
+		withMessage message: String,
+		duration: TimeInterval,
+		position: ToastPosition,
+		style: ToastStyle
+	) {
+		let point = CGPoint(x: UIScreen.screenWidth / 2, y: SafeAreaUtils.top + 32)
+		vc?.view?.hideAllToasts()
+		vc?.view?.makeToast(message, duration: duration, point: point, title: title, image: nil, style: style, completion: { _ in })
+	}
+	
 }

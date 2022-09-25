@@ -66,9 +66,10 @@ class MainListSectionViewModel: ObservableObject, Selectable, Likable {
 			self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }
 		}
 	}
-
+	
 	@MainActor
 	func refresh() {
+		if loadingState == .loaded { return }
 		Task {
 			loadingState = .loading
 			if let _ = try? await fetchData() {

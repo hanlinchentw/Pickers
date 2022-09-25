@@ -47,6 +47,7 @@ enum BusinessProvider: NetworkProvider {
               "radius": 3000,
               "sort_by": sortBy,
               "locale":"zh_TW"]
+
     case let .searchByTerm(lat, lon, term):
       return ["latitude":lat, "longitude": lon,
               "limit" : 50,

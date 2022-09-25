@@ -9,13 +9,13 @@
 import Toast_Swift
 
 extension ToastStyle {
-  static var searchThisArea: ToastStyle {
-    var style = ToastStyle()
-    style.messageColor = .butterscotch
-    style.cornerRadius = 22
-    style.backgroundColor = .white
-    style.horizontalPadding = 16
-    style.messageAlignment = .center
-    return style
-  }
+	static var whiteCapsuleButterText: ToastStyle {
+		var style = ToastStyle()
+		style.messageColor = .butterscotch
+		style.cornerRadius = 18
+		style.backgroundColor = .white
+		style.horizontalPadding = 16
+		style.messageAlignment = .center
+		return style
+	}
 }

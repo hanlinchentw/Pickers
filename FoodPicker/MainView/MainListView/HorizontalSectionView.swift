@@ -52,7 +52,9 @@ struct HorizontalSectionView: View, Selectable, Likable {
           }
           .padding(.leading, 16)
         }
-      }
+			}
     }
   }
+	
+	
 }
