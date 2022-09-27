@@ -22,7 +22,14 @@ class RestaurantCardCell: UICollectionViewCell {
     }
   }
 
-  private let restaurantImageView = CachedImageView()
+	private let restaurantImageView: UIImageView = {
+		let iv = UIImageView()
+		iv.clipsToBounds = true
+		iv.layer.cornerRadius = 16
+		iv.backgroundColor = .lightlightGray
+		iv.contentMode = .scaleAspectFill
+		return iv
+	}()
 
   private let restaurantName: UILabel = .init(font: .arial14BoldMT, color: .black)
 
@@ -49,10 +56,10 @@ class RestaurantCardCell: UICollectionViewCell {
     backgroundColor = .white
     layer.cornerRadius = 16
     layer.masksToBounds = true
+
     addSubview(restaurantImageView)
-    let imageHeight = 130 * heightMultiplier
-    restaurantImageView.anchor(top:topAnchor, left: leftAnchor, right: rightAnchor,
-                           paddingTop: 8, paddingLeft:8, paddingRight: 8, height: imageHeight)
+    restaurantImageView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor,
+                           paddingTop: 8, paddingLeft:8, paddingRight: 8, height: 130)
 
     addSubview(selectButton)
     selectButton.anchor(top: restaurantImageView.topAnchor, right: restaurantImageView.rightAnchor, paddingRight: 8)
@@ -103,11 +110,16 @@ class RestaurantCardCell: UICollectionViewCell {
     priceLabel.text = presenter.priceCategoryDistanceText
     composeRatedLabel(rating: presenter.rating, reviewCount: presenter.reviewCount)
     businessLabel.text = presenter.openOrCloseString
-    restaurantImageView.url = presenter.imageUrl
     selectButton.setImage(UIImage(named: presenter.actionButtonImage)?
       .withRenderingMode(.alwaysOriginal), for: .normal)
     likeButton.setImage(UIImage(named: presenter.likeButtonImage)?
       .withRenderingMode(.alwaysOriginal) , for: .normal)
+		
+		if let imageUrl = URL(string: presenter.imageUrl) {
+			restaurantImageView.af.setImage(withURL: imageUrl)
+		} else {
+			restaurantImageView.image = #imageLiteral(resourceName: "defaultRestaurant")
+		}
   }
 
   func composeRatedLabel(rating: String, reviewCount: String) {

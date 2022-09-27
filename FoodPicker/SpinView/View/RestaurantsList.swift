@@ -16,7 +16,11 @@ protocol RestaurantsListDelegate: AnyObject {
 
 class RestaurantsList: UITableView{
   //MARK: - Properties
-  var restaurants = [RestaurantViewObject]() { didSet { self.reloadData() }}
+  var restaurants = [RestaurantViewObject]() { didSet {
+		UIView.performWithoutAnimation {
+			self.reloadDataSmoothly()
+		}		
+	}}
   weak var listDelegate: RestaurantsListDelegate?
   //MARK: - Lifecycle
   override init(frame: CGRect, style: UITableView.Style) {
@@ -53,8 +57,7 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource {
 // MARK: - RestaurantListCellDelegate
 extension RestaurantsList: RestaurantListCellDelegate {
   func didTapActionButton(_ restaurant: RestaurantViewObject) {
-    let index = restaurants.firstIndex(where: {$0.id == restaurant.id })!
-    let indexPath = IndexPath.init(row: index, section: 0)
-    listDelegate?.didTapActionButton(restaurant, indexPath: indexPath)
+    let index = restaurants.firstIndex(where: { $0.id == restaurant.id })!
+    listDelegate?.didTapActionButton(restaurant, indexPath: .init(row: index, section: 0))
   }
 }

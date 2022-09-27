@@ -49,27 +49,6 @@ class BottomSheetViewController : UIViewController {
 			.store(in: &set)
 	}
 	//MARK: - Selectors
-	@objc func panGesture(recognizer: UIPanGestureRecognizer) {
-		let translation = recognizer.translation(in: self.view)
-		let oldYPosition = self.view.frame.minY
-		let newYPosition = oldYPosition + translation.y
-		switch recognizer.state {
-		case .changed:
-			if newYPosition <= 0 { return }
-			self.view.frame = CGRect(x: 0, y: newYPosition, width: view.frame.width, height: view.frame.height)
-			recognizer.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
-		case .ended:
-			if newYPosition < UIScreen.main.bounds.height / 1.5, newYPosition > UIScreen.main.bounds.height / 3 {
-				self.animateIn(.middle)
-			} else if newYPosition > UIScreen.main.bounds.height / 1.5 {
-				self.animateIn(.bottom)
-			} else {
-				self.animateIn(.top)
-			}
-		default: break
-		}
-	}
-	
 	@objc func handleSaveButtonTapped() {
 		if viewModel.hasNoRestaurantSelected {
 			viewModel.error = .saveEmptyList
@@ -143,12 +122,33 @@ extension BottomSheetViewController{
 extension BottomSheetViewController: RestaurantsListDelegate {
 	func didTapActionButton(_ restaurant: RestaurantViewObject, indexPath: IndexPath) {
 		OperationQueue.main.addOperation {
-			self.viewModel.didTapActionButton(restaurant)
+			self.viewModel.didTapSelectButton(restaurant, at: indexPath)
 		}
 	}
 }
 //MARK: - UIGestureRecognizerDelegate
 extension BottomSheetViewController: UIGestureRecognizerDelegate {
+	@objc func panGesture(recognizer: UIPanGestureRecognizer) {
+		let translation = recognizer.translation(in: self.view)
+		let oldYPosition = self.view.frame.minY
+		let newYPosition = oldYPosition + translation.y
+		switch recognizer.state {
+		case .changed:
+			if newYPosition <= 0 { return }
+			self.view.frame = CGRect(x: 0, y: newYPosition, width: view.frame.width, height: view.frame.height)
+			recognizer.setTranslation(CGPoint(x: 0, y: 0), in: self.view)
+		case .ended:
+			if newYPosition < UIScreen.main.bounds.height / 1.5, newYPosition > UIScreen.main.bounds.height / 3 {
+				self.animateIn(.middle)
+			} else if newYPosition > UIScreen.main.bounds.height / 1.5 {
+				self.animateIn(.bottom)
+			} else {
+				self.animateIn(.top)
+			}
+		default: break
+		}
+	}
+
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 		let y = view.frame.minY
 		if y < 200{

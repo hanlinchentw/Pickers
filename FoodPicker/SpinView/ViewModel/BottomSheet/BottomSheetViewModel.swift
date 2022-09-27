@@ -22,29 +22,27 @@ class BottomSheetViewModel: Selectable {
 	@Published var error: EditListError? = nil
 	private var set = Set<AnyCancellable>()
 	
+	var hasNoRestaurantSelected: Bool { !restaurants.contains(where: { $0.isSelected }) }
+	
 	func refresh() {
 		// 給第一次進入轉盤頁用
-		if let selectedRestaurants = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext) as? Array<SelectedRestaurant> {
-			let allSelectedRestaurants = selectedRestaurants.map { RestaurantViewObject(restaurant: $0.restaurant) }
-			if listState == .temp {
-				self.restaurants = allSelectedRestaurants
+		if listState == .temp {
+			if let allSelected = try? SelectedRestaurant.allIn(moc) as? Array<SelectedRestaurant> {
+				let viewObjects = allSelected.map { RestaurantViewObject(restaurant: $0.restaurant) }
+				self.restaurants = viewObjects
 			}
 		}
 		isRefresh = true
-	}
-	
-	var hasNoRestaurantSelected: Bool {
-		!restaurants.contains(where: { $0.isSelected })
 	}
 
 	func observeSelectedRestaurantChange() {
 		NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
 			.sink { notification in
 				guard let userInfo = notification.userInfo else { return }
-				
+
 				let insert = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>
 				let delete = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>
-				
+
 				if let insert = insert, let object = insert.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
 					if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
 						self.restaurants[index].isSelected = true
@@ -57,16 +55,15 @@ class BottomSheetViewModel: Selectable {
 						self.restaurants[index].isSelected  = false
 					}
 				}
+
 				self.listState = self.listState == .temp ? .temp : .edited
-				
 				self.isRefresh = true
 			}
 			.store(in: &set)
 	}
 	
-	func didTapActionButton(_ target: RestaurantViewObject) {
+	func didTapSelectButton(_ target: RestaurantViewObject, at indexPath: IndexPath) {
 		selectRestaurant(isSelected: target.isSelected, restaurant: target)
-		listState = listState == .temp ? .temp : .edited
 	}
 	
 	func createList(name: String) {
@@ -120,72 +117,5 @@ class BottomSheetViewModel: Selectable {
 		self.list?.delete(in: moc)
 		try? moc.save()
 		reset()
-	}
-}
-// MARK: - Edit list error
-extension BottomSheetViewModel {
-	enum EditListError: Error {
-		case updateEmptyList(delete: () -> Void)
-		case saveEmptyList
-		case listHaveNoName
-		
-		var alertModel: AlertPresentationModel {
-			switch self {
-			case .updateEmptyList(let delete):
-				return .init(title: "Empty List",  content: "Empty List will be deleted.", rightButtonText: "Delete", leftButtonText: "Cancel", rightButtonOnPress: {
-					delete()
-				})
-			case .listHaveNoName:
-				return .init(title: "Please give me a name 🥺", rightButtonText: "OK")
-			case .saveEmptyList:
-				return .init(title: "Empty",  content: "Select at least one restaurant", rightButtonText: "OK")
-			}
-		}
-	}
-}
-
-// MARK: - ListState
-extension BottomSheetViewModel {
-	enum ListState: Int {
-		case temp
-		case existed
-		case edited
-	}
-}
-// MARK: - UI Properties
-extension BottomSheetViewModel {
-	var listName: String {
-		switch listState {
-		case .temp: return "My selected list"
-		case .existed: return list!.name
-		case .edited:
-			let ns = NSMutableAttributedString(string: list!.name, attributes: .attributes([.arial16Bold, .black]))
-			ns.append(NSAttributedString(string: " *", attributes: .butterScotch))
-			return ns.string
-		}
-	}
-	
-	var saveButtonText: String? {
-		switch listState {
-		case .temp: return "Save list"
-		case .existed: return nil
-		case .edited: return "Save as new"
-		}
-	}
-	
-	var saveButtonHidden: Bool {
-		switch listState {
-		case .temp: return false
-		case .existed: return true
-		case .edited: return false
-		}
-	}
-	
-	var updateButtonHidden: Bool {
-		switch listState {
-		case .temp: return true
-		case .existed: return true
-		case .edited: return false
-		}
 	}
 }

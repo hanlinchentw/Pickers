@@ -15,7 +15,14 @@ protocol RestaurantListCellDelegate: AnyObject {
 class RestaurantListCell : UITableViewCell {
   //MARK: - Properties
   var presenter: RestaurantPresenter? { didSet { configure() } }
-  private let restaurantImageView = CachedImageView()
+	private let restaurantImageView: UIImageView = {
+		let iv = UIImageView()
+		iv.clipsToBounds = true
+		iv.layer.cornerRadius = 16
+		iv.backgroundColor = .lightlightGray
+		iv.contentMode = .scaleAspectFill
+		return iv
+	}()
   weak var delegate: RestaurantListCellDelegate?
   // MARK: - Components
   private let restaurantName : UILabel = {
@@ -36,6 +43,7 @@ class RestaurantListCell : UITableViewCell {
   lazy var actionButton : UIButton = {
     let button = UIButton(type: .system)
     button.addTarget(self, action: #selector(handleActionButtonTapped), for: .touchUpInside)
+		button.setDimension(width: 44, height: 44)
     return button
   }()
 
@@ -48,6 +56,7 @@ class RestaurantListCell : UITableViewCell {
 
   override func prepareForReuse() {
     super.prepareForReuse()
+		self.restaurantImageView.image = nil
     self.restaurantName.text = nil
     self.ratedLabel.text = nil
     self.priceLabel.text = nil
@@ -67,11 +76,11 @@ extension RestaurantListCell {
   func setupUI() {
     backgroundColor = .white
     addSubview(restaurantImageView)
-    let imageHeight = 93 * widthMultiplier
-    restaurantImageView.anchor(left: leftAnchor, paddingLeft: 12, width: imageHeight, height: imageHeight)
+
+    restaurantImageView.anchor(left: leftAnchor, paddingLeft: 12, width: 93, height: 93)
     restaurantImageView.centerY(inView: self)
     contentView.addSubview(actionButton)
-    actionButton.anchor(right: rightAnchor, paddingRight: 8, width: 48, height: 48)
+    actionButton.anchor(right: rightAnchor, paddingRight: 8)
     actionButton.centerY(inView: self)
 
     let captionStack = UIStackView(arrangedSubviews: [restaurantName, priceLabel, ratedLabel])
@@ -88,9 +97,14 @@ extension RestaurantListCell {
     guard let presenter = presenter else { return }
     restaurantName.text = presenter.name
     priceLabel.text = presenter.priceCategoryDistanceText
-    restaurantImageView.url = presenter.imageUrl
+
     actionButton.setImage(UIImage(named: presenter.actionButtonImage)?.withRenderingMode(.alwaysOriginal), for: .normal)
     composeRatedLabel(rating: presenter.ratingWithOneDecimal, reviewCount: presenter.reviewCount)
+		if let imageUrl = URL(string: presenter.imageUrl) {
+			restaurantImageView.af.setImage(withURL: imageUrl)
+		} else {
+			restaurantImageView.image = #imageLiteral(resourceName: "defaultRestaurant")
+		}
   }
 
   func composeRatedLabel(rating: String, reviewCount: String) {
