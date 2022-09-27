@@ -15,7 +15,7 @@ struct AlertPresentationModel {
   var rightButtonText: String? = nil
   var leftButtonText: String? = nil
 
-  var rightButtonOnPress: () -> Void
+  var rightButtonOnPress: (() -> Void)? = nil
   var leftButtonOnPress: (() -> Void)? = nil
 
   var rightButtonColor: Color = .black
@@ -54,14 +54,14 @@ struct Alert: View {
             .padding(.top, 8)
         }
         HStack {
-          Spacer()
+          
           if let leftButtonText = model.leftButtonText {
+						Spacer()
             Button {
               if let onPress = model.leftButtonOnPress {
                 onPress()
-              } else {
-                presentaionMode.wrappedValue.dismiss()
               }
+							presentaionMode.wrappedValue.dismiss()
             } label: {
               Text(leftButtonText)
                 .foregroundColor(model.leftButtonColor)
@@ -70,14 +70,16 @@ struct Alert: View {
           Spacer()
           if let rightButtonText = model.rightButtonText {
             Button {
-              model.rightButtonOnPress()
-              presentaionMode.wrappedValue.dismiss()
+							if let onPress = model.rightButtonOnPress {
+								onPress()
+							}
+							presentaionMode.wrappedValue.dismiss()
             } label: {
               Text(rightButtonText)
                 .foregroundColor(model.rightButtonColor)
             }
+						Spacer()
           }
-          Spacer()
         }
         .padding(.top, 16)
         .padding(.bottom, 16)

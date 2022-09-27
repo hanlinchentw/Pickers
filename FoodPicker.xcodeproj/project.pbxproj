@@ -728,11 +728,11 @@
 				B69E3B1D28B9267000014AA3 /* View */,
 				B67414A128A5693800C545D2 /* Presenter */,
 				B650ECCF257F2648004A4049 /* SpinWheel */,
+				B6CBE89628D5FF35005BCA7D /* EditVIew */,
 				B647A4F024B22B010098B7A2 /* SpinViewController.swift */,
 				B6F5DF0328CF0EED00D4621C /* SavedListCoordinator.swift */,
 				B6AE009C24DD188400423D72 /* BottomSheetViewController.swift */,
 				B63E497A28BA669700714F94 /* SavedListView.swift */,
-				B6CBE89628D5FF35005BCA7D /* EditVIew */,
 			);
 			path = SpinView;
 			sourceTree = "<group>";

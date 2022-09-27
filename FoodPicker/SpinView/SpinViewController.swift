@@ -102,14 +102,11 @@ class SpinViewController: UIViewController {
 	}
 	
 	@objc func handleListButtonTapped() {
-		guard let nav = self.navigationController else {
-			return
-		}
-		let coordinator = SavedListCoordinator(navigationController: nav)
-		coordinator.pushToSavedListView { list in
+		let saveListCoordinator = SavedListCoordinator(navigationController: navigationController!) { list in
 			self.presenter.applyList(list)
 			self.bottomSheetVC.applyList(list)
 		}
+		saveListCoordinator.start()
 	}
 	
 	@objc func handleCleanButtonTapped() {
@@ -134,24 +131,11 @@ extension SpinViewController: SpinWheelDelegate, SpinWheelDataSource {
 	}
 	
 	func numberOfSections() -> Int {
-		return presenter.numOfSection
+		presenter.numOfSection
 	}
+
 	func itemsForSections() -> [WheelItem] {
-		return presenter.itemForSection
-	}
-}
-//MARK: -  BottomSheetDelegate
-extension SpinViewController: BottomSheetViewControllerDelegate{
-	func shouldHideResultView(shouldHide: Bool) {
-		if shouldHide {
-			UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-				self.resultView.alpha = 0
-			}
-		}else {
-			UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-				self.resultView.alpha = 1
-			}
-		}
+		presenter.itemForSection
 	}
 }
 // MARK: - ResultViewDelegate
@@ -190,22 +174,19 @@ extension SpinViewController {
 	
 	func configureListButton(){
 		view.addSubview(listButton)
-		listButton.anchor(top: view.topAnchor, right: view.rightAnchor,
-											paddingTop: 52, paddingRight: 20,
-											width: 40, height: 40)
+		listButton.anchor(top: view.topAnchor, right: view.rightAnchor, paddingTop: 52, paddingRight: 20)
+		listButton.setDimension(width: 40, height: 40)
 		
 	}
 	
 	func configureCleanButton() {
 		view.addSubview(cleanButton)
-		cleanButton.anchor(top: view.topAnchor, left: view.leftAnchor,
-											 paddingTop: 52, paddingLeft: 20,
-											 width: 40, height: 40)
+		cleanButton.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 52, paddingLeft: 20)
+		cleanButton.setDimension(width: 40, height: 40)
 	}
 	
 	func configureBottomSheetView(){
 		self.addChild(bottomSheetVC)
-		bottomSheetVC.delegate = self
 		self.view.addSubview(bottomSheetVC.view)
 		let height = view.frame.height
 		let width  = view.frame.width
