@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 import Combine
 
+
+
 class MainTabBarController : UITabBarController {
   //MARK: - Properties
   var displayTab: Array<MainTabBarConstants.TabItemType> = [.main, .spin, .favorite]
@@ -71,6 +73,10 @@ extension MainTabBarController: UITabBarControllerDelegate {
     bounceAnimation.duration = TimeInterval(0.2)
     bounceAnimation.calculationMode = CAAnimationCalculationMode.cubic
     view.layer.add(bounceAnimation, forKey: nil)
+		
+		if index == 0 {
+			NotificationCenter.default.post(name: .init(Constants.firstTabGotTapped), object: nil)
+		}
   }
 }
 

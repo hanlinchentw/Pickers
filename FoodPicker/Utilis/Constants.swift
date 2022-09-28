@@ -10,4 +10,8 @@ import UIKit
 
 final class Constants {
   static let defaultImageURL = "https://pixy.org/src/31/316448.png"
+	
+	// Notification
+	static let firstTabGotTapped = "FIRST_TAB_GOT_TAPPED"
+	
 }

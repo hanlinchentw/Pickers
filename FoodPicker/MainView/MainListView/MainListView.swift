@@ -25,42 +25,53 @@ struct MainListView: View {
 	@StateObject var popularViewModel = MainListSectionViewModel(section: .popular)
 	@StateObject var nearbyViewModel = MainListSectionViewModel(section: .nearby)
 	
+	let pub = NotificationCenter.default.publisher(for: NSNotification.Name(Constants.firstTabGotTapped))
+	
 	var body: some View {
 		ZStack {
 			Color.listViewBackground.ignoresSafeArea()
-			ScrollView {
-				VStack(spacing: 24) {
-					MainListSearchHeader(
-						searchText: $searchViewModel.searchText,
-						mapButtonOnPress: { coordinator.presentMapView() }
-					)
-					
-					if locationService.lastLocation != nil {
-						VStack {
-							if searchViewModel.showSearchResult {
-								SearchListView(vm: searchViewModel)
-							} else if popularViewModel.loadingState == .error && nearbyViewModel.loadingState == .error {
-								emptyView
-							} else {
-								HorizontalSectionView(vm: popularViewModel)
-								VerticalSectionView(vm: nearbyViewModel)
+			ScrollViewReader { proxy in
+				ScrollView {
+					VStack(spacing: 24) {
+						MainListSearchHeader(
+							searchText: $searchViewModel.searchText,
+							mapButtonOnPress: { coordinator.presentMapView() }
+						)
+						.id("MainListSearchHeader")
+						
+						if locationService.lastLocation != nil {
+							VStack {
+								if searchViewModel.showSearchResult {
+									SearchListView(vm: searchViewModel)
+								} else if popularViewModel.loadingState == .error && nearbyViewModel.loadingState == .error {
+									emptyView
+								} else {
+									HorizontalSectionView(vm: popularViewModel)
+									VerticalSectionView(vm: nearbyViewModel)
+								}
 							}
+							.onAppear {
+								refreshList()
+							}
+						} else {
+							LocationNotFoundView().padding(.top, 50)
 						}
-						.onAppear {
-							refreshList()
-						}
-					} else {
-						LocationNotFoundView().padding(.top, 50)
 					}
 				}
-			}
-			.if(!searchViewModel.showSearchResult) {
-				$0.refreshable {
-				 try? await popularViewModel.fetchData()
-				 try? await nearbyViewModel.fetchData()
-			 }
+				.if(!searchViewModel.showSearchResult) {
+					$0.refreshable {
+						try? await popularViewModel.fetchData()
+						try? await nearbyViewModel.fetchData()
+					}
+				}
+				.onReceive(pub, perform: { _ in
+					withAnimation(.easeInOut(duration: 1)) {
+						proxy.scrollTo("MainListSearchHeader")
+					}
+				})
 			}
 		}
+		
 		.navigationBarHidden(true)
 		.onTapToResign()
 	}
