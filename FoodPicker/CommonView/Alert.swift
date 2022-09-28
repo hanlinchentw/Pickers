@@ -16,7 +16,7 @@ struct AlertPresentationModel {
   var leftButtonText: String? = nil
 
   var rightButtonOnPress: (() -> Void)? = nil
-  var leftButtonOnPress: (() -> Void)? = nil
+	var leftButtonOnPress: ((_ hide: VoidClosure) -> Void)? = nil
 
   var rightButtonColor: Color = .black
   var leftButtonColor: Color = .black
@@ -30,13 +30,7 @@ struct Alert: View {
   var body: some View {
     ZStack {
       Color.black.opacity(0.6)
-        .onTapGesture {
-          if let onPress = model.leftButtonOnPress {
-            onPress()
-          } else {
-            presentaionMode.wrappedValue.dismiss()
-          }
-        }
+        .onTapGesture { presentaionMode.wrappedValue.dismiss() }
       VStack(alignment: .center) {
         if let title = model.title {
           Text(title).en18Bold()
@@ -59,9 +53,8 @@ struct Alert: View {
 						Spacer()
             Button {
               if let onPress = model.leftButtonOnPress {
-                onPress()
+								onPress({ presentaionMode.wrappedValue.dismiss() })
               }
-							presentaionMode.wrappedValue.dismiss()
             } label: {
               Text(leftButtonText)
                 .foregroundColor(model.leftButtonColor)
@@ -96,7 +89,7 @@ struct Alert_Previews<Content: View>: PreviewProvider {
   static var previews: some View {
 		Alert(model: .init(title: "", content: "",rightButtonText: "", leftButtonText: "", rightButtonOnPress: {
 
-    }, leftButtonOnPress: {
+    }, leftButtonOnPress: { _ in
 
     }))
   }

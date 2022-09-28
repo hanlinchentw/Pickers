@@ -49,7 +49,9 @@ struct FavoriteView: View {
             rightButtonText: "Remove",
             leftButtonText: "Cancel",
             rightButtonOnPress: editUsecase.removeItem,
-            leftButtonOnPress: editUsecase.cancel
+						leftButtonOnPress: { _ in
+							editUsecase.cancel()
+						}
           )
       )
     })

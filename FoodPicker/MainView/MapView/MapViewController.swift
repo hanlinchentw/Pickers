@@ -101,7 +101,9 @@ extension MapViewController: MKMapViewDelegate {
 		) {
 			if $0 {
 				Task {
+					MBProgressHUDHelper.showLoadingAnimation()
 					await self.viewModel.fetchRestaurant(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
+					MBProgressHUDHelper.hideLoadingAnimation()
 				}
 			}
 		}
@@ -117,9 +119,7 @@ extension MapViewController: MKMapViewDelegate {
 		if let annotation = annotation as? AnnotationItem {
 			let view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: NSStringFromClass(AnnotationItem.self))
 			view.titleVisibility = .adaptive
-			view.animatesWhenAdded = true
 			view.glyphImage = UIImage(named: "icon56PickerLogo")
-			view.markerTintColor = .butterscotch
 			return view
 		} else  { return nil }
 	}

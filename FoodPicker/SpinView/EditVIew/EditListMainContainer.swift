@@ -100,7 +100,7 @@ extension EditListView {
 				try? viewContext.save()
 				presentationMode.wrappedValue.dismiss()
 			},
-			leftButtonOnPress: {
+			leftButtonOnPress: { _ in
 				viewModel.alert = nil
 			}
 		)
@@ -117,7 +117,7 @@ extension EditListView {
 				try? viewContext.save()
 				goBack()
 			},
-			leftButtonOnPress: {
+			leftButtonOnPress: { _ in
 				viewModel.alert = nil
 			}
 		)

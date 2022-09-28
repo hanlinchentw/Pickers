@@ -18,13 +18,23 @@ extension BottomSheetViewModel {
 		var alertModel: AlertPresentationModel {
 			switch self {
 			case .updateEmptyList(let delete):
-				return .init(title: "Empty List",  content: "Empty List will be deleted.", rightButtonText: "Delete", leftButtonText: "Cancel", rightButtonOnPress: {
+				return .init(title: "Empty List",
+										 content: "Empty List will be deleted.",
+										 rightButtonText: "Delete",
+										 leftButtonText: "Cancel",
+										 rightButtonOnPress: {
 					delete()
-				})
+				}) { hide in
+					hide()
+				}
 			case .listHaveNoName:
-				return .init(title: "Please give me a name 🥺", rightButtonText: "OK")
+				return .init(title: "Please give me a name 🥺", rightButtonText: "OK", leftButtonOnPress: { hide in
+					hide()
+				})
 			case .saveEmptyList:
-				return .init(title: "Empty",  content: "Select at least one restaurant", rightButtonText: "OK")
+				return .init(title: "Empty",  content: "Select at least one restaurant", rightButtonText: "OK", leftButtonOnPress: { hide in
+					hide()
+				})
 			}
 		}
 	}

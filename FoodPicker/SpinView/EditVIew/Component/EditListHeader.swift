@@ -25,7 +25,7 @@ struct EditListHeader: View {
 			Spacer()
 			
 			Button(action: rightButtonOnPress, label: {
-				Image(systemName: "trash.fill")
+				Image(systemName: "minus.circle.fill")
 					.frame(width: 44, height: 44)
 					.foregroundColor(.red.opacity(0.5))
 			})

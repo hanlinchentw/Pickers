@@ -22,6 +22,7 @@ class EditListViewModel: ObservableObject {
   }
 
   func setInitialValue(list: List) {
+		self.list = list
     editListName = list.name
     try! setRestaurantsViewObjects(list: list)
   }
@@ -31,6 +32,7 @@ class EditListViewModel: ObservableObject {
 			alert = .emptyList
       return
     }
+		print("saveList.editListName >>> \(editListName)")
     list?.name = editListName
     list?.restaurants = NSSet(array: viewObjects.map {Restaurant(restaurant: $0)})
     try? CoreDataManager.sharedInstance.managedObjectContext.save()

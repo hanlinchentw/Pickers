@@ -82,15 +82,15 @@ class MapViewModel: Likable, Selectable {
 
   func fetchRestaurant(latitude: Double?, longitude: Double?) async  {
     do {
-			print("lastLocation >>> \(locationService.lastLocation)")
 			guard let latitude = latitude, let longitude = longitude else {
 				throw LoactionError.locationNotFound(message: "Location not found")
 			}
 			var viewObjects = Array<RestaurantViewObject>()
 			for offset in 0 ..< 2 {
-				let query = BusinessService.Query.init(lat: latitude, lon: longitude, option: .nearyby, limit: 50, offset: offset)
+				let query = BusinessService.Query.init(lat: latitude, lon: longitude, option: .nearyby, limit: 50, offset: 50 * offset)
 				let businesses = try await BusinessService.fetchBusinesses(query: query)
 				for business in businesses {
+					if viewObjects.contains(where: { $0.id == business.id }) { return }
 					var viewObject = RestaurantViewObject(business: business)
 					viewObject.isSelected = try selectService.exists(id: business.id, in: CoreDataManager.sharedInstance.managedObjectContext)
 					viewObject.isLiked = try likeService.exists(id: business.id, in: CoreDataManager.sharedInstance.managedObjectContext)
