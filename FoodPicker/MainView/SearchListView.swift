@@ -10,53 +10,47 @@ import SwiftUI
 
 struct SearchListView: View, Selectable {
 	@Inject var selectService: SelectedCoreService
-
+	
 	@ObservedObject var vm: SearchListViewModel
 	@EnvironmentObject var coordinator: MainCoordinator
 	@Environment(\.managedObjectContext) private var viewContext
 	@FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
-
+	
 	var body: some View {
 		ZStack {
 			Color.listViewBackground
-			switch vm.searchState {
-			case .searching:
+			if vm.searchState == .searching {
 				ProgressView()
 					.progressViewStyle(.circular)
 					.foregroundColor(.butterScotch)
-			case .done(let result):
-				switch result {
-				case .success(let viewObjects):
-					VStack {
-						ScrollView(showsIndicators: false) {
-							VStack(spacing: 16) {
-								ForEach(viewObjects.indices, id: \.self) { index in
-									let restaurant = viewObjects[index]
-									let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
-									let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
-									let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
-									
-									RestaurantListItemView(presenter: presenter, actionButtonOnPress: {
-										selectRestaurant(isSelected: isSelected, restaurant: restaurant)
-									})
-									.onTapGesture {
-										coordinator.pushToDetailView(id: restaurant.id)
-									}
-									.buttonStyle(.plain)
-								}
+			} else if vm.searchState == .done {
+				LazyVStack(spacing: 16) {
+					ScrollView(showsIndicators: false) {
+						ForEach(0 ..< vm.viewObjects.count, id: \.self) { index in
+							let restaurant = vm.viewObjects[index]
+							let isSelected = selectedRestaurants.contains(where: { $0.id == restaurant.id })
+							let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
+							let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
+							
+							RestaurantListItemView(
+								presenter: presenter,
+								actionButtonOnPress: {
+									selectRestaurant(isSelected: isSelected, restaurant: restaurant)
+								})
+							.onTapGesture {
+								coordinator.pushToDetailView(id: restaurant.id)
 							}
-							.padding(.trailing, 8)
-							.padding(.top, 16)
-							.background(Color.white)
-							.cornerRadius(24)
+							.buttonStyle(.plain)
 						}
-						Spacer()
 					}
-				case .failure(_):
-					errorView
+					.coordinateSpace(name: "MoreRestaurantScrollView")
+					.padding(.trailing, 8)
+					.padding(.top, 16)
+					.background(Color.white)
+					.cornerRadius(24)
 				}
-			case .idle:
-				Spacer().height(0)
+			} else if vm.searchState == .error {
+				errorView
 			}
 		}
 		.ignoresSafeArea()

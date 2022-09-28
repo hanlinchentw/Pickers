@@ -13,7 +13,7 @@ import MapKit
 class DetailCell : UICollectionViewCell {
   //MARK: - Properties
   weak var delegate : DetailCellDelegate?
-  var presenter: DetailRowPresenter? { didSet{ configureCellInformation()}}
+  var presenter: DetailRowPresenter? { didSet{ configureCellInformation() }}
 
   private let iconImageView : UIImageView = {
     let iv = UIImageView()
@@ -24,6 +24,8 @@ class DetailCell : UICollectionViewCell {
     let label = UILabel()
     label.font = UIFont.arial16BoldMT
     label.textColor = .black
+		label.numberOfLines = 0
+		label.adjustsFontSizeToFitWidth = true
     return label
   }()
 
@@ -95,16 +97,19 @@ extension DetailCell {
     titleStack.axis = .horizontal
     titleStack.spacing = 8
 
+		
+		
     addSubview(titleStack)
-    titleStack.anchor(top:topAnchor, left: leftAnchor,
-                      paddingTop: 16, paddingLeft: 16)
+    titleStack.anchor(top:topAnchor, left: leftAnchor, paddingTop: 16, paddingLeft: 16)
+
+		titleLabel.setDimension(width: UIScreen.screenWidth - 32)
 
     addSubview(actionButton)
     actionButton.anchor(top:topAnchor, right: rightAnchor, paddingTop: 12, paddingRight: 16)
     
     addSubview(contentLabel)
-    contentLabel.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, right:rightAnchor,
-                         paddingTop: 4, paddingLeft: 16, paddingRight: 100)
+		contentLabel.anchor(top: titleLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor,
+                         paddingTop: 12, paddingLeft: 16, paddingRight: 44, paddingBottom: 12)
 
     addSubview(rightTextLabel)
     rightTextLabel.anchor(right: rightAnchor, paddingRight: 12)

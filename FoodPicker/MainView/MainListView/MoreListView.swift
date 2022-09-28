@@ -16,16 +16,19 @@ class MoreListViewModel: ObservableObject, Selectable {
 	@Published var loadingState: LoadingState = .idle
 	@Published var viewObjects: Array<RestaurantViewObject> = []
 	@Published var locationError: Error? = nil
+
+	@Published var offset = 0
 	
 	func fetchData() async {
 		OperationQueue.main.addOperation {
 			self.loadingState = .loading
 		}
 		do {
-			let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: .nearyby, limit: 50, offset: 0)
+			let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: .nearyby, limit: 50, offset: offset)
 			let result = try await BusinessService.fetchBusinesses(query: query)
 			OperationQueue.main.addOperation {
-				self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }
+				self.viewObjects += result.map { RestaurantViewObject.init(business: $0) }
+				self.offset += 50
 				self.loadingState = .loaded
 			}
 		} catch {
@@ -36,7 +39,6 @@ class MoreListViewModel: ObservableObject, Selectable {
 			}
 		}
 	}
-	
 }
 
 struct MoreListView: View {

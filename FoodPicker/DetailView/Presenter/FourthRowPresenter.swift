@@ -39,7 +39,7 @@ class FourthRowPresenter: DetailRowPresenter {
   }
 
   var actionButtonIsHidden: Bool {
-    return false
+    return true
   }
 
   var actionButtonImageName: String? {

@@ -16,6 +16,7 @@ extension Attributes {
 
   static let arial12: Attributes = [NSAttributedString.Key.font: UIFont.arial12MT]
   static let arial14: Attributes = [NSAttributedString.Key.font: UIFont.arial14MT]
+	static let arial14Bold: Attributes = [NSAttributedString.Key.font: UIFont.arial14BoldMT]
   static let arial16Bold: Attributes = [NSAttributedString.Key.font: UIFont.arial16BoldMT]
 
   static func attributes(_ attributes: Array<Attributes>) -> Attributes {

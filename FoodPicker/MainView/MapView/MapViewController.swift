@@ -53,7 +53,7 @@ class MapViewController: UIViewController {
 		Task {
 			/*
 			 User's location is updated at main thread (it takes some time).
-			 workaround: give 1 second delay before fetch data.
+			 workaround: give 1 second delay before fetching data.
 			 */
 			try? await Task.sleep(seconds: 1)
 			await viewModel.fetchRestaurant(latitude: viewModel.userLatitude, longitude: viewModel.userLongitude)

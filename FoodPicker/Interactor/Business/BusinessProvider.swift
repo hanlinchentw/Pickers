@@ -14,12 +14,12 @@ private let clientID = "YuD9cka95Qb_g7WsdCA-rQ"
 
 enum BusinessProvider: NetworkProvider {
   case search(_ lat: Double, _ lon: Double,
-              category: String = "food",
+              category: String = "restaurant",
               sortBy : String,
               offset: Int = 0,
               limit: Int)
 
-  case searchByTerm(lat:Double, lon: Double, term: String)
+	case searchByTerm(lat:Double, lon: Double, term: String, offset: Int = 0)
 
   case detail(id: String)
 
@@ -40,23 +40,27 @@ enum BusinessProvider: NetworkProvider {
   var parameters: [String: Any] {
     switch self {
     case let .search(lat, lon, category, sortBy, offset, limit):
-      return ["categories": category,
-              "latitude":lat, "longitude": lon,
-              "limit":limit,
-              "offset": offset,
-              "radius": 3000,
-              "sort_by": sortBy,
-              "locale":"zh_TW"]
+      return [
+				"categories": category,
+				"latitude": lat,
+				"longitude": lon,
+				"radius": 3000,
+				"sort_by": sortBy,
+				"limit": limit,
+				"offset": offset
+			]
 
-    case let .searchByTerm(lat, lon, term):
-      return ["latitude":lat, "longitude": lon,
-              "limit" : 50,
-              "categories": "food",
-              "term": term,
-              "locale":"zh_TW"]
+    case let .searchByTerm(lat, lon, term, offset):
+      return [
+				"term": term,
+				"latitude": lat,
+				"longitude": lon,
+				"categories": "food",
+				"limit" : 50,
+				"offset": offset]
 
     case .detail:
-      return ["locale":"zh_TW"]
+			return [:]
     }
   }
 }

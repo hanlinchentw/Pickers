@@ -54,9 +54,11 @@ struct MainListView: View {
 					}
 				}
 			}
-			.refreshable {
-				try? await popularViewModel.fetchData()
-				try? await nearbyViewModel.fetchData()
+			.if(!searchViewModel.showSearchResult) {
+				$0.refreshable {
+				 try? await popularViewModel.fetchData()
+				 try? await nearbyViewModel.fetchData()
+			 }
 			}
 		}
 		.navigationBarHidden(true)

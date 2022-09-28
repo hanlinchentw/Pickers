@@ -14,7 +14,7 @@ class BusinessService {
 
 	static func createSearchDataTask<T: Decodable>(query: Query) throws -> DataTask<T> {
 		if !NetworkMonitor.shared.isConnected { throw URLRequestError.noInternet }
-		let service = BusinessProvider.searchByTerm(lat: query.lat, lon: query.lon, term: query.searchText ?? "Food")
+		let service = BusinessProvider.searchByTerm(lat: query.lat, lon: query.lon, term: query.searchText ?? "restaurant", offset: query.offset ?? 0)
 		let decoder = JSONDecoder()
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
 		return NetworkService.createHttpRequest(service: service).serializingDecodable(T.self, automaticallyCancelling: true, decoder: decoder)
@@ -22,7 +22,7 @@ class BusinessService {
 
 	static func fetchBusinesses(query: Query) async throws -> Array<Business> {
 		if !NetworkMonitor.shared.isConnected { throw URLRequestError.noInternet }
-		let service = BusinessProvider.search(query.lat, query.lon, category: query.searchText ?? "Food", sortBy: query.option?.sortBy ?? "distance", offset: query.offset ?? 0, limit: query.limit ?? 20)
+		let service = BusinessProvider.search(query.lat, query.lon, category: query.searchText ?? "restaurant", sortBy: query.option?.sortBy ?? "distance", offset: query.offset ?? 0, limit: query.limit ?? 20)
 		let decoder = JSONDecoder()
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
 		let response = await NetworkService.createHttpRequest(service: service).serializingDecodable(Root.self, decoder: decoder).response

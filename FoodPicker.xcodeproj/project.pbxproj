@@ -163,6 +163,7 @@
 		B6FCEC0028BB1121007A8041 /* ListCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FCEBFF28BB1121007A8041 /* ListCardView.swift */; };
 		B6FD55AC2896CB0100B659F4 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD55AA2896CB0100B659F4 /* Resolver.swift */; };
 		B6FD55AD2896CB0100B659F4 /* Inject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD55AB2896CB0100B659F4 /* Inject.swift */; };
+		B6FE66F128E4B01300F44543 /* SlideShowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FE66F028E4B01300F44543 /* SlideShowViewController.swift */; };
 		CB55746F7A456CF24EAA883C /* Pods_FoodPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E100F4CF94676583B4975A33 /* Pods_FoodPicker.framework */; };
 		EFF24B0EBFDA411A408A3810 /* Pods_FoodPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E100F4CF94676583B4975A33 /* Pods_FoodPicker.framework */; };
 /* End PBXBuildFile section */
@@ -348,6 +349,7 @@
 		B6FCEBFF28BB1121007A8041 /* ListCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCardView.swift; sourceTree = "<group>"; };
 		B6FD55AA2896CB0100B659F4 /* Resolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
 		B6FD55AB2896CB0100B659F4 /* Inject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Inject.swift; sourceTree = "<group>"; };
+		B6FE66F028E4B01300F44543 /* SlideShowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideShowViewController.swift; sourceTree = "<group>"; };
 		E100F4CF94676583B4975A33 /* Pods_FoodPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FoodPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -638,6 +640,7 @@
 				B6ABC1E728B0952C007398F4 /* Presenter */,
 				B6ABC1E428B0896F007398F4 /* ViewModel */,
 				B6D1306924C4183300040F85 /* DetailController.swift */,
+				B6FE66F028E4B01300F44543 /* SlideShowViewController.swift */,
 			);
 			path = DetailView;
 			sourceTree = "<group>";
@@ -1110,6 +1113,7 @@
 				B634A71D28A8BFC700796D63 /* RestaurantListItemView.swift in Sources */,
 				B690436728A1633F00278964 /* Detail.swift in Sources */,
 				B6ABC1E628B08982007398F4 /* DetailViewModel.swift in Sources */,
+				B6FE66F128E4B01300F44543 /* SlideShowViewController.swift in Sources */,
 				B6ABC1E928B0953A007398F4 /* FirstRowPressenter.swift in Sources */,
 				B6D1307024CBC16200040F85 /* DetailCell.swift in Sources */,
 				B6C7D5B62563F3E0005D2AA0 /* Business.swift in Sources */,
