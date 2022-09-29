@@ -87,7 +87,7 @@ class MapViewModel: Likable, Selectable {
 			}
 			var viewObjects = Array<RestaurantViewObject>()
 			for offset in 0 ..< 2 {
-				let query = BusinessService.Query.init(lat: latitude, lon: longitude, option: .nearyby, limit: 50, offset: 50 * offset)
+				let query = Query.init(lat: latitude, lon: longitude, option: .nearyby, limit: 50, offset: 50 * offset)
 				let businesses = try await BusinessService.fetchBusinesses(query: query)
 				for business in businesses {
 					if viewObjects.contains(where: { $0.id == business.id }) { return }

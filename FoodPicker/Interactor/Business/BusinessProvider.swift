@@ -55,7 +55,7 @@ enum BusinessProvider: NetworkProvider {
 				"term": term,
 				"latitude": lat,
 				"longitude": lon,
-				"categories": "food",
+				"categories": "restaurant",
 				"limit" : 50,
 				"offset": offset]
 

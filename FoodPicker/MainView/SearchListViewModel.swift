@@ -72,7 +72,7 @@ extension SearchListViewModel {
 	func searchFor(text: String, offset: Int = 0) async {
 		searchTaskHolder.cancel() // cancel current task
 		do {
-			let query = try BusinessService.Query(searchText: text, lat: locationService.getLatitude(), lon: locationService.getLongitude(), offset: offset)
+			let query = try Query(searchText: text, lat: locationService.getLatitude(), lon: locationService.getLongitude(), offset: offset)
 			let task: DataTask<Root> = try BusinessService.createSearchDataTask(query: query)
 			searchTaskHolder.task = task
 

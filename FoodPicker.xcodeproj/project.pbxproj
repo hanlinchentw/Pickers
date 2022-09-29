@@ -164,6 +164,10 @@
 		B6FD55AC2896CB0100B659F4 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD55AA2896CB0100B659F4 /* Resolver.swift */; };
 		B6FD55AD2896CB0100B659F4 /* Inject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FD55AB2896CB0100B659F4 /* Inject.swift */; };
 		B6FE66F128E4B01300F44543 /* SlideShowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FE66F028E4B01300F44543 /* SlideShowViewController.swift */; };
+		B6FE66F428E5F2F900F44543 /* GoogleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FE66F328E5F2F900F44543 /* GoogleProvider.swift */; };
+		B6FE66F628E5F94100F44543 /* GoogleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FE66F528E5F94100F44543 /* GoogleService.swift */; };
+		B6FE66F828E5F9DB00F44543 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FE66F728E5F9DB00F44543 /* Query.swift */; };
+		B6FE66FA28E5FA9E00F44543 /* Nearby.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FE66F928E5FA9E00F44543 /* Nearby.swift */; };
 		CB55746F7A456CF24EAA883C /* Pods_FoodPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E100F4CF94676583B4975A33 /* Pods_FoodPicker.framework */; };
 		EFF24B0EBFDA411A408A3810 /* Pods_FoodPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E100F4CF94676583B4975A33 /* Pods_FoodPicker.framework */; };
 /* End PBXBuildFile section */
@@ -350,6 +354,10 @@
 		B6FD55AA2896CB0100B659F4 /* Resolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
 		B6FD55AB2896CB0100B659F4 /* Inject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Inject.swift; sourceTree = "<group>"; };
 		B6FE66F028E4B01300F44543 /* SlideShowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideShowViewController.swift; sourceTree = "<group>"; };
+		B6FE66F328E5F2F900F44543 /* GoogleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleProvider.swift; sourceTree = "<group>"; };
+		B6FE66F528E5F94100F44543 /* GoogleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleService.swift; sourceTree = "<group>"; };
+		B6FE66F728E5F9DB00F44543 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
+		B6FE66F928E5FA9E00F44543 /* Nearby.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nearby.swift; sourceTree = "<group>"; };
 		E100F4CF94676583B4975A33 /* Pods_FoodPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FoodPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -470,7 +478,6 @@
 			children = (
 				B69D3822266882D000287954 /* BusinessProvider.swift */,
 				B6310C4628A5622D00ABD2E2 /* BusinessService.swift */,
-				B630C33028DA1301004B9595 /* SearchOption.swift */,
 			);
 			path = Business;
 			sourceTree = "<group>";
@@ -486,6 +493,9 @@
 		B6310C4928A5640900ABD2E2 /* Interactor */ = {
 			isa = PBXGroup;
 			children = (
+				B630C33028DA1301004B9595 /* SearchOption.swift */,
+				B6FE66F728E5F9DB00F44543 /* Query.swift */,
+				B6FE66F228E5F2EC00F44543 /* Google */,
 				B685484F24BD8605009BC800 /* Http */,
 				B6310C4828A5625300ABD2E2 /* Location */,
 				B6310C4528A5621900ABD2E2 /* Business */,
@@ -613,6 +623,7 @@
 			children = (
 				B6C7D5B52563F3E0005D2AA0 /* Business.swift */,
 				B690436628A1633F00278964 /* Detail.swift */,
+				B6FE66F928E5FA9E00F44543 /* Nearby.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -943,6 +954,15 @@
 			path = Injector;
 			sourceTree = "<group>";
 		};
+		B6FE66F228E5F2EC00F44543 /* Google */ = {
+			isa = PBXGroup;
+			children = (
+				B6FE66F328E5F2F900F44543 /* GoogleProvider.swift */,
+				B6FE66F528E5F94100F44543 /* GoogleService.swift */,
+			);
+			path = Google;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1177,6 +1197,7 @@
 				B63548F928B5292700136A15 /* ImageCache.swift in Sources */,
 				B6F2351928BD04AE00344B8D /* ListCardViewModel.swift in Sources */,
 				B6B84D512665D52F002E418D /* UIFont+UIColor+Extension.swift in Sources */,
+				B6FE66F628E5F94100F44543 /* GoogleService.swift in Sources */,
 				B6413B3028BB20FE0071F5B3 /* List+CoreDataClass.swift in Sources */,
 				B612E40728E3502B005721E3 /* BottomSheetListState.swift in Sources */,
 				B606C07F2894E69000139907 /* SpinTabItemView.swift in Sources */,
@@ -1191,6 +1212,7 @@
 				B650ECD7257F2655004A4049 /* SpinWheel.swift in Sources */,
 				B634A71F28A8C0E200796D63 /* TestRestaurantData.swift in Sources */,
 				B612E40528E34F9F005721E3 /* BottomSheetEditListError.swift in Sources */,
+				B6FE66FA28E5FA9E00F44543 /* Nearby.swift in Sources */,
 				B615FFA628CAFD60000BD3A0 /* MoreListView.swift in Sources */,
 				B630C33528DA2B3E004B9595 /* Selectable.swift in Sources */,
 				B674149D28A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift in Sources */,
@@ -1217,6 +1239,7 @@
 				B63E497E28BA6D4200714F94 /* MockedList.swift in Sources */,
 				B634A71328A74E1500796D63 /* Color+Extensions.swift in Sources */,
 				B634A71128A74DEB00796D63 /* Text+Extensions.swift in Sources */,
+				B6FE66F428E5F2F900F44543 /* GoogleProvider.swift in Sources */,
 				B6EF13B128B23366009345D6 /* FavoriteSearchContainer.swift in Sources */,
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B69E3B1C28B9223300014AA3 /* BottomSheetViewModel.swift in Sources */,
@@ -1244,6 +1267,7 @@
 				B6B6705927132FCE00715A18 /* Pickers.xcdatamodeld in Sources */,
 				B6FD55AD2896CB0100B659F4 /* Inject.swift in Sources */,
 				B6C7D5B82563F4F3005D2AA0 /* AnnotationItem.swift in Sources */,
+				B6FE66F828E5F9DB00F44543 /* Query.swift in Sources */,
 				B60CC1B128C3313800AF2B53 /* ZoomAndSnapFlowLayout.swift in Sources */,
 				B6E0D79128A61C4600B8CAE1 /* RestaurantCardView.swift in Sources */,
 				B634A73528A920CA00796D63 /* SelectedDeleteBehavior.swift in Sources */,

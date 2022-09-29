@@ -48,13 +48,3 @@ class BusinessService {
 		}
 	}
 }
-extension BusinessService {
-	struct Query {
-		var searchText: String?
-		var lat: Double
-		var lon: Double
-		var option: SearchOption?
-		var limit: Int?
-		var offset: Int?
-	}
-}

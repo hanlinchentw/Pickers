@@ -24,7 +24,7 @@ class MoreListViewModel: ObservableObject, Selectable {
 			self.loadingState = .loading
 		}
 		do {
-			let query = try BusinessService.Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: .nearyby, limit: 50, offset: offset)
+			let query = try Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: .nearyby, limit: 50, offset: offset)
 			let result = try await BusinessService.fetchBusinesses(query: query)
 			OperationQueue.main.addOperation {
 				self.viewObjects += result.map { RestaurantViewObject.init(business: $0) }

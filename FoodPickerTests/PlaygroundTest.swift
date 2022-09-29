@@ -19,7 +19,9 @@ class PlaygroundTest: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
 
-  func testExample() throws {
-    XCTFail("Playground")
+  func testExample() async throws {
+		let result = try await GoogleService.fetchNearyby(query: Query.dummyQuery)
+		print(result)
+		XCTFail("Test google service api")
   }
 }
