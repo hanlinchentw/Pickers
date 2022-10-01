@@ -143,20 +143,10 @@ class SpinResultView : UIView {
 		restaurantName.text = result.name
 		
 		priceLabel.text = presenter.priceCategoryDistanceText
-		composeRatedLabel(rating: presenter.rating, reviewCount: presenter.reviewCount)
+		ratedLabel.attributedText = presenter.ratingAndReviewCountString
 		businessLabel.text = presenter.openOrCloseString
 		restaurantImageView.url = presenter.imageUrl
 		configureResultView()
-	}
-	
-	func composeRatedLabel(rating: String, reviewCount: String) {
-		let attributedString = NSMutableAttributedString(string: "★", attributes: .attributes([.systemYellow, .arial12]))
-		attributedString.append(NSAttributedString(string: " \(rating)", attributes: .attributes([.black, .arial12])))
-		attributedString.append(NSAttributedString(string: " \(reviewCount)", attributes: .attributes([.lightGray, .arial12])))
-		let paragraph = NSMutableParagraphStyle()
-		paragraph.lineSpacing = 2
-		attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraph, range: NSRange(0 ..< attributedString.length))
-		ratedLabel.attributedText = attributedString
 	}
 	
 	func showResult(result: RestaurantViewObject) {

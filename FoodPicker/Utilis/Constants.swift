@@ -9,8 +9,6 @@
 import UIKit
 
 final class Constants {
-	static let GOOGLE_PLACE_API_KEY = "AIzaSyC2k6mcNS0Z_lKCUEVQ7-z7D_7w0dwuxOw"
-	
   static let defaultImageURL = "https://pixy.org/src/31/316448.png"
 	
 	// Notification

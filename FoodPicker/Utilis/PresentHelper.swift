@@ -34,7 +34,12 @@ final class PresentHelper {
     tap: @escaping (Bool) -> Void
   ) {
     ToastManager.shared.isTapToDismissEnabled = true
-		let point = CGPoint(x: UIScreen.screenWidth / 2, y: SafeAreaUtils.top + 32)
+		var point = CGPoint(x: UIScreen.screenWidth / 2, y: SafeAreaUtils.top + 32)
+		
+		if position == .bottom {
+			point = CGPoint(x: UIScreen.screenWidth / 2, y: SafeAreaUtils.bottom - 16)
+		}
+
 		vc?.view?.hideAllToasts()
 		vc?.view?.makeToast(message, duration: duration, point: point, title: title, image: nil, style: style, completion: tap)
   }
@@ -47,7 +52,12 @@ final class PresentHelper {
 		position: ToastPosition,
 		style: ToastStyle
 	) {
-		let point = CGPoint(x: UIScreen.screenWidth / 2, y: SafeAreaUtils.top + 32)
+		var point = CGPoint(x: UIScreen.screenWidth / 2, y: SafeAreaUtils.top + 32)
+		
+		if position == .bottom {
+			point = CGPoint(x: UIScreen.screenWidth / 2, y: UIScreen.screenHeight - SafeAreaUtils.bottom - 88)
+		}
+
 		vc?.view?.hideAllToasts()
 		vc?.view?.makeToast(message, duration: duration, point: point, title: title, image: nil, style: style, completion: { _ in })
 	}

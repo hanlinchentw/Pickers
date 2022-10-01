@@ -12,6 +12,7 @@ private let restaurantListCellIdentifier = "listCellIdentifier"
 
 protocol RestaurantsListDelegate: AnyObject {
   func didTapActionButton(_ restaurant: RestaurantViewObject, indexPath: IndexPath)
+	func didTapAddButton()
 }
 
 class RestaurantsList: UITableView{
@@ -21,6 +22,15 @@ class RestaurantsList: UITableView{
 			self.reloadDataSmoothly()
 		}		
 	}}
+
+	private lazy var addButton: UIButton = {
+		let btn = UIButton(type: .system)
+		btn.addTarget(self, action: #selector(handleAddButtonTapped), for: .touchUpInside)
+		btn.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+		btn.tintColor = .butterscotch
+		return btn
+	}()
+	
   weak var listDelegate: RestaurantsListDelegate?
   //MARK: - Lifecycle
   override init(frame: CGRect, style: UITableView.Style) {
@@ -37,6 +47,10 @@ class RestaurantsList: UITableView{
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+	
+	@objc func handleAddButtonTapped() {
+		listDelegate?.didTapAddButton()
+	}
 }
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension RestaurantsList: UITableViewDelegate, UITableViewDataSource {
@@ -52,6 +66,17 @@ extension RestaurantsList: UITableViewDelegate, UITableViewDataSource {
     cell.delegate = self
     return cell
   }
+	func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		let footerView = UIView()
+		footerView.addSubview(addButton)
+		addButton.center(inView: footerView)
+		addButton.setDimension(width: 36, height: 36)
+		return footerView
+	}
+	
+	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		return 64
+	}
 }
 
 // MARK: - RestaurantListCellDelegate

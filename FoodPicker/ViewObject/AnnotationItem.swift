@@ -13,10 +13,10 @@ class AnnotationItem: MKPointAnnotation {
   let id: String
   var indexForCollectionView: Int? = nil
 
-  init(restaurant: RestaurantViewObject) {
+	init(restaurant: RestaurantViewObject, lat: Double, lon: Double) {
     self.id = restaurant.id
     super.init()
     self.title = restaurant.name
-    self.coordinate = CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude)
+    self.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
   }
 }

@@ -51,8 +51,10 @@ class LocationService: NSObject, ObservableObject {
     return lastLocation?.coordinate.longitude
   }
 
-  func distanceFromCurrent(_ targetLatitude: Double, _ targetLongitude: Double) -> Int {
-    guard let latitude = latitude, let longitude = longitude else { return 1000 }
+  func distanceFromCurrent(_ targetLatitude: Double, _ targetLongitude: Double) -> Int? {
+		guard let latitude = latitude, let longitude = longitude,
+					!latitude.isNaN, !longitude.isNaN,
+					!targetLatitude.isNaN, !targetLongitude.isNaN else { return nil }
     let currentLocation = CLLocation(latitude: latitude, longitude: longitude)
     let targetLocation = CLLocation(latitude: targetLatitude, longitude: targetLongitude)
     let distance = targetLocation.distance(from: currentLocation)

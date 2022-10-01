@@ -44,8 +44,6 @@
 		B634A71B28A76B7300796D63 /* MainListSearchHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71A28A76B7300796D63 /* MainListSearchHeader.swift */; };
 		B634A71D28A8BFC700796D63 /* RestaurantListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71C28A8BFC700796D63 /* RestaurantListItemView.swift */; };
 		B634A71F28A8C0E200796D63 /* TestRestaurantData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71E28A8C0E200796D63 /* TestRestaurantData.swift */; };
-		B634A72228A8D0A000796D63 /* Restaurant+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A72028A8D0A000796D63 /* Restaurant+CoreDataClass.swift */; };
-		B634A72328A8D0A000796D63 /* Restaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A72128A8D0A000796D63 /* Restaurant+CoreDataProperties.swift */; };
 		B634A72628A8D32D00796D63 /* AddBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A72528A8D32D00796D63 /* AddBehavior.swift */; };
 		B634A72828A8D38500796D63 /* RestaurantManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A72728A8D38500796D63 /* RestaurantManagedObject.swift */; };
 		B634A72C28A8D45B00796D63 /* SelectedAddBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A72B28A8D45B00796D63 /* SelectedAddBehavior.swift */; };
@@ -102,6 +100,9 @@
 		B690436728A1633F00278964 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690436628A1633F00278964 /* Detail.swift */; };
 		B692F1A528E7EBE600DA90E9 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B692F1A428E7EBE600DA90E9 /* ImageCache.swift */; };
 		B692F1A728E7FCE200DA90E9 /* StrechyHeaderLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B692F1A628E7FCE200DA90E9 /* StrechyHeaderLayout.swift */; };
+		B692F1AD28E82C7400DA90E9 /* RestaurantPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B692F1AC28E82C7400DA90E9 /* RestaurantPresenterTests.swift */; };
+		B692F1B528E841F200DA90E9 /* Restaurant+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B692F1B328E841F200DA90E9 /* Restaurant+CoreDataClass.swift */; };
+		B692F1B628E841F200DA90E9 /* Restaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B692F1B428E841F200DA90E9 /* Restaurant+CoreDataProperties.swift */; };
 		B69D3823266882D000287954 /* BusinessProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D3822266882D000287954 /* BusinessProvider.swift */; };
 		B69E3B1C28B9223300014AA3 /* BottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69E3B1B28B9223300014AA3 /* BottomSheetViewModel.swift */; };
 		B6AA6C3828A55C4700444F0A /* SelectedCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA6C3728A55C4700444F0A /* SelectedCoreService.swift */; };
@@ -223,8 +224,6 @@
 		B634A71A28A76B7300796D63 /* MainListSearchHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListSearchHeader.swift; sourceTree = "<group>"; };
 		B634A71C28A8BFC700796D63 /* RestaurantListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantListItemView.swift; sourceTree = "<group>"; };
 		B634A71E28A8C0E200796D63 /* TestRestaurantData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRestaurantData.swift; sourceTree = "<group>"; };
-		B634A72028A8D0A000796D63 /* Restaurant+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Restaurant+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		B634A72128A8D0A000796D63 /* Restaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Restaurant+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		B634A72528A8D32D00796D63 /* AddBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBehavior.swift; sourceTree = "<group>"; };
 		B634A72728A8D38500796D63 /* RestaurantManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantManagedObject.swift; sourceTree = "<group>"; };
 		B634A72B28A8D45B00796D63 /* SelectedAddBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedAddBehavior.swift; sourceTree = "<group>"; };
@@ -292,6 +291,10 @@
 		B690436628A1633F00278964 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
 		B692F1A428E7EBE600DA90E9 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		B692F1A628E7FCE200DA90E9 /* StrechyHeaderLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrechyHeaderLayout.swift; sourceTree = "<group>"; };
+		B692F1AC28E82C7400DA90E9 /* RestaurantPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantPresenterTests.swift; sourceTree = "<group>"; };
+		B692F1B028E82E0A00DA90E9 /* FoodPickerTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FoodPickerTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		B692F1B328E841F200DA90E9 /* Restaurant+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Restaurant+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		B692F1B428E841F200DA90E9 /* Restaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Restaurant+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		B69D3822266882D000287954 /* BusinessProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessProvider.swift; sourceTree = "<group>"; };
 		B69E3B1B28B9223300014AA3 /* BottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewModel.swift; sourceTree = "<group>"; };
 		B6AA6C3728A55C4700444F0A /* SelectedCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCoreService.swift; sourceTree = "<group>"; };
@@ -565,6 +568,8 @@
 			isa = PBXGroup;
 			children = (
 				B636BBA828BB397D00BC8996 /* PlaygroundTest.swift */,
+				B692F1AC28E82C7400DA90E9 /* RestaurantPresenterTests.swift */,
+				B692F1B028E82E0A00DA90E9 /* FoodPickerTests-Bridging-Header.h */,
 			);
 			path = FoodPickerTests;
 			sourceTree = "<group>";
@@ -786,10 +791,10 @@
 		B6AA6C3528A55BE300444F0A /* NSmanagedObject */ = {
 			isa = PBXGroup;
 			children = (
+				B692F1B328E841F200DA90E9 /* Restaurant+CoreDataClass.swift */,
+				B692F1B428E841F200DA90E9 /* Restaurant+CoreDataProperties.swift */,
 				B6413B2E28BB20FE0071F5B3 /* List+CoreDataClass.swift */,
 				B6413B2F28BB20FE0071F5B3 /* List+CoreDataProperties.swift */,
-				B634A72028A8D0A000796D63 /* Restaurant+CoreDataClass.swift */,
-				B634A72128A8D0A000796D63 /* Restaurant+CoreDataProperties.swift */,
 				B674149828A5668200C545D2 /* SelectedRestaurant+CoreDataClass.swift */,
 				B674149928A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift */,
 				B674149A28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift */,
@@ -1023,7 +1028,7 @@
 				TargetAttributes = {
 					B636BB9D28BB394900BC8996 = {
 						CreatedOnToolsVersion = 13.4.1;
-						LastSwiftMigration = 1340;
+						LastSwiftMigration = 1400;
 						TestTargetID = B647A4C824B1F7BA0098B7A2;
 					};
 					B647A4C824B1F7BA0098B7A2 = {
@@ -1119,6 +1124,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B636BBA928BB397D00BC8996 /* PlaygroundTest.swift in Sources */,
+				B692F1AD28E82C7400DA90E9 /* RestaurantPresenterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1155,7 +1161,6 @@
 				B6D4505928A9490F0076DE9A /* CoreDataManager.swift in Sources */,
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
 				B6B9976628B9DD3A007C3D1D /* CachedImageView.swift in Sources */,
-				B634A72328A8D0A000796D63 /* Restaurant+CoreDataProperties.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B634A73928A9217800796D63 /* RestaurantAddBehavior.swift in Sources */,
 				B6413B3128BB20FE0071F5B3 /* List+CoreDataProperties.swift in Sources */,
@@ -1184,6 +1189,7 @@
 				B6AE009D24DD188400423D72 /* BottomSheetViewController.swift in Sources */,
 				B6EF13AD28B21AD9009345D6 /* FavoriteListContainer.swift in Sources */,
 				B63548FD28B52A6500136A15 /* ImageFetcher.swift in Sources */,
+				B692F1B528E841F200DA90E9 /* Restaurant+CoreDataClass.swift in Sources */,
 				B674149E28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift in Sources */,
 				B6D1306A24C4183300040F85 /* DetailController.swift in Sources */,
 				B6310C4728A5622D00ABD2E2 /* BusinessService.swift in Sources */,
@@ -1252,6 +1258,7 @@
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B69E3B1C28B9223300014AA3 /* BottomSheetViewModel.swift in Sources */,
 				B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */,
+				B692F1B628E841F200DA90E9 /* Restaurant+CoreDataProperties.swift in Sources */,
 				B685484624B4511A009BC800 /* RestaurantListCell.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */,
@@ -1267,7 +1274,6 @@
 				B60CC1BD28C6426200AF2B53 /* Coordinator.swift in Sources */,
 				B6B84D58266633C4002E418D /* ErrorView.swift in Sources */,
 				B674149C28A5668200C545D2 /* SelectedRestaurant+CoreDataClass.swift in Sources */,
-				B634A72228A8D0A000796D63 /* Restaurant+CoreDataClass.swift in Sources */,
 				B630C33128DA1301004B9595 /* SearchOption.swift in Sources */,
 				B63C19AB251C656A0012CC4A /* RestaurantsList.swift in Sources */,
 				B6C40F3428BD227C0086DDBD /* EditListMainContainer.swift in Sources */,
@@ -1335,6 +1341,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hanlin.FoodPickerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "FoodPickerTests/FoodPickerTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1363,6 +1370,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hanlin.FoodPickerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "FoodPickerTests/FoodPickerTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1391,6 +1399,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hanlin.FoodPickerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "FoodPickerTests/FoodPickerTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

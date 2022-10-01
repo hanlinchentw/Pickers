@@ -141,7 +141,10 @@ extension MapViewController: MKMapViewDelegate {
 	func addAnnotations(restaurants : [RestaurantViewObject]){
 		self.mapView.removeAnnotations(self.mapView.annotations)
 		for (index, restaurant) in restaurants.enumerated() {
-			let anno = AnnotationItem(restaurant: restaurant)
+			guard let lat = restaurant.latitude, let lon = restaurant.longitude else {
+				continue
+			}
+			let anno = AnnotationItem(restaurant: restaurant, lat: lat, lon: lon)
 			anno.indexForCollectionView = index
 			self.mapView.addAnnotation(anno)
 		}

@@ -146,7 +146,11 @@ extension SpinViewController: SpinResultViewDelegate {
 	}
 	
 	func openMap(_ restaurant: RestaurantViewObject) {
-		MKMapView.openMapForPlace(name: restaurant.name, coordinate:  CLLocationCoordinate2D(latitude: restaurant.latitude, longitude: restaurant.longitude) )
+		if let lat = restaurant.latitude, let lon = restaurant.longitude {
+			MKMapView.openMapForPlace(name: restaurant.name, coordinate:  CLLocationCoordinate2D(latitude: lat, longitude: lon) )
+		} else {
+			PresentHelper.showToast(withMessage: "Restaurant not found", duration: 1, position: .bottom, style: .whiteCapsuleButterText)
+		}
 	}
 }
 //MARK: - Auto layout

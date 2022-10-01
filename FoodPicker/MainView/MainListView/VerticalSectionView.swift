@@ -38,6 +38,7 @@ struct VerticalSectionView: View, Selectable {
               RestaurantListItemView(presenter: presenter, actionButtonOnPress: {
 								selectRestaurant(isSelected: isSelected, restaurant: restaurant)
               })
+							.padding(.horizontal, 8)
               .onTapGesture {
                 coordinator.pushToDetailView(id: restaurant.id)
               }
@@ -65,5 +66,6 @@ struct VerticalSectionView: View, Selectable {
         Spacer()
       }
     }
+		
   }
 }

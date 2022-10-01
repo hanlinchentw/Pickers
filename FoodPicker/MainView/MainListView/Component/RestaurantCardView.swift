@@ -21,29 +21,32 @@ struct RestaurantCardView: View {
 
   var body: some View {
     VStack(alignment: .leading) {
-      CachedAsyncImage(url: presenter.imageUrl, content: { phase in
-        switch phase {
-        case .empty:
-          Color.gray.opacity(0.5)
-        case .success(let image):
-          image.resizable()
-        case .failure(_):
-          Image(systemName: "photo.artframe")
-        @unknown default:
-					Image(systemName: "photo.artframe")
-        }
-      })
-      .aspectRatio(contentMode: .fill)
-      .frame(width: 264, height: 128)
-      .overlay(alignment: .topTrailing) {
-        ActionButton(imageName: presenter.actionButtonImage) {
-          selectButtonOnPress()
-        }
-        .animation(.easeInOut(duration: 0.25), value: presenter.actionButtonImage)
-      }
-      .cornerRadius(16)
-      .padding(.top, 8)
-      .padding(.horizontal, 8)
+			if let imageURL = presenter.imageUrl {
+				CachedAsyncImage(url: imageURL, content: { phase in
+					switch phase {
+					case .empty:
+						Color.gray.opacity(0.5)
+					case .success(let image):
+						image.resizable()
+					case .failure(_):
+						Image(systemName: "photo.artframe")
+					@unknown default:
+						Image(systemName: "photo.artframe")
+					}
+				})
+				.aspectRatio(contentMode: .fill)
+				.frame(width: 264, height: 128)
+				.overlay(alignment: .topTrailing) {
+					ActionButton(imageName: presenter.actionButtonImage) {
+						selectButtonOnPress()
+					}
+					.animation(.easeInOut(duration: 0.25), value: presenter.actionButtonImage)
+				}
+				.cornerRadius(16)
+				.padding(.top, 8)
+				.padding(.horizontal, 8)
+			}
+      
 
       Spacer()
 
@@ -54,12 +57,19 @@ struct RestaurantCardView: View {
           Text(presenter.openOrCloseString)
             .en14Bold()
             .foregroundColor(presenter.openOrCloseColor)
-          Text(presenter.priceCategoryDistanceText).en14().foregroundColor(Color.gray.opacity(0.7))
+					if let priceCategoryDistanceText = presenter.priceCategoryDistanceText {
+						Text(priceCategoryDistanceText).en14().foregroundColor(Color.gray.opacity(0.7))
+					}
           HStack(spacing: 4, content: {
             Text("★").foregroundColor(Color.yellow)
-            Text("\(presenter.ratingWithOneDecimal)").en14()
-            Text("\("\(presenter.reviewCount)")").en14()
-              .foregroundColor(Color.gray.opacity(0.7))
+						if let rating = presenter.ratingWithOneDecimal {
+							Text("\(rating)").en14()
+						}
+            
+						if let reviewCount = presenter.reviewCount {
+							Text("\("\(reviewCount)")").en14()
+								.foregroundColor(Color.gray.opacity(0.7))
+						}
             Spacer()
           })
         }

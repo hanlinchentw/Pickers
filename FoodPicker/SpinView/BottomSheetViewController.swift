@@ -39,6 +39,7 @@ class BottomSheetViewController : UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		viewModel.refresh()
+		animateIn(.middle)
 	}
 	// MARK: - Binding
 	private func bindRefresh() {
@@ -125,6 +126,25 @@ extension BottomSheetViewController: RestaurantsListDelegate {
 			self.viewModel.didTapSelectButton(restaurant, at: indexPath)
 		}
 	}
+	
+	func didTapAddButton() {
+		let alertVC = UIAlertController(title: "Custom Option", message: nil, preferredStyle: .alert)
+		alertVC.addTextField { (tf) in
+			tf.placeholder = "Enter the name"
+			tf.keyboardType = .asciiCapable
+			tf.autocapitalizationType = .none
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		let saveAction = UIAlertAction(title: "Add", style: .default) { (action) in
+			guard let name = alertVC.textFields?[0].text, !name.isEmpty else {
+				return
+			}
+			self.viewModel.addCustomOption(name: name)
+		}
+		alertVC.addAction(cancelAction)
+		alertVC.addAction(saveAction)
+		present(alertVC, animated: true, completion: nil)
+	}
 }
 //MARK: - UIGestureRecognizerDelegate
 extension BottomSheetViewController: UIGestureRecognizerDelegate {
@@ -210,7 +230,7 @@ extension BottomSheetViewController {
 			switch self {
 			case .top: return 100
 			case .middle: return 100 + 330
-			case .bottom: return UIScreen.screenHeight - 100
+			case .bottom: return UIScreen.screenHeight - 116
 			}
 		}
 	}

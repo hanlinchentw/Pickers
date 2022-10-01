@@ -2,7 +2,7 @@
 //  Restaurant+CoreDataClass.swift
 //  FoodPicker
 //
-//  Created by 陳翰霖 on 2022/8/14.
+//  Created by 陳翰霖 on 2022/10/1.
 //  Copyright © 2022 陳翰霖. All rights reserved.
 //
 //
@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-@objc(Restaurant)
-public class Restaurant: NSManagedObject {
+
+public class Restaurant: NSManagedObject, RestaurantManagedObject {
 
 }

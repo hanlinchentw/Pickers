@@ -84,6 +84,11 @@ class BottomSheetViewModel: Selectable {
 		isRefresh = true
 	}
 	
+	func addCustomOption(name: String) {
+		let restaurant = RestaurantViewObject.init(name: name)
+		selectRestaurant(isSelected: false, restaurant: restaurant)
+	}
+	
 	func updateList() {
 		let currentSelectedRestaurants = restaurants.filter { $0.isSelected }
 		restaurants = currentSelectedRestaurants

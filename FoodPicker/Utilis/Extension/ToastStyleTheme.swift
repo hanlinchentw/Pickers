@@ -9,13 +9,25 @@
 import Toast_Swift
 
 extension ToastStyle {
-	static var whiteCapsuleButterText: ToastStyle {
+	static var capsuleButterText: ToastStyle {
 		var style = ToastStyle()
-		style.messageColor = .butterscotch
 		style.cornerRadius = 18
-		style.backgroundColor = .white
 		style.horizontalPadding = 16
 		style.messageAlignment = .center
+		return style
+	}
+
+	static var whiteCapsuleButterText: ToastStyle {
+		var style = capsuleButterText
+		style.messageColor = .butterscotch
+		style.backgroundColor = .white
+		return style
+	}
+	
+	static var blackCapsuleButterText: ToastStyle {
+		var style = capsuleButterText
+		style.backgroundColor = .black
+		style.messageColor = .white
 		return style
 	}
 }

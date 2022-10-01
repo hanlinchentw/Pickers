@@ -12,7 +12,7 @@ import UIKit
 class NotchView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
-    backgroundColor = .lightlightGray
+		backgroundColor = .init(white: 0.2, alpha: 0.4)
     layer.cornerRadius = 4 / 2
   }
   
