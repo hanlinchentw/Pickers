@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Alamofire
+import ImageSlideshow
 
 class DetailViewModel {
   @Inject var selectedCoreService: SelectedCoreService
@@ -66,10 +67,6 @@ extension DetailViewModel {
       PresentHelper.topViewController?.present(activityViewController, animated: true, completion: nil)
     }
   }
-
-  func expandButtonTapped() {
-    self.isExpanded.toggle()
-  }
 }
 
 extension DetailViewModel {
@@ -87,4 +84,23 @@ extension DetailViewModel {
       }
     }
   }
+}
+
+extension DetailViewModel {
+	var imageUrl: [URL] {
+		if let photos = detail?.photos, !photos.isEmpty {
+			return photos
+		}
+		
+		if let imageUrl = detail?.imageUrl {
+			return [URL(string: imageUrl) ?? URL(string: Constants.defaultImageURL)!]
+		}
+		
+		return []
+	}
+	
+	var imageSource: Array<AlamofireSource> {
+		let source = imageUrl.map { AlamofireSource(url: $0) }
+		return source
+	}
 }

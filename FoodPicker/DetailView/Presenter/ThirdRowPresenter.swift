@@ -50,8 +50,11 @@ class ThirdRowPresenter: DetailRowPresenter {
   var addressSub : NSAttributedString {
     guard let address : String = detail.location?.displayAddress.reduce("",{$0 + " " + $1})
     else { return NSAttributedString(string: "No Providing") }
+		
+		let paragraphStyle = NSMutableParagraphStyle()
+		paragraphStyle.lineSpacing = 4
     let attributedString = NSMutableAttributedString(string: address,
-                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.customblack])
+																										 attributes: .attributes([.black, [NSAttributedString.Key.paragraphStyle : paragraphStyle]]))
     return attributedString
   }
 

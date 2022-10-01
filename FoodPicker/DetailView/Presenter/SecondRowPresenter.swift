@@ -71,50 +71,28 @@ class SecondRowPresenter: DetailRowPresenter {
 		let tab = NSTextTab(textAlignment: .left, location: 100, options: [:])
 		paragraphStyle.tabStops = [tab]
 		
-		if isExpanded {
-			let weekArray = ["Monday\t",
-											 "Tuesday\t",
-											 "Wednesday\t",
-											 "Thursday\t",
-											 "Friday\t",
-											 "Saturday\t",
-											 "Sunday\t"]
-			var everydayOpenInterval : [String] = []
-			for (index, day) in weekArray.enumerated(){
-				let openInterval = getInterval(hours: openHours, numofDayfromYelp: index)
-				if openInterval == "" {
-					everydayOpenInterval.append("\(day)Might be closed.\n\n")
-				}else {
-					everydayOpenInterval.append("\(day)\(openInterval)\n\n")
-				}
+		let weekArray = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+		var everydayOpenInterval : [String] = []
+		for (index, day) in weekArray.enumerated(){
+			let openInterval = getInterval(hours: openHours, numofDayfromYelp: index)
+			if openInterval == "" {
+				everydayOpenInterval.append("\(day)\tNo providing.\n\n")
+			}else {
+				everydayOpenInterval.append("\(day)\t\(openInterval)\n\n")
 			}
-			let expandedSheet = everydayOpenInterval.reduce("", { $0 + $1 })
+		}
 
+		if isExpanded {
+			let expandedSheet = everydayOpenInterval.reduce("", { $0 + $1 })
 			return NSMutableAttributedString(
 				string: expandedSheet,
 				attributes: .attributes([[NSAttributedString.Key.paragraphStyle: paragraphStyle], .black])
 			)
 		}else {
-			let day = getDayFromNum(weekDayNum)
-			let fromToInterval = getInterval(hours: openHours, numofDayfromYelp: numofDayTransfromToYelp)
 			return NSAttributedString(
-				string: "\(day)\t\(fromToInterval) ",
+				string: everydayOpenInterval[weekDayNum - 2],
 				attributes: .attributes([[NSAttributedString.Key.paragraphStyle: paragraphStyle], .black, .arial14Bold])
 			)
-			
-		}
-	}
-	
-	func getDayFromNum(_ num: Int) -> String {
-		switch num {
-		case 2: return "Monday"
-		case 3: return "Tuesday"
-		case 4: return "Wednesday"
-		case 5: return "Thursday"
-		case 6: return "Friday"
-		case 7: return "Saturday"
-		case 1: return "Sunday"
-		default: return "Sunday"
 		}
 	}
 	

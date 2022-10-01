@@ -33,7 +33,7 @@ struct CachedAsyncImage<Content: View>: View {
 
     }
     .task {
-      await viewModel.load(url)
+			await viewModel.load(url, cache: ImageCacheImpl.shared)
     }
   }
 }

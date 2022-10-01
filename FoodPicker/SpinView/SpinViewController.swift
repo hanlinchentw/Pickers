@@ -133,7 +133,7 @@ extension SpinViewController: SpinWheelDelegate, SpinWheelDataSource {
 	func numberOfSections() -> Int {
 		presenter.numOfSection
 	}
-
+	
 	func itemsForSections() -> [WheelItem] {
 		presenter.itemForSection
 	}
@@ -203,6 +203,7 @@ extension SpinViewController {
 	
 	func bindResult(){
 		self.presenter.$result
+			.delay(for: .milliseconds(700), scheduler: RunLoop.main)
 			.compactMap { $0 }
 			.receive(on: RunLoop.main)
 			.sink { self.resultView.restaurant = $0 }

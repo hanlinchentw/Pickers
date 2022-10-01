@@ -17,9 +17,7 @@ class RestaurantCardCell: UICollectionViewCell {
   weak var delegate: RestaurantCardCellDelegate?
 
   var presenter: RestaurantPresenter? {
-    didSet {
-      configure()
-    }
+    didSet { configure() }
   }
 
 	private let restaurantImageView: UIImageView = {
@@ -32,8 +30,6 @@ class RestaurantCardCell: UICollectionViewCell {
 	}()
 
   private let restaurantName: UILabel = .init(font: .arial14BoldMT, color: .black)
-
-  private let businessLabel : UILabel = .init(font: .boldSystemFont(ofSize: 14), color: .freshGreen)
 
   private let priceLabel: UILabel = .init(font: .arial12MT, color: .systemGray)
 
@@ -64,17 +60,18 @@ class RestaurantCardCell: UICollectionViewCell {
     addSubview(selectButton)
     selectButton.anchor(top: restaurantImageView.topAnchor, right: restaurantImageView.rightAnchor, paddingRight: 8)
 
-    addSubview(likeButton)
-    likeButton.anchor(top:restaurantImageView.bottomAnchor, right:rightAnchor, paddingRight: 8,
-                      width: 48, height: 48)
+		addSubview(likeButton)
+		likeButton.anchor(top: restaurantImageView.bottomAnchor, right: rightAnchor, paddingTop: 8, paddingRight: 16)
+		likeButton.setDimension(width: 32, height: 32)
 
-    let captionStack = UIStackView(arrangedSubviews: [restaurantName, businessLabel, priceLabel, ratedLabel])
-    captionStack.distribution = .fillProportionally
+    let captionStack = UIStackView(arrangedSubviews: [restaurantName, priceLabel, ratedLabel])
+		captionStack.distribution = .fillEqually
     captionStack.spacing = 4
     captionStack.axis = .vertical
-    addSubview(captionStack)
-    captionStack.anchor(top: restaurantImageView.bottomAnchor, left: leftAnchor,bottom: bottomAnchor,
-                        paddingTop: 8, paddingLeft: 16, paddingBottom: 8)
+    
+		addSubview(captionStack)
+		captionStack.anchor(top: restaurantImageView.bottomAnchor, left: leftAnchor, right: likeButton.leftAnchor, bottom: bottomAnchor,
+											 paddingTop: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 8)
   }
   
   required init?(coder: NSCoder) {
@@ -109,7 +106,6 @@ class RestaurantCardCell: UICollectionViewCell {
     restaurantName.text = presenter.name
     priceLabel.text = presenter.priceCategoryDistanceText
     composeRatedLabel(rating: presenter.rating, reviewCount: presenter.reviewCount)
-    businessLabel.text = presenter.openOrCloseString
     selectButton.setImage(UIImage(named: presenter.actionButtonImage)?
       .withRenderingMode(.alwaysOriginal), for: .normal)
     likeButton.setImage(UIImage(named: presenter.likeButtonImage)?

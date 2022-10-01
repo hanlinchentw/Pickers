@@ -22,7 +22,7 @@ class SlideShowViewController: UIViewController {
 		
 		view.addSubview(button)
 		button.center(inView: view)
-		button.setDimension(width: 24, height: 24)
+		button.setDimension(width: 16, height: 16)
 		button.centerY(inView: view)
 		view.setDimension(width: 40, height: 40)
 		view.layer.cornerRadius = 20
@@ -46,6 +46,9 @@ class SlideShowViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		configureUI()
+		let panGes = UIPanGestureRecognizer(target: self, action: #selector(panGesture(gesture:)))
+		self.view.addGestureRecognizer(panGes)
+		self.view.isUserInteractionEnabled = true
 	}
 	
 	@objc func handleDismissDetailPage(){
@@ -61,5 +64,14 @@ extension SlideShowViewController {
 
 		view.addSubview(backbuttonContainerView)
 		backbuttonContainerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 32)
+	}
+}
+
+extension SlideShowViewController: UIGestureRecognizerDelegate {
+	@objc func panGesture(gesture: UIPanGestureRecognizer) {
+		let yTranslation = gesture.translation(in: self.view).y
+		if abs(yTranslation) > 50 {
+			self.dismiss(animated: true)
+		}
 	}
 }

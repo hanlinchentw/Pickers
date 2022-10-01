@@ -35,7 +35,7 @@ class CachedImageView: UIImageView {
         return
       }
       Task {
-        await self?.viewModel.load(url)
+				await self?.viewModel.load(url, cache: ImageCacheImpl.shared)
       }
     }
     .store(in: &set)

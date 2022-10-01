@@ -13,12 +13,11 @@ class CachedAsyncImageViewModel: ObservableObject {
 
   private let fetcher = ImageFetcher()
 
-  @MainActor func load(_ imageUrl: String, cache: ImageCache = .shared) async {
-
+  @MainActor func load(_ imageUrl: String, cache: ImageCache) async {
     self.currentState = .loading
 
     do {
-      if let cachedData = cache.object(forKey: NSString.init(string: imageUrl)) {
+      if let cachedData = cache.get(forKey: NSString.init(string: imageUrl)) {
         self.currentState = .success(cachedData)
         return
       }

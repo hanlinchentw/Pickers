@@ -69,9 +69,9 @@ struct RestaurantPresenter {
 
   var likeButtonImage: String {
     guard let isLiked = isLiked else {
-      return "btnBookmarkHeartPressed"
+      return "btnBookmarkHeartDefault"
     }
-    return isLiked ? "btnBookmarkHeartPressed" : "icnHeart"
+    return isLiked ? "btnBookmarkHeartPressed" : "btnBookmarkHeartDefault"
   }
 
   init(restaurant : RestaurantViewObject, actionButtonMode: ActionButtonMode, isLiked: Bool? = nil) {

@@ -120,6 +120,7 @@ extension MapViewController: MKMapViewDelegate {
 			let view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: NSStringFromClass(AnnotationItem.self))
 			view.titleVisibility = .adaptive
 			view.glyphImage = UIImage(named: "icon56PickerLogo")
+			view.markerTintColor = .butterscotch
 			return view
 		} else  { return nil }
 	}

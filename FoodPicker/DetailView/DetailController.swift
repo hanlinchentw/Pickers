@@ -26,8 +26,9 @@ class DetailController : UICollectionViewController {
 	//MARK: - Lifecycle
 	init(id: String) {
 		self.viewModel = DetailViewModel(restaurantId: id)
-		let layout = UICollectionViewFlowLayout()
-		layout.headerReferenceSize = CGSize(width: UIScreen.screenWidth, height: 300)
+		let layout = StrechyHeaderLayout()
+		layout.headerReferenceSize = .init(width: UIScreen.screenWidth, height: 300)
+		layout.scrollDirection = .vertical
 		super.init(collectionViewLayout: layout)
 	}
 	
@@ -51,15 +52,9 @@ class DetailController : UICollectionViewController {
 	// MARK: - Binding
 	func bindCollectionView() {
 		viewModel.$detail
-			.combineLatest(viewModel.$isLiked)
-			.sink { [weak self] _, _ in
+			.combineLatest(viewModel.$isLiked, viewModel.$isExpanded)
+			.sink { [weak self] _, _, _ in
 				self?.collectionView.reloadData()
-			}
-			.store(in: &set)
-		
-		viewModel.$isExpanded
-			.sink { [weak self] _ in
-				self?.collectionView.reloadItems(at: [.init(row: 1, section: 0)])
 			}
 			.store(in: &set)
 	}
@@ -70,6 +65,7 @@ class DetailController : UICollectionViewController {
 		collectionView.register(DetailHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
 		collectionView.delegate = self
 		collectionView.dataSource = self
+		collectionView.alwaysBounceVertical = true
 		collectionView.setDimension(width: UIScreen.screenWidth, height: UIScreen.screenHeight + 1000)
 		collectionView.contentInset = UIEdgeInsets(top: -SafeAreaUtils.top, left: 0, bottom: 100, right: 0)
 	}
@@ -107,17 +103,20 @@ extension DetailController {
 		var presenter: DetailRowPresenter = DetailRowPresenterMapper.mapPresenterFromDetailConfig(config, detail: detail, isExpanded: viewModel.isExpanded)
 		presenter.delegate = self
 		cell.presenter = presenter
-		cell.isExpanded = self.viewModel.isExpanded
 		return cell
 	}
 	
 	@MainActor
 	override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 		let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind , withReuseIdentifier: headerIdentifier, for: indexPath) as! DetailHeader
-		let presenter = DetailHeaderPresenter(isLiked: self.viewModel.isLiked, detail: viewModel.detail)
+		let presenter = DetailHeaderPresenter(isLiked: self.viewModel.isLiked, detail: viewModel.detail, imageSource: viewModel.imageSource)
 		presenter.delegate = self
 		header.presenter = presenter
 		return header
+	}
+
+	override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		if abs(collectionView.contentOffset.y) >= 150 { self.pushToSlideShowVC() }
 	}
 }
 extension DetailController : UICollectionViewDelegateFlowLayout {
@@ -127,7 +126,7 @@ extension DetailController : UICollectionViewDelegateFlowLayout {
 		}
 		return  CGSize(width: collectionView.frame.width, height: 88)
 	}
-	
+
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
 		return 4
 	}
@@ -146,8 +145,8 @@ extension DetailController : DetailHeaderDelegate {
 		self.viewModel.shareButtonTapped()
 	}
 	
-	func pushToSlideShowVC(photos: Array<AlamofireSource>) {
-		let slideShow = SlideShowViewController(photos: photos)
+	func pushToSlideShowVC() {
+		let slideShow = SlideShowViewController(photos: viewModel.imageSource)
 		slideShow.modalTransitionStyle = .crossDissolve
 		slideShow.modalPresentationStyle = .fullScreen
 		self.present(slideShow, animated: true)
@@ -156,6 +155,7 @@ extension DetailController : DetailHeaderDelegate {
 //MARK: - DetailCellDelegate
 extension DetailController: DetailCellDelegate {
 	func didTapActionButton(_ config: DetailConfig) {
+		print("didTapActionButton >>> \(config)")
 		guard let detail = viewModel.detail else { return }
 		switch config {
 		case .main, .phone: break
