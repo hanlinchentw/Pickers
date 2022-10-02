@@ -67,8 +67,7 @@ struct ListCardView: View {
             ForEach(0 ..< viewModel.numOfRestaurants, id: \.self) { index in
               let restaurant = viewModel.getRestaurantByIndex(index)
               let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: .none)
-              RestaurantListItemView(presenter: presenter) {
-              }
+              RestaurantListItemView(presenter: presenter) {}
             }
           }
           .padding(.bottom, 16)

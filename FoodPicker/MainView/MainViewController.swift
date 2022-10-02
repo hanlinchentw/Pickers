@@ -42,13 +42,13 @@ extension MainViewController {
       .sink { mode in
         switch mode {
         case .list:
-          UIView.animate(withDuration: 0.4) {
+          UIView.animate(withDuration: 0.3) {
             self.mapVC.view.alpha = 0
             self.listVC.view.alpha = 1
             self.tabBarController?.tabBar.alpha = 1
           }
         case .map:
-          UIView.animate(withDuration: 0.4) {
+          UIView.animate(withDuration: 0.3) {
             self.mapVC.view.alpha = 1
             self.listVC.view.alpha = 0
             self.tabBarController?.tabBar.alpha = 0
@@ -85,6 +85,7 @@ extension MainViewController {
     mapView.fit(inView: self.view)
   }
 }
+
 extension MainViewController {
   enum MainPageMode {
     case list

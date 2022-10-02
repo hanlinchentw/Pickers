@@ -34,33 +34,6 @@ class BottomSheetViewModel: Selectable {
 		}
 		isRefresh = true
 	}
-
-	func observeSelectedRestaurantChange() {
-		NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
-			.sink { notification in
-				guard let userInfo = notification.userInfo else { return }
-
-				let insert = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>
-				let delete = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>
-
-				if let insert = insert, let object = insert.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
-					if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
-						self.restaurants[index].isSelected = true
-					} else {
-						self.restaurants.append(RestaurantViewObject(restaurant: object.restaurant))
-					}
-				}
-				if let delete = delete, let object = delete.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
-					if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
-						self.restaurants[index].isSelected  = false
-					}
-				}
-
-				self.listState = self.listState == .temp ? .temp : .edited
-				self.isRefresh = true
-			}
-			.store(in: &set)
-	}
 	
 	func didTapSelectButton(_ target: RestaurantViewObject, at indexPath: IndexPath) {
 		selectRestaurant(isSelected: target.isSelected, restaurant: target)
@@ -122,5 +95,29 @@ class BottomSheetViewModel: Selectable {
 		self.list?.delete(in: moc)
 		try? moc.save()
 		reset()
+	}
+}
+
+extension BottomSheetViewModel: RestaurantContextDidChangeNotify {
+	var selectContextDidInsert: ((_ insert: SelectedRestaurant) -> Void)? {
+		{ insert in
+			if let index = self.restaurants.firstIndex(where: { $0.id == insert.id }) {
+				self.restaurants[index].isSelected = true
+			} else {
+				self.restaurants.append(RestaurantViewObject(restaurant: insert.restaurant))
+			}
+			self.listState = self.listState == .temp ? .temp : .edited
+			self.isRefresh = true
+		}
+	}
+	
+	var selectContextDidDelete: ((_ delete: SelectedRestaurant) -> Void)? {
+		{ delete in
+			if let index = self.restaurants.firstIndex(where: { $0.id == delete.id }) {
+				self.restaurants[index].isSelected  = false
+			}
+			self.listState = self.listState == .temp ? .temp : .edited
+			self.isRefresh = true
+		}
 	}
 }

@@ -33,7 +33,7 @@ class BottomSheetViewController : UIViewController {
 		bindRefresh()
 		bindListState()
 		bindErrorState()
-		viewModel.observeSelectedRestaurantChange()
+		viewModel.observeContextObjectsChange()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {

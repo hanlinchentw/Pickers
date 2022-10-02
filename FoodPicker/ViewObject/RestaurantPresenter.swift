@@ -55,7 +55,7 @@ struct RestaurantPresenter {
 	}
 
 	var ratingWithOneDecimal: String? {
-		guard let rating = restaurant.rating else {
+		guard let rating = restaurant.rating, rating != 0, !rating.isNaN else {
 			return nil
 		}
 		return "\((rating * 10).rounded()/10)"
@@ -69,7 +69,8 @@ struct RestaurantPresenter {
 	}
 	
 	var distanceFromCurrentLocation : Int? {
-		guard let lat = restaurant.latitude, let lon = restaurant.longitude else {
+		guard let lat = restaurant.latitude, let lon = restaurant.longitude,
+						lat != 0, lon != 0 else {
 			return nil
 		}
 		return LocationService.shared.distanceFromCurrent(lat, lon)
@@ -93,9 +94,10 @@ struct RestaurantPresenter {
 	
 	var ratingAndReviewCountString: NSMutableAttributedString? {
 		guard let rating = restaurant.rating, let reviewCount = restaurant.reviewCount,
-					!rating.isNaN else {
+					rating != 0, !rating.isNaN else {
 			return nil
 		}
+
 		let attributedString = NSMutableAttributedString(string: "★", attributes: .attributes([.systemYellow, .arial12]))
 		attributedString.append(NSAttributedString(string: " \(rating)", attributes: .attributes([.black, .arial12])))
 		attributedString.append(NSAttributedString(string: " \(reviewCount)", attributes: .attributes([.lightGray, .arial12])))

@@ -37,10 +37,9 @@ struct RestaurantListItemView: View {
 				.frame(width: 93, height: 93)
 				.cornerRadius(16)
 				.padding(.top, 8)
-				.padding(.horizontal, 8)
+				.padding(.leading, 8)
 			}
-			
-			
+
 			VStack(alignment: .leading) {
 				VStack(alignment: .leading, spacing: 6) {
 					Text(presenter.name).en16Bold()
@@ -60,7 +59,10 @@ struct RestaurantListItemView: View {
 					})
 				}
 			}
-			.padding(.leading, 6)
+			.padding(.leading, 16)
+			
+			Spacer()
+
 			Button {
 				actionButtonOnPress()
 			} label: {
@@ -70,5 +72,6 @@ struct RestaurantListItemView: View {
 			}
 			.frame(width: 40, height: 40)
 		}
+		.frame(width: UIScreen.screenWidth - 16, height: 102)
 	}
 }

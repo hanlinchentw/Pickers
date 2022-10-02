@@ -20,7 +20,7 @@ class SpinWheelPresenter  {
   private var set = Set<AnyCancellable>()
 
   init() {
-    observeSelectedRestaurantChange()
+		observeContextObjectsChange()
   }
 
   var numOfSection: Int {
@@ -57,14 +57,6 @@ class SpinWheelPresenter  {
     return items1 + items2
   }
 
-  func observeSelectedRestaurantChange() {
-    NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
-      .sink { notification in
-        self.refresh()
-      }
-      .store(in: &set)
-  }
-
   func refresh() {
     if let selectedRestaurants = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext) as? Array<SelectedRestaurant> {
       self.restaurants = selectedRestaurants.map { RestaurantViewObject(restaurant: $0.restaurant) }
@@ -93,10 +85,20 @@ class SpinWheelPresenter  {
 	}
 }
 
+// MARK: - Default item
 extension SpinWheelPresenter {
 	static let item1 = WheelItem(id: UUID().uuidString, title: "Picker!", titleColor: .customblack, itemColor: .white)
   static let item2 = WheelItem(id: UUID().uuidString, title: "Picker!", titleColor: .customblack, itemColor: .pale)
   static let item3 = WheelItem(id: UUID().uuidString, title: "Picker!", titleColor: .customblack, itemColor: .white)
   static let item4 = WheelItem(id: UUID().uuidString, title: "Picker!", titleColor: .customblack, itemColor: .pale)
   static let defaultItems = [item1, item2, item3, item4]
+}
+
+// MARK: - RestaurantContextDidChangeNotifiy
+extension SpinWheelPresenter: RestaurantContextDidChangeNotify {
+	var contextObjectDidChange: ((Notification) -> Void)? {
+		{ _ in
+			self.refresh()
+		}
+	}
 }

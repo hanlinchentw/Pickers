@@ -36,49 +36,17 @@ class MapViewModel: Likable, Selectable {
   }
 
   init() {
-    observeSelectedRestaurantChange()
+    observeContextObjectsChange()
   }
 
-  func refresh() {
-    OperationQueue.main.addOperation {
-      if let numOfSelectRestaurant = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext).count {
-        self.numOfSelectRestaurant = numOfSelectRestaurant
-      }
-      self.isRefresh = true
-    }
-  }
-
-  func observeSelectedRestaurantChange() {
-    NotificationCenter.default.publisher(for: Notification.Name.NSManagedObjectContextObjectsDidChange)
-      .sink { notification in
-        guard let userInfo = notification.userInfo else { return }
-        let insert = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>
-        let delete = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>
-
-        if let insert = insert, let object = insert.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
-          if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
-            self.restaurants[index].isSelected = true
-          }
-        }
-        if let delete = delete, let object = delete.first(where: { $0 is SelectedRestaurant}) as? SelectedRestaurant {
-          if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
-            self.restaurants[index].isSelected  = false
-          }
-        }
-        if let insert = insert, let object = insert.first(where: { $0 is LikedRestaurant}) as? LikedRestaurant {
-          if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
-            self.restaurants[index].isLiked = true
-          }
-        }
-        if let delete = delete, let object = delete.first(where: { $0 is LikedRestaurant}) as? LikedRestaurant {
-          if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
-            self.restaurants[index].isLiked  = false
-          }
-        }
-        self.refresh()
-      }
-      .store(in: &set)
-  }
+	func refresh() {
+		OperationQueue.main.addOperation {
+			if let numOfSelectRestaurant = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext).count {
+				self.numOfSelectRestaurant = numOfSelectRestaurant
+			}
+			self.isRefresh = true
+		}
+	}
 
   func fetchRestaurant(latitude: Double?, longitude: Double?) async  {
     do {
@@ -105,4 +73,42 @@ class MapViewModel: Likable, Selectable {
       self.error = error
     }
   }
+}
+
+extension MapViewModel: RestaurantContextDidChangeNotify {
+	var selectContextDidInsert: ((SelectedRestaurant) -> Void)? {
+		{ object in
+			if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
+				self.restaurants[index].isSelected = true
+				self.refresh()
+			}
+		}
+	}
+	
+	var selectContextDidDelete: ((SelectedRestaurant) -> Void)? {
+		{ object in
+			if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
+				self.restaurants[index].isSelected = false
+				self.refresh()
+			}
+		}
+	}
+	
+	var likeContextDidInsert: ((LikedRestaurant) -> Void)? {
+		{ object in
+			if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
+				self.restaurants[index].isLiked = true
+				self.refresh()
+			}
+		}
+	}
+	
+	var likeContextDidDelete: ((LikedRestaurant) -> Void)? {
+		{ object in
+			if let index = self.restaurants.firstIndex(where: { $0.id == object.id }) {
+				self.restaurants[index].isLiked = false
+				self.refresh()
+			}
+		}
+	}
 }

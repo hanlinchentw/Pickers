@@ -27,7 +27,7 @@ class ListCardViewModel: ObservableObject {
   }
 
   var numOfRestaurants: Int {
-    return list.restaurants.count ?? 0
+    return list.restaurants.count
   }
 
   var numOfRestaurantsDisplayText: String {
@@ -36,6 +36,7 @@ class ListCardViewModel: ObservableObject {
 
   func getRestaurantByIndex(_ index: Int) -> RestaurantViewObject {
     let restaurant = list.restaurants.allObjects[index] as! Restaurant
+		print("restaurant >>>", restaurant)
     return RestaurantViewObject(restaurant: restaurant)
   }
 }
