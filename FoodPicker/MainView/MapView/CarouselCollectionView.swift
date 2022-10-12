@@ -19,9 +19,7 @@ class CarouselCollectionView: UICollectionView {
   //MARK: - Properties
   var restaurants = [RestaurantViewObject]() {
     didSet {
-      UIView.animate(withDuration: 0, animations: {
-        self.reloadSections(.init([0]))
-      })
+      reloadData()
     }
   }
 
@@ -44,7 +42,7 @@ class CarouselCollectionView: UICollectionView {
     fatalError("init(coder:) has not been implemented")
   }
 }
-extension CarouselCollectionView: UICollectionViewDelegate, UICollectionViewDataSource{
+extension CarouselCollectionView: UICollectionViewDelegate, UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return restaurants.count
   }

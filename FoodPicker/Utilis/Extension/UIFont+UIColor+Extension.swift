@@ -16,6 +16,10 @@ extension UIFont {
   static var arial14MT: UIFont {
     return UIFont(name: "ArialMT", size: 14) ?? UIFont()
   }
+	
+	static var arial16MT: UIFont {
+		return UIFont(name: "ArialMT", size: 16) ?? UIFont()
+	}
 
   static var arial14BoldMT: UIFont {
     return UIFont(name: "Arial-BoldMT", size: 14) ?? UIFont()
@@ -24,6 +28,10 @@ extension UIFont {
   static var arial16BoldMT: UIFont {
     return UIFont(name: "Arial-BoldMT", size: 16) ?? UIFont()
   }
+	
+	static var arial24BoldMT: UIFont {
+		return UIFont(name: "Arial-BoldMT", size: 24) ?? UIFont()
+	}
 }
 extension UIColor {
   @nonobjc class var denimBlue: UIColor {

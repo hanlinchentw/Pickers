@@ -15,67 +15,51 @@ protocol RestaurantsListDelegate: AnyObject {
 	func didTapAddButton()
 }
 
-class RestaurantsList: UITableView{
+class RestaurantsList: UICollectionView {
   //MARK: - Properties
-  var restaurants = [RestaurantViewObject]() { didSet {
-		UIView.performWithoutAnimation {
-			self.reloadDataSmoothly()
-		}		
-	}}
-
-	private lazy var addButton: UIButton = {
-		let btn = UIButton(type: .system)
-		btn.addTarget(self, action: #selector(handleAddButtonTapped), for: .touchUpInside)
-		btn.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
-		btn.tintColor = .butterscotch
-		return btn
-	}()
-	
+  var restaurants = [RestaurantViewObject]() { didSet { self.reloadData() }}
   weak var listDelegate: RestaurantsListDelegate?
   //MARK: - Lifecycle
-  override init(frame: CGRect, style: UITableView.Style) {
-    super.init(frame: frame, style: .plain)
-    layer.cornerRadius = 16
-    rowHeight = 93 + 24
-    backgroundColor = .white
-    separatorStyle = .none
-    delegate = self
-    dataSource = self
+	override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+		let layout = UICollectionViewFlowLayout()
+		layout.itemSize = .init(width: UIScreen.screenWidth, height: 93 + 24)
+		super.init(frame: frame, collectionViewLayout: layout)
+		layer.cornerRadius = 16
+		backgroundColor = .white
+		delegate = self
+		dataSource = self
+		register(RestaurantListCell.self, forCellWithReuseIdentifier: restaurantListCellIdentifier)
+		register(RestaurantListFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: NSStringFromClass(RestaurantListFooterView.self))
+	}
 
-    register(RestaurantListCell.self, forCellReuseIdentifier: restaurantListCellIdentifier)
-  }
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-	
-	@objc func handleAddButtonTapped() {
-		listDelegate?.didTapAddButton()
-	}
 }
 // MARK: - UITableViewDelegate, UITableViewDataSource
-extension RestaurantsList: UITableViewDelegate, UITableViewDataSource {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return restaurants.count
-  }
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = self.dequeueReusableCell(withIdentifier: restaurantListCellIdentifier, for: indexPath) as! RestaurantListCell
-    cell.selectionStyle = .none
-    let restaurant = restaurants[indexPath.row]
-    let actionButtonMode: ActionButtonMode = restaurant.isSelected ? .select : .deselect
-    cell.presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
-    cell.delegate = self
-    return cell
-  }
-	func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-		let footerView = UIView()
-		footerView.addSubview(addButton)
-		addButton.center(inView: footerView)
-		addButton.setDimension(width: 36, height: 36)
-		return footerView
+extension RestaurantsList: UICollectionViewDelegate, UICollectionViewDataSource {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return restaurants.count
+	}
+
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = self.dequeueReusableCell(withReuseIdentifier: restaurantListCellIdentifier, for: indexPath) as! RestaurantListCell
+		let restaurant = restaurants[indexPath.row]
+		let actionButtonMode: ActionButtonMode = restaurant.isSelected ? .select : .deselect
+		cell.presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
+		cell.delegate = self
+		return cell
 	}
 	
-	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		return 64
+	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+		if kind == UICollectionView.elementKindSectionFooter {
+			let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: NSStringFromClass(RestaurantListFooterView.self), for: indexPath) as! RestaurantListFooterView
+			footer.didTap = { [weak self] in
+				self?.listDelegate?.didTapAddButton()
+			}
+			return footer
+		}
+		return UICollectionReusableView()
 	}
 }
 

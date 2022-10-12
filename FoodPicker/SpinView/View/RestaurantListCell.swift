@@ -12,7 +12,7 @@ protocol RestaurantListCellDelegate: AnyObject {
   func didTapActionButton(_ restaurant : RestaurantViewObject)
 }
 
-class RestaurantListCell : UITableViewCell {
+class RestaurantListCell: UICollectionViewCell {
   //MARK: - Properties
   var presenter: RestaurantPresenter? { didSet { configure() } }
 
@@ -52,10 +52,10 @@ class RestaurantListCell : UITableViewCell {
 
   private let ratedLabel = UILabel()
   //MARK: - Lifecycle
-  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-    super.init(style: style, reuseIdentifier: reuseIdentifier)
-    setupUI()
-  }
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		setupUI()
+	}
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -74,7 +74,7 @@ extension RestaurantListCell {
     actionButton.anchor(right: rightAnchor, paddingRight: 8)
     actionButton.centerY(inView: self)
 
-		restaurantImageView.setDimension(width: 93, height: 93)
+		restaurantImageView.setDimension(width: 93)
     let captionStack = UIStackView(arrangedSubviews: [restaurantName, priceLabel, ratedLabel])
 		captionStack.distribution = .fillProportionally
     captionStack.spacing = 0

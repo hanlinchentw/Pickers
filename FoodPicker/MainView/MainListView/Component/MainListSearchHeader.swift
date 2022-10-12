@@ -9,34 +9,34 @@
 import SwiftUI
 
 struct MainListSearchHeader: View {
-	@Binding var searchText: String
+	var onEditing:  ()  -> Void
 	var mapButtonOnPress: () -> Void
 	
 	var body: some View {
 		HStack(alignment: .center) {
-			TextField("", text: $searchText)
-			.placeholder(when: searchText.isEmpty) {
-				HStack {
-					Image(systemName: "magnifyingglass")
-					Text("Search for restaurants")
-				}
-				.foregroundColor(.gray.opacity(0.5))
+			HStack {
+				Image(systemName: "magnifyingglass")
+					.frame(height: 44)
+					.padding(.leading, 12)
+				Text("Search for restaurants")
+				Spacer()
 			}
-			.showClearButton(text: $searchText)
-			.padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 0))
+			.foregroundColor(.gray.opacity(0.5))
 			.height(40)
 			.roundedWithShadow(cornerRadius: 8)
-
+			.padding(.trailing, 12)
+			.onTapGesture {
+				onEditing()
+			}
+			
 			Button {
 				mapButtonOnPress()
 			} label: {
 				Image(systemName: "map.circle.fill")
 					.foregroundColor(.butterScotch)
-					.frame(width: searchText.isEmpty ? 40 : 0, height: searchText.isEmpty ? 40 : 0)
+					.frame(width: 40, height: 40)
 			}
 			.roundedWithShadow(cornerRadius: 8)
-			.opacity(searchText.isEmpty ? 1 : 0)
-			.animation(.easeInOut(duration: 0.2), value: searchText.isEmpty)
 		}
 		.padding(.top, 16)
 		.padding(.leading, 16)
@@ -48,10 +48,8 @@ struct SearchFieldContainer_Previews: PreviewProvider {
 	static var previews: some View {
 		
 		MainListSearchHeader(
-			searchText: .constant(""),
-			mapButtonOnPress: {
-			
-			}
+			onEditing: {},
+			mapButtonOnPress: {}
 		)
 	}
 }

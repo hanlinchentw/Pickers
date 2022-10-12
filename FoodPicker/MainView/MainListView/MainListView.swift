@@ -21,7 +21,7 @@ struct MainListView: View {
 	@ObservedObject var locationService: LocationService
 	@EnvironmentObject var coordinator: MainCoordinator
 	@Environment(\.managedObjectContext) private var viewContext
-	@StateObject var searchViewModel = SearchListViewModel()
+//	@StateObject var searchViewModel = SearchListViewModel()
 	@StateObject var popularViewModel = MainListSectionViewModel(section: .popular)
 	@StateObject var nearbyViewModel = MainListSectionViewModel(section: .nearby)
 	
@@ -34,16 +34,16 @@ struct MainListView: View {
 				ScrollView {
 					VStack(spacing: 24) {
 						MainListSearchHeader(
-							searchText: $searchViewModel.searchText,
+							onEditing: {
+								coordinator.presentSearchViewController()
+							},
 							mapButtonOnPress: { coordinator.presentMapView() }
 						)
 						.id("MainListSearchHeader")
 						
 						if locationService.lastLocation != nil {
 							VStack {
-								if searchViewModel.showSearchResult {
-									SearchListView(vm: searchViewModel)
-								} else if popularViewModel.loadingState == .error && nearbyViewModel.loadingState == .error {
+								if popularViewModel.loadingState == .error && nearbyViewModel.loadingState == .error {
 									emptyView
 								} else {
 									HorizontalSectionView(vm: popularViewModel)
@@ -58,11 +58,9 @@ struct MainListView: View {
 						}
 					}
 				}
-				.if(!searchViewModel.showSearchResult) {
-					$0.refreshable {
-						try? await popularViewModel.fetchData()
-						try? await nearbyViewModel.fetchData()
-					}
+				.refreshable {
+					try? await popularViewModel.fetchData()
+					try? await nearbyViewModel.fetchData()
 				}
 				.onReceive(pub, perform: { _ in
 					withAnimation(.easeInOut(duration: 1)) {
