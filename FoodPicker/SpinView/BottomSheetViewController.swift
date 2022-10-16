@@ -20,7 +20,7 @@ class BottomSheetViewController : UIViewController {
 	private let titleLabel = UILabel("My selected list", font: .arial16BoldMT, color: .black)
 	private let saveButton = ListSaveButton()
 	private let updateButton = ListUpdateButton()
-	private let tableView = RestaurantsList()
+	private let collectionView = RestaurantsList()
 	private var set = Set<AnyCancellable>()
 	//MARK: - Lifecycle
 	override func viewDidLoad() {
@@ -45,7 +45,7 @@ class BottomSheetViewController : UIViewController {
 	private func bindRefresh() {
 		viewModel.$isRefresh
 			.sink { _ in
-				self.tableView.restaurants = self.viewModel.restaurants
+				self.collectionView.restaurants = self.viewModel.restaurants
 			}
 			.store(in: &set)
 	}
@@ -172,9 +172,9 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 		let y = view.frame.minY
 		if y < 200{
-			tableView.isScrollEnabled = true
+			collectionView.isScrollEnabled = true
 		} else {
-			tableView.isScrollEnabled = false
+			collectionView.isScrollEnabled = false
 		}
 		return false
 	}
@@ -200,11 +200,11 @@ extension BottomSheetViewController {
 	}
 	
 	func configureTableView() {
-		view.addSubview(tableView)
-		tableView.anchor(top: titleLabel.bottomAnchor, left:view.leftAnchor,
+		view.addSubview(collectionView)
+		collectionView.anchor(top: titleLabel.bottomAnchor, left:view.leftAnchor,
 										 right: view.rightAnchor,bottom: view.bottomAnchor,
 										 paddingTop: 16, paddingBottom: 200)
-		tableView.listDelegate = self
+		collectionView.listDelegate = self
 	}
 	
 	func configureButton() {

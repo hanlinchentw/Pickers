@@ -36,7 +36,7 @@ class RestaurantsList: UICollectionView {
     fatalError("init(coder:) has not been implemented")
   }
 }
-// MARK: - UITableViewDelegate, UITableViewDataSource
+// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 extension RestaurantsList: UICollectionViewDelegate, UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return restaurants.count
@@ -62,7 +62,12 @@ extension RestaurantsList: UICollectionViewDelegate, UICollectionViewDataSource 
 		return UICollectionReusableView()
 	}
 }
-
+// MARK: - UICollectionViewDelegateFlowLayout
+extension RestaurantsList: UICollectionViewDelegateFlowLayout {
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+		return .init(width: UIScreen.screenWidth, height: 72)
+	}
+}
 // MARK: - RestaurantListCellDelegate
 extension RestaurantsList: RestaurantListCellDelegate {
   func didTapActionButton(_ restaurant: RestaurantViewObject) {
