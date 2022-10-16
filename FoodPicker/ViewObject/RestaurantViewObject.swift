@@ -61,10 +61,6 @@ extension RestaurantViewObject {
 		self.id = UUID().uuidString
 	}
 }
-extension RestaurantViewObject: Equatable {
-  static func ==(lhs: RestaurantViewObject, rhs: RestaurantViewObject) -> Bool {
-    return lhs.id == rhs.id
-  }
-}
+extension RestaurantViewObject: Equatable {}
 
 extension RestaurantViewObject: Hashable {}

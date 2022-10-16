@@ -11,10 +11,11 @@ import Combine
 
 
 
-class SearchViewController: UIViewController {
+class SearchViewController: UIViewController, Selectable {
 	typealias DataSource = UICollectionViewDiffableDataSource<Section, SectionItem>
 	typealias Snapshot = NSDiffableDataSourceSnapshot<Section, SectionItem>
 	// MARK: - Property
+	@Inject var selectService: SelectedCoreService
 	weak var coordinator: SearchCoordinator?
 	
 	private var vm = SearchListViewModel()
@@ -70,6 +71,7 @@ class SearchViewController: UIViewController {
 		setupCollectionView()
 		bindTextfield()
 		bindSearchState()
+		bindRefresh()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -129,6 +131,18 @@ extension SearchViewController {
 			.store(in: &set)
 	}
 	
+	func bindRefresh() {
+		vm.$isRefresh
+			.sink { [weak self] isRefresh in
+				guard let self = self else {
+					return
+				}
+				let snapshot = self.createSearchResultSnapshot(result: self.vm.viewObjects)
+				self.dataSource.apply(snapshot, animatingDifferences: true)
+			}
+			.store(in: &set)
+	}
+	
 	func showRecommendSection() {
 		self.menuButton.isHidden = true
 		self.collectionView.backgroundColor = .backgroundColor
@@ -175,6 +189,7 @@ extension SearchViewController {
 			let restaurant = restaurant
 			let actionButtonMode: ActionButtonMode = restaurant.isSelected ? .select : .deselect
 			cell.presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode)
+			cell.delegate = self
 		}
 		return searchResultRegistration
 	}
@@ -203,10 +218,15 @@ extension SearchViewController {
 	func createSearchResultSnapshot(result: Array<RestaurantViewObject>) -> Snapshot {
 		var snapshot = Snapshot()
 		snapshot.appendSections([Section.Search])
-		
-		let items = result.map { SectionItem.Search(restaurant: $0) }
+		let items = self.vm.viewObjects.map { SectionItem.Search(restaurant: $0) }
 		snapshot.appendItems(items, toSection: Section.Search)
 		return snapshot
+	}
+}
+// MARK: - RestaurantListCellDelegate
+extension SearchViewController: RestaurantListCellDelegate {
+	func didTapActionButton(_ restaurant: RestaurantViewObject) {
+		selectRestaurant(isSelected: restaurant.isSelected, restaurant: restaurant)
 	}
 }
 // MARK: - UITextFieldDelegate
