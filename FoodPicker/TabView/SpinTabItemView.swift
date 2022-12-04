@@ -51,7 +51,7 @@ class SpinTabItemView: UIImageView, SpinTabItemViewProps {
 //MARK: - UI
   private func configureUI() {
     backgroundColor = .butterscotch
-    image = UIImage(named: MainTabBarConstants.SpinTabImage)
+    image = UIImage(named: MainTabBarController.SpinTabImage)
     contentMode = .scaleAspectFit
     setDimension(width: 54, height: 54)
     layer.cornerRadius = 54 / 2
@@ -66,7 +66,7 @@ class SpinTabItemView: UIImageView, SpinTabItemViewProps {
       .sink(receiveValue: { [weak self] newNumberStr in
         if newNumberStr.toInt == 0 {
           self?.numOfSelectedLabel.text = nil
-          self?.image = UIImage(named: MainTabBarConstants.SpinTabImage)
+          self?.image = UIImage(named: MainTabBarController.SpinTabImage)
         } else {
           self?.numOfSelectedLabel.text = newNumberStr
           self?.numOfSelectedLabel.performBounceAnimataion(scale: 1.5, duration: 0.2)

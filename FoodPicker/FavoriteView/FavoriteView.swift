@@ -80,9 +80,9 @@ struct FavoriteHeader: View {
       VStack {
         Text("Favorite")
           .en16Bold()
-          .padding(.top, 24)
+					.padding(.top, SafeAreaUtils.top)
       }
-      .frame(width: UIScreen.screenWidth, height: 80)
+      .frame(width: UIScreen.screenWidth, height: 100)
       .background(Color.white)
       .cornerRadius(32, corners: [.bottomLeft, .bottomRight])
       Spacer()

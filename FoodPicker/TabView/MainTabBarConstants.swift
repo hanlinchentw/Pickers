@@ -10,54 +10,41 @@ import UIKit
 import SwiftUI
 import CoreData
 
-final class MainTabBarConstants {
-  enum TabItemType {
-    case main
-    case favorite
-    case spin
+enum MainTab: Tab, CaseIterable {
+	case main
+	case spin
+	case favorite
 
-    var viewController: UIViewController {
-      switch self {
-      case .main:
-        let nav = UINavigationController()
-        let coordinator = MainCoordinator(navigationController: nav)
-        coordinator.start()
-        return nav
-      case .favorite: return UIHostingController(rootView: FavoriteView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
-      case .spin:
-				let nav = UINavigationController(rootViewController: SpinViewController())
-				return nav
-      }
-    }
+	static let homeUnselectedTabImage = "homeUnselectedS"
+	static let homeSelectedTabImage = "homeSelectedS"
 
-    var defaultTabItemImage: String {
-      switch self {
-      case .main: return MainTabBarConstants.homeUnselectedTabImage
-      case .favorite: return MainTabBarConstants.favoriteUnselectedTabImage
-      case .spin: return ""
-      }
-    }
+	static let favoriteUnselectedTabImage = "favoriteUnselectedS"
+	static let favoriteSelectedTabImage = "icnTabHeartSelected"
 
-    var selectedTabItemImage: String {
-      switch self {
-      case .main: return MainTabBarConstants.homeSelectedTabImage
-      case .favorite: return MainTabBarConstants.favoriteSelectedTabImage
-      case .spin: return ""
-      }
-    }
-  }
-
-  static let homeUnselectedTabImage = "homeUnselectedS"
-  static let homeSelectedTabImage = "homeSelectedS"
-
-  static let searchUnselectedTabImage = "searchUnselectedS"
-  static let searchSelectedTabImage = "searchSelectedS"
-
-  static let favoriteUnselectedTabImage = "favoriteUnselectedS"
-  static let favoriteSelectedTabImage = "icnTabHeartSelected"
-
-  static let SpinTabImage = "spinActive"
-
-  static let tabImage = "bar"
+	private var viewController: UIViewController {
+		switch self {
+		case .main:
+			let nav = UINavigationController()
+			nav.tabBarItem.image = UIImage(named: Self.homeUnselectedTabImage)
+			nav.tabBarItem.selectedImage = UIImage(named: Self.homeSelectedTabImage)
+			let coordinator = MainCoordinator(navigationController: nav)
+			coordinator.start()
+			return nav
+		case .favorite:
+			let favoriteVC = UIHostingController(rootView: FavoriteView().environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext))
+			favoriteVC.tabBarItem.image = UIImage(named: Self.favoriteUnselectedTabImage)
+			favoriteVC.tabBarItem.selectedImage = UIImage(named: Self.favoriteSelectedTabImage)
+			return favoriteVC
+		case .spin:
+			return UINavigationController(rootViewController: SpinViewController())
+		}
+	}
+	
+	static var viewControllers: Array<UIViewController> {
+		MainTab.allCases.map {
+			let vc = $0.viewController
+			vc.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
+			return vc
+		}
+	}
 }
-

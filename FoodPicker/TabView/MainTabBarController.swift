@@ -11,10 +11,11 @@ import CoreData
 import Combine
 
 
-
-class MainTabBarController: UITabBarController {
+class MainTabBarController: UITabBarController, TabController {
+	static let SpinTabImage = "spinActive"
+	static let tabImage = "bar"
+	typealias TabType = MainTab
 	//MARK: - Properties
-	var displayTab: Array<MainTabBarConstants.TabItemType> = [.main, .spin, .favorite]
 	private let spinTabItemView = SpinTabItemView(frame: .zero)
 	
 	private var set = Set<AnyCancellable>()
@@ -43,10 +44,11 @@ extension MainTabBarController: RestaurantContextDidChangeNotify {
 extension MainTabBarController{
 	func configureTabBar(){
 		view.backgroundColor = .backgroundColor
-		viewControllers = displayTab.map { TabItemFactory.createTabItem(type: $0) }
+		viewControllers = self.displayViewControllers
 		self.selectedIndex = 0
 		tabBar.backgroundColor = .white
-		tabBar.backgroundImage = UIImage(named: MainTabBarConstants.tabImage)?.withRenderingMode(.alwaysOriginal)
+		tabBar.backgroundImage = UIImage(named: Self.tabImage)?.withRenderingMode(.alwaysOriginal)
+		tabBar.tintColor = .black
 		tabBar.layer.cornerRadius = 36
 		tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
 		tabBar.layer.masksToBounds = true
@@ -71,16 +73,5 @@ extension MainTabBarController: UITabBarControllerDelegate {
 		if index == 0 {
 			NotificationCenter.default.post(name: .init(Constants.firstTabGotTapped), object: nil)
 		}
-	}
-}
-
-//MARK: - TabItem Factory
-final class TabItemFactory {
-	static func createTabItem(type: MainTabBarConstants.TabItemType) -> UIViewController {
-		let vc = type.viewController
-		vc.tabBarItem.image = UIImage(named: type.defaultTabItemImage)?.withRenderingMode(.alwaysOriginal)
-		vc.tabBarItem.selectedImage = UIImage(named: type.selectedTabItemImage)?.withRenderingMode(.alwaysOriginal)
-		vc.tabBarItem.imageInsets = UIEdgeInsets(top: 16, left: 0, bottom: -16, right: 0)
-		return vc
 	}
 }

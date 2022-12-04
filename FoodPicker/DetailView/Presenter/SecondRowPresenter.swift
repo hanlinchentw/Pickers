@@ -90,7 +90,7 @@ class SecondRowPresenter: DetailRowPresenter {
 			)
 		}else {
 			return NSAttributedString(
-				string: everydayOpenInterval[weekDayNum - 2],
+				string: everydayOpenInterval[numofDayTransfromToYelp],
 				attributes: .attributes([[NSAttributedString.Key.paragraphStyle: paragraphStyle], .black, .arial14Bold])
 			)
 		}
