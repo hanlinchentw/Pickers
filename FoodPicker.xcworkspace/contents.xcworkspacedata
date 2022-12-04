@@ -2,36 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:SearchHistory+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:SearchHistory+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:LikedRestaurant+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:LikedRestaurant+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:SelectedRestaurant+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:SelectedRestaurant+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:ListEntity+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:ListEntity+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:SavedRestaurant+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:SavedRestaurant+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
       location = "group:FoodPicker.xcodeproj">
    </FileRef>
    <FileRef

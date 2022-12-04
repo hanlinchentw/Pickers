@@ -9,7 +9,11 @@
 import UIKit
 
 extension String {
-    
+
+    var toInt: Int? {
+      return Int(self)
+    }
+
     var containsChineseCharacters: Bool {
         return self.range(of: "\\p{Han}", options: .regularExpression) != nil
     }
