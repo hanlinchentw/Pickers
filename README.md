@@ -1,7 +1,5 @@
 # Pickers
-
-## Demonstration
-<img src="../Pickers/ScreenShot/Demo.gif" height="500">
+<img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/Demo.gif" height="500">
 
 ### Table of Contents
 <ol>
@@ -86,15 +84,15 @@ Thirt party library
   <tr>
     <td>
       <h3>List</h3>
-      <img src="../Pickers/ScreenShot/Main-1.png" height="370">
+      <img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/Main-1.png" height="370">
     </td>
     <td>
       <h3>Map</h3>
-      <img src="../Pickers/ScreenShot/Map-1.png" height="370">
+      <img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/Map-1.png" height="370">
     </td>
     <td>
       <h3>Search</h3>
-      <img src="../Pickers/ScreenShot/Search-2.png" height="370">
+      <img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/Search-2.png" height="370">
     </td>
   </tr>
 </table>
@@ -104,15 +102,15 @@ Thirt party library
   <tr>
     <td>
       <h3>Wheel</h3>
-      <img src="../Pickers/ScreenShot/Spin-demo-1.gif" height="370">
+      <img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/Spin-demo-1.gif" height="370">
     </td>
     <td>
       <h3>Saved list</h3>
-      <img src="../Pickers/ScreenShot/List-2.png" height="370">
+      <img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/List-2.png" height="370">
     </td>
     <td>
       <h3>Custom option</h3>
-      <img src="../Pickers/ScreenShot/CUstom-option.png" height="370">
+      <img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/Custom-option.png" height="370">
     </td>
   </tr>
 </table>
@@ -123,11 +121,11 @@ Thirt party library
   <tr>
     <td>
       <h3>Saved list</h3>
-      <img src="./ScreenShot/List-1.png" height="400">
+      <img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/List-1.png" height="400">
     </td>
     <td>
       <h3>Favorite</h3>
-      <img src="./ScreenShot/Favorite-1.png" height="400">
+      <img src="https://github.com/hanlinchentw/Pickers/blob/master/ScreenShot/Favorite-1.png" height="400">
     </td>
   </tr>
 </table>
