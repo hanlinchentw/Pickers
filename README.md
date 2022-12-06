@@ -1,58 +1,69 @@
 # Pickers
 
-![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Demo2.gif) 
+## Demonstration
+<img src="../Pickers/ScreenShot/Demo.gif" height="500">
 
-<!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
-  </ol>
-</details>
+### Table of Contents
+<ol>
+  <li>
+    <a href="#about-the-project">About The Project</a>
+  </li>
+  <li><a href="#built-with">Built With</a></li>
+  <li><a href="#feature">Feature</a></li>
+  <li>
+    <a href="#getting-started">Getting Started</a>
+    <ul>
+      <li><a href="#prerequisites">Prerequisites</a></li>
+      <li><a href="#installation">Installation</a></li>
+    </ul>
+  </li>
+  <li><a href="#contributors">Contributors</a></li>
+  <li><a href="#acknowledgements">Acknowledgements</a></li>
+</ol>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Picker使用YELP API 搜尋使用者附近的餐廳，並且以卡片、清單或是地圖的方式呈現，使用者可以選擇或儲存餐廳，餐廳選擇後會呈現在轉盤上，轉盤可以幫助使用者隨機決定今日餐點。
 
+Picker is aim to resolve the most difficult problem.
 
-### Built With
+`What should I eat for lunch?`
 
-POP (Protocol oriented Programming) / MVVM
+By searching the restaurants nearby, users can pick whatever they like into the lottery wheel, and the wheel will randomly choose one for them.
 
-網路層以及資料儲存組成：
-* [Moya](https://github.com/Moya/Moya)
----  網路層由MOYA組成，MOYA是基於Alamofire的抽象層，使用的目的是為了方便管理不同的Endpoint以及各項功能如base url, method, params, header。
-* [Core Data](https://developer.apple.com/documentation/coredata)
---- 使用Core Data 處理餐廳的選擇、儲存等操作，並且加入Observer觀察Entity Change，更新每一個頁面的資訊。
-* [Firebase](https://firebase.google.com)
---- 使用者可以使用email註冊並登入，後台管理使用Firebase/Auth。
+## Built With
+Architecture:
+- MVVM+C 
+  --- Modal-View-ViewModel+Coordinator
 
-其他UI：
-* [MBProgressHUD](https://github.com/jdg/MBProgressHUD)
---- Loading data 時使用，簡單方便！
-* [imageSlideShow](https://github.com/zvonicek/ImageSlideshow)
---- 可左右滑動的圖片牆，此乃基於Alamofire的套件，輸入 image url 即可載入圖片。
-* [LuckyWheel](https://github.com/AhmedNasserSh/iOSLuckyWheel)
---- 使用UIBezierPath刻出的轉盤
+Network：
+- [Yelp fusion](https://www.yelp.com/developers/documentation/v3)
 
+- [Alamofire](https://github.com/Alamofire/Alamofire)
+  --- Use this third party library to write network stuff elegantly.
 
+- [Moya](https://github.com/Moya/Moya)
+  --- Abstract network layer, for manage different endpoint and app networking
+
+Local storage:
+- [Core Data](https://developer.apple.com/documentation/coredata)
+  --- Save user favorite restaurants and picker list.
+
+UI components：
+
+Most of the components are built with UIKit, few are SwiftUI.
+
+Thirt party library
+
+- [MBProgressHUD](https://github.com/jdg/MBProgressHUD)
+  --- Loading View
+
+- [imageSlideShow](https://github.com/zvonicek/ImageSlideshow)
+  --- The image slide show base on alamofire, it can load image asynchronously and cache it.
+- [LuckyWheel](https://github.com/AhmedNasserSh/iOSLuckyWheel)
+  --- An iOS Lucky wheel with customizable text and text colors and section colors and very easy to integrate.
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 ### Installation
@@ -65,50 +76,79 @@ POP (Protocol oriented Programming) / MVVM
    ```Swift
    pod install
    ```
-   
-<!-- Usage -->
-## Usage
-1. 主頁呈現 分成卡片與地圖方式呈現
-### 卡片 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;地圖
-![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/LIST.gif) 
-![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Map.gif) 
 
-2. . 餐廳選取後可以透過轉盤取出今天的餐點！
+<!-- Fsage -->
 
-![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/spin.gif) 
+## Feature
+`User can select restaurant from different feature`
 
-3. 轉盤上的餐廳們可以用儲存起來，下次不用再選一次
+<table>
+  <tr>
+    <td>
+      <h3>List</h3>
+      <img src="../Pickers/ScreenShot/Main-1.png" height="370">
+    </td>
+    <td>
+      <h3>Map</h3>
+      <img src="../Pickers/ScreenShot/Map-1.png" height="370">
+    </td>
+    <td>
+      <h3>Search</h3>
+      <img src="../Pickers/ScreenShot/Search-2.png" height="370">
+    </td>
+  </tr>
+</table>
 
-![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/savedList.gif)
+`Picker, pick your lunch!`
+<table>
+  <tr>
+    <td>
+      <h3>Wheel</h3>
+      <img src="../Pickers/ScreenShot/Spin-demo-1.gif" height="370">
+    </td>
+    <td>
+      <h3>Saved list</h3>
+      <img src="../Pickers/ScreenShot/List-2.png" height="370">
+    </td>
+    <td>
+      <h3>Custom option</h3>
+      <img src="../Pickers/ScreenShot/CUstom-option.png" height="370">
+    </td>
+  </tr>
+</table>
 
-4. 附近沒有的餐廳，也可以使用搜尋功能
 
-![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Search.gif)
+`Saved Restaurant`
+<table>
+  <tr>
+    <td>
+      <h3>Saved list</h3>
+      <img src="./ScreenShot/List-1.png" height="400">
+    </td>
+    <td>
+      <h3>Favorite</h3>
+      <img src="./ScreenShot/Favorite-1.png" height="400">
+    </td>
+  </tr>
+</table>
+<!-- Contributors -->
 
-5. 儲存最愛的餐廳
-
-![image](https://github.com/hanlinchentw/Pickers/blob/main/picker%20demo%20gif%26image/Favorite.gif)
-
-<!-- Technical challenge-->
-## Technical challenge
-這個project最主要的挑戰在於轉盤，渲染轉盤的方式，省事一點的方法應該就是直接匯入圖片，但是因為轉盤是動態的，隨著每一次選擇餐廳都不一樣，因此需要用code渲染轉盤，因此我利用UIBezierPath刻出轉盤，每一次有餐廳選擇以後，就重新渲染一次，這樣一來轉盤就可以隨著資料變動，也不會佔用硬碟空間。
-
-第二個挑戰在於資料的處理，一開始我是使用Firebase Real time Database，但是因為Firebase Real time Database是有使用成本的，因此我決定將資料的處理放在本地，利用Coredata進行餐廳的選擇以及儲存，將使用者對餐廳的操作儲存，並且觀察Entity的變化，由此更新UI。
-
-<!-- CONTACT -->
-## Contact
+## Contributors
 
 ### iOS Developer
-陳翰霖 Chen, Han-Lin - [Linkedin](https://www.linkedin.com/in/han-lin-chen-07b635200/) - s3876531@gmail.com
-### UI/UX Designer
-侯凱馨 Hou, Kai-Hsin - [Linkedin](https://www.linkedin.com/in/han-lin-chen-07b635200/) - 12326casey@gmail.com
 
-Project Link: [Picker](https://github.com/hanlinchentw/Picker)
+陳翰霖 Chen, Han-Lin - [Linkedin](https://www.linkedin.com/in/han-lin-chen-07b635200/) - s3876531@gmail.com
+
+### UI/UX Designer
+
+侯凱馨 Hou, Kai-Hsin - [Linkedin](https://www.linkedin.com/in/caseyhou/) - 12326casey@gmail.com
 
 <!-- ACKNOWLEDGEMENTS -->
+
 ## Acknowledgements
-* [Yelp fusion](https://www.yelp.com/developers/documentation/v3)
-* [Moya](https://github.com/Moya/Moya)
-* [LuckyWheel](https://github.com/AhmedNasserSh/iOSLuckyWheel)
-* [MBProgressHUD](https://github.com/jdg/MBProgressHUD)
-* [imageSlideShow](https://github.com/zvonicek/ImageSlideshow)
+
+- [Yelp fusion](https://www.yelp.com/developers/documentation/v3)
+- [Moya](https://github.com/Moya/Moya)
+- [LuckyWheel](https://github.com/AhmedNasserSh/iOSLuckyWheel)
+- [MBProgressHUD](https://github.com/jdg/MBProgressHUD)
+- [imageSlideShow](https://github.com/zvonicek/ImageSlideshow)
