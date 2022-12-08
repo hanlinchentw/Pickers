@@ -1,7 +1,9 @@
 # Pickers
+
 <img src="./ScreenShot/Demo.gif" height="500">
 
 ### Table of Contents
+
 <ol>
   <li>
     <a href="#about-the-project">About The Project</a>
@@ -20,45 +22,55 @@
 </ol>
 
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 Picker is aim to resolve the most difficult problem.
 
-`What should I eat for lunch?`
+`What should I eat for lunch or dinner?`
 
-By searching the restaurants nearby, users can pick whatever they like into the lottery wheel, and the wheel will randomly choose one for them.
+By searching the restaurants nearby, users can pick whatever they like or add custom options to the lottery wheel, and the wheel will randomly choose one for them.
+Also, Picker can save the user's favorite restaurant and the list of user picks.
 
 ## Built With
-Architecture:
-- MVVM+C 
-  --- Modal-View-ViewModel+Coordinator
 
-Network：
-- [Yelp fusion](https://www.yelp.com/developers/documentation/v3)
+<table>
+  <tr>
+    <td>Architecture</td>
+    <td>MVVM+C</td>
+  </tr>
+  <tr>
+    <tr>
+      <td>Network</td>
+      <td>
+        <a href="https://www.yelp.com/developers/documentation/v3">Yelp fusion</a>, 
+         <a href="https://github.com/Alamofire/Alamofire">Alamofire</a>,
+         <a href="https://github.com/Moya/Moya">Moya</a>
+      </td>
+    </tr>
+    <tr>
+      <td>Local storage</td>
+      <td>Core Data</td>
+    </tr>
+    <tr>
+      <td>Others</td>
+      <td>
+        <a href="https://github.com/jdg/MBProgressHUD">MBProgressHUD</a>, 
+         <a href="https://github.com/zvonicek/ImageSlideshow">imageSlideShow</a>,
+         <a href="https://github.com/AhmedNasserSh/iOSLuckyWheel">LuckyWheel</a>
+      </td>
+    </tr>
+  </tr>
+</table>
 
-- [Alamofire](https://github.com/Alamofire/Alamofire)
-  --- Use this third party library to write network stuff elegantly.
+### Difficulties
 
-- [Moya](https://github.com/Moya/Moya)
-  --- Abstract network layer, for manage different endpoint and app networking
+`Lottery wheel component`
 
-Local storage:
-- [Core Data](https://developer.apple.com/documentation/coredata)
-  --- Save user favorite restaurants and picker list.
+- Problem: How to make a rotatable wheel dynamically with different inputs?
+- Solution: After survey on internet, I found a library  <a href="https://github.com/AhmedNasserSh/iOSLuckyWheel">LuckyWheel</a> for my reference. I made a reuseable wheel component with UIBezierPath.
 
-UI components：
 
-Most of the components are built with UIKit, few are SwiftUI.
-
-Thirt party library
-
-- [MBProgressHUD](https://github.com/jdg/MBProgressHUD)
-  --- Loading View
-
-- [imageSlideShow](https://github.com/zvonicek/ImageSlideshow)
-  --- The image slide show base on alamofire, it can load image asynchronously and cache it.
-- [LuckyWheel](https://github.com/AhmedNasserSh/iOSLuckyWheel)
-  --- An iOS Lucky wheel with customizable text and text colors and section colors and very easy to integrate.
 
 <!-- GETTING STARTED -->
 
@@ -78,6 +90,7 @@ Thirt party library
 <!-- Fsage -->
 
 ## Feature
+
 `User can select restaurant from different feature`
 
 <table>
@@ -88,7 +101,7 @@ Thirt party library
     </td>
     <td>
       <h3>Map</h3>
-      <img src="./master/ScreenShot/Map-1.png" height="370">
+      <img src="./ScreenShot/Map-1.png" height="370">
     </td>
     <td>
       <h3>Search</h3>
@@ -98,6 +111,7 @@ Thirt party library
 </table>
 
 `Picker, pick your lunch!`
+
 <table>
   <tr>
     <td>
@@ -115,8 +129,8 @@ Thirt party library
   </tr>
 </table>
 
-
 `Saved Restaurant`
+
 <table>
   <tr>
     <td>
