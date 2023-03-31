@@ -89,6 +89,7 @@
 		B674149D28A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149928A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift */; };
 		B674149E28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149A28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift */; };
 		B674149F28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149B28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift */; };
+		B683140A29D596F600340782 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140929D596F600340782 /* Config.swift */; };
 		B68453F828D2320A00BB7956 /* EditNameContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68453F728D2320A00BB7956 /* EditNameContainer.swift */; };
 		B684CA7028A54E4500320DE0 /* RestaurantCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */; };
 		B685484424B44938009BC800 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484324B44938009BC800 /* LocationService.swift */; };
@@ -291,6 +292,8 @@
 		B674149928A5668200C545D2 /* SelectedRestaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedRestaurant+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		B674149A28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LikedRestaurant+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		B674149B28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LikedRestaurant+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		B683140829D596CB00340782 /* DEBUG.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DEBUG.xcconfig; sourceTree = "<group>"; };
+		B683140929D596F600340782 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		B68453F728D2320A00BB7956 /* EditNameContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameContainer.swift; sourceTree = "<group>"; };
 		B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCore.swift; sourceTree = "<group>"; };
 		B685484324B44938009BC800 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -633,29 +636,31 @@
 		B647A4CB24B1F7BA0098B7A2 /* FoodPicker */ = {
 			isa = PBXGroup;
 			children = (
-				B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */,
-				B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */,
-				B6FD55A92896CAEC00B659F4 /* Injector */,
-				B647A4E224B203600098B7A2 /* Model */,
-				B68551AF28C30D3A0077C47E /* ViewObject */,
-				B6CA847428D7513200B85453 /* Protocol */,
-				B67414A028A568C700C545D2 /* TabView */,
-				B60CC1B428C63E2800AF2B53 /* MainView */,
-				B6A2FA8D2533E6C6005CB171 /* SpinView */,
-				B6C7D5A52550FB80005D2AA0 /* FavoriteView */,
-				B647A4E424B203630098B7A2 /* DetailView */,
-				B647A4E324B203620098B7A2 /* CommonView */,
-				B6310C4928A5640900ABD2E2 /* Interactor */,
-				B647A4E524B203650098B7A2 /* Utilis */,
-				B60CC1BB28C6425500AF2B53 /* Coordinator */,
-				B692F1A128E7EBA400DA90E9 /* Feature */,
-				B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */,
-				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
-				B615FFA728CB7E69000BD3A0 /* Mock */,
-				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
-				B647A4DA24B1F7BE0098B7A2 /* Info.plist */,
-				B647A4D224B1F7BA0098B7A2 /* Main.storyboard */,
 				B6D1306024C01E2800040F85 /* GoogleService-Info.plist */,
+				B647A4DA24B1F7BE0098B7A2 /* Info.plist */,
+				B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */,
+				B683140929D596F600340782 /* Config.swift */,
+				B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */,
+				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
+				B647A4D224B1F7BA0098B7A2 /* Main.storyboard */,
+				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
+				B683140B29D6B61C00340782 /* Configuration */,
+				B647A4E324B203620098B7A2 /* CommonView */,
+				B60CC1BB28C6425500AF2B53 /* Coordinator */,
+				B647A4E424B203630098B7A2 /* DetailView */,
+				B6C7D5A52550FB80005D2AA0 /* FavoriteView */,
+				B692F1A128E7EBA400DA90E9 /* Feature */,
+				B6FD55A92896CAEC00B659F4 /* Injector */,
+				B6310C4928A5640900ABD2E2 /* Interactor */,
+				B60CC1B428C63E2800AF2B53 /* MainView */,
+				B615FFA728CB7E69000BD3A0 /* Mock */,
+				B647A4E224B203600098B7A2 /* Model */,
+				B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */,
+				B6CA847428D7513200B85453 /* Protocol */,
+				B6A2FA8D2533E6C6005CB171 /* SpinView */,
+				B67414A028A568C700C545D2 /* TabView */,
+				B647A4E524B203650098B7A2 /* Utilis */,
+				B68551AF28C30D3A0077C47E /* ViewObject */,
 			);
 			path = FoodPicker;
 			sourceTree = "<group>";
@@ -757,6 +762,14 @@
 				B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		B683140B29D6B61C00340782 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				B683140829D596CB00340782 /* DEBUG.xcconfig */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 		B685484F24BD8605009BC800 /* Http */ = {
@@ -1297,6 +1310,7 @@
 				B6CA847628D7513C00B85453 /* RestaurantViewModel.swift in Sources */,
 				B634A72628A8D32D00796D63 /* AddBehavior.swift in Sources */,
 				B634A73728A9214D00796D63 /* LikedDeleteBehavior.swift in Sources */,
+				B683140A29D596F600340782 /* Config.swift in Sources */,
 				B6C9752328D3750A00287369 /* EditListContainer.swift in Sources */,
 				B6D407C228AD3DF500E59CE3 /* SafeAreaUtils.swift in Sources */,
 				B606C0822894EDCB00139907 /* MainTabBarConstants.swift in Sources */,
@@ -1666,7 +1680,7 @@
 		};
 		B647A4DE24B1F7BE0098B7A2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 82BE6C24A2D73B898301F556 /* Pods-FoodPicker.debug.xcconfig */;
+			baseConfigurationReference = B683140829D596CB00340782 /* DEBUG.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -1722,7 +1736,7 @@
 				B636BBA728BB394900BC8996 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		B647A4C424B1F7BA0098B7A2 /* Build configuration list for PBXProject "FoodPicker" */ = {
 			isa = XCConfigurationList;
@@ -1732,7 +1746,7 @@
 				B647A4DC24B1F7BE0098B7A2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		B647A4DD24B1F7BE0098B7A2 /* Build configuration list for PBXNativeTarget "FoodPicker" */ = {
 			isa = XCConfigurationList;
@@ -1742,7 +1756,7 @@
 				B647A4DF24B1F7BE0098B7A2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 

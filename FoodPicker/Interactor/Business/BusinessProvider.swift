@@ -8,10 +8,6 @@
 
 import Alamofire
 
-let apiKey = "h5NSdIjEmi4z7epQTIJPYugPGwWYgNhiJH5RcUoVX90k7KmDfC5WuBElnwDhnAvaFt2QltMWNgtd7dOVDWu824Z0yvqUlfFozS7qdperB2Jm5Ks1VU-oY_gIvsLiYnYx"
-
-private let clientID = "YuD9cka95Qb_g7WsdCA-rQ"
-
 enum BusinessProvider: NetworkProvider {
   case search(_ lat: Double, _ lon: Double,
               category: String = "restaurant",
@@ -23,9 +19,9 @@ enum BusinessProvider: NetworkProvider {
 
   case detail(id: String)
 
-  var baseURL: String { "https://api.yelp.com/v3/businesses" }
+	var baseURL: String { Configuration.baseURL + "/businesses" }
 
-  var headers: HTTPHeaders? { return ["Authorization":"Bearer \(apiKey)"]}
+	var headers: HTTPHeaders? { return ["Authorization":"Bearer \(Configuration.apiKey)"]}
 
   var method: HTTPMethod { HTTPMethod.get }
 
