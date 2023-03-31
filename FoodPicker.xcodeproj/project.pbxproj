@@ -91,6 +91,10 @@
 		B683140A29D596F600340782 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140929D596F600340782 /* Config.swift */; };
 		B683140D29D6B8C900340782 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140C29D6B8C900340782 /* AppCoordinator.swift */; };
 		B683141029D6BC8B00340782 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140F29D6BC8B00340782 /* R.generated.swift */; };
+		B683141329D6C03A00340782 /* HomeTabContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683141229D6C03A00340782 /* HomeTabContainer.swift */; };
+		B683141529D6C06200340782 /* HomeTabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683141429D6C06200340782 /* HomeTabItem.swift */; };
+		B683141C29D6C33F00340782 /* LotteryContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683141B29D6C33F00340782 /* LotteryContainer.swift */; };
+		B683141E29D6CB4400340782 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683141D29D6CB4400340782 /* TabBarView.swift */; };
 		B68453F828D2320A00BB7956 /* EditNameContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68453F728D2320A00BB7956 /* EditNameContainer.swift */; };
 		B684CA7028A54E4500320DE0 /* RestaurantCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */; };
 		B685484424B44938009BC800 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484324B44938009BC800 /* LocationService.swift */; };
@@ -296,6 +300,10 @@
 		B683140929D596F600340782 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		B683140C29D6B8C900340782 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		B683140F29D6BC8B00340782 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
+		B683141229D6C03A00340782 /* HomeTabContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabContainer.swift; sourceTree = "<group>"; };
+		B683141429D6C06200340782 /* HomeTabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabItem.swift; sourceTree = "<group>"; };
+		B683141B29D6C33F00340782 /* LotteryContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LotteryContainer.swift; sourceTree = "<group>"; };
+		B683141D29D6CB4400340782 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		B68453F728D2320A00BB7956 /* EditNameContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameContainer.swift; sourceTree = "<group>"; };
 		B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCore.swift; sourceTree = "<group>"; };
 		B685484324B44938009BC800 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -649,18 +657,18 @@
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
 				B683140B29D6B61C00340782 /* Configuration */,
 				B647A4E324B203620098B7A2 /* CommonView */,
-				B60CC1BB28C6425500AF2B53 /* Coordinator */,
 				B647A4E424B203630098B7A2 /* DetailView */,
+				B6A2FA8D2533E6C6005CB171 /* SpinView */,
 				B6C7D5A52550FB80005D2AA0 /* FavoriteView */,
+				B60CC1B428C63E2800AF2B53 /* MainView */,
+				B60CC1BB28C6425500AF2B53 /* Coordinator */,
 				B692F1A128E7EBA400DA90E9 /* Feature */,
 				B6FD55A92896CAEC00B659F4 /* Injector */,
 				B6310C4928A5640900ABD2E2 /* Interactor */,
-				B60CC1B428C63E2800AF2B53 /* MainView */,
 				B615FFA728CB7E69000BD3A0 /* Mock */,
 				B647A4E224B203600098B7A2 /* Model */,
 				B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */,
 				B6CA847428D7513200B85453 /* Protocol */,
-				B6A2FA8D2533E6C6005CB171 /* SpinView */,
 				B67414A028A568C700C545D2 /* TabView */,
 				B647A4E524B203650098B7A2 /* Utilis */,
 				B68551AF28C30D3A0077C47E /* ViewObject */,
@@ -775,6 +783,24 @@
 			path = Configuration;
 			sourceTree = "<group>";
 		};
+		B683141129D6C00600340782 /* Tab */ = {
+			isa = PBXGroup;
+			children = (
+				B683141229D6C03A00340782 /* HomeTabContainer.swift */,
+				B683141429D6C06200340782 /* HomeTabItem.swift */,
+				B683141D29D6CB4400340782 /* TabBarView.swift */,
+			);
+			path = Tab;
+			sourceTree = "<group>";
+		};
+		B683141A29D6C32D00340782 /* LotteryView */ = {
+			isa = PBXGroup;
+			children = (
+				B683141B29D6C33F00340782 /* LotteryContainer.swift */,
+			);
+			path = LotteryView;
+			sourceTree = "<group>";
+		};
 		B685484F24BD8605009BC800 /* Http */ = {
 			isa = PBXGroup;
 			children = (
@@ -796,6 +822,8 @@
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
+				B683141A29D6C32D00340782 /* LotteryView */,
+				B683141129D6C00600340782 /* Tab */,
 				B63548F728B5291700136A15 /* CachedImage */,
 				B692F1A828E7FCE500DA90E9 /* SpecialCollectionViewLayout */,
 			);
@@ -1243,10 +1271,12 @@
 				B64BE92428B28D3F0072F6A0 /* Alert.swift in Sources */,
 				B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */,
 				B612E3FF28DEFC3A005721E3 /* LocationNotFoundView.swift in Sources */,
+				B683141C29D6C33F00340782 /* LotteryContainer.swift in Sources */,
 				B6B9976F28BA0B21007C3D1D /* ListUpdateButton.swift in Sources */,
 				B6D4505928A9490F0076DE9A /* CoreDataManager.swift in Sources */,
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
 				B6B9976628B9DD3A007C3D1D /* CachedImageView.swift in Sources */,
+				B683141E29D6CB4400340782 /* TabBarView.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B683141029D6BC8B00340782 /* R.generated.swift in Sources */,
 				B6F7607A28F6F545006BEF79 /* NSCollectionLayoutItem+Extension.swift in Sources */,
@@ -1282,6 +1312,7 @@
 				B692F1B528E841F200DA90E9 /* Restaurant+CoreDataClass.swift in Sources */,
 				B674149E28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift in Sources */,
 				B6D1306A24C4183300040F85 /* DetailController.swift in Sources */,
+				B683141329D6C03A00340782 /* HomeTabContainer.swift in Sources */,
 				B6310C4728A5622D00ABD2E2 /* BusinessService.swift in Sources */,
 				B615FF9E28CADCAD000BD3A0 /* ToastStyleTheme.swift in Sources */,
 				B69D3823266882D000287954 /* BusinessProvider.swift in Sources */,
@@ -1357,6 +1388,7 @@
 				B6C1F01E28E9DF8500E32E24 /* RestaurantContextDidChangeNotify.swift in Sources */,
 				B692F1B628E841F200DA90E9 /* Restaurant+CoreDataProperties.swift in Sources */,
 				B61F9BAC28F1B50000440F97 /* SearchTextField.swift in Sources */,
+				B683141529D6C06200340782 /* HomeTabItem.swift in Sources */,
 				B685484624B4511A009BC800 /* RestaurantListCell.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */,
@@ -1566,7 +1598,7 @@
 				DEVELOPMENT_TEAM = 83AH7T8DV5;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				INFOPLIST_FILE = FoodPicker/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1703,7 +1735,7 @@
 				DEVELOPMENT_TEAM = 83AH7T8DV5;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				INFOPLIST_FILE = FoodPicker/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1726,7 +1758,7 @@
 				DEVELOPMENT_TEAM = 83AH7T8DV5;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				INFOPLIST_FILE = FoodPicker/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

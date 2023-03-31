@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class AppCoordinator: Coordinator {
 	var childCoordinators: [Coordinator] = []
@@ -18,7 +19,7 @@ class AppCoordinator: Coordinator {
 	}
 	
 	func start() {
-		let tabVC = MainTabBarController()
+		let tabVC = UIHostingController(rootView: HomeTabContainer())
 		navigationController.setViewControllers([tabVC], animated: false)
 	}
 }

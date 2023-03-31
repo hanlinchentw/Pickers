@@ -18,10 +18,9 @@ enum LoadingState {
 }
 
 struct MainListView: View {
-	@ObservedObject var locationService: LocationService
+	@Inject var locationService: LocationService
 	@EnvironmentObject var coordinator: MainCoordinator
 	@Environment(\.managedObjectContext) private var viewContext
-//	@StateObject var searchViewModel = SearchListViewModel()
 	@StateObject var popularViewModel = MainListSectionViewModel(section: .popular)
 	@StateObject var nearbyViewModel = MainListSectionViewModel(section: .nearby)
 	
