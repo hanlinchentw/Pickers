@@ -10,12 +10,12 @@ import Foundation
 
 final class Configuration {
 	static var baseURL: String {
-		(Bundle.main.infoDictionary?["BACKEND_URL"] as! String)
+		(Bundle.main.infoDictionary?["YELP_BACKEND_URL"] as! String)
 								.replacingOccurrences(of: "\\", with: "")
 	}
 	
 	static var apiKey: String {
-		(Bundle.main.infoDictionary?["API_KEY"] as! String)
+		(Bundle.main.infoDictionary?["YELP_API_KEY"] as! String)
 			.replacingOccurrences(of: "\\", with: "")
 	}
 }
