@@ -13,14 +13,11 @@ import CoreLocation
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-//    print("SQLite Folder >>> \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last)")
     NetworkMonitor.shared.startMonitoring()
     Resolver.sharedInstance.register(type: BusinessService.self, dependency: BusinessService.sharedInstance)
-
     Resolver.sharedInstance.register(type: RestaurantCoreService.self, dependency: RestaurantCoreService.sharedInstance)
     Resolver.sharedInstance.register(type: SelectedCoreService.self, dependency: SelectedCoreService.sharedInstance)
     Resolver.sharedInstance.register(type: LikedCoreService.self, dependency: LikedCoreService.sharedInstance)
-
     Resolver.sharedInstance.register(type: LocationService.self, dependency: LocationService.shared)
 
     return true

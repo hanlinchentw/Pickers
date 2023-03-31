@@ -9,25 +9,29 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
-    var window: UIWindow?
-
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        
-        guard let scene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(windowScene: scene)
-        window?.makeKeyAndVisible()
-        let home = MainTabBarController()
-        self.window?.rootViewController = home
-    }
-    func resize(image: UIImage, newWidth: CGFloat) -> UIImage {
-
-        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: image.size.height))
-        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: image.size.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return newImage!
-    }
+	
+	var window: UIWindow?
+	
+	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+		
+		guard let scene = (scene as? UIWindowScene) else { return }
+		window = UIWindow(windowScene: scene)
+		window?.makeKeyAndVisible()
+		
+		let rootNavigationController = UINavigationController()
+		let appCoordinator = AppCoordinator(navigationController: rootNavigationController)
+		appCoordinator.start()
+		self.window?.rootViewController = rootNavigationController
+		
+	}
+	func resize(image: UIImage, newWidth: CGFloat) -> UIImage {
+		
+		UIGraphicsBeginImageContext(CGSize(width: newWidth, height: image.size.height))
+		image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: image.size.height))
+		let newImage = UIGraphicsGetImageFromCurrentImageContext()
+		UIGraphicsEndImageContext()
+		
+		return newImage!
+	}
 }
 

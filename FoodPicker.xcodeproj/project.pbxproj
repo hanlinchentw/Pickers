@@ -90,6 +90,7 @@
 		B674149E28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149A28A5668200C545D2 /* LikedRestaurant+CoreDataClass.swift */; };
 		B674149F28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149B28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift */; };
 		B683140A29D596F600340782 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140929D596F600340782 /* Config.swift */; };
+		B683140D29D6B8C900340782 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140C29D6B8C900340782 /* AppCoordinator.swift */; };
 		B68453F828D2320A00BB7956 /* EditNameContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68453F728D2320A00BB7956 /* EditNameContainer.swift */; };
 		B684CA7028A54E4500320DE0 /* RestaurantCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */; };
 		B685484424B44938009BC800 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484324B44938009BC800 /* LocationService.swift */; };
@@ -294,6 +295,7 @@
 		B674149B28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LikedRestaurant+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		B683140829D596CB00340782 /* DEBUG.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DEBUG.xcconfig; sourceTree = "<group>"; };
 		B683140929D596F600340782 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		B683140C29D6B8C900340782 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		B68453F728D2320A00BB7956 /* EditNameContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameContainer.swift; sourceTree = "<group>"; };
 		B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCore.swift; sourceTree = "<group>"; };
 		B685484324B44938009BC800 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -639,10 +641,11 @@
 				B6D1306024C01E2800040F85 /* GoogleService-Info.plist */,
 				B647A4DA24B1F7BE0098B7A2 /* Info.plist */,
 				B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */,
-				B683140929D596F600340782 /* Config.swift */,
 				B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */,
+				B683140C29D6B8C900340782 /* AppCoordinator.swift */,
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
 				B647A4D224B1F7BA0098B7A2 /* Main.storyboard */,
+				B683140929D596F600340782 /* Config.swift */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
 				B683140B29D6B61C00340782 /* Configuration */,
 				B647A4E324B203620098B7A2 /* CommonView */,
@@ -1326,6 +1329,7 @@
 				B6F7608128F7195C006BEF79 /* SearchVCSection.swift in Sources */,
 				B634A71128A74DEB00796D63 /* Text+Extensions.swift in Sources */,
 				B61F9BB228F3268100440F97 /* RestaurantListFooterView.swift in Sources */,
+				B683140D29D6B8C900340782 /* AppCoordinator.swift in Sources */,
 				B6EF13B128B23366009345D6 /* FavoriteSearchContainer.swift in Sources */,
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B69E3B1C28B9223300014AA3 /* BottomSheetViewModel.swift in Sources */,
