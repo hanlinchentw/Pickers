@@ -12,4 +12,5 @@ target 'FoodPicker' do
   pod 'ImageSlideshow', '~> 1.9.0'
   pod 'MBProgressHUD'
   pod 'Toast-Swift', '~> 5.0.1'
+	pod 'R.swift'
 end

@@ -25,7 +25,7 @@ enum MainTab: Tab, CaseIterable {
 		switch self {
 		case .main:
 			let nav = UINavigationController()
-			nav.tabBarItem.image = UIImage(named: Self.homeUnselectedTabImage)
+			nav.tabBarItem.image = UIImage(named: R.image.homeUnselectedS.name)
 			nav.tabBarItem.selectedImage = UIImage(named: Self.homeSelectedTabImage)
 			let coordinator = MainCoordinator(navigationController: nav)
 			coordinator.start()

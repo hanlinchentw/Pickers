@@ -72,7 +72,6 @@
 		B6413B3328BB2C7A0071F5B3 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6413B3228BB2C7A0071F5B3 /* DateUtils.swift */; };
 		B647A4CD24B1F7BA0098B7A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */; };
 		B647A4CF24B1F7BA0098B7A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */; };
-		B647A4D424B1F7BA0098B7A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B647A4D224B1F7BA0098B7A2 /* Main.storyboard */; };
 		B647A4D624B1F7BE0098B7A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */; };
 		B647A4D924B1F7BE0098B7A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */; };
 		B647A4E124B1FA640098B7A2 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A4E024B1FA640098B7A2 /* MainTabBarController.swift */; };
@@ -91,6 +90,7 @@
 		B674149F28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B674149B28A5668200C545D2 /* LikedRestaurant+CoreDataProperties.swift */; };
 		B683140A29D596F600340782 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140929D596F600340782 /* Config.swift */; };
 		B683140D29D6B8C900340782 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140C29D6B8C900340782 /* AppCoordinator.swift */; };
+		B683141029D6BC8B00340782 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140F29D6BC8B00340782 /* R.generated.swift */; };
 		B68453F828D2320A00BB7956 /* EditNameContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68453F728D2320A00BB7956 /* EditNameContainer.swift */; };
 		B684CA7028A54E4500320DE0 /* RestaurantCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */; };
 		B685484424B44938009BC800 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484324B44938009BC800 /* LocationService.swift */; };
@@ -275,7 +275,6 @@
 		B647A4C924B1F7BA0098B7A2 /* FoodPicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodPicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		B647A4D324B1F7BA0098B7A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B647A4D824B1F7BE0098B7A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B647A4DA24B1F7BE0098B7A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -296,6 +295,7 @@
 		B683140829D596CB00340782 /* DEBUG.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DEBUG.xcconfig; sourceTree = "<group>"; };
 		B683140929D596F600340782 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		B683140C29D6B8C900340782 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		B683140F29D6BC8B00340782 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		B68453F728D2320A00BB7956 /* EditNameContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameContainer.swift; sourceTree = "<group>"; };
 		B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCore.swift; sourceTree = "<group>"; };
 		B685484324B44938009BC800 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -644,8 +644,8 @@
 				B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */,
 				B683140C29D6B8C900340782 /* AppCoordinator.swift */,
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
-				B647A4D224B1F7BA0098B7A2 /* Main.storyboard */,
 				B683140929D596F600340782 /* Config.swift */,
+				B683140F29D6BC8B00340782 /* R.generated.swift */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
 				B683140B29D6B61C00340782 /* Configuration */,
 				B647A4E324B203620098B7A2 /* CommonView */,
@@ -1067,6 +1067,7 @@
 			buildConfigurationList = B647A4DD24B1F7BE0098B7A2 /* Build configuration list for PBXNativeTarget "FoodPicker" */;
 			buildPhases = (
 				5B65AD510D0C48F1ECAAAC0A /* [CP] Check Pods Manifest.lock */,
+				B683140E29D6BBBE00340782 /* ShellScript */,
 				B647A4C524B1F7BA0098B7A2 /* Sources */,
 				B647A4C624B1F7BA0098B7A2 /* Frameworks */,
 				B647A4C724B1F7BA0098B7A2 /* Resources */,
@@ -1135,7 +1136,6 @@
 				B647A4D924B1F7BE0098B7A2 /* LaunchScreen.storyboard in Resources */,
 				B6D1306124C01E2800040F85 /* GoogleService-Info.plist in Resources */,
 				B647A4D624B1F7BE0098B7A2 /* Assets.xcassets in Resources */,
-				B647A4D424B1F7BA0098B7A2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1180,6 +1180,25 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FoodPicker/Pods-FoodPicker-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		B683140E29D6BBBE00340782 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"TEMP_DIR/rswift-lastru",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1229,6 +1248,7 @@
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
 				B6B9976628B9DD3A007C3D1D /* CachedImageView.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
+				B683141029D6BC8B00340782 /* R.generated.swift in Sources */,
 				B6F7607A28F6F545006BEF79 /* NSCollectionLayoutItem+Extension.swift in Sources */,
 				B634A73928A9217800796D63 /* RestaurantAddBehavior.swift in Sources */,
 				B6413B3128BB20FE0071F5B3 /* List+CoreDataProperties.swift in Sources */,
@@ -1379,14 +1399,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B647A4D224B1F7BA0098B7A2 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B647A4D324B1F7BA0098B7A2 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

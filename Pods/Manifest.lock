@@ -9,6 +9,7 @@ PODS:
     - ImageSlideshow/Core
   - ImageSlideshow/Core (1.9.2)
   - MBProgressHUD (1.2.0)
+  - R.swift (7.3.0)
   - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
@@ -17,6 +18,7 @@ DEPENDENCIES:
   - ImageSlideshow (~> 1.9.0)
   - ImageSlideshow/Alamofire
   - MBProgressHUD
+  - R.swift
   - Toast-Swift (~> 5.0.1)
 
 SPEC REPOS:
@@ -25,6 +27,7 @@ SPEC REPOS:
     - AlamofireImage
     - ImageSlideshow
     - MBProgressHUD
+    - R.swift
     - Toast-Swift
 
 SPEC CHECKSUMS:
@@ -32,8 +35,9 @@ SPEC CHECKSUMS:
   AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
   ImageSlideshow: be305b54eaf2b2cfc7a7141c7c734605d44dc07d
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  R.swift: cef1c530541cb49412752721797f10dae6b32d11
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 7d9e967728382e1968638f8ae02cdca5f50548ae
+PODFILE CHECKSUM: 099dced9b0d8e468fa2a3bd48dfaf14c80d027e2
 
 COCOAPODS: 1.11.3
