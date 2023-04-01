@@ -652,7 +652,6 @@
 				B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */,
 				B683140C29D6B8C900340782 /* AppCoordinator.swift */,
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
-				B683140929D596F600340782 /* Config.swift */,
 				B683140F29D6BC8B00340782 /* R.generated.swift */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
 				B683140B29D6B61C00340782 /* Configuration */,
@@ -778,6 +777,7 @@
 		B683140B29D6B61C00340782 /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
+				B683140929D596F600340782 /* Config.swift */,
 				B683140829D596CB00340782 /* DEBUG.xcconfig */,
 			);
 			path = Configuration;
