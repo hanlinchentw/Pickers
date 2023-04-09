@@ -1,0 +1,244 @@
+[
+  {
+    "rating": 4,
+    "reviewCount": 1,
+    "distance": 473.21602634905776,
+    "id": "o1ajNPidoo-DNf1-SQGEZg",
+    "categories": [{ "title": "Coffee & Tea" }],
+    "imageUrl": "https:\\/\\/s3-media4.fl.yelpcdn.com\\/bphoto\\/sf9uNv6wis0Qpuf_XxK2Tw\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.204555, "latitude": 25.001034000000001 },
+    "name": "Louisa Coffee"
+  },
+  {
+    "rating": 5,
+    "reviewCount": 1,
+    "distance": 1605.0375161108445,
+    "id": "ELWsMNrbUu6GyTHXG6NxOw",
+    "categories": [{ "title": "Cafes" }],
+    "imageUrl": "https:\\/\\/s3-media1.fl.yelpcdn.com\\/bphoto\\/THRcmpTqdSgU78qCx0Aczg\\/o.jpg",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.21335999999999,
+      "latitude": 25.008050000000001
+    },
+    "name": "Puzzle Coffee"
+  },
+  {
+    "rating": 5,
+    "reviewCount": 1,
+    "distance": 2003.2716658022512,
+    "id": "PWKoChpV26vnduNcSJbnjg",
+    "categories": [{ "title": "Cafeteria" }],
+    "imageUrl": "https:\\/\\/s3-media4.fl.yelpcdn.com\\/bphoto\\/-JGttFep9xNGSjTncIyWaw\\/o.jpg",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.21275989298999,
+      "latitude": 25.0138149072584
+    },
+    "name": "濠品鐵板專賣"
+  },
+  {
+    "rating": 3.5,
+    "reviewCount": 2,
+    "distance": 2003.8198467056,
+    "id": "x9NmlRokOp4hNXWYsZ8QVA",
+    "categories": [{ "title": "Cafes" }],
+    "imageUrl": "https:\\/\\/s3-media3.fl.yelpcdn.com\\/bphoto\\/HJGGBfCAuuaiRpFjCF1kTg\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.212962, "latitude": 25.013666000000001 },
+    "name": "Cafe' TIN"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 1,
+    "distance": 2068.3903004181102,
+    "id": "Zg2Kqcr8RLXXDkGRSyBMuw",
+    "categories": [{ "title": "Ramen" }],
+    "imageUrl": "https:\\/\\/s3-media2.fl.yelpcdn.com\\/bphoto\\/StkMW8QDJVC_wNlFAlG4PQ\\/o.jpg",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.212855179008,
+      "latitude": 25.014501445882701
+    },
+    "name": "Nishiki"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 1,
+    "distance": 2114.4735981377848,
+    "id": "Q_DvQdjHt31yQK45jZx4rw",
+    "price": "$$$",
+    "categories": [{ "title": "Coffee & Tea" }],
+    "imageUrl": "https:\\/\\/s3-media3.fl.yelpcdn.com\\/bphoto\\/bXAFaZelVi4Pci7QP5D3ig\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.215217, "latitude": 25.013093000000001 },
+    "name": "Starbucks"
+  },
+  {
+    "rating": 5,
+    "reviewCount": 2,
+    "distance": 2114.4735981377848,
+    "id": "lXMIbjNlwDaVUCxJLFmLMg",
+    "price": "$",
+    "categories": [{ "title": "Burgers" }, { "title": "Fast Food" }],
+    "imageUrl": "https:\\/\\/s3-media1.fl.yelpcdn.com\\/bphoto\\/E29etquOzdWcwlG7MnSAYQ\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.215217, "latitude": 25.013093000000001 },
+    "name": "Mos Burger"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 5,
+    "distance": 2125.1781357186992,
+    "id": "0Bgoj5ivxXkwLqdgjnoI-A",
+    "price": "$$",
+    "categories": [{ "title": "Ramen" }],
+    "imageUrl": "https:\\/\\/s3-media2.fl.yelpcdn.com\\/bphoto\\/HiEl2oXOhwBgbiZO7fhMbg\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.215058, "latitude": 25.013380999999999 },
+    "name": "Ippudo"
+  },
+  {
+    "rating": 5,
+    "reviewCount": 1,
+    "distance": 2874.5964899536007,
+    "id": "OL2Ijvs8J10lB3t7qMPuhQ",
+    "categories": [{ "title": "Bakeries" }],
+    "imageUrl": "https:\\/\\/s3-media3.fl.yelpcdn.com\\/bphoto\\/OzIfd3clKBtzZQMSJE1iBA\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.22886, "latitude": 25.000599999999999 },
+    "name": "Tai Cheong Bakery"
+  },
+  {
+    "rating": 1,
+    "reviewCount": 1,
+    "distance": 2874.5964899536007,
+    "id": "uu_N5cqQPH24LyYM47-FeA",
+    "price": "$$$",
+    "categories": [{ "title": "Korean" }],
+    "imageUrl": "https:\\/\\/s3-media3.fl.yelpcdn.com\\/bphoto\\/cZ1VKzKSEEj9wA1vXOj8Ug\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.22886, "latitude": 25.000599999999999 },
+    "name": "兩班家韓式碳烤"
+  },
+  {
+    "rating": 5,
+    "reviewCount": 1,
+    "distance": 2874.5964899536007,
+    "id": "G4YrK6bzSd3efdk_8LPcIg",
+    "categories": [{ "title": "Steakhouses" }],
+    "imageUrl": "https:\\/\\/s3-media2.fl.yelpcdn.com\\/bphoto\\/LGgt8yc9qGLzHZJJyFwm5Q\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.22886, "latitude": 25.000599999999999 },
+    "name": "Stanley's Steakhouse"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 1,
+    "distance": 2875.4630080874235,
+    "id": "Ekbcx4iqcSmfOJzvdzPhow",
+    "categories": [{ "title": "Japanese" }, { "title": "Sushi Bars" }],
+    "imageUrl": "",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.22852809517001,
+      "latitude": 25.0004826652692
+    },
+    "name": "Kura Sushi"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 1,
+    "distance": 2892.9225944501941,
+    "id": "zv5vGJnJgynZfTGhrbWMBg",
+    "categories": [{ "title": "Taiwanese" }, { "title": "Delis" }],
+    "imageUrl": "https:\\/\\/s3-media3.fl.yelpcdn.com\\/bphoto\\/fA3yRm7HLfnVu9mBpL4ZrQ\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.2290192, "latitude": 25.001670799999999 },
+    "name": "聖加南洋小品"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 1,
+    "distance": 2901.0819938214095,
+    "id": "nj2_e1Ud-LyzwGcPiT5utw",
+    "categories": [{ "title": "Taiwanese" }, { "title": "Dim Sum" }],
+    "imageUrl": "https:\\/\\/s3-media4.fl.yelpcdn.com\\/bphoto\\/O4dNdxR-QLMWbLffZN2rVg\\/o.jpg",
+    "isClosed": false,
+    "coordinates": { "longitude": 121.228769, "latitude": 25.000931000000001 },
+    "name": "Zhu Ji"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 1,
+    "distance": 2944.589135148929,
+    "id": "_6AJbGs9rGkJI5xyn6MoKA",
+    "categories": [{ "title": "American (Traditional)" }],
+    "imageUrl": "https:\\/\\/s3-media1.fl.yelpcdn.com\\/bphoto\\/oKn8rUzQAbxz_8q_EvnDpA\\/o.jpg",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.22920999999999,
+      "latitude": 25.000658000000001
+    },
+    "name": "Cafe Grazie"
+  },
+  {
+    "rating": 2,
+    "reviewCount": 2,
+    "distance": 2944.589135148929,
+    "id": "gUG5roDkR_4sIqP2Itb3Zw",
+    "price": "$$",
+    "categories": [{ "title": "Japanese" }],
+    "imageUrl": "https:\\/\\/s3-media3.fl.yelpcdn.com\\/bphoto\\/vGcBZOIVdQ0VYuW4sFMEbQ\\/o.jpg",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.22920999999999,
+      "latitude": 25.000658000000001
+    },
+    "name": "Blue House"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 1,
+    "distance": 2944.589135148929,
+    "id": "BHSbmcF-oeYvmOQrrcLlaA",
+    "categories": [{ "title": "Indian" }],
+    "imageUrl": "https:\\/\\/s3-media2.fl.yelpcdn.com\\/bphoto\\/AXIWg3XHf-iSRimZI2I36A\\/o.jpg",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.22920999999999,
+      "latitude": 25.000658000000001
+    },
+    "name": "咖哩帝國"
+  },
+  {
+    "rating": 4.5,
+    "reviewCount": 3,
+    "distance": 2944.589135148929,
+    "id": "AKJIn_cypPoAFs6TrdiWig",
+    "price": "$$",
+    "categories": [{ "title": "Tonkatsu" }],
+    "imageUrl": "https:\\/\\/s3-media2.fl.yelpcdn.com\\/bphoto\\/1XiKyhoOKwImStAUovLweg\\/o.jpg",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.22920999999999,
+      "latitude": 25.000658000000001
+    },
+    "name": "靜岡勝政日式豬排"
+  },
+  {
+    "rating": 3,
+    "reviewCount": 1,
+    "distance": 2944.589135148929,
+    "id": "xyvQ5KbEe6lCL0iKvGIuSw",
+    "categories": [{ "title": "Korean" }],
+    "imageUrl": "https:\\/\\/s3-media1.fl.yelpcdn.com\\/bphoto\\/vIuHC1I46SigD8e0x2tfPw\\/o.jpg",
+    "isClosed": false,
+    "coordinates": {
+      "longitude": 121.22920999999999,
+      "latitude": 25.000658000000001
+    },
+    "name": "兩班家韓式碳烤"
+  }
+]

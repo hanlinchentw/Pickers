@@ -19,7 +19,7 @@ final class RestaurantPresenterTests: XCTestCase {
 		XCTAssert(presenter.actionButtonImage == "")
 		XCTAssert(presenter.distanceFromCurrentLocation == 1000)
 		XCTAssert(presenter.priceCategoryDistanceText == "$・Cafe・1000 m")
-		XCTAssert(presenter.ratingAndReviewCountString.string == "★ 4.8 (15+)")
+		XCTAssert(presenter.ratingAndReviewCountString?.string == "★ 4.8 (15+)")
 	}
 }
 

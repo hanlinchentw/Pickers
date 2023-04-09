@@ -13,4 +13,8 @@ target 'FoodPicker' do
   pod 'MBProgressHUD'
   pod 'Toast-Swift', '~> 5.0.1'
 	pod 'R.swift'
+	
+	target 'FoodPickerTests' do
+		inherit! :search_paths
+	end
 end
