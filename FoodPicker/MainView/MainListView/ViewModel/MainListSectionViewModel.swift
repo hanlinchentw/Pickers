@@ -36,7 +36,7 @@ enum MainListSection: Int, CaseIterable {
 }
 
 class MainListSectionViewModel: ObservableObject, Selectable, Likable {
-	@Inject var locationService: LocationService
+	@Inject var locationManager: LocationManager
 	@Inject var selectService: SelectedCoreService
 	@Inject var likeService: LikedCoreService
 	
@@ -60,7 +60,10 @@ class MainListSectionViewModel: ObservableObject, Selectable, Likable {
 	}
 	
 	func fetchData() async throws {
-		let query = try Query.init(lat: locationService.getLatitude(), lon: locationService.getLongitude(), option: section.searchOption, limit: section.count, offset: 0)
+		guard let currentLocation = locationManager.lastLocation else {
+			return
+		}
+		let query = Query.init(lat: currentLocation.latitude, lon: currentLocation.longitude, option: section.searchOption, limit: section.count, offset: 0)
 		let result = try await BusinessService.fetchBusinesses(query: query)
 		OperationQueue.main.addOperation {
 			self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }

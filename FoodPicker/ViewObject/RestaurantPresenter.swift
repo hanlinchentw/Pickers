@@ -73,7 +73,8 @@ struct RestaurantPresenter {
 						lat != 0, lon != 0 else {
 			return nil
 		}
-		return LocationService.shared.distanceFromCurrent(lat, lon)
+		return 123
+//		return LocationService.shared.distanceFromCurrent(lat, lon)
 	}
 	
 	var actionButtonImage: String {

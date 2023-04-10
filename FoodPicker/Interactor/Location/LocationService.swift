@@ -15,19 +15,11 @@ enum LoactionError: Error {
   case locationNotFound(message: String)
 }
 
-class LocationService: NSObject, ObservableObject {
-  static let shared = LocationService()
-  static let locationManager = CLLocationManager()
-
-  @Published var lastLocation: CLLocation?
+class LocationService {
 	
-  override init() {
-    super.init()
-    LocationService.locationManager.delegate = self
-    LocationService.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-    LocationService.locationManager.requestWhenInUseAuthorization()
-    LocationService.locationManager.startMonitoringSignificantLocationChanges()
-  }
+	@Inject var locationManager: LocationManager
+	
+  @Published var lastLocation: CLLocation?
 
 	func getLatitude() throws -> Double {
 		guard let latitude = lastLocation?.coordinate.latitude else {
@@ -59,16 +51,5 @@ class LocationService: NSObject, ObservableObject {
     let targetLocation = CLLocation(latitude: targetLatitude, longitude: targetLongitude)
     let distance = targetLocation.distance(from: currentLocation)
     return Int(distance)
-  }
-}
-
-//MARK: - CLLocationManagerDelegate
-extension LocationService: CLLocationManagerDelegate {
-  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    guard let location = locations.last else { return }
-		OperationQueue.main.addOperation {
-			self.lastLocation = location
-		}
-    print(#function, location)
   }
 }

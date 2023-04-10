@@ -18,11 +18,9 @@ enum LoadingState {
 }
 
 struct MainListView: View {
-	@Inject var locationService: LocationService
 	@EnvironmentObject var coordinator: MainCoordinator
 	@Environment(\.managedObjectContext) private var viewContext
 	@StateObject var popularViewModel = MainListSectionViewModel(section: .popular)
-	@StateObject var nearbyViewModel = MainListSectionViewModel(section: .nearby)
 	
 	let pub = NotificationCenter.default.publisher(for: NSNotification.Name(Constants.firstTabGotTapped))
 	
@@ -32,34 +30,16 @@ struct MainListView: View {
 			ScrollViewReader { proxy in
 				ScrollView {
 					VStack(spacing: 24) {
-						MainListSearchHeader(
-							onEditing: {
-								coordinator.presentSearchViewController()
-							},
-							mapButtonOnPress: { coordinator.presentMapView() }
-						)
-						.id("MainListSearchHeader")
-						
-						if locationService.lastLocation != nil {
-							VStack {
-								if popularViewModel.loadingState == .error && nearbyViewModel.loadingState == .error {
-									emptyView
-								} else {
-									HorizontalSectionView(vm: popularViewModel)
-									VerticalSectionView(vm: nearbyViewModel)
-								}
-							}
-							.onAppear {
-								refreshList()
-							}
-						} else {
-							LocationNotFoundView().padding(.top, 50)
+						VStack {
+							HorizontalSectionView(vm: popularViewModel)
+						}
+						.onAppear {
+							refreshList()
 						}
 					}
 				}
 				.refreshable {
 					try? await popularViewModel.fetchData()
-					try? await nearbyViewModel.fetchData()
 				}
 				.onReceive(pub, perform: { _ in
 					withAnimation(.easeInOut(duration: 1)) {
@@ -68,7 +48,6 @@ struct MainListView: View {
 				})
 			}
 		}
-		
 		.navigationBarHidden(true)
 		.onTapToResign()
 	}
@@ -90,6 +69,5 @@ struct MainListView: View {
 	
 	func refreshList() {
 		popularViewModel.refresh()
-		nearbyViewModel.refresh()
 	}
 }

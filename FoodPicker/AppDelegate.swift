@@ -18,7 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     Resolver.sharedInstance.register(type: RestaurantCoreService.self, dependency: RestaurantCoreService.sharedInstance)
     Resolver.sharedInstance.register(type: SelectedCoreService.self, dependency: SelectedCoreService.sharedInstance)
     Resolver.sharedInstance.register(type: LikedCoreService.self, dependency: LikedCoreService.sharedInstance)
-    Resolver.sharedInstance.register(type: LocationService.self, dependency: LocationService.shared)
+		
+		Resolver.sharedInstance.register(type: LocationManager.self, dependency: LocationManager.shared)
 
     return true
   }

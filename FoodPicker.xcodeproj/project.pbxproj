@@ -100,6 +100,9 @@
 		B683142729D8126B00340782 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683142629D8126B00340782 /* MockURLProtocol.swift */; };
 		B683142C29D81FEB00340782 /* StaticBusinesses.json in Resources */ = {isa = PBXBuildFile; fileRef = B683142B29D81FEB00340782 /* StaticBusinesses.json */; };
 		B683142E29D82AC400340782 /* NetworkingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683142D29D82AC400340782 /* NetworkingError.swift */; };
+		B683143129E2AF5500340782 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683143029E2AF5500340782 /* LocationManager.swift */; };
+		B683143329E412DD00340782 /* LocationManager+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683143229E412DD00340782 /* LocationManager+Status.swift */; };
+		B683143529E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683143429E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift */; };
 		B68453F828D2320A00BB7956 /* EditNameContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68453F728D2320A00BB7956 /* EditNameContainer.swift */; };
 		B684CA7028A54E4500320DE0 /* RestaurantCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */; };
 		B685484424B44938009BC800 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484324B44938009BC800 /* LocationService.swift */; };
@@ -316,6 +319,9 @@
 		B683142629D8126B00340782 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		B683142B29D81FEB00340782 /* StaticBusinesses.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = StaticBusinesses.json; sourceTree = "<group>"; };
 		B683142D29D82AC400340782 /* NetworkingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingError.swift; sourceTree = "<group>"; };
+		B683143029E2AF5500340782 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		B683143229E412DD00340782 /* LocationManager+Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationManager+Status.swift"; sourceTree = "<group>"; };
+		B683143429E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationManager+CLLocationManagerDelegate.swift"; sourceTree = "<group>"; };
 		B68453F728D2320A00BB7956 /* EditNameContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameContainer.swift; sourceTree = "<group>"; };
 		B684CA6F28A54E4500320DE0 /* RestaurantCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCore.swift; sourceTree = "<group>"; };
 		B685484324B44938009BC800 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -671,6 +677,7 @@
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
 				B683140F29D6BC8B00340782 /* R.generated.swift */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
+				B683143729E416BB00340782 /* UI */,
 				B683140B29D6B61C00340782 /* Configuration */,
 				B647A4E324B203620098B7A2 /* CommonView */,
 				B647A4E424B203630098B7A2 /* DetailView */,
@@ -844,6 +851,40 @@
 			path = JSON;
 			sourceTree = "<group>";
 		};
+		B683142F29E2AF4800340782 /* GeoLocation */ = {
+			isa = PBXGroup;
+			children = (
+				B683143029E2AF5500340782 /* LocationManager.swift */,
+				B683143229E412DD00340782 /* LocationManager+Status.swift */,
+				B683143429E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift */,
+			);
+			path = GeoLocation;
+			sourceTree = "<group>";
+		};
+		B683143729E416BB00340782 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				B683143829E416C800340782 /* Layout */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		B683143829E416C800340782 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				B60CC1B028C3313800AF2B53 /* ZoomAndSnapFlowLayout.swift */,
+				B692F1A628E7FCE200DA90E9 /* StrechyHeaderLayout.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		B683143929E416ED00340782 /* MainView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MainView;
+			sourceTree = "<group>";
+		};
 		B685484F24BD8605009BC800 /* Http */ = {
 			isa = PBXGroup;
 			children = (
@@ -865,22 +906,14 @@
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
-				B683142029D80D1E00340782 /* Network */,
-				B683141A29D6C32D00340782 /* LotteryView */,
-				B683141129D6C00600340782 /* Tab */,
+				B683143929E416ED00340782 /* MainView */,
 				B63548F728B5291700136A15 /* CachedImage */,
-				B692F1A828E7FCE500DA90E9 /* SpecialCollectionViewLayout */,
+				B683142F29E2AF4800340782 /* GeoLocation */,
+				B683141A29D6C32D00340782 /* LotteryView */,
+				B683142029D80D1E00340782 /* Network */,
+				B683141129D6C00600340782 /* Tab */,
 			);
 			path = Feature;
-			sourceTree = "<group>";
-		};
-		B692F1A828E7FCE500DA90E9 /* SpecialCollectionViewLayout */ = {
-			isa = PBXGroup;
-			children = (
-				B60CC1B028C3313800AF2B53 /* ZoomAndSnapFlowLayout.swift */,
-				B692F1A628E7FCE200DA90E9 /* StrechyHeaderLayout.swift */,
-			);
-			path = SpecialCollectionViewLayout;
 			sourceTree = "<group>";
 		};
 		B69E3B1D28B9267000014AA3 /* View */ = {
@@ -1318,6 +1351,7 @@
 				B650ECD5257F2655004A4049 /* SpinWheelItemText.swift in Sources */,
 				B685484C24B6D390009BC800 /* Constants.swift in Sources */,
 				B6B9976828B9F1A1007C3D1D /* NSAttributedString+Extensions.swift in Sources */,
+				B683143529E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift in Sources */,
 				B612E3FD28DE03D6005721E3 /* TypeAlias.swift in Sources */,
 				B6ABC1ED28B09550007398F4 /* ThirdRowPresenter.swift in Sources */,
 				B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */,
@@ -1349,6 +1383,7 @@
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B683141029D6BC8B00340782 /* R.generated.swift in Sources */,
 				B6F7607A28F6F545006BEF79 /* NSCollectionLayoutItem+Extension.swift in Sources */,
+				B683143129E2AF5500340782 /* LocationManager.swift in Sources */,
 				B634A73928A9217800796D63 /* RestaurantAddBehavior.swift in Sources */,
 				B6413B3128BB20FE0071F5B3 /* List+CoreDataProperties.swift in Sources */,
 				B6CBE88E28D37DD9005BCA7D /* HeightPreferenceKey.swift in Sources */,
@@ -1365,6 +1400,7 @@
 				B630C33328DA20A7004B9595 /* MainListSectionViewModel.swift in Sources */,
 				B6B84D532665D579002E418D /* UIViewController+Extension.swift in Sources */,
 				B684CA7028A54E4500320DE0 /* RestaurantCore.swift in Sources */,
+				B683143329E412DD00340782 /* LocationManager+Status.swift in Sources */,
 				B60CC1BA28C641EE00AF2B53 /* MainCoordinator.swift in Sources */,
 				B6FD55AC2896CB0100B659F4 /* Resolver.swift in Sources */,
 				B6EF13A228B0B8F6009345D6 /* DetailAddButton.swift in Sources */,
