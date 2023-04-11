@@ -9,7 +9,6 @@
     <a href="#about-the-project">About The Project</a>
   </li>
   <li><a href="#built-with">Built With</a></li>
-  <li><a href="#feature">Feature</a></li>
   <li>
     <a href="#getting-started">Getting Started</a>
     <ul>
@@ -86,63 +85,6 @@ Also, Picker can save the user's favorite restaurant and the list of user picks.
    ```Swift
    pod install
    ```
-
-<!-- Fsage -->
-
-## Feature
-
-`User can select restaurant from different feature`
-
-<table>
-  <tr>
-    <td>
-      <h3>List</h3>
-      <img src="./ScreenShot/Main-1.png" height="370">
-    </td>
-    <td>
-      <h3>Map</h3>
-      <img src="./ScreenShot/Map-1.png" height="370">
-    </td>
-    <td>
-      <h3>Search</h3>
-      <img src="./ScreenShot/Search-2.png" height="370">
-    </td>
-  </tr>
-</table>
-
-`Picker, pick your lunch!`
-
-<table>
-  <tr>
-    <td>
-      <h3>Wheel</h3>
-      <img src="./ScreenShot/Spin-demo-1.gif" height="370">
-    </td>
-    <td>
-      <h3>Saved list</h3>
-      <img src="./ScreenShot/List-2.png" height="370">
-    </td>
-    <td>
-      <h3>Custom option</h3>
-      <img src="./ScreenShot/Custom-option.png" height="370">
-    </td>
-  </tr>
-</table>
-
-`Saved Restaurant`
-
-<table>
-  <tr>
-    <td>
-      <h3>Saved list</h3>
-      <img src="./ScreenShot/List-1.png" height="400">
-    </td>
-    <td>
-      <h3>Favorite</h3>
-      <img src="./ScreenShot/Favorite-1.png" height="400">
-    </td>
-  </tr>
-</table>
 <!-- Contributors -->
 
 ## Contributors
