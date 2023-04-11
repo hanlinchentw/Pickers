@@ -18,8 +18,6 @@ enum LoadingState {
 }
 
 struct MainListView: View {
-	@EnvironmentObject var coordinator: MainCoordinator
-	@Environment(\.managedObjectContext) private var viewContext
 	@StateObject var popularViewModel = MainListSectionViewModel(section: .popular)
 	
 	let pub = NotificationCenter.default.publisher(for: NSNotification.Name(Constants.firstTabGotTapped))

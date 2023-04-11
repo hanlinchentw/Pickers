@@ -27,7 +27,6 @@ struct HomeTabContainer: View {
 				LotteryContainer()
 					.tag(HomeTabItem.Lottery.rawValue)
 				FavoriteView()
-					.environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
 					.tag(HomeTabItem.Favorite.rawValue)
 			}
 

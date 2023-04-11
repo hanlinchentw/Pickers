@@ -10,12 +10,6 @@ import SwiftUI
 import Combine
 
 struct FavoriteView: View {
-  @Environment(\.managedObjectContext) private var viewContext
-  @FetchRequest(sortDescriptors: []) var likedRestaurants: FetchedResults<LikedRestaurant>
-
-  // Use cases
-  @StateObject var editUsecase = EditFavoriteListUsecase()
-
   // States
   @State var searchText: String = ""
 
@@ -24,37 +18,12 @@ struct FavoriteView: View {
       Color.listViewBackground.ignoresSafeArea()
       FavoriteHeader()
       ScrollView(.vertical, showsIndicators: false) {
-        FavoriteSearchContainer(inputText: $searchText, isEditing: editUsecase.isEditing)
-
-        FavoriteEditButtonContainer(isEditing: $editUsecase.isEditing)
-
-        FavoriteListContainer(
-          listData:
-            likedRestaurants
-            .map { $0.restaurant }
-            .filter( { filterListData(name: $0.name) }),
-          isEditing: $editUsecase.isEditing,
-          deleteButtonOnPress: editUsecase.setDeleteItem
-        )
-        .environment(\.managedObjectContext, viewContext)
+				Text("Favorite")
+					.foregroundColor(.black)
       }
       .safeAreaInset(edge: .top) { Spacer().height(50) }
       .safeAreaInset(edge: .bottom) { Spacer().height(50) }
     }
-    .showAlert(when: editUsecase.deletedItem != nil, alert: {
-      Alert(model:
-          .init(
-            title: "Remove from My Favorite",
-						content: editUsecase.deletionAlertText,
-            rightButtonText: "Remove",
-            leftButtonText: "Cancel",
-            rightButtonOnPress: editUsecase.removeItem,
-						leftButtonOnPress: { _ in
-							editUsecase.cancel()
-						}
-          )
-      )
-    })
     .navigationBarHidden(true)
     .onTapGesture {
       UIResponder.resign()
