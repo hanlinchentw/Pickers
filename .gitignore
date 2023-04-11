@@ -23,7 +23,7 @@ project.xcworkspace
 xcuserdata
 project.xcworkspace/
 xcuserdata/
-Configuration/
+*.xcconfig
 *.generated.swift
 
 ## Other
