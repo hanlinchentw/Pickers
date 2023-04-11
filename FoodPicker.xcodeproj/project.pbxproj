@@ -647,7 +647,6 @@
 			isa = PBXGroup;
 			children = (
 				B647A4CB24B1F7BA0098B7A2 /* FoodPicker */,
-				B683142A29D81FE400340782 /* JSON */,
 				B636BB9F28BB394900BC8996 /* FoodPickerTests */,
 				B647A4CA24B1F7BA0098B7A2 /* Products */,
 				9219E683C3B75723B7371A89 /* Pods */,
@@ -674,6 +673,7 @@
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
 				B683140F29D6BC8B00340782 /* R.generated.swift */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
+				B692F1A128E7EBA400DA90E9 /* Feature */,
 				B683143729E416BB00340782 /* UI */,
 				B683140B29D6B61C00340782 /* Configuration */,
 				B647A4E324B203620098B7A2 /* CommonView */,
@@ -682,7 +682,6 @@
 				B6C7D5A52550FB80005D2AA0 /* FavoriteView */,
 				B60CC1B428C63E2800AF2B53 /* MainView */,
 				B60CC1BB28C6425500AF2B53 /* Coordinator */,
-				B692F1A128E7EBA400DA90E9 /* Feature */,
 				B6FD55A92896CAEC00B659F4 /* Injector */,
 				B6310C4928A5640900ABD2E2 /* Interactor */,
 				B615FFA728CB7E69000BD3A0 /* Mock */,
@@ -691,6 +690,7 @@
 				B6CA847428D7513200B85453 /* Protocol */,
 				B67414A028A568C700C545D2 /* TabView */,
 				B647A4E524B203650098B7A2 /* Utilis */,
+				B683142A29D81FE400340782 /* JSON */,
 				B68551AF28C30D3A0077C47E /* ViewObject */,
 			);
 			path = FoodPicker;
@@ -875,13 +875,6 @@
 			path = Layout;
 			sourceTree = "<group>";
 		};
-		B683143929E416ED00340782 /* MainView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = MainView;
-			sourceTree = "<group>";
-		};
 		B685484F24BD8605009BC800 /* Http */ = {
 			isa = PBXGroup;
 			children = (
@@ -903,7 +896,6 @@
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
-				B683143929E416ED00340782 /* MainView */,
 				B63548F728B5291700136A15 /* CachedImage */,
 				B683142F29E2AF4800340782 /* GeoLocation */,
 				B683141A29D6C32D00340782 /* LotteryView */,
