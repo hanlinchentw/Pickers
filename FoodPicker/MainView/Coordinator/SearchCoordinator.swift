@@ -9,7 +9,7 @@
 import UIKit
 
 class SearchCoordinator: Coordinator {
-	var parent: MainCoordinator?
+	var parent: FeedCoordinator?
 	var childCoordinators = [Coordinator]()
 	var navigationController: UINavigationController
 

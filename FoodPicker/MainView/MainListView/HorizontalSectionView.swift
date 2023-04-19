@@ -8,20 +8,14 @@
 
 import SwiftUI
 
-struct HorizontalSectionView: View, Selectable, Likable {
-	@Inject var selectService: SelectedCoreService
-	@Inject var likeService: LikedCoreService
-	
-	@ObservedObject var vm: MainListSectionViewModel
-	@EnvironmentObject var coordinator: MainCoordinator
-	@Environment(\.managedObjectContext) private var viewContext
-	@FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
-	@FetchRequest(sortDescriptors: []) var likedRestaurants: FetchedResults<LikedRestaurant>
-	
+struct HorizontalSectionView<ViewModel>: View where ViewModel: MainListViewModelProtocol {
+	@ObservedObject var vm: ViewModel
+	@EnvironmentObject var coordinator: FeedCoordinator
+
 	var body: some View {
 		VStack(alignment: .leading, spacing: 8) {
 			if (vm.loadingState != .error) {
-				Text(vm.section.description)
+				Text("Top choices")
 					.en24Bold()
 					.padding(.leading, 16)
 				ScrollView(.horizontal, showsIndicators: false) {
@@ -32,16 +26,16 @@ struct HorizontalSectionView: View, Selectable, Likable {
 							} else {
 								let restaurant = vm.viewObjects[index]
 								
-								let isLiked = likedRestaurants.contains(where: {$0.id == restaurant.id})
-								let isSelected = selectedRestaurants.contains(where: {$0.id == restaurant.id})
+								let isLiked = false
+								let isSelected = false
 								
 								let actionButtonMode: ActionButtonMode = isSelected ? .select : .deselect
 								let presenter = RestaurantPresenter(restaurant: restaurant, actionButtonMode: actionButtonMode, isLiked: isLiked)
 								
 								RestaurantCardView(presenter: presenter) {
-									selectRestaurant(isSelected: isSelected, restaurant: restaurant)
+									
 								} _: {
-									likeRestaurant(isLiked: isLiked, restaurant: restaurant)
+									
 								}
 								.onTapGesture {
 									coordinator.pushToDetailView(id: restaurant.id)

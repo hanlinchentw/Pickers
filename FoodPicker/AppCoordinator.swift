@@ -9,18 +9,20 @@
 import UIKit
 import SwiftUI
 
-class AppCoordinator: Coordinator {
+final class AppCoordinator: Coordinator {
 	var childCoordinators: [Coordinator] = []
-	
+ 
 	var navigationController: UINavigationController
 	
-	init(navigationController: UINavigationController) {
+	init(window: UIWindow, navigationController: UINavigationController) {
 		self.navigationController = navigationController
+		window.rootViewController = navigationController
+		window.makeKeyAndVisible()
 	}
 	
 	func start() {
-//		 let tabVC = MainTabBarController()
-		let tabVC = UIHostingController(rootView: HomeTabContainer())
-		navigationController.setViewControllers([tabVC], animated: false)
+		let tabCoordinator = TabCoordinator(navigationController: navigationController)
+		tabCoordinator.start()
+		addCoordinator(tabCoordinator)
 	}
 }

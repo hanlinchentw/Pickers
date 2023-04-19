@@ -43,7 +43,7 @@ class MoreListViewModel: ObservableObject, Selectable {
 
 struct MoreListView: View {
 	@StateObject var viewModel = MoreListViewModel()
-  @EnvironmentObject var coordinator: MainCoordinator
+  @EnvironmentObject var coordinator: FeedCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
 

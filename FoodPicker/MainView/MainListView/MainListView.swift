@@ -9,6 +9,8 @@
 import SwiftUI
 import CoreData
 import Toast_Swift
+import CoreLocation
+import Combine
 
 enum LoadingState {
 	case idle
@@ -17,33 +19,24 @@ enum LoadingState {
 	case error
 }
 
-struct MainListView: View {
-	@StateObject var popularViewModel = MainListSectionViewModel(section: .popular)
-	
-	let pub = NotificationCenter.default.publisher(for: NSNotification.Name(Constants.firstTabGotTapped))
+struct MainListView<ViewModel>: View where ViewModel: MainListViewModelProtocol {
+	@ObservedObject var viewModel: ViewModel
 	
 	var body: some View {
 		ZStack {
 			Color.listViewBackground.ignoresSafeArea()
-			ScrollViewReader { proxy in
-				ScrollView {
-					VStack(spacing: 24) {
-						VStack {
-							HorizontalSectionView(vm: popularViewModel)
-						}
-						.onAppear {
-							refreshList()
-						}
+			ScrollView {
+				VStack(spacing: 24) {
+					VStack {
+						HorizontalSectionView(vm: viewModel)
 					}
 				}
-				.refreshable {
-					try? await popularViewModel.fetchData()
-				}
-				.onReceive(pub, perform: { _ in
-					withAnimation(.easeInOut(duration: 1)) {
-						proxy.scrollTo("MainListSearchHeader")
-					}
-				})
+			}
+			.refreshable {
+				try? await viewModel.fetchData()
+			}
+			.onAppear {
+				viewModel.refresh()
 			}
 		}
 		.navigationBarHidden(true)
@@ -52,7 +45,7 @@ struct MainListView: View {
 	
 	var emptyView: some View {
 		Button {
-			refreshList()
+			viewModel.refresh()
 		} label: {
 			HStack {
 				Text("Please try again")
@@ -64,8 +57,46 @@ struct MainListView: View {
 			}
 		}
 	}
-	
-	func refreshList() {
-		popularViewModel.refresh()
+}
+
+struct MainListView_Previews: PreviewProvider {
+	static var previews: some View {
+		let mockViewModel = MockViewModel(.empty)
+		return MainListView(viewModel: mockViewModel)
 	}
+}
+
+class MockViewModel: MainListViewModelProtocol {
+	enum MockType {
+		case loading
+		case loaded
+		case empty
+	}
+	var type: MockType
+	init(_ type: MockType) {
+		self.type = type
+		switch type {
+		case .loading:
+			viewObjects = []
+			loadingState = .loading
+		case .loaded:
+			viewObjects = [
+				MockedRestaurant.TEST_RESTAURANT_VIEW_OBJECT_1,
+				MockedRestaurant.TEST_RESTAURANT_VIEW_OBJECT_2
+				
+			]
+			loadingState = .loaded
+		case .empty:
+			viewObjects = []
+			loadingState = .loaded
+		}
+	}
+	
+	var viewObjects: Array<RestaurantViewObject>
+	var loadingState: LoadingState
+	var dataCount: Int {
+		viewObjects.count
+	}
+	func fetchData() async throws {}
+	func refresh() {}
 }

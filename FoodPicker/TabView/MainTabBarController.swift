@@ -9,58 +9,43 @@
 import UIKit
 import CoreData
 import Combine
+import SwiftUI
 
-
-class MainTabBarController: UITabBarController, TabController {
-	static let SpinTabImage = "spinActive"
-	static let tabImage = "bar"
-	typealias TabType = MainTab
+class MainTabBarController: TabBarController {
 	//MARK: - Properties
 	private let spinTabItemView = SpinTabItemView(frame: .zero)
-	
-	private var set = Set<AnyCancellable>()
+
+//	private var set = Set<AnyCancellable>()
 	//MARK: - Lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		overrideUserInterfaceStyle = .light
-		try? SelectedRestaurant.deleteAll(in: CoreDataManager.sharedInstance.managedObjectContext)
-		CoreDataManager.sharedInstance.saveContext()
 		configureTabBar()
-		observeContextObjectsChange()
-	}
-}
-
-extension MainTabBarController: RestaurantContextDidChangeNotify {
-	var contextObjectDidChange: ((Notification) -> Void)? {
-		{ notification in
-			if let selectedRestaurants = try? SelectedRestaurant.allIn(CoreDataManager.sharedInstance.managedObjectContext) as? Array<SelectedRestaurant> {
-				self.spinTabItemView.update(selectedRestaurants.count)
-			}
-		}
 	}
 }
 
 //MARK: -  HomeController setup
-extension MainTabBarController{
+extension MainTabBarController {
 	func configureTabBar(){
 		view.backgroundColor = .backgroundColor
-		viewControllers = self.displayViewControllers
-		self.selectedIndex = 0
 		tabBar.backgroundColor = .white
-		tabBar.backgroundImage = UIImage(named: Self.tabImage)?.withRenderingMode(.alwaysOriginal)
+		tabBar.backgroundImage = UIImage(resource: R.image.bar, with: nil)?.withRenderingMode(.alwaysOriginal)
 		tabBar.tintColor = .black
 		tabBar.layer.cornerRadius = 36
 		tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
 		tabBar.layer.masksToBounds = true
 		tabBar.isTranslucent = true
-		
+	}
+	
+	override func setViewControllers(_ viewControllers: [UIViewController]?, animated: Bool) {
+		super.setViewControllers(viewControllers, animated: animated)
 		let spinTabItem = tabBar.subviews[1]
 		spinTabItem.addSubview(spinTabItemView)
 		spinTabItemView.center(inView: spinTabItem, yConstant: 12)
 	}
 }
-
-extension MainTabBarController: UITabBarControllerDelegate {
+ // MARK: - Animation
+extension MainTabBarController {
 	override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
 		guard let index = tabBar.items?.firstIndex(of: item) else { return }
 		guard let view = tabBar.subviews[index+1].subviews.last else { return }
@@ -69,9 +54,5 @@ extension MainTabBarController: UITabBarControllerDelegate {
 		bounceAnimation.duration = TimeInterval(0.2)
 		bounceAnimation.calculationMode = CAAnimationCalculationMode.cubic
 		view.layer.add(bounceAnimation, forKey: nil)
-		
-		if index == 0 {
-			NotificationCenter.default.post(name: .init(Constants.firstTabGotTapped), object: nil)
-		}
 	}
 }

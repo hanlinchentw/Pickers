@@ -16,12 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		
 		guard let scene = (scene as? UIWindowScene) else { return }
 		window = UIWindow(windowScene: scene)
-		window?.makeKeyAndVisible()
 		
 		let rootNavigationController = UINavigationController()
-		let appCoordinator = AppCoordinator(navigationController: rootNavigationController)
+		let appCoordinator = AppCoordinator(window: window!, navigationController: rootNavigationController)
 		appCoordinator.start()
-		self.window?.rootViewController = rootNavigationController
 		
 	}
 	func resize(image: UIImage, newWidth: CGFloat) -> UIImage {

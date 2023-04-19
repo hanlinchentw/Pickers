@@ -8,37 +8,20 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
-enum MainListSection: Int, CaseIterable {
-	case popular = 0
-	case nearby
+protocol MainListViewModelProtocol: ObservableObject {
+	var viewObjects: Array<RestaurantViewObject> { get set }
+	var loadingState: LoadingState { get set }
 	
-	var description: String {
-		switch self {
-		case .popular: return "Popular"
-		case .nearby: return "Restaurant nearby"
-		}
-	}
+	var dataCount: Int { get }
 	
-	var searchOption: SearchOption {
-		switch self {
-		case .popular: return .popular
-		case .nearby: return .nearyby
-		}
-	}
-	
-	var count: Int {
-		switch self {
-		case .nearby: return 30
-		default: return 10
-		}
-	}
+	func fetchData() async throws
+	func refresh()
 }
 
-class MainListSectionViewModel: ObservableObject, Selectable, Likable {
-	@Inject var locationManager: LocationManager
-	@Inject var selectService: SelectedCoreService
-	@Inject var likeService: LikedCoreService
+class MainListViewModel: MainListViewModelProtocol {
+	@Inject var locationManager: LocationManagerProtocol
 	
 	@Published var loadingState: LoadingState = .loading
 	@Published var viewObjects: Array<RestaurantViewObject> = []
@@ -52,27 +35,38 @@ class MainListSectionViewModel: ObservableObject, Selectable, Likable {
 		}
 		return 0
 	}
+
+	init() {
+		bindLocation()
+	}
 	
-	let section: MainListSection
+	var set = Set<AnyCancellable>()
 	
-	init(section: MainListSection) {
-		self.section = section
+	func bindLocation() {
+		locationManager.locationPublisher.sink { location in
+			guard location != nil, self.viewObjects.isEmpty else {
+				return
+			}
+			Task {
+				try? await self.fetchData()
+			}
+		}
+		.store(in: &set)
 	}
 	
 	func fetchData() async throws {
 		guard let currentLocation = locationManager.lastLocation else {
 			return
 		}
-		let query = Query.init(lat: currentLocation.latitude, lon: currentLocation.longitude, option: section.searchOption, limit: section.count, offset: 0)
+		
+		let query = Query.init(lat: currentLocation.latitude, lon: currentLocation.longitude, option: .bestMatch, limit: 20, offset: 0)
 		let result = try await BusinessService.fetchBusinesses(query: query)
 		OperationQueue.main.addOperation {
 			self.viewObjects = result.map { RestaurantViewObject.init(business: $0) }
 		}
 	}
-	
-	@MainActor
+
 	func refresh() {
-		if loadingState == .loaded { return }
 		Task {
 			loadingState = .loading
 			if let _ = try? await fetchData() {

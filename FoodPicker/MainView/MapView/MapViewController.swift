@@ -17,8 +17,7 @@ import Toast_Swift
 class MapViewController: UIViewController {
 	static let CAROUSEL_HEIGHT: CGFloat = 250
 	//MARK: - Properties
-	@Inject var locationService: LocationService
-	weak var coordinator: MainCoordinator?
+	weak var coordinator: FeedCoordinator?
 	private let viewModel = MapViewModel()
 	let carouselView = CarouselCollectionView()
 	private var mapView = MKMapView()
@@ -61,7 +60,7 @@ class MapViewController: UIViewController {
 	}
 	// MARK: - Selector
 	@objc func dismissMapView() {
-		self.coordinator?.presentListView()
+		
 	}
 	
 	@objc func relocateUser() {

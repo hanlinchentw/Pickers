@@ -13,7 +13,7 @@ import MapKit
 import CoreData
 
 class MapViewModel: Likable, Selectable {
-  @Inject var locationService: LocationService
+  @Inject var locationManager: LocationManagerProtocol
   @Inject var selectService: SelectedCoreService
   @Inject var likeService: LikedCoreService
 
@@ -28,11 +28,11 @@ class MapViewModel: Likable, Selectable {
   var set = Set<AnyCancellable>()
 
   var userLatitude: Double? {
-    return locationService.latitude
+		locationManager.lastLocation?.latitude
   }
 
   var userLongitude: Double? {
-    return locationService.longitude
+		locationManager.lastLocation?.longitude
   }
 
   init() {

@@ -73,7 +73,7 @@ struct RestaurantPresenter {
 						lat != 0, lon != 0 else {
 			return nil
 		}
-		return 123
+		return 404
 //		return LocationService.shared.distanceFromCurrent(lat, lon)
 	}
 	

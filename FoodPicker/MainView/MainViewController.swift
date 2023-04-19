@@ -14,7 +14,7 @@ class MainViewController: UIViewController {
   // MARK: - Store
   private var listVC: UIViewController!
   private let mapVC: MapViewController = .init()
-  weak var coordinator: MainCoordinator? {
+  weak var coordinator: FeedCoordinator? {
     didSet {
       setupMapView()
       setupListView(coordinator: coordinator!)
@@ -60,9 +60,9 @@ extension MainViewController {
 }
 // MARK: - Set up UI
 extension MainViewController {
-  func setupListView(coordinator: MainCoordinator) {
+  func setupListView(coordinator: FeedCoordinator) {
     listVC = UIHostingController(
-			rootView: MainListView()
+			rootView: MainListView(viewModel: MainListViewModel())
         .environmentObject(coordinator)
         .environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
     )

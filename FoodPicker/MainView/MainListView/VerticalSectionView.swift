@@ -12,8 +12,8 @@ struct VerticalSectionView: View, Selectable {
 	@Inject var selectService: SelectedCoreService
 	@Inject var likeService: LikedCoreService
 	
-	@ObservedObject var vm: MainListSectionViewModel
-  @EnvironmentObject var coordinator: MainCoordinator
+	@ObservedObject var vm: MainListViewModel
+  @EnvironmentObject var coordinator: FeedCoordinator
   @Environment(\.managedObjectContext) private var viewContext
   @FetchRequest(sortDescriptors: []) var selectedRestaurants: FetchedResults<SelectedRestaurant>
 
