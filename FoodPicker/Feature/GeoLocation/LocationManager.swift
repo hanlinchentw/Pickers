@@ -10,7 +10,16 @@ import Foundation
 import CoreLocation
 import Combine
 
-class LocationManager: NSObject {
+protocol LocationManagerProtocol {
+	var lastLocation: CLLocationCoordinate2D? { get set }
+	var locationPublisher: AnyPublisher<CLLocationCoordinate2D?, Never> { get }
+	var authorizationStatus: CLAuthorizationStatus { get }
+	
+	func startTracking() throws
+	func stopTracking()
+}
+
+class LocationManager: NSObject, LocationManagerProtocol {
 	static let shared: LocationManager = {
 		let instance = LocationManager()
 		return instance
@@ -40,6 +49,7 @@ class LocationManager: NSObject {
 		super.init()
 		locationManager.delegate = self
 		locationManager.desiredAccuracy = kCLLocationAccuracyBest
+		try? startTracking()
 	}
 	
 	func requestAuthorization() {
@@ -56,7 +66,7 @@ class LocationManager: NSObject {
 			locationManager.startUpdatingHeading()
 			status = .tracking
 		case .restricted, .denied:
-			stopTracking()
+			status = .restricted
 		@unknown default:
 			stopTracking()
 		}

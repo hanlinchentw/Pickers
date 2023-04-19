@@ -10,17 +10,20 @@ import Foundation
 import CoreLocation
 
 extension LocationManager: CLLocationManagerDelegate {
-	private func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) async {
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 		guard let location = locations.last else { return }
+		print("\(#function) location=\(location)")
 		lastLocation = location.coordinate
 	}
 	
-	private func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) async {
+	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
 		if authorizationStatus == CLAuthorizationStatus.restricted,
 			 authorizationStatus == CLAuthorizationStatus.denied {
 			self.status = .stopped
 		} else if authorizationStatus == CLAuthorizationStatus.notDetermined {
 			requestAuthorization()
+		} else {
+			try? startTracking()
 		}
 	}
 }

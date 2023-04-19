@@ -13,5 +13,6 @@ extension LocationManager {
 		case initiated
 		case tracking
 		case stopped
+		case restricted
 	}
 }
