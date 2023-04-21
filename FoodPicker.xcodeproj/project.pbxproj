@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -125,6 +125,8 @@
 		B6A0F95129EFBA10003470EE /* PocketCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95029EFBA10003470EE /* PocketCoordinator.swift */; };
 		B6A0F95329EFBA1A003470EE /* PocketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95229EFBA1A003470EE /* PocketViewController.swift */; };
 		B6A0F95529EFC3BB003470EE /* TabCoordinatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95429EFC3BB003470EE /* TabCoordinatorViewModel.swift */; };
+		B6A0F95829F00A98003470EE /* LocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95729F00A98003470EE /* LocationManagerProtocol.swift */; };
+		B6A0F95B29F25F69003470EE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = B6A0F95A29F25F69003470EE /* Kingfisher */; };
 		B6AA6C3828A55C4700444F0A /* SelectedCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA6C3728A55C4700444F0A /* SelectedCoreService.swift */; };
 		B6AA6C3A28A55C6000444F0A /* LikedCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA6C3928A55C6000444F0A /* LikedCoreService.swift */; };
 		B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */; };
@@ -344,6 +346,7 @@
 		B6A0F95029EFBA10003470EE /* PocketCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketCoordinator.swift; sourceTree = "<group>"; };
 		B6A0F95229EFBA1A003470EE /* PocketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketViewController.swift; sourceTree = "<group>"; };
 		B6A0F95429EFC3BB003470EE /* TabCoordinatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCoordinatorViewModel.swift; sourceTree = "<group>"; };
+		B6A0F95729F00A98003470EE /* LocationManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerProtocol.swift; sourceTree = "<group>"; };
 		B6AA6C3728A55C4700444F0A /* SelectedCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCoreService.swift; sourceTree = "<group>"; };
 		B6AA6C3928A55C6000444F0A /* LikedCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedCoreService.swift; sourceTree = "<group>"; };
 		B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Map+Extensions.swift"; sourceTree = "<group>"; };
@@ -430,6 +433,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6A0F95B29F25F69003470EE /* Kingfisher in Frameworks */,
 				34E70F312F31F8E2CB2A5415 /* Pods_FoodPicker.framework in Frameworks */,
 				CB55746F7A456CF24EAA883C /* Pods_FoodPicker.framework in Frameworks */,
 				EFF24B0EBFDA411A408A3810 /* Pods_FoodPicker.framework in Frameworks */,
@@ -839,6 +843,7 @@
 				B683143029E2AF5500340782 /* LocationManager.swift */,
 				B683143229E412DD00340782 /* LocationManager+Status.swift */,
 				B683143429E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift */,
+				B6A0F95729F00A98003470EE /* LocationManagerProtocol.swift */,
 			);
 			path = GeoLocation;
 			sourceTree = "<group>";
@@ -883,10 +888,11 @@
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
-				B6A0F94F29EFBA06003470EE /* Pocket */,
 				B63548F728B5291700136A15 /* CachedImage */,
+				B6A0F95629EFC8E7003470EE /* Feed */,
 				B683142F29E2AF4800340782 /* GeoLocation */,
 				B683142029D80D1E00340782 /* Network */,
+				B6A0F94F29EFBA06003470EE /* Pocket */,
 			);
 			path = Feature;
 			sourceTree = "<group>";
@@ -912,6 +918,13 @@
 				B6A0F95229EFBA1A003470EE /* PocketViewController.swift */,
 			);
 			path = Pocket;
+			sourceTree = "<group>";
+		};
+		B6A0F95629EFC8E7003470EE /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Feed;
 			sourceTree = "<group>";
 		};
 		B6A2FA8D2533E6C6005CB171 /* SpinView */ = {
@@ -1168,6 +1181,9 @@
 			dependencies = (
 			);
 			name = FoodPicker;
+			packageProductDependencies = (
+				B6A0F95A29F25F69003470EE /* Kingfisher */,
+			);
 			productName = FoodPicker;
 			productReference = B647A4C924B1F7BA0098B7A2 /* FoodPicker.app */;
 			productType = "com.apple.product-type.application";
@@ -1201,6 +1217,9 @@
 				Base,
 			);
 			mainGroup = B647A4C024B1F7BA0098B7A2;
+			packageReferences = (
+				B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = B647A4CA24B1F7BA0098B7A2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1463,6 +1482,7 @@
 				B60CC1B628C63E4400AF2B53 /* RestaurantPresenter.swift in Sources */,
 				B63E497928BA20FB00714F94 /* UITableView+Extensions.swift in Sources */,
 				B6CBE89C28D5FFE9005BCA7D /* EditListViewModel.swift in Sources */,
+				B6A0F95829F00A98003470EE /* LocationManagerProtocol.swift in Sources */,
 				B683142E29D82AC400340782 /* NetworkingError.swift in Sources */,
 				B683142229D80D8700340782 /* AFNetworkingManager.swift in Sources */,
 				B6AA6C3A28A55C6000444F0A /* LikedCoreService.swift in Sources */,
@@ -1898,6 +1918,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B6A0F95A29F25F69003470EE /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */ = {

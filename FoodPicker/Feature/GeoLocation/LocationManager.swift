@@ -10,15 +10,6 @@ import Foundation
 import CoreLocation
 import Combine
 
-protocol LocationManagerProtocol {
-	var lastLocation: CLLocationCoordinate2D? { get set }
-	var locationPublisher: AnyPublisher<CLLocationCoordinate2D?, Never> { get }
-	var authorizationStatus: CLAuthorizationStatus { get }
-	
-	func startTracking() throws
-	func stopTracking()
-}
-
 class LocationManager: NSObject, LocationManagerProtocol {
 	static let shared: LocationManager = {
 		let instance = LocationManager()
