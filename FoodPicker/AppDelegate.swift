@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import CoreLocation
+import GoogleMaps
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,7 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     Resolver.sharedInstance.register(type: LikedCoreService.self, dependency: LikedCoreService.sharedInstance)
 		
 		Resolver.sharedInstance.register(type: LocationManagerProtocol.self, dependency: LocationManager.shared)
-
+		
+		GMSServices.provideAPIKey(Configuration.googleMapApiKey)
     return true
   }
 

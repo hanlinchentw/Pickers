@@ -25,12 +25,19 @@ final class FeedViewController: UIViewController {
 	}
 	
 	override func viewDidLoad() {
-		
+		super.viewDidLoad()
+		showMap()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.navigationController?.navigationBar.isHidden = true
 		self.tabBarController?.tabBar.isHidden = false
+	}
+	
+	func showMap() {
+		addChild(mapViewController)
+		view.addSubview(mapViewController.view)
+		mapViewController.view.fit(inView: view)
 	}
 }

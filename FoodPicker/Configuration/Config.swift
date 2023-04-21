@@ -18,4 +18,9 @@ final class Configuration {
 		(Bundle.main.infoDictionary?["YELP_API_KEY"] as! String)
 			.replacingOccurrences(of: "\\", with: "")
 	}
+	
+	static var googleMapApiKey: String {
+		(Bundle.main.infoDictionary?["GOOGLE_MAP_API_KEY"] as! String)
+			.replacingOccurrences(of: "\\", with: "")
+	}
 }

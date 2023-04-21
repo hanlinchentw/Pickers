@@ -13,7 +13,8 @@ target 'FoodPicker' do
   pod 'MBProgressHUD'
   pod 'Toast-Swift', '~> 5.0.1'
 	pod 'R.swift'
-	
+	pod 'GoogleMaps', '7.4.0'
+
 	target 'FoodPickerTests' do
 		inherit! :search_paths
 	end
