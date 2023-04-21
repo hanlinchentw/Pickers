@@ -14,7 +14,7 @@ import CoreLocation
 import Combine
 import Toast_Swift
 
-class MapViewController: UIViewController {
+class _MapViewController: UIViewController {
 	static let CAROUSEL_HEIGHT: CGFloat = 250
 	//MARK: - Properties
 	weak var coordinator: FeedCoordinator?
@@ -88,7 +88,7 @@ class MapViewController: UIViewController {
 	}
 }
 //MARK: -  Map Delegate
-extension MapViewController: MKMapViewDelegate {
+extension _MapViewController: MKMapViewDelegate {
 	func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
 		let centerCoordinate = mapView.centerCoordinate
 		PresentHelper.showTapToast(
@@ -151,7 +151,7 @@ extension MapViewController: MKMapViewDelegate {
 	}
 }
 // MARK: - CarouselViewDelegate
-extension MapViewController: CarouselViewDelegate {
+extension _MapViewController: CarouselViewDelegate {
 	func itemDidTap(restaurant: RestaurantViewObject) {
 		coordinator?.pushToDetailView(id: restaurant.id)
 	}
@@ -178,7 +178,7 @@ extension MapViewController: CarouselViewDelegate {
 	}
 }
 //MARK: - Auto layout
-extension MapViewController {
+extension _MapViewController {
 	func configureDismissButton() {
 		view.addSubview(dismissButton)
 		dismissButton.anchor(top: view.topAnchor, right: view.rightAnchor, paddingTop: 15 + SafeAreaUtils.top, paddingRight: 8)

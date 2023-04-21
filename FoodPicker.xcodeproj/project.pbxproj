@@ -14,7 +14,6 @@
 		B60CC1B128C3313800AF2B53 /* ZoomAndSnapFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1B028C3313800AF2B53 /* ZoomAndSnapFlowLayout.swift */; };
 		B60CC1B328C33D2000AF2B53 /* RestaurantCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1B228C33D2000AF2B53 /* RestaurantCardCell.swift */; };
 		B60CC1B628C63E4400AF2B53 /* RestaurantPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1B528C63E4400AF2B53 /* RestaurantPresenter.swift */; };
-		B60CC1B828C63E7100AF2B53 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1B728C63E7100AF2B53 /* MainViewController.swift */; };
 		B60CC1BA28C641EE00AF2B53 /* FeedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1B928C641EE00AF2B53 /* FeedCoordinator.swift */; };
 		B60CC1BD28C6426200AF2B53 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1BC28C6426200AF2B53 /* Coordinator.swift */; };
 		B60CC1BF28C7A64500AF2B53 /* MapDismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1BE28C7A64500AF2B53 /* MapDismissButton.swift */; };
@@ -102,7 +101,7 @@
 		B685485324BECC7F009BC800 /* SpinWheelPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */; };
 		B68551AE28C3063E0077C47E /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68551AD28C3063E0077C47E /* MapViewModel.swift */; };
 		B68551B128C30EEF0077C47E /* RestaurantViewObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68551B028C30EEF0077C47E /* RestaurantViewObject.swift */; };
-		B68551B528C32F6D0077C47E /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68551B428C32F6D0077C47E /* MapViewController.swift */; };
+		B68551B528C32F6D0077C47E /* _MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68551B428C32F6D0077C47E /* _MapViewController.swift */; };
 		B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6898D4828A41DDA005D4EFA /* NSManagedObject.swift */; };
 		B68DD02A268032CA008E1FDE /* SpinResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD029268032CA008E1FDE /* SpinResultView.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
@@ -122,6 +121,9 @@
 		B6A0F95529EFC3BB003470EE /* TabCoordinatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95429EFC3BB003470EE /* TabCoordinatorViewModel.swift */; };
 		B6A0F95829F00A98003470EE /* LocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95729F00A98003470EE /* LocationManagerProtocol.swift */; };
 		B6A0F95B29F25F69003470EE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = B6A0F95A29F25F69003470EE /* Kingfisher */; };
+		B6A0F95D29F26FC9003470EE /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95C29F26FC9003470EE /* FeedViewController.swift */; };
+		B6A0F95F29F2703F003470EE /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95E29F2703F003470EE /* ListViewController.swift */; };
+		B6A0F96129F271E1003470EE /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F96029F271E1003470EE /* MapViewController.swift */; };
 		B6AA6C3828A55C4700444F0A /* SelectedCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA6C3728A55C4700444F0A /* SelectedCoreService.swift */; };
 		B6AA6C3A28A55C6000444F0A /* LikedCoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA6C3928A55C6000444F0A /* LikedCoreService.swift */; };
 		B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */; };
@@ -216,7 +218,6 @@
 		B60CC1B028C3313800AF2B53 /* ZoomAndSnapFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomAndSnapFlowLayout.swift; sourceTree = "<group>"; };
 		B60CC1B228C33D2000AF2B53 /* RestaurantCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCardCell.swift; sourceTree = "<group>"; };
 		B60CC1B528C63E4400AF2B53 /* RestaurantPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantPresenter.swift; sourceTree = "<group>"; };
-		B60CC1B728C63E7100AF2B53 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		B60CC1B928C641EE00AF2B53 /* FeedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCoordinator.swift; sourceTree = "<group>"; };
 		B60CC1BC28C6426200AF2B53 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		B60CC1BE28C7A64500AF2B53 /* MapDismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDismissButton.swift; sourceTree = "<group>"; };
@@ -317,7 +318,7 @@
 		B685485224BECC7F009BC800 /* SpinWheelPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinWheelPresenter.swift; sourceTree = "<group>"; };
 		B68551AD28C3063E0077C47E /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		B68551B028C30EEF0077C47E /* RestaurantViewObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantViewObject.swift; sourceTree = "<group>"; };
-		B68551B428C32F6D0077C47E /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		B68551B428C32F6D0077C47E /* _MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _MapViewController.swift; sourceTree = "<group>"; };
 		B6898D4828A41DDA005D4EFA /* NSManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObject.swift; sourceTree = "<group>"; };
 		B68DD029268032CA008E1FDE /* SpinResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinResultView.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
@@ -336,6 +337,9 @@
 		B6A0F95229EFBA1A003470EE /* PocketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketViewController.swift; sourceTree = "<group>"; };
 		B6A0F95429EFC3BB003470EE /* TabCoordinatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCoordinatorViewModel.swift; sourceTree = "<group>"; };
 		B6A0F95729F00A98003470EE /* LocationManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerProtocol.swift; sourceTree = "<group>"; };
+		B6A0F95C29F26FC9003470EE /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		B6A0F95E29F2703F003470EE /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		B6A0F96029F271E1003470EE /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B6AA6C3728A55C4700444F0A /* SelectedCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCoreService.swift; sourceTree = "<group>"; };
 		B6AA6C3928A55C6000444F0A /* LikedCoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedCoreService.swift; sourceTree = "<group>"; };
 		B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Map+Extensions.swift"; sourceTree = "<group>"; };
@@ -469,7 +473,6 @@
 				B615FFA328CAFCC2000BD3A0 /* Coordinator */,
 				B6C40F3728BE68EC0086DDBD /* MapView */,
 				B65A3CC128A56D1100B15966 /* MainListView */,
-				B60CC1B728C63E7100AF2B53 /* MainViewController.swift */,
 				B630C32E28DA0FE0004B9595 /* SearchListViewModel.swift */,
 				B61F9BA828F1B06F00440F97 /* SearchViewController.swift */,
 			);
@@ -514,7 +517,6 @@
 		B615FFA328CAFCC2000BD3A0 /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
-				B60CC1B928C641EE00AF2B53 /* FeedCoordinator.swift */,
 				B61F9BAD28F1BA8C00440F97 /* SearchCoordinator.swift */,
 			);
 			path = Coordinator;
@@ -653,6 +655,7 @@
 				B683140C29D6B8C900340782 /* AppCoordinator.swift */,
 				B6A0F94729EFB684003470EE /* TabCoordinator.swift */,
 				B6A0F95429EFC3BB003470EE /* TabCoordinatorViewModel.swift */,
+				B647A4E024B1FA640098B7A2 /* MainTabBarController.swift */,
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
 				B683140F29D6BC8B00340782 /* R.generated.swift */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
@@ -671,7 +674,6 @@
 				B647A4E224B203600098B7A2 /* Model */,
 				B6B6705727132FCE00715A18 /* Pickers.xcdatamodeld */,
 				B6CA847428D7513200B85453 /* Protocol */,
-				B67414A028A568C700C545D2 /* TabView */,
 				B647A4E524B203650098B7A2 /* Utilis */,
 				B683142A29D81FE400340782 /* JSON */,
 				B68551AF28C30D3A0077C47E /* ViewObject */,
@@ -760,15 +762,6 @@
 			path = MainListView;
 			sourceTree = "<group>";
 		};
-		B67414A028A568C700C545D2 /* TabView */ = {
-			isa = PBXGroup;
-			children = (
-				B647A4E024B1FA640098B7A2 /* MainTabBarController.swift */,
-				B606C07E2894E69000139907 /* SpinTabItemView.swift */,
-			);
-			path = TabView;
-			sourceTree = "<group>";
-		};
 		B67414A128A5693800C545D2 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
@@ -829,6 +822,7 @@
 				B683143829E416C800340782 /* Layout */,
 				B6A0F94929EFB6B0003470EE /* TabBarController.swift */,
 				B6A0F94B29EFB6DB003470EE /* Scrollable.swift */,
+				B606C07E2894E69000139907 /* SpinTabItemView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -897,6 +891,10 @@
 		B6A0F95629EFC8E7003470EE /* Feed */ = {
 			isa = PBXGroup;
 			children = (
+				B60CC1B928C641EE00AF2B53 /* FeedCoordinator.swift */,
+				B6A0F95C29F26FC9003470EE /* FeedViewController.swift */,
+				B6A0F95E29F2703F003470EE /* ListViewController.swift */,
+				B6A0F96029F271E1003470EE /* MapViewController.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -995,7 +993,7 @@
 			isa = PBXGroup;
 			children = (
 				B68551AD28C3063E0077C47E /* MapViewModel.swift */,
-				B68551B428C32F6D0077C47E /* MapViewController.swift */,
+				B68551B428C32F6D0077C47E /* _MapViewController.swift */,
 				B60CC1AE28C3312400AF2B53 /* CarouselCollectionView.swift */,
 				B60CC1B228C33D2000AF2B53 /* RestaurantCardCell.swift */,
 				B60CC1BE28C7A64500AF2B53 /* MapDismissButton.swift */,
@@ -1149,6 +1147,7 @@
 				B647A4C624B1F7BA0098B7A2 /* Frameworks */,
 				B647A4C724B1F7BA0098B7A2 /* Resources */,
 				8FBA0555CA4ECF30D33E6771 /* [CP] Embed Pods Frameworks */,
+				374709873221435696F16235 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1192,7 +1191,7 @@
 			);
 			mainGroup = B647A4C024B1F7BA0098B7A2;
 			packageReferences = (
-				B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher.git" */,
 			);
 			productRefGroup = B647A4CA24B1F7BA0098B7A2 /* Products */;
 			projectDirPath = "";
@@ -1225,6 +1224,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		374709873221435696F16235 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FoodPicker/Pods-FoodPicker-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FoodPicker/Pods-FoodPicker-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FoodPicker/Pods-FoodPicker-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		5B65AD510D0C48F1ECAAAC0A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1299,7 +1315,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				"$SRCROOT/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1419,10 +1435,11 @@
 				B606C07F2894E69000139907 /* SpinTabItemView.swift in Sources */,
 				B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */,
 				B6EF13AB28B11FB6009345D6 /* FavoriteView.swift in Sources */,
+				B6A0F95D29F26FC9003470EE /* FeedViewController.swift in Sources */,
 				B6ABC1EB28B09543007398F4 /* SecondRowPresenter.swift in Sources */,
 				B685485124BD8631009BC800 /* NetworkService.swift in Sources */,
 				B68551AE28C3063E0077C47E /* MapViewModel.swift in Sources */,
-				B68551B528C32F6D0077C47E /* MapViewController.swift in Sources */,
+				B68551B528C32F6D0077C47E /* _MapViewController.swift in Sources */,
 				B634A71928A76B4800796D63 /* VerticalSectionView.swift in Sources */,
 				B6EF13A628B0CA0B009345D6 /* ShimmerView.swift in Sources */,
 				B650ECD7257F2655004A4049 /* SpinWheel.swift in Sources */,
@@ -1447,6 +1464,7 @@
 				B6C9752328D3750A00287369 /* EditListContainer.swift in Sources */,
 				B6D407C228AD3DF500E59CE3 /* SafeAreaUtils.swift in Sources */,
 				B6CBE89528D5EE5E005BCA7D /* KeyboardHelper.swift in Sources */,
+				B6A0F95F29F2703F003470EE /* ListViewController.swift in Sources */,
 				B6B9976B28BA0A2A007C3D1D /* NotchView.swift in Sources */,
 				B60CC1B628C63E4400AF2B53 /* RestaurantPresenter.swift in Sources */,
 				B63E497928BA20FB00714F94 /* UITableView+Extensions.swift in Sources */,
@@ -1463,6 +1481,7 @@
 				B61F9BB228F3268100440F97 /* RestaurantListFooterView.swift in Sources */,
 				B683140D29D6B8C900340782 /* AppCoordinator.swift in Sources */,
 				B6EF13B128B23366009345D6 /* FavoriteSearchContainer.swift in Sources */,
+				B6A0F96129F271E1003470EE /* MapViewController.swift in Sources */,
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B69E3B1C28B9223300014AA3 /* BottomSheetViewModel.swift in Sources */,
 				B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */,
@@ -1474,7 +1493,6 @@
 				B6898D4928A41DDA005D4EFA /* NSManagedObject.swift in Sources */,
 				B6B9976D28BA0AAD007C3D1D /* ListSaveButton.swift in Sources */,
 				B612E40128DEFE05005721E3 /* AppSettingHelper.swift in Sources */,
-				B60CC1B828C63E7100AF2B53 /* MainViewController.swift in Sources */,
 				B61F9BB028F1D85400440F97 /* CategoryCardCell.swift in Sources */,
 				B6FCEC0028BB1121007A8041 /* ListCardView.swift in Sources */,
 				B6EF139F28B0AEC0009345D6 /* PresentHelper.swift in Sources */,
@@ -1888,7 +1906,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -1901,7 +1919,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		B6A0F95A29F25F69003470EE /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			package = B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher.git" */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */

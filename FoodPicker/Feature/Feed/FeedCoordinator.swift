@@ -11,8 +11,24 @@ import SwiftUI
 
 final class FeedCoordinator: Coordinator, ObservableObject {
 	var childCoordinators = [Coordinator]()
+	
 	var navigationController: UINavigationController
-	lazy var rootViewController = MainViewController()
+	
+	lazy var mapViewController: MapViewController = {
+		let vc = MapViewController()
+		return vc
+	}()
+
+	lazy var listViewController: ListViewController = {
+		let vc = ListViewController()
+		return vc
+	}()
+	
+	lazy var rootViewController: FeedViewController = {
+		let vc = FeedViewController(listViewController: listViewController, mapViewController: mapViewController)
+		vc.coordinator = self
+		return vc
+	}()
 	
 	init(navigationController: UINavigationController = .init()) {
 		self.navigationController = navigationController
