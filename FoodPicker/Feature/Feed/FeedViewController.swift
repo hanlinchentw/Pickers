@@ -26,7 +26,7 @@ final class FeedViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		showMap()
+		showList()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -39,5 +39,11 @@ final class FeedViewController: UIViewController {
 		addChild(mapViewController)
 		view.addSubview(mapViewController.view)
 		mapViewController.view.fit(inView: view)
+	}
+	
+	func showList() {
+		addChild(listViewController)
+		view.addSubview(listViewController.view)
+		listViewController.view.fit(inView: view)
 	}
 }

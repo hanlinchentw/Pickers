@@ -14,6 +14,7 @@ target 'FoodPicker' do
   pod 'Toast-Swift', '~> 5.0.1'
 	pod 'R.swift'
 	pod 'GoogleMaps', '7.4.0'
+	pod 'APIKit', '~> 5.0'
 
 	target 'FoodPickerTests' do
 		inherit! :search_paths

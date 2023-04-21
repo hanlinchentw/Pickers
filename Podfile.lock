@@ -2,6 +2,7 @@ PODS:
   - Alamofire (5.6.2)
   - AlamofireImage (4.2.0):
     - Alamofire (~> 5.4)
+  - APIKit (5.4.0)
   - GoogleMaps (7.4.0):
     - GoogleMaps/Maps (= 7.4.0)
   - GoogleMaps/Base (7.4.0)
@@ -20,6 +21,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 5.6.1)
   - AlamofireImage (~> 4.1)
+  - APIKit (~> 5.0)
   - GoogleMaps (= 7.4.0)
   - ImageSlideshow (~> 1.9.0)
   - ImageSlideshow/Alamofire
@@ -31,6 +33,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - AlamofireImage
+    - APIKit
     - GoogleMaps
     - ImageSlideshow
     - MBProgressHUD
@@ -40,12 +43,13 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
   AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
+  APIKit: 0680e86d2e8abd5bc42e64963f5f89d209eb9271
   GoogleMaps: 032f676450ba0779bd8ce16840690915f84e57ac
   ImageSlideshow: be305b54eaf2b2cfc7a7141c7c734605d44dc07d
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   R.swift: cef1c530541cb49412752721797f10dae6b32d11
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 66230ddb959bde371cdee6d267f86bf6bcd0e2bf
+PODFILE CHECKSUM: 16990418980426f6b79be519201389cf288ecc64
 
 COCOAPODS: 1.11.3

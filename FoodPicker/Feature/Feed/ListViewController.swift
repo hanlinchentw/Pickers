@@ -7,7 +7,20 @@
 //
 
 import UIKit
+import APIKit
 
 final class ListViewController: UIViewController {
-	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		let request = NearbySearchRequest(keyword: "food", latitude: 23.12, longitude: 125.1)
+		
+		Session.send(request) { result in
+			switch result {
+			case .success(let sueccess):
+				print("success >>> \(sueccess)")
+			case .failure(let failure):
+				print("success >>> \(failure)")
+			}
+		}
+	}
 }

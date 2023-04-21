@@ -10,17 +10,23 @@ import Foundation
 
 final class Configuration {
 	static var baseURL: String {
-		(Bundle.main.infoDictionary?["YELP_BACKEND_URL"] as! String)
-								.replacingOccurrences(of: "\\", with: "")
+		getBundleValueByKey("YELP_BACKEND_URL")
 	}
 	
 	static var apiKey: String {
-		(Bundle.main.infoDictionary?["YELP_API_KEY"] as! String)
-			.replacingOccurrences(of: "\\", with: "")
+		getBundleValueByKey("YELP_API_KEY")
 	}
 	
 	static var googleMapApiKey: String {
-		(Bundle.main.infoDictionary?["GOOGLE_MAP_API_KEY"] as! String)
+		getBundleValueByKey("GOOGLE_MAP_API_KEY")
+	}
+	
+	static var googlePlaceApiBaseURL: String {
+		return "https://maps.googleapis.com/maps/api/place"
+	}
+	
+	static func getBundleValueByKey(_ key: String) -> String {
+		(Bundle.main.infoDictionary?[key] as! String)
 			.replacingOccurrences(of: "\\", with: "")
 	}
 }
