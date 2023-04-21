@@ -8,6 +8,7 @@
 
 import UIKit
 import Combine
+import Kingfisher
 
 protocol SpinResultViewDelegate: AnyObject {
 	func pushToDetailVC(_ restaurant: RestaurantViewObject)
@@ -27,7 +28,7 @@ class SpinResultView : UIView {
 	}()
 	
 	private let descriptionLabel = UILabel("What's for today?", font: .arial16BoldMT, color: .black)
-	private lazy var restaurantImageView = CachedImageView()
+	private lazy var restaurantImageView = UIImageView()
 	private lazy var  restaurantName = UILabel("Starbucks", font: UIFont(name: "Avenir-Heavy", size: 16)!, color: .black)
 	private lazy var  priceLabel = UILabel("", font: .arial14MT, color: .gray)
 	private lazy var  businessLabel = UILabel("Open", font: .arial14BoldMT, color: .freshGreen)
@@ -145,7 +146,12 @@ class SpinResultView : UIView {
 		priceLabel.text = presenter.priceCategoryDistanceText
 		ratedLabel.attributedText = presenter.ratingAndReviewCountString
 		businessLabel.text = presenter.openOrCloseString
-		restaurantImageView.url = presenter.imageUrl
+		
+		if let urlString = presenter.imageUrl,
+			 let imageUrl = URL(string: urlString) {
+			restaurantImageView.kf.setImage(with: imageUrl)
+		}
+		
 		configureResultView()
 	}
 	

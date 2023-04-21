@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct RestaurantListItemView: View {
 	var presenter: RestaurantPresenter
@@ -19,27 +20,23 @@ struct RestaurantListItemView: View {
 	}
 	var body: some View {
 		HStack {
-			if let imageUrl = presenter.imageUrl {
-				CachedAsyncImage(url: imageUrl) { phase in
-					switch phase {
-					case .empty:
-						Color.gray.opacity(0.5)
-					case .success(let image):
-						image
-							.resizable()
-					case .failure(_):
-						Image(systemName: "exclamationmark.icloud")
-					@unknown default:
-						Image(systemName: "exclamationmark.icloud")
+			if let urlString = presenter.imageUrl,
+				 let imageURL = URL(string: urlString) {
+				KFImage.url(imageURL)
+					.onSuccess { r in
+						print(r)
 					}
-				}
-				.aspectRatio(contentMode: .fill)
-				.frame(width: 93, height: 93)
-				.cornerRadius(16)
-				.padding(.top, 8)
-				.padding(.leading, 8)
+					.placeholder { p in
+						Color.gray.opacity(0.5)
+					}
+					.resizable()
+					.aspectRatio(contentMode: .fill)
+					.frame(width: 93, height: 93)
+					.cornerRadius(16)
+					.padding(.top, 8)
+					.padding(.leading, 8)
 			}
-
+			
 			VStack(alignment: .leading) {
 				VStack(alignment: .leading, spacing: 6) {
 					Text(presenter.name).en16Bold()
@@ -62,7 +59,7 @@ struct RestaurantListItemView: View {
 			.padding(.leading, 16)
 			
 			Spacer()
-
+			
 			Button {
 				actionButtonOnPress()
 			} label: {
