@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import CoreLocation
+import Combine
 
 protocol LocationManagerProtocol {
 	var lastLocation: CLLocationCoordinate2D? { get set }
