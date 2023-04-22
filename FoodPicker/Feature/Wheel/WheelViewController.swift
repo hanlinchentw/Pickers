@@ -7,7 +7,11 @@
 //
 
 import UIKit
+import WheelUI
 
 final class WheelViewController: UIViewController {
-	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+	}
 }
