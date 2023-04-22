@@ -22,6 +22,7 @@ struct NearbySearchRequest: Request {
 	var keyword: String
 	var latitude: Double
 	var longitude: Double
+	var radius = 1500
 	
 	typealias Response = PlaceApiResponse
 	
@@ -41,15 +42,22 @@ struct NearbySearchRequest: Request {
 		[
 			"keyword": keyword,
 			"location": "\(latitude),\(longitude)",
-			"radius": 5000,
-			"type": "Restaurant",
+			"radius": radius,
+			"type": "restaurant",
 			"key": Configuration.googleMapApiKey,
 		]
 	}
 	
 	func response(from object: Any, urlResponse: HTTPURLResponse) throws -> PlaceApiResponse {
-		guard let result = object as? PlaceApiResponse else {
+		guard let dictionary = object as? [String: AnyObject],
+					let data = try? JSONSerialization.data(withJSONObject: dictionary, options: []) else {
 			throw ResponseError.unexpectedObject(object)
+		}
+
+		let decoder = JSONDecoder()
+		decoder.keyDecodingStrategy = .convertFromSnakeCase
+		guard let result = try? decoder.decode(PlaceApiResponse.self, from: data) else {
+			throw CastError(actualValue: object, expectedType: PlaceApiResponse.self)
 		}
 		
 		return result
