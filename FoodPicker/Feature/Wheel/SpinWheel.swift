@@ -21,7 +21,7 @@ protocol SpinWheelDataSource: NSObjectProtocol {
 	func itemsForSections() -> [WheelItem]
 }
 
-class SpinWheel: UIView {
+final class SpinWheel: UIView {
 	var delegate: SpinWheelDelegate?
 	var dataSource :SpinWheelDataSource?
 	var infinteRotation = false

@@ -13,7 +13,7 @@ final class WheelCoordinator: Coordinator {
 	
 	var navigationController: UINavigationController
 	
-	lazy var rootViewController = SpinViewController()
+	lazy var rootViewController = WheelViewController()
 	
 	init() {
 		self.navigationController = UINavigationController()

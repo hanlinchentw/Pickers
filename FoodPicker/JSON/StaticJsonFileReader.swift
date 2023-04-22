@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+final class StaticJsonFileReader: NSObject {
+	static func read(_ filename: String) -> Data? {
+		if let path = Bundle.main.path(forResource: filename, ofType: "json"),
+			 let staticData = FileManager.default.contents(atPath: path) {
+			return staticData
+		}
+		return nil
+	}
+}

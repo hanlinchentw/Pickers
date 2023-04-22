@@ -6,4 +6,8 @@
 //  Copyright © 2023 陳翰霖. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+final class WheelViewController: UIViewController {
+	
+}
