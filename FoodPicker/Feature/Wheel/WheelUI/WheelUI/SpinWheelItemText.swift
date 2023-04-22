@@ -38,8 +38,7 @@ class SpinWheelItemText: UIView {
     for (index, angle) in angles.enumerated() {
       guard var name = items[index].title else { return }
       var numOfChars = name.count
-      let nameContainsChinese = name.containsChineseCharacters
-      let charOffset = nameContainsChinese ? 12 : 8
+      let charOffset = 8
 
       while Int(wheelRadius / 2) <= numOfChars * charOffset {
         name = String(name.dropLast())
@@ -55,7 +54,7 @@ class SpinWheelItemText: UIView {
 
 extension SpinWheelItemText {
   func drawTextLayer(text: String, context: CGContext, angle: CGFloat){
-    let textSpacing : CGFloat = text.containsChineseCharacters ? 1.3 : 0.5
+    let textSpacing : CGFloat = 1
     // Set the text attributes
     let attributes = [NSAttributedString.Key.foregroundColor: UIColor.black,
                       NSAttributedString.Key.font: UIFont(name: "Arial-BoldMT", size: 14) as Any,

@@ -10,22 +10,19 @@ import Foundation
 import UIKit
 import CoreGraphics
 
-@objc protocol  SpinWheelDelegate: NSObjectProtocol {
+public protocol SpinWheelDelegate: NSObjectProtocol {
 	func wheelDidChangeValue(_ newValue: Int)
-	@objc optional func lastAnimation() -> CABasicAnimation
-	@objc optional func landingPostion() -> SpinWheel.LandingPostion
 }
 
-protocol SpinWheelDataSource: NSObjectProtocol {
+public protocol SpinWheelDataSource: NSObjectProtocol {
 	func numberOfSections() -> Int
 	func itemsForSections() -> [WheelItem]
 }
 
 public final class SpinWheel: UIView {
-	var delegate: SpinWheelDelegate?
-	var dataSource :SpinWheelDataSource?
-	var infinteRotation = false
-	var animateLanding = false
+	public var delegate: SpinWheelDelegate?
+	public var dataSource :SpinWheelDataSource?
+	public var animateLanding = false
 	
 	var container = UIView()
 	
@@ -56,16 +53,16 @@ public final class SpinWheel: UIView {
 		super.init(coder: aDecoder)
 	}
 	
-	func reloadData() {
+	public func reloadData() {
 		try? drawWheel()
 	}
 	
-	func setTarget(section: Int){
+	public func setTarget(section: Int){
 		assert(section <= (dataSource?.numberOfSections())!, "selected Section is out of bounds")
 		self.selectdSection = section
 	}
 	
-	func manualRotation(aCircleTime: Double) {
+	public func manualRotation(aCircleTime: Double) {
 		self.isAnimating = true
 		UIView.animate(withDuration: aCircleTime, delay: 0.0, options: .curveEaseInOut, animations: {
 			self.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
@@ -80,7 +77,7 @@ public final class SpinWheel: UIView {
 		})
 	}
 	
-	func stop() {
+	public func stop() {
 		self.isUserInteractionEnabled = false
 		
 		if isAnimating {
@@ -101,8 +98,7 @@ public final class SpinWheel: UIView {
 	}
 }
 
-extension SpinWheel {
-	@objc
+public extension SpinWheel {
 	enum LandingPostion:Int {
 		case top = 270
 		case left = 180
@@ -117,7 +113,7 @@ extension SpinWheel {
 			throw SpinWheelError.nilDataSource
 		}
 		assert((dataSource.numberOfSections()) == (dataSource.itemsForSections().count), "number of sections must be equal as items")
-		let landingPostion = delegate?.landingPostion?() ?? .top
+		let landingPostion: LandingPostion = .top
 		
 		var start: CGFloat = CGFloat(landingPostion.rawValue)
 		var end: CGFloat = CGFloat(landingPostion.rawValue) + angleSize
@@ -154,8 +150,8 @@ extension SpinWheel {
 	
 	private func drawLabelView(textRotateAngles: Array<CGFloat>) {
 		let labelsView = SpinWheelItemText(angles: textRotateAngles, withRadius: Float(wheelRadius), items: (dataSource?.itemsForSections())!)
+		labelsView.frame = self.bounds
 		container.addSubview(labelsView)
-		labelsView.fit(inView: self)
 	}
 }
 // MARK: - Helpers
@@ -167,18 +163,14 @@ extension SpinWheel {
 	private func getSelectedSector(_ section: Int) {
 		selectedSection = getSectorByValue(section)
 		selectedSection!.opacity = Float(1)
-		if let lastAnimation = delegate?.lastAnimation?() {
-			selectedSection!.add(lastAnimation, forKey: "lastAnimation")
-		} else {
-			if animateLanding {
-				let flash = CABasicAnimation(keyPath: "opacity")
-				flash.fromValue = 0.8
-				flash.toValue = 1
-				flash.duration = 0.2
-				flash.autoreverses = true
-				flash.repeatCount = 2
-				selectedSection!.add(flash, forKey: "flashAnimation")
-			}
+		if animateLanding {
+			let flash = CABasicAnimation(keyPath: "opacity")
+			flash.fromValue = 0.8
+			flash.toValue = 1
+			flash.duration = 0.2
+			flash.autoreverses = true
+			flash.repeatCount = 2
+			selectedSection!.add(flash, forKey: "flashAnimation")
 		}
 		delegate!.wheelDidChangeValue(section)
 	}

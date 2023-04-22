@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-@objc public class WheelItem: NSObject{
-	var id : String
+public class WheelItem: NSObject{
+	public var id : String
 	var title :String?
 	var titleColor :UIColor?
 	var itemColor :UIColor?

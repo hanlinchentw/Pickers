@@ -12,6 +12,7 @@ import Combine
 import SwiftUI
 import CoreLocation
 import MapKit
+import WheelUI
 
 class SpinViewController: UIViewController {
 	static let wheelWidth: CGFloat = 330

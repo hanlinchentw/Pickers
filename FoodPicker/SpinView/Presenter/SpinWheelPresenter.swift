@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import CoreData
+import WheelUI
 
 class SpinWheelPresenter  {
   @Inject var selectedCoreService: SelectedCoreService
