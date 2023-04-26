@@ -9,12 +9,13 @@
 import Foundation
 import UIKit
 
-public class WheelItem: NSObject{
-	public var id : String
-	var title :String?
-	var titleColor :UIColor?
-	var itemColor :UIColor?
-	public init (id: String, title :String ,titleColor:UIColor ,itemColor:UIColor){
+public class WheelItem: NSObject {
+	public var id: String
+	var title: String
+	var titleColor: UIColor
+	var itemColor: UIColor
+
+	public init (id: String = UUID().uuidString, title: String, titleColor: UIColor, itemColor: UIColor) {
 		self.id = id
 		self.title = title
 		self.titleColor = titleColor

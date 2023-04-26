@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B620482329F3C9A000732275 /* SpinWheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620482029F3C9A000732275 /* SpinWheel.swift */; };
+		B620482329F3C9A000732275 /* Wheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620482029F3C9A000732275 /* Wheel.swift */; };
 		B620482429F3C9A000732275 /* WheelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620482129F3C9A000732275 /* WheelItem.swift */; };
-		B620482529F3C9A000732275 /* SpinWheelItemText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620482229F3C9A000732275 /* SpinWheelItemText.swift */; };
 		B6A0F98C29F3C6E3003470EE /* WheelUI.docc in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F98B29F3C6E3003470EE /* WheelUI.docc */; };
 		B6A0F99229F3C6E3003470EE /* WheelUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6A0F98729F3C6E3003470EE /* WheelUI.framework */; };
 		B6A0F99729F3C6E3003470EE /* WheelUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F99629F3C6E3003470EE /* WheelUITests.swift */; };
@@ -27,9 +26,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B620482029F3C9A000732275 /* SpinWheel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinWheel.swift; sourceTree = "<group>"; };
+		B620482029F3C9A000732275 /* Wheel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wheel.swift; sourceTree = "<group>"; };
 		B620482129F3C9A000732275 /* WheelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WheelItem.swift; sourceTree = "<group>"; };
-		B620482229F3C9A000732275 /* SpinWheelItemText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinWheelItemText.swift; sourceTree = "<group>"; };
 		B6A0F98729F3C6E3003470EE /* WheelUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WheelUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6A0F98A29F3C6E3003470EE /* WheelUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WheelUI.h; sourceTree = "<group>"; };
 		B6A0F98B29F3C6E3003470EE /* WheelUI.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = WheelUI.docc; sourceTree = "<group>"; };
@@ -77,8 +75,7 @@
 		B6A0F98929F3C6E3003470EE /* WheelUI */ = {
 			isa = PBXGroup;
 			children = (
-				B620482029F3C9A000732275 /* SpinWheel.swift */,
-				B620482229F3C9A000732275 /* SpinWheelItemText.swift */,
+				B620482029F3C9A000732275 /* Wheel.swift */,
 				B620482129F3C9A000732275 /* WheelItem.swift */,
 				B6A0F98A29F3C6E3003470EE /* WheelUI.h */,
 				B6A0F98B29F3C6E3003470EE /* WheelUI.docc */,
@@ -204,8 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6A0F98C29F3C6E3003470EE /* WheelUI.docc in Sources */,
-				B620482529F3C9A000732275 /* SpinWheelItemText.swift in Sources */,
-				B620482329F3C9A000732275 /* SpinWheel.swift in Sources */,
+				B620482329F3C9A000732275 /* Wheel.swift in Sources */,
 				B620482429F3C9A000732275 /* WheelItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

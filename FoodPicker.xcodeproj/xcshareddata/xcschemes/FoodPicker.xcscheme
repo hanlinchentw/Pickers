@@ -40,6 +40,16 @@
                ReferencedContainer = "container:FoodPicker.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B6A0F99029F3C6E3003470EE"
+               BuildableName = "WheelUITests.xctest"
+               BlueprintName = "WheelUITests"
+               ReferencedContainer = "container:FoodPicker/Feature/Wheel/WheelUI/WheelUI.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

@@ -48,7 +48,7 @@ class SpinViewController: UIViewController {
 	
 	private var resultView = SpinResultView()
 	
-	private var spinWheel = SpinWheel(frame: CGRect(x: 0, y: 0, width: wheelWidth, height: wheelHeight))
+	private var spinWheel = Wheel(frame: CGRect(x: 0, y: 0, width: wheelWidth, height: wheelHeight))
 	
 	private let bottomSheetVC = BottomSheetViewController()
 	private var set = Set<AnyCancellable>()
@@ -95,7 +95,7 @@ class SpinViewController: UIViewController {
 	func wheelSpin(targetIndex: Int) {
 		self.spinWheel.setTarget(section: targetIndex)
 		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
-			self.spinWheel.manualRotation(aCircleTime: 0.15)
+//			self.spinWheel.manualRotation(aCircleTime: 0.15)
 			DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
 				self.spinWheel.stop()
 			}
