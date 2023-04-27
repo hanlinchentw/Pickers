@@ -12,9 +12,6 @@ import Alamofire
 import ImageSlideshow
 
 class DetailViewModel {
-  @Inject var selectedCoreService: SelectedCoreService
-  @Inject var likedCoreService: LikedCoreService
-
   let id: String
   @Published var detail: Detail? = nil
   @Published var isLiked: Bool = false
@@ -29,36 +26,12 @@ class DetailViewModel {
 extension DetailViewModel {
   @MainActor
   func refresh() {
-    self.isSelected = try! selectedCoreService.exists(id: self.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-    self.isLiked = try! likedCoreService.exists(id: self.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-    self.fetchDetail()
   }
 
   func selectButtonTapped() {
-    print("selectButtonTapped")
-    guard let detail = detail else {
-      return
-    }
-    let restaurant: Restaurant = .init(detail: detail)
-    if isSelected {
-      try! selectedCoreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-    } else {
-      try! selectedCoreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
-    }
-    isSelected.toggle()
   }
 
   func likeButtonTapped() {
-    guard let detail = detail else {
-      return
-    }
-    let restaurant: Restaurant = .init(detail: detail)
-    if isLiked {
-      try! likedCoreService.deleteRestaurant(id: restaurant.id, in: CoreDataManager.sharedInstance.managedObjectContext)
-    } else {
-      try! likedCoreService.addRestaurant(data: ["restaurant": restaurant], in: CoreDataManager.sharedInstance.managedObjectContext)
-    }
-    isLiked.toggle()
   }
 
   func shareButtonTapped() {
