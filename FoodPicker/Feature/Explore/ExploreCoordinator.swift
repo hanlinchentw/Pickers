@@ -9,7 +9,7 @@
 import UIKit
 import SwiftUI
 
-final class FeedCoordinator: Coordinator, ObservableObject {
+final class ExploreCoordinator: Coordinator, ObservableObject {
 	var childCoordinators = [Coordinator]()
 	
 	var navigationController: UINavigationController
@@ -19,13 +19,13 @@ final class FeedCoordinator: Coordinator, ObservableObject {
 		return vc
 	}()
 
-	lazy var listViewController: ListViewController = {
-		let vc = ListViewController()
+	lazy var feedViewController: FeedViewController = {
+		let vc = FeedViewController()
 		return vc
 	}()
 	
-	lazy var rootViewController: FeedViewController = {
-		let vc = FeedViewController(listViewController: listViewController, mapViewController: mapViewController)
+	lazy var rootViewController: ExploreMainViewController = {
+		let vc = ExploreMainViewController(feedViewController: feedViewController, mapViewController: mapViewController)
 		vc.coordinator = self
 		return vc
 	}()
@@ -43,12 +43,6 @@ final class FeedCoordinator: Coordinator, ObservableObject {
 	}
 	
 	func pushToMoreListView() {
-		let moreListVC = UIHostingController(rootView: MoreListView()
-			.environmentObject(self)
-			.environment(\.managedObjectContext, CoreDataManager.sharedInstance.managedObjectContext)
-		)
-		navigationController.tabBarController?.tabBar.isHidden = true
-		navigationController.pushViewController(moreListVC, animated: true)
 	}
 	
 	@MainActor
@@ -59,16 +53,6 @@ final class FeedCoordinator: Coordinator, ObservableObject {
 	
 	@MainActor
 	func presentSearchViewController() {
-		let nav = UINavigationController()
-		nav.modalPresentationStyle = .overFullScreen
-		nav.modalTransitionStyle = .crossDissolve
-		
-		let searchCoordinator = SearchCoordinator(navigationController: nav)
-		searchCoordinator.parent = self
-		self.childCoordinators.append(searchCoordinator)
-		searchCoordinator.start()
-		
-		PresentHelper.topViewController?.present(nav, animated: true)
 	}
 	
 	func childDidFinish(_ child: Coordinator?) {

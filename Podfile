@@ -15,7 +15,9 @@ target 'FoodPicker' do
 	pod 'R.swift'
 	pod 'GoogleMaps', '7.4.0'
 	pod 'APIKit', '~> 5.0'
-
+	pod "StatefulViewController", "~> 3.0"
+	pod 'SnapKit', '~> 5.6.0'
+	
 	target 'FoodPickerTests' do
 		inherit! :search_paths
 	end

@@ -26,7 +26,7 @@ class TabCoordinator: Coordinator {
 		let viewModel = TabCoordinatorViewModel()
 		
 		// feedCoordinator
-		let feedCoordinator = FeedCoordinator()
+		let feedCoordinator = ExploreCoordinator()
 		feedCoordinator.start()
 		feedCoordinator.rootViewController.tabBarItem = viewModel.feedBarItem
 		addCoordinator(feedCoordinator)

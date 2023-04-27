@@ -1,5 +1,5 @@
 //
-//  FeedViewController.swift
+//  ExploreMainViewController.swift
 //  FoodPicker
 //
 //  Created by 陳翰霖 on 2023/4/21.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-final class FeedViewController: UIViewController {
+final class ExploreMainViewController: UIViewController {
 	// MARK: - Property
-	let listViewController: ListViewController
+	let listViewController: FeedViewController
 	let mapViewController: MapViewController
-	weak var coordinator: FeedCoordinator?
+	weak var coordinator: ExploreCoordinator?
 	// MARK: - Lifecycle
-	init(listViewController: ListViewController, mapViewController: MapViewController) {
-		self.listViewController = listViewController
+	init(feedViewController: FeedViewController, mapViewController: MapViewController) {
+		self.listViewController = feedViewController
 		self.mapViewController = mapViewController
 		super.init(nibName: nil, bundle: nil)
 	}

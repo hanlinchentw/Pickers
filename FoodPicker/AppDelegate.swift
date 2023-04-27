@@ -15,13 +15,7 @@ import GoogleMaps
 class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     NetworkMonitor.shared.startMonitoring()
-    Resolver.sharedInstance.register(type: BusinessService.self, dependency: BusinessService.sharedInstance)
-    Resolver.sharedInstance.register(type: RestaurantCoreService.self, dependency: RestaurantCoreService.sharedInstance)
-    Resolver.sharedInstance.register(type: SelectedCoreService.self, dependency: SelectedCoreService.sharedInstance)
-    Resolver.sharedInstance.register(type: LikedCoreService.self, dependency: LikedCoreService.sharedInstance)
-		
 		Resolver.sharedInstance.register(type: LocationManagerProtocol.self, dependency: LocationManager.shared)
-		
 		GMSServices.provideAPIKey(Configuration.googleMapApiKey)
     return true
   }

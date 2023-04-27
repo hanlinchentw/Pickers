@@ -48,8 +48,8 @@ extension DetailViewModel {
     MBProgressHUDHelper.showLoadingAnimation()
     Task {
       do {
-        let detail = try await BusinessService.fetchDetail(id: self.id)
-        self.detail = detail
+//        let detail = try await BusinessService.fetchDetail(id: self.id)
+//        self.detail = detail
         MBProgressHUDHelper.hideLoadingAnimation()
       } catch {
         print("fetchDetail.failed >>> \(error.localizedDescription)")

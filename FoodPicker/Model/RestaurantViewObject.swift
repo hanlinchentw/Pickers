@@ -25,37 +25,6 @@ struct RestaurantViewObject: Identifiable {
 }
 
 extension RestaurantViewObject {
-  init(restaurant: Restaurant) {
-    self.businessCategory = restaurant.businessCategory
-    self.id = restaurant.id
-    self.imageUrl = restaurant.imageUrl
-    self.latitude = restaurant.latitude
-    self.longitude = restaurant.longitude
-    self.name = restaurant.name
-    self.price = restaurant.price
-    self.rating = restaurant.rating
-		self.reviewCount = Int(restaurant.reviewCount)
-    self.isLiked = restaurant.isLiked
-    self.isSelected = restaurant.isSelected
-    self.isClosed = restaurant.isClosed
-  }
-}
-
-extension RestaurantViewObject {
-  init(business: Business) {
-    self.id = business.id
-    self.name = business.name
-    self.imageUrl = business.imageUrl
-    self.reviewCount = business.reviewCount
-    self.rating = business.rating
-    self.price = business.price ?? "-"
-    self.businessCategory = business.categories[safe: 0]?.title ?? "Cusine"
-    self.latitude = business.coordinates.latitude
-    self.longitude = business.coordinates.longitude
-  }
-}
-
-extension RestaurantViewObject {
 	init(name: String) {
 		self.name = name
 		self.id = UUID().uuidString
