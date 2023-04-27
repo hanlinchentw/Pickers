@@ -19,6 +19,7 @@
 		B612E40128DEFE05005721E3 /* AppSettingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E40028DEFE05005721E3 /* AppSettingHelper.swift */; };
 		B615FF9E28CADCAD000BD3A0 /* ToastStyleTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615FF9D28CADCAD000BD3A0 /* ToastStyleTheme.swift */; };
 		B620483329F9026C00732275 /* FeedViewController+FeedViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620483229F9026C00732275 /* FeedViewController+FeedViewLayout.swift */; };
+		B620483F29FA1D7F00732275 /* FeedViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620483E29FA1D7F00732275 /* FeedViewController+DataSource.swift */; };
 		B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A70A28A6AF6100796D63 /* View+Extensions.swift */; };
 		B634A70D28A6C0CA00796D63 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A70C28A6C0CA00796D63 /* RoundedCorner.swift */; };
 		B634A71128A74DEB00796D63 /* Text+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71028A74DEB00796D63 /* Text+Extensions.swift */; };
@@ -173,6 +174,7 @@
 		B612E40028DEFE05005721E3 /* AppSettingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingHelper.swift; sourceTree = "<group>"; };
 		B615FF9D28CADCAD000BD3A0 /* ToastStyleTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastStyleTheme.swift; sourceTree = "<group>"; };
 		B620483229F9026C00732275 /* FeedViewController+FeedViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedViewController+FeedViewLayout.swift"; sourceTree = "<group>"; };
+		B620483E29FA1D7F00732275 /* FeedViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedViewController+DataSource.swift"; sourceTree = "<group>"; };
 		B634A70A28A6AF6100796D63 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		B634A70C28A6C0CA00796D63 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		B634A71028A74DEB00796D63 /* Text+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Extensions.swift"; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 			children = (
 				B6A0F95C29F26FC9003470EE /* ExploreMainViewController.swift */,
 				B6A0F95E29F2703F003470EE /* FeedViewController.swift */,
+				B620483E29FA1D7F00732275 /* FeedViewController+DataSource.swift */,
 				B620483229F9026C00732275 /* FeedViewController+FeedViewLayout.swift */,
 				B6A0F96029F271E1003470EE /* MapViewController.swift */,
 			);
@@ -534,15 +537,15 @@
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
-				B6FD55A92896CAEC00B659F4 /* Injector */,
-				B6C7D5A52550FB80005D2AA0 /* Favorite */,
 				B647A4E424B203630098B7A2 /* Detail */,
-				B6A0F97A29F3C493003470EE /* Wheel */,
-				B6A0F96D29F28166003470EE /* GooglePlace */,
 				B6A0F95629EFC8E7003470EE /* Explore */,
+				B6C7D5A52550FB80005D2AA0 /* Favorite */,
 				B683142F29E2AF4800340782 /* GeoLocation */,
+				B6A0F96D29F28166003470EE /* GooglePlace */,
+				B6FD55A92896CAEC00B659F4 /* Injector */,
 				B683142029D80D1E00340782 /* Network */,
 				B6A0F94F29EFBA06003470EE /* Pocket */,
+				B6A0F97A29F3C493003470EE /* Wheel */,
 			);
 			path = Feature;
 			sourceTree = "<group>";
@@ -977,6 +980,7 @@
 				B6ABC1E928B0953A007398F4 /* FirstRowPressenter.swift in Sources */,
 				B6D1307024CBC16200040F85 /* DetailCell.swift in Sources */,
 				B6C7D5B62563F3E0005D2AA0 /* Business.swift in Sources */,
+				B620483F29FA1D7F00732275 /* FeedViewController+DataSource.swift in Sources */,
 				B692F1A728E7FCE200DA90E9 /* StrechyHeaderLayout.swift in Sources */,
 				B634A71528A74E8600796D63 /* Int+Extensions.swift in Sources */,
 				B64BE92428B28D3F0072F6A0 /* Alert.swift in Sources */,

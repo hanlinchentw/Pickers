@@ -30,10 +30,6 @@ extension FeedViewController {
 		let horizontalItemSize = NSCollectionLayoutSize(widthDimension: horizontalItemWidth, heightDimension: horizontalItemHeight)
 		let verticalItemSize = NSCollectionLayoutSize(widthDimension: verticalItemWidth, heightDimension: verticalItemHeight)
 		collectionView = UICollectionView(frame: .zero, collectionViewLayout: FeedViewLayout(horizontalItemSize: horizontalItemSize, verticalItemSize: verticalItemSize))
-		collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Hello")
-		collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
-		collectionView.delegate = self
-		collectionView.dataSource = self
 		
 		view.addSubview(collectionView)
 		collectionView.snp.makeConstraints { make in

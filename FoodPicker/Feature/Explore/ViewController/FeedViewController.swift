@@ -12,10 +12,15 @@ import SnapKit
 
 final class FeedViewController: UIViewController {
 	var collectionView: UICollectionView!
-	
+	lazy var dataSource = makeDataSource()
+
 	init() {
 		super.init(nibName: nil, bundle: nil)
 		setupCollectionView()
+		
+		collectionView.delegate = self
+		collectionView.dataSource = dataSource
+		applyDataSource()
 	}
 	
 	required init?(coder: NSCoder) {
@@ -25,6 +30,10 @@ final class FeedViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 	}
+	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+	}
 }
 
 extension FeedViewController: StatefulViewController {
@@ -33,30 +42,5 @@ extension FeedViewController: StatefulViewController {
 	}
 }
 
-extension FeedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 2
-	}
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 10
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Hello", for: indexPath) as! UICollectionViewCell
-		cell.backgroundColor = indexPath.section == 0 ? .red : .blue
-		return cell
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-		let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath)
-		headerView.backgroundColor = .systemBackground
-		let label = UILabel()
-		label.text = indexPath.section == 0 ? "Popular" : "Nearyby"
-		label.font = UIFont.boldSystemFont(ofSize: 20)
-		headerView.addSubview(label)
-		label.snp.makeConstraints { make in
-			make.edges.equalToSuperview()
-		}
-		return headerView
-	}
+extension FeedViewController: UICollectionViewDelegate {
 }
