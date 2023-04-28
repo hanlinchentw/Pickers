@@ -10,13 +10,6 @@ import UIKit
 import SnapKit
 
 extension FeedViewController {
-	var horizontalItemWidth: NSCollectionLayoutDimension {
-		.fractionalWidth(0.4)
-	}
-	
-	var horizontalItemHeight: NSCollectionLayoutDimension {
-		.fractionalWidth(0.2)
-	}
 	
 	var verticalItemWidth: NSCollectionLayoutDimension {
 		.fractionalWidth(1)
@@ -27,27 +20,19 @@ extension FeedViewController {
 	}
 	
 	func setupCollectionView() {
-		let horizontalItemSize = NSCollectionLayoutSize(widthDimension: horizontalItemWidth, heightDimension: horizontalItemHeight)
 		let verticalItemSize = NSCollectionLayoutSize(widthDimension: verticalItemWidth, heightDimension: verticalItemHeight)
-		collectionView = UICollectionView(frame: .zero, collectionViewLayout: FeedViewLayout(horizontalItemSize: horizontalItemSize, verticalItemSize: verticalItemSize))
+		collectionView = UICollectionView(frame: .zero, collectionViewLayout: FeedViewLayout(verticalItemSize: verticalItemSize))
 		
 		view.addSubview(collectionView)
 		collectionView.snp.makeConstraints { make in
 			make.edges.equalToSuperview()
 		}
 	}
-
+	
 	class FeedViewLayout: UICollectionViewCompositionalLayout {
 		
-		init(horizontalItemSize: NSCollectionLayoutSize, verticalItemSize: NSCollectionLayoutSize) {
+		init(verticalItemSize: NSCollectionLayoutSize) {
 			super.init { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
-				// Define item size and group for horizontal section
-				let horizontalItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-				horizontalItem.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
-				let horizontalGroup = NSCollectionLayoutGroup.horizontal(layoutSize: horizontalItemSize, subitems: [horizontalItem])
-				let horizontalSection = NSCollectionLayoutSection(group: horizontalGroup)
-				horizontalSection.orthogonalScrollingBehavior = .continuous
-				
 				// Define item size and group for vertical section
 				let verticalItem = NSCollectionLayoutItem(layoutSize: verticalItemSize)
 				verticalItem.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
@@ -55,13 +40,7 @@ extension FeedViewController {
 				let verticalGroup = NSCollectionLayoutGroup.vertical(layoutSize: verticalGroupSize, subitems: [verticalItem])
 				let verticalSection = NSCollectionLayoutSection(group: verticalGroup)
 				
-				let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50))
-				let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-				header.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
-				horizontalSection.boundarySupplementaryItems = [header]
-				verticalSection.boundarySupplementaryItems = [header]
-				
-				return sectionIndex == 0 ? horizontalSection : verticalSection
+				return verticalSection
 			}
 		}
 		

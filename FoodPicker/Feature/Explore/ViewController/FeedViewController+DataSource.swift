@@ -9,24 +9,14 @@
 import UIKit
 
 extension FeedViewController {
-	enum RestaurantSection {
-		case popular
-		case nearby
+	typealias DataSource = UICollectionViewDiffableDataSource<Section, RestaurantViewObject>
+	typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, RestaurantViewObject>
+	
+	enum Section {
+		case result
 	}
 	
-	func makeDataSource() -> UICollectionViewDiffableDataSource<RestaurantSection, RestaurantViewObject> {
-		
-		let headerRegistration = UICollectionView.SupplementaryRegistration<UICollectionReusableView>(elementKind: UICollectionView.elementKindSectionHeader) { headerView, elementKind, indexPath in
-			headerView.backgroundColor = .systemBackground
-			let label = UILabel()
-			label.text = indexPath.section == 0 ? "Popular" : "Nearyby"
-			label.font = UIFont.boldSystemFont(ofSize: 20)
-			headerView.addSubview(label)
-			label.snp.makeConstraints { make in
-				make.edges.equalToSuperview()
-			}
-		}
-		
+	func makeDataSource() -> DataSource {
 		let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, RestaurantViewObject> { cell, indexPath, item in
 			var content = cell.defaultContentConfiguration()
 			content.text = item.name
@@ -34,30 +24,18 @@ extension FeedViewController {
 			cell.contentConfiguration = content
 		}
 		
-		let dataSource = UICollectionViewDiffableDataSource<RestaurantSection, RestaurantViewObject>(collectionView: collectionView) { collectionView, indexPath, restaurant in
+		let dataSource = UICollectionViewDiffableDataSource<Section, RestaurantViewObject>(collectionView: collectionView) { collectionView, indexPath, restaurant in
 			let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: restaurant)
 			return cell
-		}
-
-		dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-			collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
 		}
 		
 		return dataSource
 	}
 	
 	func applyDataSource() {
-		let popularRestaurants: [RestaurantViewObject] = [.init(name: "Louisa"), .init(name: "Louisa"), .init(name: "Louisa")]
-		let nearbyRestaurants: [RestaurantViewObject] = [.init(name: "Louisa"), .init(name: "Louisa"), .init(name: "Louisa"), .init(name: "Louisa")]
-		
-		var restaurantData = [RestaurantSection: [RestaurantViewObject]]()
-		restaurantData[.popular] = popularRestaurants
-		restaurantData[.nearby] = nearbyRestaurants
-		
-		var snapshot = NSDiffableDataSourceSnapshot<RestaurantSection, RestaurantViewObject>()
-		snapshot.appendSections([.popular, .nearby])
-		snapshot.appendItems(restaurantData[.popular] ?? [], toSection: .popular)
-		snapshot.appendItems(restaurantData[.nearby] ?? [], toSection: .nearby)
+		var snapshot = DataSourceSnapshot()
+		snapshot.appendSections([.result])
+		snapshot.appendItems([.init(name: "Louisa"), .init(name: "Louisa"), .init(name: "Louisa")])
 		dataSource.apply(snapshot, animatingDifferences: true)
 	}
 }
