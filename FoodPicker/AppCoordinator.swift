@@ -21,8 +21,7 @@ final class AppCoordinator: Coordinator {
 	}
 	
 	func start() {
-		let tabCoordinator = TabCoordinator(navigationController: navigationController)
-		tabCoordinator.start()
-		addCoordinator(tabCoordinator)
+		let root = UIHostingController(rootView: RootView())
+		self.navigationController.setViewControllers([root], animated: false)
 	}
 }

@@ -13,22 +13,8 @@ final class ExploreCoordinator: Coordinator, ObservableObject {
 	var childCoordinators = [Coordinator]()
 	
 	var navigationController: UINavigationController
-	
-	lazy var mapViewController: MapViewController = {
-		let vc = MapViewController()
-		return vc
-	}()
-
-	lazy var feedViewController: FeedViewController = {
-		let vc = FeedViewController()
-		return vc
-	}()
-	
-	lazy var rootViewController: ExploreMainViewController = {
-		let vc = ExploreMainViewController(feedViewController: feedViewController, mapViewController: mapViewController)
-		vc.coordinator = self
-		return vc
-	}()
+	lazy var viewModel = ExploreViewModelImpl()
+	lazy var rootViewController: UIViewController = UIHostingController(rootView: ExplorerView(viewModel: ExploreViewModelImpl()))
 	
 	init(navigationController: UINavigationController = .init()) {
 		self.navigationController = navigationController

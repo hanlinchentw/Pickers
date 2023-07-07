@@ -7,20 +7,17 @@
 //
 
 import UIKit
-import StatefulViewController
-import SnapKit
+import Combine
 
 final class FeedViewController: UIViewController {
 	var collectionView: UICollectionView!
-	lazy var dataSource = makeDataSource()
+	let viewModel: ExploreViewModel
+	
+	var cancellableSet = Set<AnyCancellable>()
 
-	init() {
+	init(viewModel: ExploreViewModel) {
+		self.viewModel = viewModel
 		super.init(nibName: nil, bundle: nil)
-		setupCollectionView()
-		
-		collectionView.delegate = self
-		collectionView.dataSource = dataSource
-		applyDataSource()
 	}
 	
 	required init?(coder: NSCoder) {
@@ -29,18 +26,43 @@ final class FeedViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		setupCollectionView()
+		viewModel.viewObjectsPublisher
+			.receive(on: RunLoop.main)
+			.sink { _ in
+				self.collectionView?.reloadData()
+			}
+			.store(in: &cancellableSet)
+	}
+}
+
+extension FeedViewController: UICollectionViewDelegate {}
+
+extension FeedViewController: UICollectionViewDataSource {
+	func numberOfSections(in collectionView: UICollectionView) -> Int {
+		1
 	}
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		viewModel.viewObjects.count
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(FeedCell.self), for: indexPath) as? FeedCell else {
+			return UICollectionViewCell()
+		}
+		let viewObject = viewModel.viewObject(for: indexPath.row)
+		cell.configure(viewObject: viewObject)
+		return cell
 	}
 }
 
-extension FeedViewController: StatefulViewController {
-	func hasContent() -> Bool {
-		return false
+extension FeedViewController: SlideSheetPresented {
+	var presentedView: UIView {
+		view
 	}
-}
-
-extension FeedViewController: UICollectionViewDelegate {
+	
+	var scrollView: UIScrollView? {
+		collectionView
+	}
 }

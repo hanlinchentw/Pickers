@@ -7,43 +7,34 @@
 //
 
 import UIKit
-import SnapKit
 
 extension FeedViewController {
-	
-	var verticalItemWidth: NSCollectionLayoutDimension {
-		.fractionalWidth(1)
-	}
-	
-	var verticalItemHeight: NSCollectionLayoutDimension {
-		.absolute(100)
-	}
-	
+
 	func setupCollectionView() {
-		let verticalItemSize = NSCollectionLayoutSize(widthDimension: verticalItemWidth, heightDimension: verticalItemHeight)
-		collectionView = UICollectionView(frame: .zero, collectionViewLayout: FeedViewLayout(verticalItemSize: verticalItemSize))
-		
+		collectionView = UICollectionView(frame: .zero, collectionViewLayout: FeedViewLayout())
+		collectionView.delegate = self
+		collectionView.dataSource = self
+		collectionView.register(FeedCell.self, forCellWithReuseIdentifier: NSStringFromClass(FeedCell.self))
 		view.addSubview(collectionView)
-		collectionView.snp.makeConstraints { make in
-			make.edges.equalToSuperview()
-		}
+		collectionView.fit(inView: view)
 	}
-	
+
 	class FeedViewLayout: UICollectionViewCompositionalLayout {
-		
-		init(verticalItemSize: NSCollectionLayoutSize) {
+
+		init() {
 			super.init { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
 				// Define item size and group for vertical section
+				let verticalItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(350))
 				let verticalItem = NSCollectionLayoutItem(layoutSize: verticalItemSize)
 				verticalItem.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
 				let verticalGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))
 				let verticalGroup = NSCollectionLayoutGroup.vertical(layoutSize: verticalGroupSize, subitems: [verticalItem])
 				let verticalSection = NSCollectionLayoutSection(group: verticalGroup)
-				
+
 				return verticalSection
 			}
 		}
-		
+
 		required init?(coder: NSCoder) {
 			fatalError("init(coder:) has not been implemented")
 		}
