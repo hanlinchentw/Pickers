@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import CoreLocation
 import GoogleMaps
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     NetworkMonitor.shared.startMonitoring()
 		Resolver.sharedInstance.register(type: LocationManagerProtocol.self, dependency: LocationManager.shared)
 		GMSServices.provideAPIKey(Configuration.googleMapApiKey)
+		GMSPlacesClient.provideAPIKey(Configuration.googleMapApiKey)
     return true
   }
 

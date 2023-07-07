@@ -11,13 +11,11 @@ target 'FoodPicker' do
   pod "ImageSlideshow/Alamofire"
   pod 'ImageSlideshow', '~> 1.9.0'
   pod 'MBProgressHUD'
-  pod 'Toast-Swift', '~> 5.0.1'
 	pod 'R.swift'
 	pod 'GoogleMaps', '7.4.0'
+	pod 'GooglePlaces', '8.0.0'
 	pod 'APIKit', '~> 5.0'
-	pod "StatefulViewController", "~> 3.0"
-	pod 'SnapKit', '~> 5.6.0'
-	
+  pod 'JXSegmentedView'	
 	target 'FoodPickerTests' do
 		inherit! :search_paths
 	end
