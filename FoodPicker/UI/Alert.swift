@@ -16,7 +16,7 @@ struct AlertPresentationModel {
   var leftButtonText: String? = nil
 
   var rightButtonOnPress: (() -> Void)? = nil
-	var leftButtonOnPress: ((_ hide: VoidClosure) -> Void)? = nil
+	var leftButtonOnPress: ((_ hide: () -> ()) -> Void)? = nil
 
   var rightButtonColor: Color = .black
   var leftButtonColor: Color = .black

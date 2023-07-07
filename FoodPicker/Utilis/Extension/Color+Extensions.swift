@@ -20,4 +20,8 @@ extension Color {
   static var freshGreen: Color {
     Color(red: 127/255, green: 203/255, blue: 89/255)
   }
+	
+	static var gray1: Color {
+		Color(red: 151/255, green: 151/255, blue: 151/255)
+	}
 }

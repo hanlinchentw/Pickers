@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 extension UIFont {
   static var arial12MT: UIFont {
@@ -33,6 +34,33 @@ extension UIFont {
 		return UIFont(name: "Arial-BoldMT", size: 24) ?? UIFont()
 	}
 }
+
+extension Font {
+	static var arial12MT: Font {
+		return Font.custom("ArialMT", size: 12)
+	}
+
+	static var arial14MT: Font {
+		return Font.custom("ArialMT", size: 14)
+	}
+	
+	static var arial16MT: Font {
+		return Font.custom("ArialMT", size: 16)
+	}
+
+	static var arial14BoldMT: Font {
+		return Font.custom("Arial-BoldMT", size: 14)
+	}
+
+	static var arial16BoldMT: Font {
+		return Font.custom("Arial-BoldMT", size: 16)
+	}
+	
+	static var arial24BoldMT: Font {
+		return Font.custom("Arial-BoldMT", size: 24)
+	}
+}
+
 extension UIColor {
   @nonobjc class var denimBlue: UIColor {
     return UIColor(red: 60.0 / 255.0, green: 89.0 / 255.0, blue: 157.0 / 255.0, alpha: 1.0)
