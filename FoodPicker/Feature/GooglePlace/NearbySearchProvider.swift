@@ -9,18 +9,13 @@
 import Foundation
 import APIKit
 
-final class NearbySearchProvider {
-	var keyword: String
-	var latitude: Double
-	var longitude: Double
+protocol NearbySearchProvider {
+	func search(keyword: String, latitude: Double, longitude: Double) async throws -> Array<PlaceApiResult>
+}
+
+final class NearbySearchProviderImpl: NearbySearchProvider  {
 	
-	init(keyword: String, latitude: Double, longitude: Double) {
-		self.keyword = keyword
-		self.latitude = latitude
-		self.longitude = longitude
-	}
-	
-	func search() async throws -> Array<PlaceApiResult> {
+	func search(keyword: String, latitude: Double, longitude: Double) async throws -> Array<PlaceApiResult> {
 		let request = NearbySearchRequest(keyword: keyword, latitude: latitude, longitude: longitude)
 		let response = try await Session.response(for: request)
 		return response.results

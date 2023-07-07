@@ -10,26 +10,32 @@ import Foundation
 
 struct RestaurantViewObject: Identifiable {
   var id: String
+	var name: String
+	var price: String?
+	var rating: Double?
+	var reviewCount: Int?
 	var businessCategory: String?
-  var imageUrl: String?
-  var latitude: Double?
-  var longitude: Double?
-  var name: String
-  var price: String?
-  var rating: Double?
-  var reviewCount: Int?
+  var imageUrls: [URL?] = []
+  var latitude: Double
+  var longitude: Double
 
   var isLiked: Bool = false
   var isSelected: Bool = false
   var isClosed: Bool = false
 }
 
-extension RestaurantViewObject {
-	init(name: String) {
-		self.name = name
-		self.id = UUID().uuidString
-	}
-}
 extension RestaurantViewObject: Equatable {}
 
 extension RestaurantViewObject: Hashable {}
+
+extension RestaurantViewObject {
+	static let dummy = RestaurantViewObject(
+		id: UUID().uuidString,
+		name: "Test Picker",
+		imageUrls: [
+			URL(string: "https://www.pizzarock.com.tw/uploads/6/3/7/3/6373268/website-main-page-pizza-rock-001_orig.jpg")
+		],
+		latitude: 23.5,
+		longitude: 121.0
+	)
+}

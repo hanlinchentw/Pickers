@@ -21,7 +21,7 @@ struct PlaceApiResult: Decodable {
 	let rating: Double
 	let geometry: Geometry
 	let openingHours: OpeningHours
-	let photos: Array<PlacePhoto>
+	let photos: Array<PlacePhoto>?
 	
 	struct Geometry: Decodable {
 		let location: Location

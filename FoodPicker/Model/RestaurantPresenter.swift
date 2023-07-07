@@ -26,10 +26,6 @@ struct RestaurantPresenter {
 		return restaurant.name
 	}
 	
-	var imageUrl: String? {
-		restaurant.imageUrl
-	}
-	
 	var priceCategoryDistanceText: String? {
 		var text = ""
 		if let price = restaurant.price {
@@ -69,11 +65,7 @@ struct RestaurantPresenter {
 	}
 	
 	var distanceFromCurrentLocation : Int? {
-		guard let lat = restaurant.latitude, let lon = restaurant.longitude,
-						lat != 0, lon != 0 else {
-			return nil
-		}
-		return 404
+		404
 //		return LocationService.shared.distanceFromCurrent(lat, lon)
 	}
 	
