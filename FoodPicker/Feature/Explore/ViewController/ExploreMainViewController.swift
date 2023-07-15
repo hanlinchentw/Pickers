@@ -17,6 +17,8 @@ final class ExploreMainViewController: UIViewController {
 	let viewModel: ExploreViewModel
 	private var bottomSheetView: SlidingSheetView!
 	weak var coordinator: ExploreCoordinator?
+	
+	static let FILTER_VIEW_HEIGHT: CGFloat = 200
 	// MARK: - Lifecycle
 	init(viewModel: ExploreViewModel) {
 		self.viewModel = viewModel
@@ -61,30 +63,32 @@ final class ExploreMainViewController: UIViewController {
 		searchViewController.view.anchor(top: view.topAnchor)
 		searchViewController.view.anchor(left: view.leftAnchor)
 		searchViewController.view.anchor(right: view.rightAnchor)
-		searchViewController.view.setDimension(height: 200)
+		searchViewController.view.setDimension(height: Self.FILTER_VIEW_HEIGHT)
 	}
 }
 
 extension ExploreMainViewController {
-	private func topHeightMargin() -> CGFloat {
-		let filtersViewHeight: CGFloat = 200
-		return filtersViewHeight - 25
+	var bottomSheetHeightOnTop: CGFloat {
+		UIScreen.main.bounds.height - Self.FILTER_VIEW_HEIGHT - 25
+	}
+
+	var bottomSheetHeightOnBottom: CGFloat {
+		88
 	}
 	
 	private func setupBottomSheet() {
-		let initialPosition = SlidingSheetView.Position.top(UIScreen.main.bounds.height - topHeightMargin())
 		let configuration = SlidingSheetView.Config(
 			contentView: listViewController,
 			parentViewController: self,
-			initialPosition: initialPosition,
+			initialPosition: .top(bottomSheetHeightOnTop),
 			allowedPositions: [
-				initialPosition,
-				.bottom(150)
+				.top(bottomSheetHeightOnTop),
+				.bottom(bottomSheetHeightOnBottom)
 			],
 			showPullIndicator: true,
 			isDismissable: false
 		)
-		
+
 		self.bottomSheetView = SlidingSheetView(config: configuration)
 		self.bottomSheetView.delegate = self
 
@@ -108,7 +112,7 @@ extension ExploreMainViewController: SlidingSheetViewDelegate {
 																												scrollView: UIScrollView,
 																												offset: CGPoint) {
 		
-		let threshold: CGFloat = -40
+		let threshold: CGFloat = -20
 		if offset.y < threshold {
 			view.moveToPosition(.bottom(), duration: 1)
 		}
@@ -116,7 +120,10 @@ extension ExploreMainViewController: SlidingSheetViewDelegate {
 	
 	public func slidingSheetView(_ view: SlidingSheetView,
 															 heightDidChange height: CGFloat) {
-		
+		let x = height - bottomSheetHeightOnBottom
+		let y = bottomSheetHeightOnTop - bottomSheetHeightOnBottom
+		let ratio = x/y
+		NotificationCenter.default.post(name: .exploreSlidingSheetHeightDidChange, object: nil, userInfo: ["height": height, "ratio": ratio])
 	}
 	
 	public func slidingSheetView(_ view: SlidingSheetView,

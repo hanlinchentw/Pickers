@@ -95,6 +95,8 @@
 		B6ABC1EB28B09543007398F4 /* SecondRowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABC1EA28B09543007398F4 /* SecondRowPresenter.swift */; };
 		B6ABC1ED28B09550007398F4 /* ThirdRowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABC1EC28B09550007398F4 /* ThirdRowPresenter.swift */; };
 		B6ABC1EF28B095B8007398F4 /* DetailRowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABC1EE28B095B8007398F4 /* DetailRowPresenter.swift */; };
+		B6AFD0852A58599600E968B4 /* ExploreSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AFD0842A58599600E968B4 /* ExploreSearchBarView.swift */; };
+		B6AFD0872A62813500E968B4 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AFD0862A62813500E968B4 /* Notification.swift */; };
 		B6B84D4B2665D4BD002E418D /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D4A2665D4BD002E418D /* UIView+Extension.swift */; };
 		B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D4C2665D4DE002E418D /* UIButton+ Extension.swift */; };
 		B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B84D4E2665D50D002E418D /* UITextField +Extension.swift */; };
@@ -273,6 +275,8 @@
 		B6ABC1EA28B09543007398F4 /* SecondRowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondRowPresenter.swift; sourceTree = "<group>"; };
 		B6ABC1EC28B09550007398F4 /* ThirdRowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdRowPresenter.swift; sourceTree = "<group>"; };
 		B6ABC1EE28B095B8007398F4 /* DetailRowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRowPresenter.swift; sourceTree = "<group>"; };
+		B6AFD0842A58599600E968B4 /* ExploreSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchBarView.swift; sourceTree = "<group>"; };
+		B6AFD0862A62813500E968B4 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		B6B84D4A2665D4BD002E418D /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		B6B84D4C2665D4DE002E418D /* UIButton+ Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+ Extension.swift"; sourceTree = "<group>"; };
 		B6B84D4E2665D50D002E418D /* UITextField +Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField +Extension.swift"; sourceTree = "<group>"; };
@@ -513,6 +517,7 @@
 			isa = PBXGroup;
 			children = (
 				B6697F3C2A52B4AE009E321B /* FeedCell.swift */,
+				B6AFD0842A58599600E968B4 /* ExploreSearchBarView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -639,6 +644,7 @@
 		B6A0F96629F27DB0003470EE /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				B6AFD0862A62813500E968B4 /* Notification.swift */,
 				B6A0F96729F27DD1003470EE /* CastError.swift */,
 			);
 			path = Common;
@@ -1054,6 +1060,7 @@
 				B683141029D6BC8B00340782 /* R.generated.swift in Sources */,
 				B683143129E2AF5500340782 /* LocationManager.swift in Sources */,
 				B6A0F95329EFBA1A003470EE /* PocketViewController.swift in Sources */,
+				B6AFD0852A58599600E968B4 /* ExploreSearchBarView.swift in Sources */,
 				B6CBE88E28D37DD9005BCA7D /* HeightPreferenceKey.swift in Sources */,
 				B6CB5FE428B0A2220042C34C /* FourthRowPresenter.swift in Sources */,
 				B6F7898A2899883800829ED4 /* ViewModelType.swift in Sources */,
@@ -1084,6 +1091,7 @@
 				B606C07F2894E69000139907 /* SpinTabItemView.swift in Sources */,
 				B6B84D4F2665D50D002E418D /* UITextField +Extension.swift in Sources */,
 				B6ABC1EB28B09543007398F4 /* SecondRowPresenter.swift in Sources */,
+				B6AFD0872A62813500E968B4 /* Notification.swift in Sources */,
 				B6EF13A628B0CA0B009345D6 /* ShimmerView.swift in Sources */,
 				B65917BD2A52A6EA00C92B54 /* SlidingSheetView.swift in Sources */,
 				B6A0F96A29F27E36003470EE /* PlaceApiResponse.swift in Sources */,

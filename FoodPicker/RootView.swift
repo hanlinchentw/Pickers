@@ -7,9 +7,12 @@
 //
 
 import SwiftUI
+import Combine
 
 struct RootView: View {
 	@State var selectedIndex: Int = 0
+	@State var tabBarOffset: CGFloat = 0
+	var heightDidChangePublisher = NotificationCenter.Publisher(center: .default, name: .exploreSlidingSheetHeightDidChange)
 	
 	init() {
 		UITabBar.appearance().isHidden = true
@@ -26,12 +29,19 @@ struct RootView: View {
 				PocketView()
 					.tag(2)
 			}
-
+			
 			TabBarView(selectedTab: $selectedIndex)
-				.frame(height: 80)
+				.frame(height: 88)
 				.background(.white)
 				.clipped()
 				.cornerRadius(36)
+				.ignoresSafeArea()
+				.offset(y: tabBarOffset)
+		}
+		.ignoresSafeArea()
+		.onReceive(heightDidChangePublisher) { output in
+			guard let ratio = output.userInfo?["ratio"] as? CGFloat else { return }
+			tabBarOffset = 88 - (ratio * 88)
 		}
 	}
 }
