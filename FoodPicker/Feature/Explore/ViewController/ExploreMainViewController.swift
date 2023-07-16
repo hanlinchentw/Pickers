@@ -13,7 +13,12 @@ final class ExploreMainViewController: UIViewController {
 	let listViewController: FeedViewController
 	let mapViewController: MapViewController
 	let searchViewController: ExploreSearchViewController
-
+	var mapSwitchButton = with(UIButton()) {
+		$0.backgroundColor = .black
+		$0.setImage(UIImage(systemName: "map"), for: .normal)
+		$0.setTitle("Map", for: .normal)
+		$0.layer.cornerRadius = 10
+	}
 	let viewModel: ExploreViewModel
 	private var bottomSheetView: SlidingSheetView!
 	weak var coordinator: ExploreCoordinator?
@@ -37,6 +42,7 @@ final class ExploreMainViewController: UIViewController {
 		setupMap()
 		setupSearch()
 		setupBottomSheet()
+		setupMapSwitchButton()
 		bottomSheetView?.setupLayout(animated: false)
 		self.view.sendSubviewToBack(bottomSheetView)
 		self.view.sendSubviewToBack(mapViewController.view)
@@ -65,8 +71,22 @@ final class ExploreMainViewController: UIViewController {
 		searchViewController.view.anchor(right: view.rightAnchor)
 		searchViewController.view.setDimension(height: Self.FILTER_VIEW_HEIGHT)
 	}
+	
+	func setupMapSwitchButton() {
+		view.addSubview(mapSwitchButton)
+		mapSwitchButton.centerX(inView: view)
+		mapSwitchButton.anchor(bottom: view.bottomAnchor, paddingBottom: 120)
+		mapSwitchButton.setDimension(width: 100, height: 20)
+
+		mapSwitchButton.addTarget(self, action: #selector(didTapMapSwitchButton), for: .touchUpInside)
+	}
+	
+	@objc func didTapMapSwitchButton() {
+		bottomSheetView.moveToPosition(.bottom())
+	}
 }
 
+// MARK: - BottomSheet
 extension ExploreMainViewController {
 	var bottomSheetHeightOnTop: CGFloat {
 		UIScreen.main.bounds.height - Self.FILTER_VIEW_HEIGHT - 25
@@ -108,45 +128,30 @@ extension ExploreMainViewController {
 
 extension ExploreMainViewController: SlidingSheetViewDelegate {
 	
-	public func slidingSheetViewScrollViewDidChangeOffset(_ view: SlidingSheetView,
-																												scrollView: UIScrollView,
-																												offset: CGPoint) {
-		
-		let threshold: CGFloat = -20
-		if offset.y < threshold {
-			view.moveToPosition(.bottom(), duration: 1)
-		}
+	public func slidingSheetViewScrollViewDidChangeOffset(_ view: SlidingSheetView, scrollView: UIScrollView, offset: CGPoint) {
 	}
 	
-	public func slidingSheetView(_ view: SlidingSheetView,
-															 heightDidChange height: CGFloat) {
+	public func slidingSheetView(_ view: SlidingSheetView, heightDidChange height: CGFloat) {
+		listViewController.collectionView.collectionViewLayout.invalidateLayout()
+
 		let x = height - bottomSheetHeightOnBottom
 		let y = bottomSheetHeightOnTop - bottomSheetHeightOnBottom
 		let ratio = x/y
 		NotificationCenter.default.post(name: .exploreSlidingSheetHeightDidChange, object: nil, userInfo: ["height": height, "ratio": ratio])
 	}
 	
-	public func slidingSheetView(_ view: SlidingSheetView,
-															 willMoveTo position: SlidingSheetView.Position) {
-		
+	public func slidingSheetView(_ view: SlidingSheetView, willMoveTo position: SlidingSheetView.Position) {
+
 	}
 	
 	public func slidingSheetView(_ view: SlidingSheetView,
 															 didMoveFromPosition position: SlidingSheetView.Position?,
 															 toPosition: SlidingSheetView.Position) {
-		
-		// Modify appearance when fully expanded
+		mapSwitchButton.isHidden = !toPosition.isTop
 		view.setAsAnchored(!toPosition.isTop)
-		
-		// Disable the pan gesture on top in order to avoid collpasing the sheet while moving inside table cells.
 		view.panGesture.isEnabled = !toPosition.isTop
-//		
-		// Disable scrolling inside the table when collapsed.
-		listViewController.scrollView?.isUserInteractionEnabled = toPosition.isTop
-		listViewController.collectionView.reloadData()
 	}
 	
 	public func slidingSheetViewRequestForDismission(_ view: SlidingSheetView) {
-		
 	}
 }

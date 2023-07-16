@@ -29,7 +29,7 @@ struct RootView: View {
 				PocketView()
 					.tag(2)
 			}
-			
+
 			TabBarView(selectedTab: $selectedIndex)
 				.frame(height: 88)
 				.background(.white)
@@ -37,11 +37,12 @@ struct RootView: View {
 				.cornerRadius(36)
 				.ignoresSafeArea()
 				.offset(y: tabBarOffset)
+				.animation(.easeInOut, value: tabBarOffset)
 		}
 		.ignoresSafeArea()
 		.onReceive(heightDidChangePublisher) { output in
 			guard let ratio = output.userInfo?["ratio"] as? CGFloat else { return }
-			tabBarOffset = 88 - (ratio * 88)
+			tabBarOffset = 88 * (1 - ratio)
 		}
 	}
 }
