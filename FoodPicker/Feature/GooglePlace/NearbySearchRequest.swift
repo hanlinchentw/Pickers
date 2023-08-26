@@ -23,21 +23,21 @@ struct NearbySearchRequest: Request {
 	var latitude: Double
 	var longitude: Double
 	var radius = 1500
-	
+
 	typealias Response = PlaceApiResponse
-	
+
 	var baseURL: URL {
 		URL(string: Configuration.googlePlaceApiBaseURL)!
 	}
-	
+
 	var method: APIKit.HTTPMethod {
 		.get
 	}
-	
+
 	var path: String {
 		"/nearbysearch/json"
 	}
-	
+
 	var queryParameters: [String : Any]? {
 		[
 			"keyword": keyword,
@@ -47,7 +47,7 @@ struct NearbySearchRequest: Request {
 			"key": Configuration.googleMapApiKey,
 		]
 	}
-	
+
 	func response(from object: Any, urlResponse: HTTPURLResponse) throws -> PlaceApiResponse {
 		guard let dictionary = object as? [String: AnyObject],
 					let data = try? JSONSerialization.data(withJSONObject: dictionary, options: []) else {
@@ -59,7 +59,7 @@ struct NearbySearchRequest: Request {
 		guard let result = try? decoder.decode(PlaceApiResponse.self, from: data) else {
 			throw CastError(actualValue: object, expectedType: PlaceApiResponse.self)
 		}
-		
+
 		return result
 	}
 }

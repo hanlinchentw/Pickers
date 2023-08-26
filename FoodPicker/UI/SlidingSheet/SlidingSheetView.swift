@@ -85,6 +85,7 @@ public class SlidingSheetView: UIView, UIGestureRecognizerDelegate {
 		setupUI()
 		setupPanGesture()
 		evaluateHeightsOnAllowedPositions()
+		contentView.scrollView?.delegate = self
 	}
 	
 	required init?(coder: NSCoder) {
@@ -185,7 +186,7 @@ public class SlidingSheetView: UIView, UIGestureRecognizerDelegate {
 	private func setupUI() {
 		self.backgroundColor = .white
 		self.isOpaque = true
-		
+
 		addSubview(contentView.presentedView)
 		contentView.presentedView.translatesAutoresizingMaskIntoConstraints = false
 		
@@ -462,6 +463,10 @@ public class SlidingSheetView: UIView, UIGestureRecognizerDelegate {
 		
 		self.delegate?.slidingSheetView(self, heightDidChange: height)
 	}
+
+	func resetContentOffset() {
+		contentView.scrollView?.contentOffset.y = 0
+	}
 	
 	// MARK: - UIGestureRecognizerDelegate
 	
@@ -484,4 +489,18 @@ public class SlidingSheetView: UIView, UIGestureRecognizerDelegate {
 		return true
 	}
 	
+}
+
+extension SlidingSheetView: UIScrollViewDelegate {
+	public func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+		delegate?.slidingSheetControllerWillBeginDecelerating()
+	}
+
+	public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+		delegate?.slidingSheetControllerWillStartDragging()
+	}
+	
+	public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+		delegate?.slidingSheetControllerWillEndDragging()
+	}
 }

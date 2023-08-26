@@ -14,6 +14,7 @@ extension FeedViewController {
 		collectionView = UICollectionView(frame: .zero, collectionViewLayout: FeedViewLayout())
 		collectionView.delegate = self
 		collectionView.dataSource = self
+		collectionView.showsVerticalScrollIndicator = false
 		collectionView.register(FeedCell.self, forCellWithReuseIdentifier: NSStringFromClass(FeedCell.self))
 		view.addSubview(collectionView)
 		collectionView.fit(inView: view)
@@ -23,15 +24,14 @@ extension FeedViewController {
 
 		init() {
 			super.init { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
-				// Define item size and group for vertical section
-				let verticalItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(350))
-				let verticalItem = NSCollectionLayoutItem(layoutSize: verticalItemSize)
-				verticalItem.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
-				let verticalGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))
-				let verticalGroup = NSCollectionLayoutGroup.vertical(layoutSize: verticalGroupSize, subitems: [verticalItem])
-				let verticalSection = NSCollectionLayoutSection(group: verticalGroup)
-
-				return verticalSection
+				let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(350))
+				let item = NSCollectionLayoutItem(layoutSize: itemSize)
+				item.contentInsets = .init(top: 0, leading: 24, bottom: 0, trailing: 24)
+				let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, repeatingSubitem: item, count: 1)
+				let section = NSCollectionLayoutSection(group: group)
+				section.interGroupSpacing = 32
+				section.contentInsets = .init(top: 0, leading: 0, bottom: 100, trailing: 0)
+				return section
 			}
 		}
 

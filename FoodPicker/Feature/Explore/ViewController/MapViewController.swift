@@ -32,8 +32,8 @@ final class MapViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-//		setupMapView()
-//		bindViewObjectsChanged()
+		setupMapView()
+		bindViewObjectsChanged()
 	}
 }
 

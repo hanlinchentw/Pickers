@@ -13,17 +13,23 @@ final class ExploreMainViewController: UIViewController {
 	let listViewController: FeedViewController
 	let mapViewController: MapViewController
 	let searchViewController: ExploreSearchViewController
-	var mapSwitchButton = with(UIButton()) {
-		$0.backgroundColor = .black
-		$0.setImage(UIImage(systemName: "map"), for: .normal)
-		$0.setTitle("Map", for: .normal)
-		$0.layer.cornerRadius = 10
-	}
+	var mapSwitchButton: UIButton = {
+		let button = UIButton()
+		button.setImage(UIImage(systemName: "map.fill"), for: .normal)
+		button.semanticContentAttribute = .forceRightToLeft
+		button.setTitle("Map", for: .normal)
+		button.titleLabel?.font = .arial14MT
+		button.backgroundColor = .black
+		button.tintColor = .white
+		button.layer.cornerRadius = 16
+		button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+		return button
+	}()
+	var mapSwitchButtonVisibilityTimeout: Timer?
 	let viewModel: ExploreViewModel
 	private var bottomSheetView: SlidingSheetView!
 	weak var coordinator: ExploreCoordinator?
-	
-	static let FILTER_VIEW_HEIGHT: CGFloat = 200
+	static let FILTER_VIEW_HEIGHT: CGFloat = 170
 	// MARK: - Lifecycle
 	init(viewModel: ExploreViewModel) {
 		self.viewModel = viewModel
@@ -32,11 +38,11 @@ final class ExploreMainViewController: UIViewController {
 		self.searchViewController = ExploreSearchViewController()
 		super.init(nibName: nil, bundle: nil)
 	}
-	
+
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupMap()
@@ -47,9 +53,9 @@ final class ExploreMainViewController: UIViewController {
 		self.view.sendSubviewToBack(bottomSheetView)
 		self.view.sendSubviewToBack(mapViewController.view)
 		self.view.bringSubviewToFront(searchViewController.view)
-//		viewModel.fetch()
+		viewModel.fetch()
 	}
-	
+
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.navigationController?.navigationBar.isHidden = true
@@ -75,27 +81,29 @@ final class ExploreMainViewController: UIViewController {
 	func setupMapSwitchButton() {
 		view.addSubview(mapSwitchButton)
 		mapSwitchButton.centerX(inView: view)
-		mapSwitchButton.anchor(bottom: view.bottomAnchor, paddingBottom: 120)
-		mapSwitchButton.setDimension(width: 100, height: 20)
+		mapSwitchButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 64)
+		mapSwitchButton.setDimension(width: 90, height: 32)
 
 		mapSwitchButton.addTarget(self, action: #selector(didTapMapSwitchButton), for: .touchUpInside)
 	}
 	
 	@objc func didTapMapSwitchButton() {
 		bottomSheetView.moveToPosition(.bottom())
+		bottomSheetView.resetContentOffset()
+		bottomSheetView.contentView.presentedView.alpha = 0
 	}
 }
 
 // MARK: - BottomSheet
 extension ExploreMainViewController {
 	var bottomSheetHeightOnTop: CGFloat {
-		UIScreen.main.bounds.height - Self.FILTER_VIEW_HEIGHT - 25
+		UIScreen.main.bounds.height - Self.FILTER_VIEW_HEIGHT + 25
 	}
 
 	var bottomSheetHeightOnBottom: CGFloat {
-		88
+		72
 	}
-	
+
 	private func setupBottomSheet() {
 		let configuration = SlidingSheetView.Config(
 			contentView: listViewController,
@@ -124,16 +132,12 @@ extension ExploreMainViewController {
 	}
 }
 
-// MARK: - MapsController + SlidingSheetViewDelegate
-
+// MARK: - SlidingSheetViewDelegate
 extension ExploreMainViewController: SlidingSheetViewDelegate {
-	
-	public func slidingSheetViewScrollViewDidChangeOffset(_ view: SlidingSheetView, scrollView: UIScrollView, offset: CGPoint) {
-	}
+	public func slidingSheetViewScrollViewDidChangeOffset(_ view: SlidingSheetView, scrollView: UIScrollView, offset: CGPoint) {}
 	
 	public func slidingSheetView(_ view: SlidingSheetView, heightDidChange height: CGFloat) {
 		listViewController.collectionView.collectionViewLayout.invalidateLayout()
-
 		let x = height - bottomSheetHeightOnBottom
 		let y = bottomSheetHeightOnTop - bottomSheetHeightOnBottom
 		let ratio = x/y
@@ -141,7 +145,11 @@ extension ExploreMainViewController: SlidingSheetViewDelegate {
 	}
 	
 	public func slidingSheetView(_ view: SlidingSheetView, willMoveTo position: SlidingSheetView.Position) {
-
+		if position.isTop {
+			UIView.animate(withDuration: 0.3) {
+				view.contentView.presentedView.alpha = 1
+			}
+		}
 	}
 	
 	public func slidingSheetView(_ view: SlidingSheetView,
@@ -151,7 +159,39 @@ extension ExploreMainViewController: SlidingSheetViewDelegate {
 		view.setAsAnchored(!toPosition.isTop)
 		view.panGesture.isEnabled = !toPosition.isTop
 	}
+
+	public func slidingSheetViewRequestForDismission(_ view: SlidingSheetView) {}
 	
-	public func slidingSheetViewRequestForDismission(_ view: SlidingSheetView) {
+	public func slidingSheetControllerWillStartDragging() {
+		mapSwitchButtonVisibilityTimeout?.invalidate()
+		hideMapSwitchButton()
+	}
+
+	func slidingSheetControllerWillBeginDecelerating() {
+		mapSwitchButtonVisibilityTimeout = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+			self.showMapSwitchButton()
+		})
+	}
+
+	func slidingSheetControllerWillEndDragging() {
+		mapSwitchButtonVisibilityTimeout = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+			self.showMapSwitchButton()
+		})
+	}
+
+	func showMapSwitchButton() {
+		self.mapSwitchButton.isHidden = false
+		UIView.animate(withDuration: 0.3) {
+			self.mapSwitchButton.alpha = 1
+		}
+
+	}
+
+	func hideMapSwitchButton() {
+		UIView.animate(withDuration: 0.3) {
+			self.mapSwitchButton.alpha = 0
+		} completion: { _ in
+			self.mapSwitchButton.isHidden = true
+		}
 	}
 }

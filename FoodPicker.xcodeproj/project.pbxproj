@@ -22,6 +22,9 @@
 		B610EA982A4C8D5D00990CC5 /* PocketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA972A4C8D5D00990CC5 /* PocketView.swift */; };
 		B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */; };
 		B612E40128DEFE05005721E3 /* AppSettingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E40028DEFE05005721E3 /* AppSettingHelper.swift */; };
+		B61C993A2A6A8E5E000ADEFE /* RestaurantSelectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61C99392A6A8E5E000ADEFE /* RestaurantSelectionStore.swift */; };
+		B61C993C2A6A8E6B000ADEFE /* RestaurantSelectionDomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61C993B2A6A8E6B000ADEFE /* RestaurantSelectionDomainModel.swift */; };
+		B61C99452A6A92D3000ADEFE /* Defaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61C99442A6A92D3000ADEFE /* Defaults+Extensions.swift */; };
 		B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A70A28A6AF6100796D63 /* View+Extensions.swift */; };
 		B634A70D28A6C0CA00796D63 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A70C28A6C0CA00796D63 /* RoundedCorner.swift */; };
 		B634A71128A74DEB00796D63 /* Text+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B634A71028A74DEB00796D63 /* Text+Extensions.swift */; };
@@ -86,7 +89,6 @@
 		B6A0F97929F3A6D2003470EE /* NearbySearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F97829F3A6D2003470EE /* NearbySearchProvider.swift */; };
 		B6A0F97C29F3C4A8003470EE /* WheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F97B29F3C4A8003470EE /* WheelViewController.swift */; };
 		B6A0F9BD29F3C795003470EE /* WheelCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F9BC29F3C795003470EE /* WheelCoordinator.swift */; };
-		B6A8A9B52A4D76E5001E3542 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = B6A8A9B42A4D76E5001E3542 /* Kingfisher */; };
 		B6A8A9C22A4D7868001E3542 /* Pods_FoodPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2922B2735BEDFD9EB907267A /* Pods_FoodPicker.framework */; };
 		B6A8A9C32A4D7868001E3542 /* Pods_FoodPicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2922B2735BEDFD9EB907267A /* Pods_FoodPicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */; };
@@ -193,6 +195,9 @@
 		B610EA972A4C8D5D00990CC5 /* PocketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketView.swift; sourceTree = "<group>"; };
 		B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		B612E40028DEFE05005721E3 /* AppSettingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingHelper.swift; sourceTree = "<group>"; };
+		B61C99392A6A8E5E000ADEFE /* RestaurantSelectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantSelectionStore.swift; sourceTree = "<group>"; };
+		B61C993B2A6A8E6B000ADEFE /* RestaurantSelectionDomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantSelectionDomainModel.swift; sourceTree = "<group>"; };
+		B61C99442A6A92D3000ADEFE /* Defaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+Extensions.swift"; sourceTree = "<group>"; };
 		B634A70A28A6AF6100796D63 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		B634A70C28A6C0CA00796D63 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		B634A71028A74DEB00796D63 /* Text+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Extensions.swift"; sourceTree = "<group>"; };
@@ -328,7 +333,6 @@
 			files = (
 				B6A8A9C22A4D7868001E3542 /* Pods_FoodPicker.framework in Frameworks */,
 				B659179F2A4D82A100C92B54 /* WheelUI.framework in Frameworks */,
-				B6A8A9B52A4D76E5001E3542 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,6 +376,15 @@
 				B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */,
 			);
 			path = ViewModifier;
+			sourceTree = "<group>";
+		};
+		B61C99382A6A8E4E000ADEFE /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				B61C99392A6A8E5E000ADEFE /* RestaurantSelectionStore.swift */,
+				B61C993B2A6A8E6B000ADEFE /* RestaurantSelectionDomainModel.swift */,
+			);
+			path = Selection;
 			sourceTree = "<group>";
 		};
 		B620483429F9070F00732275 /* ViewController */ = {
@@ -445,6 +458,7 @@
 				B683143729E416BB00340782 /* UI */,
 				B6A0F96629F27DB0003470EE /* Common */,
 				B647A4E524B203650098B7A2 /* Utilis */,
+				B61C99442A6A92D3000ADEFE /* Defaults+Extensions.swift */,
 			);
 			path = FoodPicker;
 			sourceTree = "<group>";
@@ -605,6 +619,7 @@
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
+				B61C99382A6A8E4E000ADEFE /* Selection */,
 				B647A4E424B203630098B7A2 /* Detail */,
 				B6A0F95629EFC8E7003470EE /* Explore */,
 				B683142F29E2AF4800340782 /* GeoLocation */,
@@ -818,7 +833,6 @@
 			);
 			name = FoodPicker;
 			packageProductDependencies = (
-				B6A8A9B42A4D76E5001E3542 /* Kingfisher */,
 			);
 			productName = FoodPicker;
 			productReference = B647A4C924B1F7BA0098B7A2 /* FoodPicker.app */;
@@ -855,6 +869,7 @@
 			mainGroup = B647A4C024B1F7BA0098B7A2;
 			packageReferences = (
 				B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				B61C99402A6A92B4000ADEFE /* XCRemoteSwiftPackageReference "Defaults" */,
 			);
 			productRefGroup = B647A4CA24B1F7BA0098B7A2 /* Products */;
 			projectDirPath = "";
@@ -1085,6 +1100,7 @@
 				B647A4E724B2039D0098B7A2 /* Extension.swift in Sources */,
 				B6F789B826774D9B0003ED5C /* String+Extensions.swift in Sources */,
 				B6A0F96829F27DD1003470EE /* CastError.swift in Sources */,
+				B61C99452A6A92D3000ADEFE /* Defaults+Extensions.swift in Sources */,
 				B6A0F97729F3A302003470EE /* StaticJsonFileReader.swift in Sources */,
 				B6B84D512665D52F002E418D /* UIFont+UIColor+Extension.swift in Sources */,
 				B610EA922A4C29EE00990CC5 /* TabItems.swift in Sources */,
@@ -1105,6 +1121,7 @@
 				B6D407C228AD3DF500E59CE3 /* SafeAreaUtils.swift in Sources */,
 				B610EA962A4C8CB800990CC5 /* WheelView.swift in Sources */,
 				B610EA8E2A4C268A00990CC5 /* RootView.swift in Sources */,
+				B61C993C2A6A8E6B000ADEFE /* RestaurantSelectionDomainModel.swift in Sources */,
 				B6CBE89528D5EE5E005BCA7D /* KeyboardHelper.swift in Sources */,
 				B6B9976B28BA0A2A007C3D1D /* NotchView.swift in Sources */,
 				B60CC1B628C63E4400AF2B53 /* RestaurantPresenter.swift in Sources */,
@@ -1114,6 +1131,7 @@
 				B634A71328A74E1500796D63 /* Color+Extensions.swift in Sources */,
 				B610EA902A4C271D00990CC5 /* TabBarView.swift in Sources */,
 				B634A71128A74DEB00796D63 /* Text+Extensions.swift in Sources */,
+				B61C993A2A6A8E5E000ADEFE /* RestaurantSelectionStore.swift in Sources */,
 				B683140D29D6B8C900340782 /* AppCoordinator.swift in Sources */,
 				B6A0F96129F271E1003470EE /* MapViewController.swift in Sources */,
 				B6A0F9BD29F3C795003470EE /* WheelCoordinator.swift in Sources */,
@@ -1530,6 +1548,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B61C99402A6A92B4000ADEFE /* XCRemoteSwiftPackageReference "Defaults" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/Defaults";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -1539,14 +1565,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		B6A8A9B42A4D76E5001E3542 /* Kingfisher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B647A4C124B1F7BA0098B7A2 /* Project object */;
 }

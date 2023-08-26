@@ -45,9 +45,8 @@ final class ExploreViewModelImpl: ExploreViewModel, ObservableObject {
 	func fetch() {
 		Task {
 			do {
-				guard let lat = lastLocation?.latitude,
-							let lon = lastLocation?.longitude else {
-					fatalError("need to throw error here")
+				guard let lat = lastLocation?.latitude, let lon = lastLocation?.longitude else {
+					return
 				}
 				let results = try await nearbySearchProvider.search(keyword: "food", latitude: lat , longitude: lon)
 				let photoReferences = results.map { ($0.photos ?? []).map(\.photoReference) }
@@ -63,6 +62,7 @@ final class ExploreViewModelImpl: ExploreViewModel, ObservableObject {
 		}
 	}
 }
+
 extension Zip2Sequence where Sequence1 == [PlaceApiResult], Sequence2 == [[URL?]] {
 	func mapPlaceApiResultToRestaurantViewObject() -> [RestaurantViewObject] {
 		self.map { (place, images) in

@@ -14,7 +14,6 @@ protocol NearbySearchProvider {
 }
 
 final class NearbySearchProviderImpl: NearbySearchProvider  {
-	
 	func search(keyword: String, latitude: Double, longitude: Double) async throws -> Array<PlaceApiResult> {
 		let request = NearbySearchRequest(keyword: keyword, latitude: latitude, longitude: longitude)
 		let response = try await Session.response(for: request)

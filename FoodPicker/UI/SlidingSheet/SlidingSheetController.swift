@@ -185,6 +185,10 @@ public class SlidingSheetController: UIViewController, UIGestureRecognizerDelega
                                                           offset: CGPoint) {
         delegate?.slidingSheetController(self, innerScrollView: scrollView, didChangeOffset: offset)
     }
+	
+	public func slidingSheetControllerWillStartDragging() {}
+	public func slidingSheetControllerWillEndDragging() {}
+	public func slidingSheetControllerWillBeginDecelerating() {}
     
     // MARK: - UIGestureRecognizerDelegate
     

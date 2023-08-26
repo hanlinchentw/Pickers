@@ -12,18 +12,18 @@ import Combine
 final class FeedViewController: UIViewController {
 	var collectionView: UICollectionView!
 	let viewModel: ExploreViewModel
-	
+
 	var cancellableSet = Set<AnyCancellable>()
 
 	init(viewModel: ExploreViewModel) {
 		self.viewModel = viewModel
 		super.init(nibName: nil, bundle: nil)
 	}
-	
+
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupCollectionView()
@@ -39,10 +39,6 @@ final class FeedViewController: UIViewController {
 extension FeedViewController: UICollectionViewDelegate {}
 
 extension FeedViewController: UICollectionViewDataSource {
-	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		1
-	}
-	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		viewModel.viewObjects.count
 	}

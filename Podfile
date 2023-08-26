@@ -15,7 +15,8 @@ target 'FoodPicker' do
 	pod 'GoogleMaps', '7.4.0'
 	pod 'GooglePlaces', '8.0.0'
 	pod 'APIKit', '~> 5.0'
-  pod 'JXSegmentedView'	
+  pod 'JXSegmentedView'
+	pod 'Defaults'
 	target 'FoodPickerTests' do
 		inherit! :search_paths
 	end

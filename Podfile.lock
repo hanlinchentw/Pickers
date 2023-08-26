@@ -3,6 +3,7 @@ PODS:
   - AlamofireImage (4.2.0):
     - Alamofire (~> 5.4)
   - APIKit (5.4.0)
+  - Defaults (4.2.2)
   - GoogleMaps (7.4.0):
     - GoogleMaps/Maps (= 7.4.0)
   - GoogleMaps/Base (7.4.0)
@@ -23,6 +24,7 @@ DEPENDENCIES:
   - Alamofire (~> 5.6.1)
   - AlamofireImage (~> 4.1)
   - APIKit (~> 5.0)
+  - Defaults
   - GoogleMaps (= 7.4.0)
   - GooglePlaces (= 8.0.0)
   - ImageSlideshow (~> 1.9.0)
@@ -36,6 +38,7 @@ SPEC REPOS:
     - Alamofire
     - AlamofireImage
     - APIKit
+    - Defaults
     - GoogleMaps
     - GooglePlaces
     - ImageSlideshow
@@ -47,6 +50,7 @@ SPEC CHECKSUMS:
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
   AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
   APIKit: 0680e86d2e8abd5bc42e64963f5f89d209eb9271
+  Defaults: d785e56c0fb8890dc40351603f05c8e1df1bdd45
   GoogleMaps: 032f676450ba0779bd8ce16840690915f84e57ac
   GooglePlaces: 46231f49e2dc52aa9a604f99e2e6b29996f30cc7
   ImageSlideshow: be305b54eaf2b2cfc7a7141c7c734605d44dc07d
@@ -54,6 +58,6 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   R.swift: cef1c530541cb49412752721797f10dae6b32d11
 
-PODFILE CHECKSUM: 31e4fa6d8ee8375f758408d1493a07947c64d785
+PODFILE CHECKSUM: 14af2fb53a0a8b50e57e0287a6e445fcc4412ece
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
