@@ -13,7 +13,6 @@
 		B60CC1B628C63E4400AF2B53 /* RestaurantPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1B528C63E4400AF2B53 /* RestaurantPresenter.swift */; };
 		B60CC1BA28C641EE00AF2B53 /* ExploreCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1B928C641EE00AF2B53 /* ExploreCoordinator.swift */; };
 		B60CC1BD28C6426200AF2B53 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CC1BC28C6426200AF2B53 /* Coordinator.swift */; };
-		B610EA8C2A4C210B00990CC5 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA8B2A4C210B00990CC5 /* MapView.swift */; };
 		B610EA8E2A4C268A00990CC5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA8D2A4C268A00990CC5 /* RootView.swift */; };
 		B610EA902A4C271D00990CC5 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA8F2A4C271D00990CC5 /* TabBarView.swift */; };
 		B610EA922A4C29EE00990CC5 /* TabItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA912A4C29EE00990CC5 /* TabItems.swift */; };
@@ -40,7 +39,6 @@
 		B64BE92428B28D3F0072F6A0 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64BE92328B28D3F0072F6A0 /* Alert.swift */; };
 		B659179F2A4D82A100C92B54 /* WheelUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B659179C2A4D81DC00C92B54 /* WheelUI.framework */; };
 		B65917A02A4D82A100C92B54 /* WheelUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B659179C2A4D81DC00C92B54 /* WheelUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B65917A22A4F134400C92B54 /* FeedContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65917A12A4F134400C92B54 /* FeedContainerView.swift */; };
 		B65917B82A52A6E500C92B54 /* SlidingSheetControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65917B62A52A6E500C92B54 /* SlidingSheetControllerDelegate.swift */; };
 		B65917B92A52A6E500C92B54 /* SlidingSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65917B72A52A6E500C92B54 /* SlidingSheetController.swift */; };
 		B65917BD2A52A6EA00C92B54 /* SlidingSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65917BA2A52A6EA00C92B54 /* SlidingSheetView.swift */; };
@@ -66,6 +64,7 @@
 		B683143129E2AF5500340782 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683143029E2AF5500340782 /* LocationManager.swift */; };
 		B683143329E412DD00340782 /* LocationManager+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683143229E412DD00340782 /* LocationManager+Status.swift */; };
 		B683143529E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683143429E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift */; };
+		B68383972A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383962A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
 		B68551B128C30EEF0077C47E /* RestaurantViewObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68551B028C30EEF0077C47E /* RestaurantViewObject.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
@@ -186,7 +185,6 @@
 		B60CC1B528C63E4400AF2B53 /* RestaurantPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantPresenter.swift; sourceTree = "<group>"; };
 		B60CC1B928C641EE00AF2B53 /* ExploreCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreCoordinator.swift; sourceTree = "<group>"; };
 		B60CC1BC28C6426200AF2B53 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
-		B610EA8B2A4C210B00990CC5 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		B610EA8D2A4C268A00990CC5 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		B610EA8F2A4C271D00990CC5 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		B610EA912A4C29EE00990CC5 /* TabItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItems.swift; sourceTree = "<group>"; };
@@ -223,7 +221,6 @@
 		B647A4E624B2039D0098B7A2 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		B64BE92328B28D3F0072F6A0 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		B65917962A4D81DC00C92B54 /* WheelUI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = WheelUI.xcodeproj; path = WheelUI/WheelUI.xcodeproj; sourceTree = "<group>"; };
-		B65917A12A4F134400C92B54 /* FeedContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedContainerView.swift; sourceTree = "<group>"; };
 		B65917B62A52A6E500C92B54 /* SlidingSheetControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlidingSheetControllerDelegate.swift; sourceTree = "<group>"; };
 		B65917B72A52A6E500C92B54 /* SlidingSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlidingSheetController.swift; sourceTree = "<group>"; };
 		B65917BA2A52A6EA00C92B54 /* SlidingSheetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlidingSheetView.swift; sourceTree = "<group>"; };
@@ -250,6 +247,7 @@
 		B683143029E2AF5500340782 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		B683143229E412DD00340782 /* LocationManager+Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationManager+Status.swift"; sourceTree = "<group>"; };
 		B683143429E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationManager+CLLocationManagerDelegate.swift"; sourceTree = "<group>"; };
+		B68383962A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceApiResultToRestaurantViewObject.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B68551B028C30EEF0077C47E /* RestaurantViewObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantViewObject.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
@@ -616,6 +614,14 @@
 			path = Layout;
 			sourceTree = "<group>";
 		};
+		B68383932A99F42F0015B0E6 /* Mapper */ = {
+			isa = PBXGroup;
+			children = (
+				B68383962A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift */,
+			);
+			path = Mapper;
+			sourceTree = "<group>";
+		};
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
 			isa = PBXGroup;
 			children = (
@@ -647,8 +653,7 @@
 			children = (
 				B60CC1B928C641EE00AF2B53 /* ExploreCoordinator.swift */,
 				B666C4552A3038A8003E2FBF /* ExplorerView.swift */,
-				B65917A12A4F134400C92B54 /* FeedContainerView.swift */,
-				B610EA8B2A4C210B00990CC5 /* MapView.swift */,
+				B68383932A99F42F0015B0E6 /* Mapper */,
 				B65917D32A52B48800C92B54 /* View */,
 				B620483429F9070F00732275 /* ViewController */,
 				B620484029FC3FFD00732275 /* ViewModel */,
@@ -1070,9 +1075,9 @@
 				B65917BE2A52A6EA00C92B54 /* SlidingSheetViewDelegate.swift in Sources */,
 				B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */,
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
-				B610EA8C2A4C210B00990CC5 /* MapView.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B683141029D6BC8B00340782 /* R.generated.swift in Sources */,
+				B68383972A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift in Sources */,
 				B683143129E2AF5500340782 /* LocationManager.swift in Sources */,
 				B6A0F95329EFBA1A003470EE /* PocketViewController.swift in Sources */,
 				B6AFD0852A58599600E968B4 /* ExploreSearchBarView.swift in Sources */,
@@ -1080,7 +1085,6 @@
 				B6CB5FE428B0A2220042C34C /* FourthRowPresenter.swift in Sources */,
 				B6F7898A2899883800829ED4 /* ViewModelType.swift in Sources */,
 				B683143329E412DD00340782 /* LocationManager+Status.swift in Sources */,
-				B65917A22A4F134400C92B54 /* FeedContainerView.swift in Sources */,
 				B65917D02A52AB8B00C92B54 /* FeedViewController+DataSource.swift in Sources */,
 				B60CC1BA28C641EE00AF2B53 /* ExploreCoordinator.swift in Sources */,
 				B6FD55AC2896CB0100B659F4 /* Resolver.swift in Sources */,

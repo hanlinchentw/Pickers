@@ -22,10 +22,10 @@ struct RootView: View {
 	var body: some View {
 		ZStack(alignment: .bottom) {
 			TabView(selection: $selectedIndex) {
-				ExplorerView()
+				ExplorerView(selectionStore: selectionStore)
 					.tag(0)
 					.ignoresSafeArea()
-				WheelView()
+				WheelView(selectionStore: selectionStore)
 					.tag(1)
 				PocketView()
 					.tag(2)

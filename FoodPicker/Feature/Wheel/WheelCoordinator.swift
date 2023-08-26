@@ -13,13 +13,13 @@ final class WheelCoordinator: Coordinator {
 	
 	var navigationController: UINavigationController
 	
-	lazy var rootViewController = WheelViewController()
+//	lazy var rootViewController = WheelViewController()
 	
 	init() {
 		self.navigationController = UINavigationController()
 	}
 	
 	func start() {
-		navigationController.viewControllers = [rootViewController]
+//		navigationController.viewControllers = [rootViewController]
 	}
 }

@@ -30,7 +30,7 @@ extension FeedViewController {
 				let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, repeatingSubitem: item, count: 1)
 				let section = NSCollectionLayoutSection(group: group)
 				section.interGroupSpacing = 32
-				section.contentInsets = .init(top: 0, leading: 0, bottom: 100, trailing: 0)
+				section.contentInsets = .init(top: 0, leading: 0, bottom: 120, trailing: 0)
 				return section
 			}
 		}

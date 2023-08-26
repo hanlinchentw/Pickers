@@ -50,17 +50,17 @@ final class ExploreMainViewController: UIViewController {
 		setupBottomSheet()
 		setupMapSwitchButton()
 		bottomSheetView?.setupLayout(animated: false)
-		self.view.sendSubviewToBack(bottomSheetView)
-		self.view.sendSubviewToBack(mapViewController.view)
-		self.view.bringSubviewToFront(searchViewController.view)
+		view.sendSubviewToBack(bottomSheetView)
+		view.sendSubviewToBack(mapViewController.view)
+		view.bringSubviewToFront(searchViewController.view)
 		viewModel.fetch()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		self.navigationController?.navigationBar.isHidden = true
-		self.navigationController?.navigationBar.isTranslucent = true
-		self.tabBarController?.tabBar.isHidden = true
+		navigationController?.navigationBar.isHidden = true
+		navigationController?.navigationBar.isTranslucent = true
+		tabBarController?.tabBar.isHidden = true
 	}
 	
 	func setupMap() {
@@ -91,6 +91,10 @@ final class ExploreMainViewController: UIViewController {
 		bottomSheetView.moveToPosition(.bottom())
 		bottomSheetView.resetContentOffset()
 		bottomSheetView.contentView.presentedView.alpha = 0
+	}
+	
+	func refreshView() {
+		listViewController.updateView()
 	}
 }
 

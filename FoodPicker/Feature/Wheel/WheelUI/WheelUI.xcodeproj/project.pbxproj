@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B620482329F3C9A000732275 /* Wheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620482029F3C9A000732275 /* Wheel.swift */; };
 		B620482429F3C9A000732275 /* WheelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B620482129F3C9A000732275 /* WheelItem.swift */; };
+		B68383992A9A0E290015B0E6 /* WheelItemText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383982A9A0E290015B0E6 /* WheelItemText.swift */; };
 		B6A0F98C29F3C6E3003470EE /* WheelUI.docc in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F98B29F3C6E3003470EE /* WheelUI.docc */; };
 		B6A0F99229F3C6E3003470EE /* WheelUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6A0F98729F3C6E3003470EE /* WheelUI.framework */; };
 		B6A0F99729F3C6E3003470EE /* WheelUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F99629F3C6E3003470EE /* WheelUITests.swift */; };
@@ -28,6 +29,7 @@
 /* Begin PBXFileReference section */
 		B620482029F3C9A000732275 /* Wheel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wheel.swift; sourceTree = "<group>"; };
 		B620482129F3C9A000732275 /* WheelItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WheelItem.swift; sourceTree = "<group>"; };
+		B68383982A9A0E290015B0E6 /* WheelItemText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelItemText.swift; sourceTree = "<group>"; };
 		B6A0F98729F3C6E3003470EE /* WheelUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WheelUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6A0F98A29F3C6E3003470EE /* WheelUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WheelUI.h; sourceTree = "<group>"; };
 		B6A0F98B29F3C6E3003470EE /* WheelUI.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = WheelUI.docc; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 			children = (
 				B620482029F3C9A000732275 /* Wheel.swift */,
 				B620482129F3C9A000732275 /* WheelItem.swift */,
+				B68383982A9A0E290015B0E6 /* WheelItemText.swift */,
 				B6A0F98A29F3C6E3003470EE /* WheelUI.h */,
 				B6A0F98B29F3C6E3003470EE /* WheelUI.docc */,
 			);
@@ -203,6 +206,7 @@
 				B6A0F98C29F3C6E3003470EE /* WheelUI.docc in Sources */,
 				B620482329F3C9A000732275 /* Wheel.swift in Sources */,
 				B620482429F3C9A000732275 /* WheelItem.swift in Sources */,
+				B68383992A9A0E290015B0E6 /* WheelItemText.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

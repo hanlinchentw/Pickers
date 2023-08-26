@@ -46,3 +46,15 @@ extension PlaceApiResult: Equatable {
 		lhs.placeId == rhs.placeId
 	}
 }
+
+extension PlaceApiResult {
+	static var staticData: [Self] {
+		guard let data = StaticJsonFileReader.read("Place") else {
+			return []
+		}
+		let decoder = JSONDecoder()
+		decoder.keyDecodingStrategy = .convertFromSnakeCase
+		let response = try? decoder.decode(PlaceApiResponse.self, from: data)
+		return response?.results ?? []
+	}
+}

@@ -46,16 +46,7 @@ public final class Wheel: UIView {
 	var wheelRadius: CGFloat {
 		self.frame.width / 2
 	}
-	
-	override public init(frame: CGRect) {
-		super.init(frame: frame)
-		container = UIView(frame: frame)
-	}
-	
-	required public init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-	}
-	
+
 	public func reloadData() {
 		drawWheel()
 	}
@@ -116,42 +107,36 @@ extension Wheel {
 		case bottom = 90
 	}
 }
+
 // MARK: - Graphic
-private extension Wheel {
-	var textAttributes: [NSAttributedString.Key: Any] {
-		let TEXT_SPACING = 1.2
-		return [
-			NSAttributedString.Key.foregroundColor: UIColor.black,
-			NSAttributedString.Key.font: UIFont(name: "Arial-BoldMT", size: 14) as Any,
-			NSAttributedString.Key.kern: TEXT_SPACING,
-		] as [NSAttributedString.Key : Any]
-	}
-	
+extension Wheel {
 	private func drawWheel() {
-		guard let dataSource = dataSource else {
-			fatalError("Missing Wheel dataSource.")
-		}
+		guard let dataSource = dataSource else { fatalError("nil data source") }
 		assert((dataSource.numberOfSections()) == (dataSource.itemsForSections().count), "number of sections must be equal as items")
-		container.layer.sublayers?.removeAll()
+		let landingPostion: LandingPostion = .top
+		container.removeFromSuperview()
+		container = UIView()
+
+		var start: CGFloat = CGFloat(landingPostion.rawValue)
+		var end: CGFloat = CGFloat(landingPostion.rawValue) + angleSize
+		var angles: Array<CGFloat> = []
 		
-		let start = CGFloat(landingPosition.rawValue) - angleSize/2
-		(0 ..< dataSource.numberOfSections())
-			.map { index -> (CGFloat, CGFloat, WheelItem) in
-				let startAngle = start + CGFloat(index)*angleSize
-				let endAngle = startAngle + angleSize
-				let item = dataSource.itemsForSections()[index]
-				return (startAngle, endAngle, item)
-			}
-			.forEach { startAngle, endAngle, item in
-				let shapeLayer = createShapeLayer(start: startAngle, end: endAngle, item: item)
-				container.layer.addSublayer(shapeLayer)
-				let textLayer = createTextLayer(start: startAngle, end: endAngle, item: item)
-				container.layer.addSublayer(textLayer)
-			}
+		for index in 0 ..< dataSource.numberOfSections() {
+			angles.append(angleToRadian(start) + angleToRadian(angleSize)/2) // place text in the middle of every single pizza
+			let shapeLayer = createShapeLayer(start: start, end: end, item: dataSource.itemsForSections()[index])
+			container.layer.addSublayer(shapeLayer)
+			start = CGFloat(fmodf(Float(start + angleSize), 360.0))
+			end = CGFloat(fmodf(Float(end + angleSize), 360.0))
+		}
+		let labelsView = WheelItemText(angles: angles, withRadius: Float(wheelRadius), items: (dataSource.itemsForSections()))
+
+		labelsView.frame = self.bounds
+		container.frame = self.bounds
 		addSubview(container)
+		addSubview(labelsView)
 	}
-	
-	func createShapeLayer(start: CGFloat, end: CGFloat, item: WheelItem) -> CAShapeLayer {
+
+	private func createShapeLayer(start: CGFloat, end: CGFloat, item: WheelItem) -> CAShapeLayer {
 		let path = UIBezierPath()
 		let center = CGPoint(x: frame.size.width/2, y: frame.size.height/2)
 		path.move(to: center)
@@ -163,34 +148,10 @@ private extension Wheel {
 		layer.name = item.id
 		return layer
 	}
-	
-	func createTextLayer(start: CGFloat, end: CGFloat, item: WheelItem) -> CATextLayer {
-		let textSize = item.title.size(withAttributes: textAttributes)
-		let center = CGPoint(x: frame.size.width/2, y: frame.size.height/2)
-		let textAngle = angleToRadian(start+angleSize/2)
-		
-		let startOnRadius = 0.4
-		let p = pointOnCircle(center: center, radius: wheelRadius*startOnRadius, angle: textAngle)
-		var textLayerframe = CGRect(x: 0, y: 0, width: wheelRadius*(1-startOnRadius)-16, height: textSize.height)
-		textLayerframe.origin.x = p.x - (textLayerframe.size.width * 0.5)
-		textLayerframe.origin.y = p.y - (textLayerframe.size.height * 0.5)
-		
-		let textLayer = CATextLayer()
-		textLayer.frame = textLayerframe
-		textLayer.anchorPoint = CGPoint(x: 0, y: 0.5)
-		textLayer.transform = CATransform3DMakeRotation(textAngle, 0, 0, 1)
-		textLayer.alignmentMode = .left
-		textLayer.truncationMode = .end
-		textLayer.string = NSAttributedString(string: item.title, attributes: textAttributes)
-		return textLayer
-	}
-	
-	func pointOnCircle(center: CGPoint, radius: CGFloat, angle: CGFloat) -> CGPoint {
-		let x = center.x + radius * cos(angle)
-		let y = center.y + radius * sin(angle)
-		return CGPoint(x: x, y: y)
-	}
+}
 
+// MARK: - Helper
+private extension Wheel {
 	private func angleToRadian(_ angle: CGFloat) -> CGFloat {
 		angle * .pi / 180.0
 	}

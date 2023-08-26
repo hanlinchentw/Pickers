@@ -34,6 +34,10 @@ final class FeedViewController: UIViewController {
 			}
 			.store(in: &cancellableSet)
 	}
+	
+	func updateView() {
+		collectionView.reloadData()
+	}
 }
 
 extension FeedViewController: UICollectionViewDelegate {}
@@ -48,8 +52,16 @@ extension FeedViewController: UICollectionViewDataSource {
 			return UICollectionViewCell()
 		}
 		let viewObject = viewModel.viewObject(for: indexPath.row)
-		cell.configure(viewObject: viewObject)
+		cell.viewObject = viewObject
+		cell.configure()
+		cell.delegate = self
 		return cell
+	}
+}
+
+extension FeedViewController: FeedCellDelegate {
+	func didTapAddButton(object: RestaurantViewObject) {
+		viewModel.didTapAddButton(object: object)
 	}
 }
 

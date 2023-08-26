@@ -10,10 +10,14 @@ import SwiftUI
 
 struct WheelView: UIViewControllerRepresentable {
 	typealias UIViewControllerType = WheelViewController
-	
+
+	@ObservedObject var selectionStore: RestaurantSelectionStore
+
 	func makeUIViewController(context: Context) -> WheelViewController {
-		return WheelViewController()
+		return WheelViewController(selectionStore: selectionStore)
 	}
 	
-	func updateUIViewController(_ uiViewController: WheelViewController, context: Context) {}
+	func updateUIViewController(_ uiViewController: WheelViewController, context: Context) {
+		uiViewController.refreshWheel()
+	}
 }

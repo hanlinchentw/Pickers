@@ -9,12 +9,15 @@
 import SwiftUI
 
 struct ExplorerView: UIViewControllerRepresentable {
-	@StateObject var viewModel = ExploreViewModelImpl()
 	typealias UIViewControllerType = ExploreMainViewController
-	
+
+	@ObservedObject var selectionStore: RestaurantSelectionStore
+
 	func makeUIViewController(context: Context) -> ExploreMainViewController {
-		.init(viewModel: viewModel)
+		.init(viewModel: ExploreViewModelImpl(selectionStore: selectionStore))
 	}
 	
-	func updateUIViewController(_ uiViewController: ExploreMainViewController, context: Context) {}
+	func updateUIViewController(_ uiViewController: ExploreMainViewController, context: Context) {
+		uiViewController.refreshView()
+	}
 }

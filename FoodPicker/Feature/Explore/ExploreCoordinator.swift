@@ -11,17 +11,17 @@ import SwiftUI
 
 final class ExploreCoordinator: Coordinator, ObservableObject {
 	var childCoordinators = [Coordinator]()
-	
+
 	var navigationController: UINavigationController
-	lazy var viewModel = ExploreViewModelImpl()
-	lazy var rootViewController: UIViewController = UIHostingController(rootView: ExplorerView(viewModel: ExploreViewModelImpl()))
+//	lazy var viewModel = ExploreViewModelImpl()
+//	lazy var rootViewController: UIViewController = UIHostingController(rootView: ExplorerView(viewModel: ExploreViewModelImpl()))
 	
 	init(navigationController: UINavigationController = .init()) {
 		self.navigationController = navigationController
 	}
 	
 	func start() {
-		navigationController.setViewControllers([rootViewController], animated: false)
+//		navigationController.setViewControllers([rootViewController], animated: false)
 	}
 	
 	func pop() {

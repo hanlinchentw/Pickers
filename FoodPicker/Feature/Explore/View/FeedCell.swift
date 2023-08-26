@@ -9,7 +9,15 @@
 import UIKit
 import ImageSlideshow
 
+protocol FeedCellDelegate: AnyObject {
+	func didTapAddButton(object: RestaurantViewObject)
+}
+
 class FeedCell: UICollectionViewCell {
+	weak var delegate: FeedCellDelegate?
+
+	var viewObject: RestaurantViewObject?
+
 	private let slideShow = with(ImageSlideshow()) {
 		$0.backgroundColor = UIColor.init(white: 0.2, alpha: 0.5)
 		$0.contentScaleMode = .scaleAspectFill
@@ -18,7 +26,6 @@ class FeedCell: UICollectionViewCell {
 	
 	private lazy var addButton = with(UIButton()) {
 		$0.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
-		$0.setImage(UIImage(named: R.image.addL.name), for: .normal)
 		$0.setDimension(width: 48, height: 48)
 	}
 	
@@ -42,11 +49,7 @@ class FeedCell: UICollectionViewCell {
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
-	override func prepareForReuse() {
-		self.contentView.subviews.forEach { $0.removeFromSuperview() }
-	}
-	
+
 	func setupUI() {
 		addSubview(slideShow)
 		slideShow.anchor(top: topAnchor)
@@ -64,16 +67,21 @@ class FeedCell: UICollectionViewCell {
 		stackView.anchor(right: rightAnchor)
 	}
 
-	func configure(viewObject: RestaurantViewObject) {
+	func configure() {
+		guard let viewObject = viewObject else { return }
 		let imageSources = viewObject.imageUrls.compactMap {$0}.map { AlamofireSource(url: $0) }
 		slideShow.setImageInputs(imageSources)
 		nameLabel.text = viewObject.name
 		statusLabel.text = viewObject.isClosed ? "Cloesd" : "Open"
 		statusLabel.textColor = viewObject.isClosed ? .red : .freshGreen
+		let addButtonImage = viewObject.isSelected ? UIImage(named: R.image.icnOvalSelected.name) : UIImage(named: R.image.addL.name)
+		addButton.setImage(addButtonImage, for: .normal)
 		infosLabel.text = "$\(viewObject.price ?? "100")・\(viewObject.businessCategory ?? "Food")・\(300)m away"
 	}
 	
 	@objc func didTapAddButton() {
-		
+		if let viewObject {
+			delegate?.didTapAddButton(object: viewObject)
+		}
 	}
 }
