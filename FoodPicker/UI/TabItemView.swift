@@ -21,16 +21,8 @@ struct TabItemView<Content1: View, Content2: View>: View {
 		} label: {
 			if isActive {
 				selectedImage()
-//				Image(uiImage: tab.item.selectedImage ?? UIImage())
-//					.renderingMode(.original)
-//					.padding(.horizontal)
-//					.padding(.vertical, 4)
 			} else {
 				image()
-//				Image(uiImage: tab.item.image ?? UIImage())
-//					.renderingMode(.original)
-//					.padding(.horizontal)
-//					.padding(.vertical, 4)
 			}
 		}
 	}

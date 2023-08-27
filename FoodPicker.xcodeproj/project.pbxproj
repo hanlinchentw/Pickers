@@ -55,7 +55,6 @@
 		B6697F412A580876009E321B /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6697F402A580876009E321B /* ExploreSearchViewController.swift */; };
 		B683140A29D596F600340782 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140929D596F600340782 /* Config.swift */; };
 		B683140D29D6B8C900340782 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140C29D6B8C900340782 /* AppCoordinator.swift */; };
-		B683141029D6BC8B00340782 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683140F29D6BC8B00340782 /* R.generated.swift */; };
 		B683142229D80D8700340782 /* AFNetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683142129D80D8700340782 /* AFNetworkingManager.swift */; };
 		B683142529D8124E00340782 /* AFNetworkingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683142429D8124E00340782 /* AFNetworkingManagerTests.swift */; };
 		B683142729D8126B00340782 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683142629D8126B00340782 /* MockURLProtocol.swift */; };
@@ -65,6 +64,7 @@
 		B683143329E412DD00340782 /* LocationManager+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683143229E412DD00340782 /* LocationManager+Status.swift */; };
 		B683143529E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683143429E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift */; };
 		B68383972A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383962A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift */; };
+		B68383A02A9B6F260015B0E6 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = B683839F2A9B6F260015B0E6 /* R.generated.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
 		B68551B128C30EEF0077C47E /* RestaurantViewObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68551B028C30EEF0077C47E /* RestaurantViewObject.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
@@ -238,7 +238,6 @@
 		B683140829D596CB00340782 /* DEBUG.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DEBUG.xcconfig; sourceTree = "<group>"; };
 		B683140929D596F600340782 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		B683140C29D6B8C900340782 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		B683140F29D6BC8B00340782 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = R.generated.swift; path = FoodPicker/R.generated.swift; sourceTree = SOURCE_ROOT; };
 		B683142129D80D8700340782 /* AFNetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFNetworkingManager.swift; sourceTree = "<group>"; };
 		B683142429D8124E00340782 /* AFNetworkingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFNetworkingManagerTests.swift; sourceTree = "<group>"; };
 		B683142629D8126B00340782 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
@@ -248,6 +247,7 @@
 		B683143229E412DD00340782 /* LocationManager+Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationManager+Status.swift"; sourceTree = "<group>"; };
 		B683143429E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationManager+CLLocationManagerDelegate.swift"; sourceTree = "<group>"; };
 		B68383962A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceApiResultToRestaurantViewObject.swift; sourceTree = "<group>"; };
+		B683839F2A9B6F260015B0E6 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B68551B028C30EEF0077C47E /* RestaurantViewObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantViewObject.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
@@ -712,7 +712,7 @@
 		B6A8A9AF2A4D73FD001E3542 /* R */ = {
 			isa = PBXGroup;
 			children = (
-				B683140F29D6BC8B00340782 /* R.generated.swift */,
+				B683839F2A9B6F260015B0E6 /* R.generated.swift */,
 			);
 			name = R;
 			sourceTree = "<group>";
@@ -1076,7 +1076,6 @@
 				B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */,
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
-				B683141029D6BC8B00340782 /* R.generated.swift in Sources */,
 				B68383972A99F4570015B0E6 /* PlaceApiResultToRestaurantViewObject.swift in Sources */,
 				B683143129E2AF5500340782 /* LocationManager.swift in Sources */,
 				B6A0F95329EFBA1A003470EE /* PocketViewController.swift in Sources */,
@@ -1156,6 +1155,7 @@
 				B6C7D5B82563F4F3005D2AA0 /* AnnotationItem.swift in Sources */,
 				B60CC1B128C3313800AF2B53 /* ZoomAndSnapFlowLayout.swift in Sources */,
 				B6B84D4B2665D4BD002E418D /* UIView+Extension.swift in Sources */,
+				B68383A02A9B6F260015B0E6 /* R.generated.swift in Sources */,
 				B6A0F97C29F3C4A8003470EE /* WheelViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

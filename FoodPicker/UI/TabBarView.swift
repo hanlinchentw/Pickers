@@ -19,15 +19,9 @@ struct TabBarView: View {
 			TabItemView(isActive: selectedTab == TabItems.explore.rawValue) {
 				selectedTab = TabItems.explore.rawValue
 			} image: {
-				Image(uiImage: TabItems.explore.item.image ?? UIImage())
-					.renderingMode(.original)
-					.padding(.horizontal)
-					.padding(.vertical, 4)
+				makeItemImage(TabItems.explore.item.image ?? UIImage())
 			} selectedImage: {
-				Image(uiImage: TabItems.explore.item.selectedImage ?? UIImage())
-					.renderingMode(.original)
-					.padding(.horizontal)
-					.padding(.vertical, 4)
+				makeItemImage(TabItems.explore.item.selectedImage ?? UIImage())
 			}
 
 			Spacer()
@@ -45,15 +39,9 @@ struct TabBarView: View {
 			TabItemView(isActive: selectedTab == TabItems.pocket.rawValue) {
 				selectedTab = TabItems.pocket.rawValue
 			} image: {
-				Image(uiImage: TabItems.pocket.item.image ?? UIImage())
-					.renderingMode(.original)
-					.padding(.horizontal)
-					.padding(.vertical, 4)
+				makeItemImage(TabItems.pocket.item.image ?? UIImage(), size: 28)
 			} selectedImage: {
-				Image(uiImage: TabItems.pocket.item.selectedImage ?? UIImage())
-					.renderingMode(.original)
-					.padding(.horizontal)
-					.padding(.vertical, 4)
+				makeItemImage(TabItems.pocket.item.selectedImage ?? UIImage(), size: 28)
 			}
 
 			Spacer().frame(width: 36)
@@ -75,6 +63,15 @@ struct TabBarView: View {
 			}
 		}
 		.frame(width: 54, height: 54)
+	}
+	
+	func makeItemImage(_ uiImage: UIImage, size: CGFloat = 24) -> some View {
+		Image(uiImage: uiImage)
+			.renderingMode(.original)
+			.resizable()
+			.frame(width: size, height: size)
+			.padding(.horizontal)
+			.padding(.vertical, 4)
 	}
 }
 

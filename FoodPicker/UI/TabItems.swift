@@ -55,8 +55,8 @@ extension TabItems {
 	private var pocketBarItem: UITabBarItem {
 		let item = UITabBarItem(
 			title: "",
-			image: UIImage(resource: R.image.favoriteUnselectedS, with: nil),
-			selectedImage: nil
+			image: UIImage(resource: R.image.list, with: nil),
+			selectedImage: UIImage(resource: R.image.listFilled, with: nil)
 		)
 		item.imageInsets = imageInsets
 		return item
