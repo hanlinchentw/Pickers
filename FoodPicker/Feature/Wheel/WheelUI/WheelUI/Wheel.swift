@@ -27,12 +27,12 @@ public final class Wheel: UIView {
 		}
 	}
 	public var animateLanding = false
-	public var aCircleTime: Double = 1
+	public var aCircleTime: Double = 1.5
 	
 	var container = UIView()
-	
+
 	var timer: Timer?
-	var isAnimating = true
+	var isAnimating = false
 	var selectedSectionIndex: Int = 0
 	var landingPosition: LandingPostion = .top
 
@@ -43,8 +43,15 @@ public final class Wheel: UIView {
 		return CGFloat(360.0 / Double(dataSource.numberOfSections()))
 	}
 	
-	var wheelRadius: CGFloat {
-		self.frame.width / 2
+	var radius: CGFloat
+	
+	public init(radius: CGFloat) {
+		self.radius = radius
+		super.init(frame: CGRect(x: 0, y: 0, width: radius*2, height: radius*2))
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
 	}
 
 	public func reloadData() {
@@ -56,46 +63,32 @@ public final class Wheel: UIView {
 		self.selectedSectionIndex = section
 	}
 	
-	public func rotate() {
-		if isAnimating { return }
-		timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
-			self.isAnimating = true
-			UIView.animate(withDuration: self.aCircleTime, delay: 0.0, options: .curveEaseInOut, animations: {
-				self.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
-			}, completion: { _ in
-				UIView.animate(withDuration: self.aCircleTime*2, delay: 0.0) {
-					self.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi*2))
-				}
-			})
+	public func start(completion: (() -> Void)? = nil) {
+		let finalAngle = -angleToRadian(angleSize * CGFloat(selectedSectionIndex)) + (12 * .pi)
+		let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+		rotationAnimation.toValue = finalAngle
+		rotationAnimation.isRemovedOnCompletion = false
+		rotationAnimation.duration = 6
+		rotationAnimation.fillMode = .both
+		rotationAnimation.timingFunction = .init(name: .easeInEaseOut)
+
+		CATransaction.begin()
+		CATransaction.setCompletionBlock {
+			completion?()
 		}
-	}
-	
-	public func stop() {
-		timer?.invalidate()
-		if isAnimating {
-			isAnimating = false
-			let zKeyPath = "layer.presentationLayer.transform.rotation.z"
-			let currentRotation = (self.value(forKeyPath: zKeyPath) as? NSNumber)?.floatValue ?? 0.0
-			let finalAngle = -angleToRadian(angleSize * CGFloat(selectedSectionIndex)) + (2 * .pi)
-			let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-			rotationAnimation.toValue = finalAngle
-			rotationAnimation.duration = aCircleTime*5 // 20% spinning speed
-			rotationAnimation.isRemovedOnCompletion = false
-			rotationAnimation.fillMode = .both
-			rotationAnimation.timingFunction = .init(name: .easeInEaseOut)
-			layer.add(rotationAnimation, forKey: nil)
-			
-			if animateLanding {
-				let selectedSection = container.layer.sublayers?.first(where: { $0.name == String(dataSource!.itemsForSections()[selectedSectionIndex].id) })
-				let animation = CABasicAnimation(keyPath: "position")
-				animation.fromValue = CGPoint(x: 0, y: 0)
-				animation.toValue = CGPoint(x: 100, y: 100)
-				animation.duration = 1.0
-				animation.repeatCount = .infinity
-				selectedSection!.add(animation, forKey: "positionAnimation")
-			}
-			delegate!.wheelDidChangeValue(selectedSectionIndex)
+
+		self.layer.add(rotationAnimation, forKey: nil)
+		if animateLanding {
+			let selectedSection = self.container.layer.sublayers?.first(where: { $0.name == String(self.dataSource!.self.itemsForSections()[self.selectedSectionIndex].id) })
+			let animation = CABasicAnimation(keyPath: "position")
+			animation.fromValue = CGPoint(x: 0, y: 0)
+			animation.toValue = CGPoint(x: 100, y: 100)
+			animation.duration = 1.0
+			animation.repeatCount = .infinity
+			selectedSection!.add(animation, forKey: "positionAnimation")
 		}
+		CATransaction.commit()
+		delegate?.wheelDidChangeValue(self.selectedSectionIndex)
 	}
 }
 
@@ -117,8 +110,8 @@ extension Wheel {
 		container.removeFromSuperview()
 		container = UIView()
 
-		var start: CGFloat = CGFloat(landingPostion.rawValue)
-		var end: CGFloat = CGFloat(landingPostion.rawValue) + angleSize
+		var start: CGFloat = CGFloat(landingPostion.rawValue) - angleSize/2
+		var end: CGFloat = CGFloat(landingPostion.rawValue) + angleSize/2
 		var angles: Array<CGFloat> = []
 		
 		for index in 0 ..< dataSource.numberOfSections() {
@@ -128,19 +121,19 @@ extension Wheel {
 			start = CGFloat(fmodf(Float(start + angleSize), 360.0))
 			end = CGFloat(fmodf(Float(end + angleSize), 360.0))
 		}
-		let labelsView = WheelItemText(angles: angles, withRadius: Float(wheelRadius), items: (dataSource.itemsForSections()))
+		let labelsView = WheelItemText(angles: angles, withRadius: Float(radius), items: (dataSource.itemsForSections()))
 
 		labelsView.frame = self.bounds
 		container.frame = self.bounds
 		addSubview(container)
-		addSubview(labelsView)
+		container.addSubview(labelsView)
 	}
 
 	private func createShapeLayer(start: CGFloat, end: CGFloat, item: WheelItem) -> CAShapeLayer {
 		let path = UIBezierPath()
 		let center = CGPoint(x: frame.size.width/2, y: frame.size.height/2)
 		path.move(to: center)
-		path.addArc(withCenter: center, radius: wheelRadius, startAngle: angleToRadian(start), endAngle: angleToRadian(end), clockwise: true)
+		path.addArc(withCenter: center, radius: radius, startAngle: angleToRadian(start), endAngle: angleToRadian(end), clockwise: true)
 		
 		let layer = CAShapeLayer()
 		layer.path = path.cgPath
