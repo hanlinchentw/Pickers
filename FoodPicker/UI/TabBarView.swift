@@ -29,9 +29,9 @@ struct TabBarView: View {
 			TabItemView(isActive: selectedTab == TabItems.wheel.rawValue) {
 				selectedTab = TabItems.wheel.rawValue
 			} image: {
-				spinTabItem
+				makeSpinTabItem(focused: false)
 			} selectedImage: {
-				spinTabItem
+				makeSpinTabItem(focused: true)
 			}
 
 			Spacer()
@@ -39,16 +39,16 @@ struct TabBarView: View {
 			TabItemView(isActive: selectedTab == TabItems.pocket.rawValue) {
 				selectedTab = TabItems.pocket.rawValue
 			} image: {
-				makeItemImage(TabItems.pocket.item.image ?? UIImage(), size: 28)
+				makeItemImage(TabItems.pocket.item.image ?? UIImage())
 			} selectedImage: {
-				makeItemImage(TabItems.pocket.item.selectedImage ?? UIImage(), size: 28)
+				makeItemImage(TabItems.pocket.item.selectedImage ?? UIImage())
 			}
 
 			Spacer().frame(width: 36)
 		}
 	}
 
-	var spinTabItem: some View {
+	func makeSpinTabItem(focused: Bool) -> some View {
 		ZStack {
 			Circle()
 				.foregroundColor(.butterScotch)
