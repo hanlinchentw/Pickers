@@ -8,35 +8,30 @@
 
 import SwiftUI
 
-struct TabItemView: View {
-	
-	var tab: TabItems
+struct TabItemView<Content1: View, Content2: View>: View {
+
 	var isActive: Bool
 	var itemOnPress: () -> Void
+	@ViewBuilder var image: () -> Content1
+	@ViewBuilder var selectedImage: () -> Content2
 	
 	var body: some View {
 		Button {
 			itemOnPress()
 		} label: {
 			if isActive {
-				Image(uiImage: tab.item.selectedImage ?? UIImage())
-					.renderingMode(.original)
-					.padding(.horizontal)
-					.padding(.vertical, 4)
+				selectedImage()
+//				Image(uiImage: tab.item.selectedImage ?? UIImage())
+//					.renderingMode(.original)
+//					.padding(.horizontal)
+//					.padding(.vertical, 4)
 			} else {
-				Image(uiImage: tab.item.image ?? UIImage())
-					.renderingMode(.original)
-					.padding(.horizontal)
-					.padding(.vertical, 4)
+				image()
+//				Image(uiImage: tab.item.image ?? UIImage())
+//					.renderingMode(.original)
+//					.padding(.horizontal)
+//					.padding(.vertical, 4)
 			}
-		}
-	}
-}
-
-struct TabItemView_Previews: PreviewProvider {
-	static var previews: some View {
-		TabItemView(tab: .explore, isActive: true) {
-			
 		}
 	}
 }

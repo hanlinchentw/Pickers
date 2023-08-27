@@ -31,7 +31,10 @@ struct RootView: View {
 					.tag(2)
 			}
 
-			TabBarView(selectedTab: $selectedIndex)
+			TabBarView(
+				selectedTab: $selectedIndex,
+				count: selectionStore.selectedRestaurants.count
+			)
 				.frame(height: 88)
 				.background(.white)
 				.clipped()

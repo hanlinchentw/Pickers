@@ -45,7 +45,7 @@ extension TabItems {
 	private var wheelBarItem: UITabBarItem {
 		let item = UITabBarItem(
 			title: "",
-			image: nil,
+			image: UIImage(resource: R.image.spinActive, with: nil),
 			selectedImage: nil
 		)
 		item.imageInsets = imageInsets
