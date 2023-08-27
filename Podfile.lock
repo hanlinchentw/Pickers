@@ -17,6 +17,7 @@ PODS:
     - ImageSlideshow/Core
   - ImageSlideshow/Core (1.9.2)
   - JXSegmentedView (1.3.0)
+  - Kingfisher (7.8.1)
   - MBProgressHUD (1.2.0)
   - R.swift (7.3.0)
 
@@ -30,6 +31,7 @@ DEPENDENCIES:
   - ImageSlideshow (~> 1.9.0)
   - ImageSlideshow/Alamofire
   - JXSegmentedView
+  - Kingfisher
   - MBProgressHUD
   - R.swift
 
@@ -43,6 +45,7 @@ SPEC REPOS:
     - GooglePlaces
     - ImageSlideshow
     - JXSegmentedView
+    - Kingfisher
     - MBProgressHUD
     - R.swift
 
@@ -55,9 +58,10 @@ SPEC CHECKSUMS:
   GooglePlaces: 46231f49e2dc52aa9a604f99e2e6b29996f30cc7
   ImageSlideshow: be305b54eaf2b2cfc7a7141c7c734605d44dc07d
   JXSegmentedView: fec0d335355b6e019c494fe2e030bde8a36d2df6
+  Kingfisher: 63f677311d36a3473f6b978584f8a3845d023dc5
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   R.swift: cef1c530541cb49412752721797f10dae6b32d11
 
-PODFILE CHECKSUM: 14af2fb53a0a8b50e57e0287a6e445fcc4412ece
+PODFILE CHECKSUM: 4ea630077561ce3a87363498dda741b18b4d0ea7
 
 COCOAPODS: 1.12.1

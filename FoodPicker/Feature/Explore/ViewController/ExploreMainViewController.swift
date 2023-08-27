@@ -28,7 +28,6 @@ final class ExploreMainViewController: UIViewController {
 	var mapSwitchButtonVisibilityTimeout: Timer?
 	let viewModel: ExploreViewModel
 	private var bottomSheetView: SlidingSheetView!
-	weak var coordinator: ExploreCoordinator?
 	static let FILTER_VIEW_HEIGHT: CGFloat = 170
 	// MARK: - Lifecycle
 	init(viewModel: ExploreViewModel) {

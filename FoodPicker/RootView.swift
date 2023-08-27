@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 struct RootView: View {
-	@State var selectedIndex: Int = 0
+	@State var selectedIndex: Int = 1
 	@State var tabBarOffset: CGFloat = 0
 	@StateObject var selectionStore = RestaurantSelectionStore()
 	var heightDidChangePublisher = NotificationCenter.Publisher(center: .default, name: .exploreSlidingSheetHeightDidChange)

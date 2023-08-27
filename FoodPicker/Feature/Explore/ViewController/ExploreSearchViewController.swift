@@ -16,6 +16,7 @@ class ExploreSearchViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		self.view.clipsToBounds = true
 		setupSearchBarView()
 		setupSegmentedView()
 		view.backgroundColor = .white
@@ -23,7 +24,7 @@ class ExploreSearchViewController: UIViewController {
 	
 	func setupSearchBarView() {
 		view.addSubview(searchBarView)
-		searchBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor)
+		searchBarView.anchor(top: view.topAnchor, paddingTop: 48)
 		searchBarView.anchor(left: view.leftAnchor, paddingLeft: 28)
 		searchBarView.anchor(right: view.rightAnchor, paddingRight: 28)
 	}

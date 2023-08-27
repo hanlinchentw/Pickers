@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ImageSlideshow
+import Kingfisher
 
 protocol FeedCellDelegate: AnyObject {
 	func didTapAddButton(object: RestaurantViewObject)
@@ -18,12 +18,15 @@ class FeedCell: UICollectionViewCell {
 
 	var viewObject: RestaurantViewObject?
 
-	private let slideShow = with(ImageSlideshow()) {
-		$0.backgroundColor = UIColor.init(white: 0.2, alpha: 0.5)
-		$0.contentScaleMode = .scaleAspectFill
-		$0.layer.cornerRadius = 16
-	}
-	
+	private let imageView: UIImageView = {
+		let iv = UIImageView()
+		iv.backgroundColor = UIColor.init(white: 0.2, alpha: 0.5)
+		iv.contentMode = .scaleAspectFill
+		iv.clipsToBounds = true
+		iv.layer.cornerRadius = 16
+		return iv
+	}()
+
 	private lazy var addButton = with(UIButton()) {
 		$0.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
 		$0.setDimension(width: 48, height: 48)
@@ -51,26 +54,27 @@ class FeedCell: UICollectionViewCell {
 	}
 
 	func setupUI() {
-		addSubview(slideShow)
-		slideShow.anchor(top: topAnchor)
-		slideShow.anchor(left: leftAnchor)
-		slideShow.anchor(right: rightAnchor)
-		slideShow.setDimension(height: 275)
+		addSubview(imageView)
+		imageView.anchor(top: topAnchor)
+		imageView.anchor(left: leftAnchor)
+		imageView.anchor(right: rightAnchor)
+		imageView.setDimension(height: 275)
 
-		slideShow.addSubview(addButton)
-		addButton.anchor(top: slideShow.topAnchor)
-		addButton.anchor(right: slideShow.rightAnchor)
+		addSubview(addButton)
+		addButton.anchor(top: imageView.topAnchor)
+		addButton.anchor(right: imageView.rightAnchor)
 		
 		addSubview(stackView)
-		stackView.anchor(top: slideShow.bottomAnchor, paddingTop: 16)
+		stackView.anchor(top: imageView.bottomAnchor, paddingTop: 16)
 		stackView.anchor(left: leftAnchor)
 		stackView.anchor(right: rightAnchor)
 	}
 
 	func configure() {
 		guard let viewObject = viewObject else { return }
-		let imageSources = viewObject.imageUrls.compactMap {$0}.map { AlamofireSource(url: $0) }
-		slideShow.setImageInputs(imageSources)
+		if let imageUrl = viewObject.imageUrls[safe: 0] as? URL {
+			imageView.kf.setImage(with: imageUrl)
+		}
 		nameLabel.text = viewObject.name
 		statusLabel.text = viewObject.isClosed ? "Cloesd" : "Open"
 		statusLabel.textColor = viewObject.isClosed ? .red : .freshGreen
