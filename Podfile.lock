@@ -20,6 +20,7 @@ PODS:
   - Kingfisher (7.8.1)
   - MBProgressHUD (1.2.0)
   - R.swift (7.3.0)
+  - Swinject (2.8.3)
 
 DEPENDENCIES:
   - Alamofire (~> 5.6.1)
@@ -34,6 +35,7 @@ DEPENDENCIES:
   - Kingfisher
   - MBProgressHUD
   - R.swift
+  - Swinject
 
 SPEC REPOS:
   trunk:
@@ -48,6 +50,7 @@ SPEC REPOS:
     - Kingfisher
     - MBProgressHUD
     - R.swift
+    - Swinject
 
 SPEC CHECKSUMS:
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
@@ -61,7 +64,8 @@ SPEC CHECKSUMS:
   Kingfisher: 63f677311d36a3473f6b978584f8a3845d023dc5
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   R.swift: cef1c530541cb49412752721797f10dae6b32d11
+  Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
 
-PODFILE CHECKSUM: 4ea630077561ce3a87363498dda741b18b4d0ea7
+PODFILE CHECKSUM: 5b64f8fea4aae4aa413ad56282033fe4543b628f
 
 COCOAPODS: 1.12.1

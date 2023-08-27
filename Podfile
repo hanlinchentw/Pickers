@@ -18,7 +18,7 @@ target 'FoodPicker' do
   pod 'JXSegmentedView'
 	pod 'Defaults'
 	pod 'Kingfisher'
-	
+	pod 'Swinject'
 	
 	target 'FoodPickerTests' do
 		inherit! :search_paths
