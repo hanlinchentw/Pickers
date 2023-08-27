@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import RswiftResources
 
 struct TabBarView: View {
 	@Binding var selectedTab: Int
@@ -19,9 +20,9 @@ struct TabBarView: View {
 			TabItemView(isActive: selectedTab == TabItems.explore.rawValue) {
 				selectedTab = TabItems.explore.rawValue
 			} image: {
-				makeItemImage(TabItems.explore.item.image ?? UIImage())
+				makeItemImage(R.image.homeUnselectedS)
 			} selectedImage: {
-				makeItemImage(TabItems.explore.item.selectedImage ?? UIImage())
+				makeItemImage(R.image.homeSelectedS)
 			}
 
 			Spacer()
@@ -39,9 +40,9 @@ struct TabBarView: View {
 			TabItemView(isActive: selectedTab == TabItems.pocket.rawValue) {
 				selectedTab = TabItems.pocket.rawValue
 			} image: {
-				makeItemImage(TabItems.pocket.item.image ?? UIImage())
+				makeItemImage(R.image.list)
 			} selectedImage: {
-				makeItemImage(TabItems.pocket.item.selectedImage ?? UIImage())
+				makeItemImage(R.image.listFilled)
 			}
 
 			Spacer().frame(width: 36)
@@ -65,8 +66,8 @@ struct TabBarView: View {
 		.frame(width: 54, height: 54)
 	}
 	
-	func makeItemImage(_ uiImage: UIImage, size: CGFloat = 24) -> some View {
-		Image(uiImage: uiImage)
+	func makeItemImage(_ imageResource: ImageResource, size: CGFloat = 24) -> some View {
+		Image(imageResource)
 			.renderingMode(.original)
 			.resizable()
 			.frame(width: size, height: size)
