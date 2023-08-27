@@ -12,7 +12,7 @@ import Combine
 struct RootView: View {
 	@State var selectedIndex: Int = 1
 	@State var tabBarOffset: CGFloat = 0
-	@StateObject var selectionStore = RestaurantSelectionStore()
+	@StateObject var selectionStore = PlacesSelectionStore()
 	var heightDidChangePublisher = NotificationCenter.Publisher(center: .default, name: .exploreSlidingSheetHeightDidChange)
 	
 	init() {
@@ -22,7 +22,7 @@ struct RootView: View {
 	var body: some View {
 		ZStack(alignment: .bottom) {
 			TabView(selection: $selectedIndex) {
-				ExplorerView(selectionStore: selectionStore)
+				ExploreSwiftUIView(selectionStore: selectionStore)
 					.tag(0)
 					.ignoresSafeArea()
 				WheelView(selectionStore: selectionStore)
@@ -33,7 +33,7 @@ struct RootView: View {
 
 			TabBarView(
 				selectedTab: $selectedIndex,
-				count: selectionStore.selectedRestaurants.count
+				count: selectionStore.selectedPlaces.count
 			)
 				.frame(height: 88)
 				.background(.white)

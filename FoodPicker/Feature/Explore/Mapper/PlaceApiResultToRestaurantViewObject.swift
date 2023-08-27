@@ -9,15 +9,17 @@
 import Foundation
 
 extension Zip2Sequence where Sequence1 == [PlaceApiResult], Sequence2 == [[URL?]] {
-	func mapPlaceApiResultToRestaurantViewObject() -> [RestaurantViewObject] {
+	func mapPlaceApiResultToRestaurantViewObject() -> [PlaceListViewModel] {
 		self.map { (place, images) in
-			RestaurantViewObject(
+			PlaceListViewModel(
 				id: place.placeId,
 				name: place.name,
 				rating: place.rating,
 				imageUrls: images,
 				latitude: place.geometry.location.lat,
-				longitude: place.geometry.location.lng
+				longitude: place.geometry.location.lng,
+				isClosed: false,
+				isSelected: false
 			)
 		}
 	}

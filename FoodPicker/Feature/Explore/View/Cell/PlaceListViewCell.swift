@@ -1,22 +1,22 @@
 //
-//  FeedCell.swift
+//  PlaceListViewCell.swift
 //  FoodPicker
 //
-//  Created by 陳翰霖 on 2023/7/3.
+//  Created by 陳翰霖 on 2023/8/27.
 //  Copyright © 2023 陳翰霖. All rights reserved.
 //
 
 import UIKit
 import Kingfisher
 
-protocol FeedCellDelegate: AnyObject {
-	func didTapAddButton(object: RestaurantViewObject)
+protocol PlaceListViewCellDelegate: AnyObject {
+	func didTapAddButton(viewModel: PlaceListViewModel)
 }
 
-class FeedCell: UICollectionViewCell {
-	weak var delegate: FeedCellDelegate?
+class PlaceListViewCell: UICollectionViewCell {
+	weak var delegate: PlaceListViewCellDelegate?
 
-	var viewObject: RestaurantViewObject?
+	var viewModel: PlaceListViewModel?
 
 	private let imageView: UIImageView = {
 		let iv = UIImageView()
@@ -71,21 +71,21 @@ class FeedCell: UICollectionViewCell {
 	}
 
 	func configure() {
-		guard let viewObject = viewObject else { return }
-		if let imageUrl = viewObject.imageUrls[safe: 0] as? URL {
+		guard let viewModel = viewModel else { return }
+		if let imageUrl = viewModel.imageUrls[safe: 0] as? URL {
 			imageView.kf.setImage(with: imageUrl)
 		}
-		nameLabel.text = viewObject.name
-		statusLabel.text = viewObject.isClosed ? "Cloesd" : "Open"
-		statusLabel.textColor = viewObject.isClosed ? .red : .freshGreen
-		let addButtonImage = viewObject.isSelected ? UIImage(named: R.image.icnOvalSelected.name) : UIImage(named: R.image.addL.name)
+		nameLabel.text = viewModel.name
+		statusLabel.text = viewModel.isClosed ? "Cloesd" : "Open"
+		statusLabel.textColor = viewModel.isClosed ? .red : .freshGreen
+		let addButtonImage = viewModel.isSelected ? UIImage(named: R.image.icnOvalSelected.name) : UIImage(named: R.image.addL.name)
 		addButton.setImage(addButtonImage, for: .normal)
-		infosLabel.text = "$\(viewObject.price ?? "100")・\(viewObject.businessCategory ?? "Food")・\(300)m away"
+		infosLabel.text = "$\(viewModel.price ?? "100")・\(viewModel.businessCategory ?? "Food")・\(300)m away"
 	}
 	
 	@objc func didTapAddButton() {
-		if let viewObject {
-			delegate?.didTapAddButton(object: viewObject)
+		if let viewModel {
+			delegate?.didTapAddButton(viewModel: viewModel)
 		}
 	}
 }

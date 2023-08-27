@@ -10,7 +10,7 @@ import UIKit
 import WheelUI
 
 final class WheelViewController: UIViewController {
-	var selectionStore: RestaurantSelectionStore
+	var selectionStore: PlacesSelectionStore
 
 	lazy var wheel: Wheel = {
 		let wheel = Wheel(radius: 330/2)
@@ -29,7 +29,7 @@ final class WheelViewController: UIViewController {
 	
 	var wheelItems: Array<WheelItem> = WheelItem.dummyItems
 
-	init(selectionStore: RestaurantSelectionStore) {
+	init(selectionStore: PlacesSelectionStore) {
 		self.selectionStore = selectionStore
 		super.init(nibName: nil, bundle: nil)
 	}
@@ -51,12 +51,12 @@ final class WheelViewController: UIViewController {
 	func refreshWheel() {
 		defer { wheel.reloadData() }
 
-		if selectionStore.selectedRestaurants.isEmpty {
+		if selectionStore.selectedPlaces.isEmpty {
 			wheelItems = WheelItem.dummyItems
 			return
 		}
 		
-		wheelItems = selectionStore.selectedRestaurants.enumerated().map {
+		wheelItems = selectionStore.selectedPlaces.enumerated().map {
 			WheelItem(id: $1.id, title: $1.name, titleColor: .customblack, itemColor: $0 % 2 == 0 ? .white : .pale)
 		}
 	}

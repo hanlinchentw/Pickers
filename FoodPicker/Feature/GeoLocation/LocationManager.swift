@@ -11,13 +11,9 @@ import CoreLocation
 import Combine
 
 class LocationManager: NSObject, LocationManagerProtocol {
-	static let shared: LocationManager = {
-		let instance = LocationManager()
-		return instance
-	}()
-	
+	static let shared = LocationManager()
+
 	var status: LocationManager.Status = .initiated
-	
 
 	var lastLocation: CLLocationCoordinate2D? {
 		didSet {

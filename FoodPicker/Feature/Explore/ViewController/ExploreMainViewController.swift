@@ -10,7 +10,7 @@ import UIKit
 
 final class ExploreMainViewController: UIViewController {
 	// MARK: - Property
-	let listViewController: FeedViewController
+	let listView: PlaceListView
 	let mapViewController: MapViewController
 	let searchViewController: ExploreSearchViewController
 	var mapSwitchButton: UIButton = {
@@ -26,15 +26,15 @@ final class ExploreMainViewController: UIViewController {
 		return button
 	}()
 	var mapSwitchButtonVisibilityTimeout: Timer?
-	let viewModel: ExploreViewModel
+	let presenter: ExplorePresenting
 	private var bottomSheetView: SlidingSheetView!
 	static let FILTER_VIEW_HEIGHT: CGFloat = 170
 	// MARK: - Lifecycle
-	init(viewModel: ExploreViewModel) {
-		self.viewModel = viewModel
-		self.listViewController = FeedViewController(viewModel: viewModel)
-		self.mapViewController = MapViewController(viewModel: viewModel)
+	init(presenter: ExplorePresenting) {
+		self.listView = PlaceListView()
+		self.mapViewController = MapViewController()
 		self.searchViewController = ExploreSearchViewController()
+		self.presenter = presenter
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -52,7 +52,8 @@ final class ExploreMainViewController: UIViewController {
 		view.sendSubviewToBack(bottomSheetView)
 		view.sendSubviewToBack(mapViewController.view)
 		view.bringSubviewToFront(searchViewController.view)
-		viewModel.fetch()
+//		viewModel.fetch()
+		presenter.onViewDidLoad()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -93,7 +94,16 @@ final class ExploreMainViewController: UIViewController {
 	}
 	
 	func refreshView() {
-		listViewController.updateView()
+		listView.update()
+	}
+}
+
+extension PlaceListView: SlideSheetPresented {
+	var presentedView: UIView {
+		self
+	}
+	var scrollView: UIScrollView? {
+		collectionView
 	}
 }
 
@@ -109,7 +119,7 @@ extension ExploreMainViewController {
 
 	private func setupBottomSheet() {
 		let configuration = SlidingSheetView.Config(
-			contentView: listViewController,
+			contentView: listView,
 			parentViewController: self,
 			initialPosition: .top(bottomSheetHeightOnTop),
 			allowedPositions: [
@@ -119,7 +129,7 @@ extension ExploreMainViewController {
 			showPullIndicator: true,
 			isDismissable: false
 		)
-
+		listView.delegate = self
 		self.bottomSheetView = SlidingSheetView(config: configuration)
 		self.bottomSheetView.delegate = self
 
@@ -135,12 +145,29 @@ extension ExploreMainViewController {
 	}
 }
 
+extension ExploreMainViewController: PlaceListViewDelegate {
+	func placesCount() -> Int {
+		presenter.count()
+//		self.viewModel.viewObjects.count
+	}
+	
+	func viewModel(atIndex index: Int) -> PlaceListViewModel {
+		presenter.viewModel(index: index)
+//		self.viewModel.viewObject(for: index)
+	}
+	
+	func didTapAddButton(viewModel: PlaceListViewModel) {
+		presenter.didSelectPlace(viewModel: viewModel)
+//		self.viewModel.didTapAddButton(viewModel: viewModel)
+	}
+}
+
 // MARK: - SlidingSheetViewDelegate
 extension ExploreMainViewController: SlidingSheetViewDelegate {
 	public func slidingSheetViewScrollViewDidChangeOffset(_ view: SlidingSheetView, scrollView: UIScrollView, offset: CGPoint) {}
 	
 	public func slidingSheetView(_ view: SlidingSheetView, heightDidChange height: CGFloat) {
-		listViewController.collectionView.collectionViewLayout.invalidateLayout()
+		listView.collectionView.collectionViewLayout.invalidateLayout()
 		let x = height - bottomSheetHeightOnBottom
 		let y = bottomSheetHeightOnTop - bottomSheetHeightOnBottom
 		let ratio = x/y
@@ -196,5 +223,15 @@ extension ExploreMainViewController: SlidingSheetViewDelegate {
 		} completion: { _ in
 			self.mapSwitchButton.isHidden = true
 		}
+	}
+}
+
+extension ExploreMainViewController: ExploreView {
+	func didChangePlaceStatus() {
+		refreshView()
+	}
+	
+	func didFetchPlace() {
+		refreshView()
 	}
 }
