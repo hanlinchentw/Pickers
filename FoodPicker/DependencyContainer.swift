@@ -22,6 +22,10 @@ final class DependencyContainer {
 		container.register(LocationManagerProtocol.self) { _ in
 			LocationManager.shared
 		}
+		
+		container.register(PlacesSelectionStore.self) { _ in
+			PlacesSelectionStore()
+		}
 
 		registerPlaceRepository()
 		registerPlaceSelectionRepository()

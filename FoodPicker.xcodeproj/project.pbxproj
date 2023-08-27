@@ -377,6 +377,7 @@
 		B61C99382A6A8E4E000ADEFE /* Selection */ = {
 			isa = PBXGroup;
 			children = (
+				B61C99392A6A8E5E000ADEFE /* PlacesSelectionStore.swift */,
 			);
 			path = Selection;
 			sourceTree = "<group>";
@@ -637,7 +638,6 @@
 		B68383B12A9B9D680015B0E6 /* Interactor */ = {
 			isa = PBXGroup;
 			children = (
-				B61C99392A6A8E5E000ADEFE /* PlacesSelectionStore.swift */,
 				B68383B22A9B9D7F0015B0E6 /* PlaceRepository.swift */,
 				B68383B82A9BA3850015B0E6 /* PlaceSelectionRepository.swift */,
 			);

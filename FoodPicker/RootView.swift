@@ -12,10 +12,11 @@ import Combine
 struct RootView: View {
 	@State var selectedIndex: Int = 1
 	@State var tabBarOffset: CGFloat = 0
-	@StateObject var selectionStore = PlacesSelectionStore()
+	@ObservedObject var selectionStore: PlacesSelectionStore
 	var heightDidChangePublisher = NotificationCenter.Publisher(center: .default, name: .exploreSlidingSheetHeightDidChange)
 	
-	init() {
+	init(selectionStore: PlacesSelectionStore) {
+		self.selectionStore = selectionStore
 		UITabBar.appearance().isHidden = true
 	}
 	
@@ -53,6 +54,6 @@ struct RootView: View {
 
 struct TabView_Previews: PreviewProvider {
 	static var previews: some View {
-		RootView()
+		RootView(selectionStore: DependencyContainer.shared.getService())
 	}
 }

@@ -21,7 +21,7 @@ final class AppCoordinator: Coordinator {
 	}
 	
 	func start() {
-		let root = UIHostingController(rootView: RootView())
+		let root = UIHostingController(rootView: RootView(selectionStore: DependencyContainer.shared.getService()))
 		self.navigationController.setViewControllers([root], animated: false)
 	}
 }
