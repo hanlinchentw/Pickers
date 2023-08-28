@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -886,8 +886,6 @@
 			);
 			mainGroup = B647A4C024B1F7BA0098B7A2;
 			packageReferences = (
-				B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				B61C99402A6A92B4000ADEFE /* XCRemoteSwiftPackageReference "Defaults" */,
 			);
 			productRefGroup = B647A4CA24B1F7BA0098B7A2 /* Products */;
 			projectDirPath = "";
@@ -1562,25 +1560,6 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		B61C99402A6A92B4000ADEFE /* XCRemoteSwiftPackageReference "Defaults" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/Defaults";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-		B6A0F95929F25F69003470EE /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = B647A4C124B1F7BA0098B7A2 /* Project object */;
 }
