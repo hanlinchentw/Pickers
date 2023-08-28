@@ -60,3 +60,20 @@ public protocol SlidingSheetViewDelegate: AnyObject {
 	func slidingSheetControllerWillStartDragging()
 	func slidingSheetControllerWillEndDragging()
 }
+
+extension SlidingSheetViewDelegate {
+	func slidingSheetView(_ view: SlidingSheetView,
+												heightDidChange height: CGFloat) {}
+	func slidingSheetView(_ view: SlidingSheetView,
+												willMoveTo position: SlidingSheetView.Position) {}
+	func slidingSheetView(_ view: SlidingSheetView,
+												didMoveFromPosition position: SlidingSheetView.Position?,
+												toPosition newPosition: SlidingSheetView.Position) {}
+	func slidingSheetViewRequestForDismission(_ view: SlidingSheetView) {}
+	func slidingSheetViewScrollViewDidChangeOffset(_ view: SlidingSheetView,
+																								 scrollView: UIScrollView,
+																								 offset: CGPoint) {}
+	func slidingSheetControllerWillBeginDecelerating() {}
+	func slidingSheetControllerWillStartDragging() {}
+	func slidingSheetControllerWillEndDragging() {}
+}

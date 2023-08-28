@@ -8,7 +8,12 @@
 
 import UIKit
 
-final class ExploreMainViewController: UIViewController {
+final class ExploreMainViewController: UIViewController, ExploreView {
+	struct Constant {
+		static let filterHeight: CGFloat = 170
+		static let bottomSheetBottomHeight: CGFloat = 72
+	}
+
 	// MARK: - Property
 	let listView: PlaceListView
 	let mapViewController: MapViewController
@@ -27,8 +32,7 @@ final class ExploreMainViewController: UIViewController {
 	}()
 	var mapSwitchButtonVisibilityTimeout: Timer?
 	let presenter: ExplorePresenting
-	private var bottomSheetView: SlidingSheetView!
-	static let FILTER_VIEW_HEIGHT: CGFloat = 170
+	private var bottomSheetView: PlaceListBottomSheetView!
 	// MARK: - Lifecycle
 	init(presenter: ExplorePresenting) {
 		self.listView = PlaceListView()
@@ -52,7 +56,6 @@ final class ExploreMainViewController: UIViewController {
 		view.sendSubviewToBack(bottomSheetView)
 		view.sendSubviewToBack(mapViewController.view)
 		view.bringSubviewToFront(searchViewController.view)
-//		viewModel.fetch()
 		presenter.onViewDidLoad()
 	}
 
@@ -63,6 +66,60 @@ final class ExploreMainViewController: UIViewController {
 		tabBarController?.tabBar.isHidden = true
 	}
 	
+	@objc func didTapMapSwitchButton() {
+		bottomSheetView.moveToPosition(.bottom())
+		bottomSheetView.resetContentOffset()
+		bottomSheetView.contentView.presentedView.alpha = 0
+	}
+	
+	func refreshView() {
+		listView.update()
+	}
+	
+	func didChangePlaceStatus() {
+		refreshView()
+	}
+	
+	func didFetchPlace() {
+		refreshView()
+	}
+}
+
+// MARK: - PlaceListViewDelegate
+extension ExploreMainViewController: PlaceListViewDelegate {
+	func placesCount() -> Int {
+		presenter.count()
+	}
+	
+	func viewModel(atIndex index: Int) -> PlaceListViewModel {
+		presenter.viewModel(index: index)
+	}
+	
+	func didTapAddButton(viewModel: PlaceListViewModel) {
+		presenter.didSelectPlace(viewModel: viewModel)
+	}
+}
+
+// MARK: - PlaceListBottomSheetViewDelegate
+extension ExploreMainViewController: PlaceListBottomSheetViewDelegate {
+	func didMove(toPosition: SlidingSheetView.Position) {
+		toPosition.isTop ? self.mapSwitchButton.showWithAnimation() : self.mapSwitchButton.hideWithAnimation()
+	}
+	
+	func didStartDragging() {
+		mapSwitchButtonVisibilityTimeout?.invalidate()
+		self.mapSwitchButton.hideWithAnimation()
+	}
+	
+	func didStopDragging() {
+		mapSwitchButtonVisibilityTimeout = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
+			self.mapSwitchButton.showWithAnimation()
+		})
+	}
+}
+
+// MARK: - UI Layout
+extension ExploreMainViewController {
 	func setupMap() {
 		addChild(mapViewController)
 		view.addSubview(mapViewController.view)
@@ -75,7 +132,7 @@ final class ExploreMainViewController: UIViewController {
 		searchViewController.view.anchor(top: view.topAnchor)
 		searchViewController.view.anchor(left: view.leftAnchor)
 		searchViewController.view.anchor(right: view.rightAnchor)
-		searchViewController.view.setDimension(height: Self.FILTER_VIEW_HEIGHT)
+		searchViewController.view.setDimension(height: Constant.filterHeight)
 	}
 	
 	func setupMapSwitchButton() {
@@ -87,52 +144,16 @@ final class ExploreMainViewController: UIViewController {
 		mapSwitchButton.addTarget(self, action: #selector(didTapMapSwitchButton), for: .touchUpInside)
 	}
 	
-	@objc func didTapMapSwitchButton() {
-		bottomSheetView.moveToPosition(.bottom())
-		bottomSheetView.resetContentOffset()
-		bottomSheetView.contentView.presentedView.alpha = 0
-	}
-	
-	func refreshView() {
-		listView.update()
-	}
-}
-
-extension PlaceListView: SlideSheetPresented {
-	var presentedView: UIView {
-		self
-	}
-	var scrollView: UIScrollView? {
-		collectionView
-	}
-}
-
-// MARK: - BottomSheet
-extension ExploreMainViewController {
-	var bottomSheetHeightOnTop: CGFloat {
-		UIScreen.main.bounds.height - Self.FILTER_VIEW_HEIGHT + 25
-	}
-
-	var bottomSheetHeightOnBottom: CGFloat {
-		72
-	}
-
-	private func setupBottomSheet() {
-		let configuration = SlidingSheetView.Config(
+	func setupBottomSheet() {
+		listView.delegate = self
+		let bottomSheetHeightOnTop = UIScreen.main.bounds.height - Constant.filterHeight + 25
+		self.bottomSheetView = PlaceListBottomSheetView(
 			contentView: listView,
 			parentViewController: self,
-			initialPosition: .top(bottomSheetHeightOnTop),
-			allowedPositions: [
-				.top(bottomSheetHeightOnTop),
-				.bottom(bottomSheetHeightOnBottom)
-			],
-			showPullIndicator: true,
-			isDismissable: false
+			maximumHeight: bottomSheetHeightOnTop,
+			minimumHeight: Constant.bottomSheetBottomHeight
 		)
-		listView.delegate = self
-		self.bottomSheetView = SlidingSheetView(config: configuration)
-		self.bottomSheetView.delegate = self
-
+		self.bottomSheetView.sheetDelegate = self
 		view.addSubview(bottomSheetView!)
 		bottomSheetView.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
@@ -140,98 +161,6 @@ extension ExploreMainViewController {
 			bottomSheetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			bottomSheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 		])
-
 		bottomSheetView.backgroundColor = .white
-	}
-}
-
-extension ExploreMainViewController: PlaceListViewDelegate {
-	func placesCount() -> Int {
-		presenter.count()
-//		self.viewModel.viewObjects.count
-	}
-	
-	func viewModel(atIndex index: Int) -> PlaceListViewModel {
-		presenter.viewModel(index: index)
-//		self.viewModel.viewObject(for: index)
-	}
-	
-	func didTapAddButton(viewModel: PlaceListViewModel) {
-		presenter.didSelectPlace(viewModel: viewModel)
-//		self.viewModel.didTapAddButton(viewModel: viewModel)
-	}
-}
-
-// MARK: - SlidingSheetViewDelegate
-extension ExploreMainViewController: SlidingSheetViewDelegate {
-	public func slidingSheetViewScrollViewDidChangeOffset(_ view: SlidingSheetView, scrollView: UIScrollView, offset: CGPoint) {}
-	
-	public func slidingSheetView(_ view: SlidingSheetView, heightDidChange height: CGFloat) {
-		listView.collectionView.collectionViewLayout.invalidateLayout()
-		let x = height - bottomSheetHeightOnBottom
-		let y = bottomSheetHeightOnTop - bottomSheetHeightOnBottom
-		let ratio = x/y
-		NotificationCenter.default.post(name: .exploreSlidingSheetHeightDidChange, object: nil, userInfo: ["height": height, "ratio": ratio])
-	}
-	
-	public func slidingSheetView(_ view: SlidingSheetView, willMoveTo position: SlidingSheetView.Position) {
-		if position.isTop {
-			UIView.animate(withDuration: 0.3) {
-				view.contentView.presentedView.alpha = 1
-			}
-		}
-	}
-	
-	public func slidingSheetView(_ view: SlidingSheetView,
-															 didMoveFromPosition position: SlidingSheetView.Position?,
-															 toPosition: SlidingSheetView.Position) {
-		mapSwitchButton.isHidden = !toPosition.isTop
-		view.setAsAnchored(!toPosition.isTop)
-		view.panGesture.isEnabled = !toPosition.isTop
-	}
-
-	public func slidingSheetViewRequestForDismission(_ view: SlidingSheetView) {}
-	
-	public func slidingSheetControllerWillStartDragging() {
-		mapSwitchButtonVisibilityTimeout?.invalidate()
-		hideMapSwitchButton()
-	}
-
-	func slidingSheetControllerWillBeginDecelerating() {
-		mapSwitchButtonVisibilityTimeout = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
-			self.showMapSwitchButton()
-		})
-	}
-
-	func slidingSheetControllerWillEndDragging() {
-		mapSwitchButtonVisibilityTimeout = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { _ in
-			self.showMapSwitchButton()
-		})
-	}
-
-	func showMapSwitchButton() {
-		self.mapSwitchButton.isHidden = false
-		UIView.animate(withDuration: 0.3) {
-			self.mapSwitchButton.alpha = 1
-		}
-
-	}
-
-	func hideMapSwitchButton() {
-		UIView.animate(withDuration: 0.3) {
-			self.mapSwitchButton.alpha = 0
-		} completion: { _ in
-			self.mapSwitchButton.isHidden = true
-		}
-	}
-}
-
-extension ExploreMainViewController: ExploreView {
-	func didChangePlaceStatus() {
-		refreshView()
-	}
-	
-	func didFetchPlace() {
-		refreshView()
 	}
 }

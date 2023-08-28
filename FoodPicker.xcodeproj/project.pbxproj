@@ -67,6 +67,7 @@
 		B68383B32A9B9D7F0015B0E6 /* PlaceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383B22A9B9D7F0015B0E6 /* PlaceRepository.swift */; };
 		B68383B52A9B9E990015B0E6 /* DependencyContainer+Explore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383B42A9B9E990015B0E6 /* DependencyContainer+Explore.swift */; };
 		B68383B92A9BA3850015B0E6 /* PlaceSelectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383B82A9BA3850015B0E6 /* PlaceSelectionRepository.swift */; };
+		B68383BB2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383BA2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
 		B68551B128C30EEF0077C47E /* RestaurantViewObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68551B028C30EEF0077C47E /* RestaurantViewObject.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
@@ -249,6 +250,7 @@
 		B68383B22A9B9D7F0015B0E6 /* PlaceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceRepository.swift; sourceTree = "<group>"; };
 		B68383B42A9B9E990015B0E6 /* DependencyContainer+Explore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DependencyContainer+Explore.swift"; sourceTree = "<group>"; };
 		B68383B82A9BA3850015B0E6 /* PlaceSelectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceSelectionRepository.swift; sourceTree = "<group>"; };
+		B68383BA2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListBottomSheetView.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B68551B028C30EEF0077C47E /* RestaurantViewObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantViewObject.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
@@ -526,6 +528,7 @@
 			children = (
 				B68383B02A9B9AC60015B0E6 /* Cell */,
 				B6AFD0842A58599600E968B4 /* ExploreSearchBarView.swift */,
+				B68383BA2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift */,
 				B68383AA2A9B8FA40015B0E6 /* PlaceListView.swift */,
 			);
 			path = View;
@@ -1110,6 +1113,7 @@
 				B634A70D28A6C0CA00796D63 /* RoundedCorner.swift in Sources */,
 				B647A4E724B2039D0098B7A2 /* Extension.swift in Sources */,
 				B6F789B826774D9B0003ED5C /* String+Extensions.swift in Sources */,
+				B68383BB2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift in Sources */,
 				B6A0F96829F27DD1003470EE /* CastError.swift in Sources */,
 				B61C99452A6A92D3000ADEFE /* Defaults+Extensions.swift in Sources */,
 				B6A0F97729F3A302003470EE /* StaticJsonFileReader.swift in Sources */,

@@ -52,6 +52,6 @@ final class ExplorePresenter: ExplorePresenting {
 		viewModels[index].isSelected = placeSelectionRepository.isSelected(id: viewModels[index].id)
 		return viewModels[index]
 	}
-	
+
 	weak var exploreView: ExploreView?
 }
