@@ -64,6 +64,8 @@ public final class Wheel: UIView {
 	}
 	
 	public func start(completion: (() -> Void)? = nil) {
+		guard let dataSource = dataSource else { fatalError("nil data source") }
+		setTarget(section: Int.random(in: 0 ..< dataSource.numberOfSections()))
 		let finalAngle = -angleToRadian(angleSize * CGFloat(selectedSectionIndex)) + (12 * .pi)
 		let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
 		rotationAnimation.toValue = finalAngle

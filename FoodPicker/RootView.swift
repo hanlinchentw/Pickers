@@ -26,7 +26,7 @@ struct RootView: View {
 				ExploreSwiftUIView(selectionStore: selectionStore)
 					.tag(0)
 					.ignoresSafeArea()
-				WheelView(selectionStore: selectionStore)
+				WheelSwiftUIView(selectionStore: selectionStore)
 					.tag(1)
 				PocketView()
 					.tag(2)

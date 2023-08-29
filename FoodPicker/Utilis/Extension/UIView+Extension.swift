@@ -70,11 +70,10 @@ extension UIView {
 
   func performBounceAnimataion(scale: CGFloat, duration: Double) {
     let zoomAnimation = CGAffineTransform(scaleX: scale, y: scale)
-
-    UIView.animate(withDuration: duration, delay: 0, options: .transitionCrossDissolve) {
+    UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut) {
       self.transform = zoomAnimation
     } completion: { (_) in
-      UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.2, options: .curveEaseOut) {
+			UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut) {
         self.transform = .identity
       }
     }

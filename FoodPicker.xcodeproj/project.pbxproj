@@ -16,7 +16,7 @@
 		B610EA902A4C271D00990CC5 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA8F2A4C271D00990CC5 /* TabBarView.swift */; };
 		B610EA922A4C29EE00990CC5 /* TabItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA912A4C29EE00990CC5 /* TabItems.swift */; };
 		B610EA942A4C2ABD00990CC5 /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA932A4C2ABD00990CC5 /* TabItemView.swift */; };
-		B610EA962A4C8CB800990CC5 /* WheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA952A4C8CB800990CC5 /* WheelView.swift */; };
+		B610EA962A4C8CB800990CC5 /* WheelSwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA952A4C8CB800990CC5 /* WheelSwiftUIView.swift */; };
 		B610EA982A4C8D5D00990CC5 /* PocketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610EA972A4C8D5D00990CC5 /* PocketView.swift */; };
 		B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */; };
 		B612E40128DEFE05005721E3 /* AppSettingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612E40028DEFE05005721E3 /* AppSettingHelper.swift */; };
@@ -90,7 +90,6 @@
 		B6A0F97729F3A302003470EE /* StaticJsonFileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F97629F3A302003470EE /* StaticJsonFileReader.swift */; };
 		B6A0F97929F3A6D2003470EE /* NearbySearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F97829F3A6D2003470EE /* NearbySearchProvider.swift */; };
 		B6A0F97C29F3C4A8003470EE /* WheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F97B29F3C4A8003470EE /* WheelViewController.swift */; };
-		B6A0F9BD29F3C795003470EE /* WheelCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F9BC29F3C795003470EE /* WheelCoordinator.swift */; };
 		B6A8A9C22A4D7868001E3542 /* Pods_FoodPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2922B2735BEDFD9EB907267A /* Pods_FoodPicker.framework */; };
 		B6A8A9C32A4D7868001E3542 /* Pods_FoodPicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2922B2735BEDFD9EB907267A /* Pods_FoodPicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */; };
@@ -188,7 +187,7 @@
 		B610EA8F2A4C271D00990CC5 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		B610EA912A4C29EE00990CC5 /* TabItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItems.swift; sourceTree = "<group>"; };
 		B610EA932A4C2ABD00990CC5 /* TabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemView.swift; sourceTree = "<group>"; };
-		B610EA952A4C8CB800990CC5 /* WheelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelView.swift; sourceTree = "<group>"; };
+		B610EA952A4C8CB800990CC5 /* WheelSwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelSwiftUIView.swift; sourceTree = "<group>"; };
 		B610EA972A4C8D5D00990CC5 /* PocketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketView.swift; sourceTree = "<group>"; };
 		B612E3FA28DCC99F005721E3 /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		B612E40028DEFE05005721E3 /* AppSettingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingHelper.swift; sourceTree = "<group>"; };
@@ -273,7 +272,6 @@
 		B6A0F97629F3A302003470EE /* StaticJsonFileReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticJsonFileReader.swift; sourceTree = "<group>"; };
 		B6A0F97829F3A6D2003470EE /* NearbySearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbySearchProvider.swift; sourceTree = "<group>"; };
 		B6A0F97B29F3C4A8003470EE /* WheelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelViewController.swift; sourceTree = "<group>"; };
-		B6A0F9BC29F3C795003470EE /* WheelCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WheelCoordinator.swift; sourceTree = "<group>"; };
 		B6A8A9C02A4D77E5001E3542 /* libMBProgressHUD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMBProgressHUD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6ABC1E228B087FC007398F4 /* Map+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Map+Extensions.swift"; sourceTree = "<group>"; };
 		B6ABC1E528B08982007398F4 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
@@ -727,9 +725,8 @@
 			isa = PBXGroup;
 			children = (
 				B65917962A4D81DC00C92B54 /* WheelUI.xcodeproj */,
-				B6A0F9BC29F3C795003470EE /* WheelCoordinator.swift */,
+				B610EA952A4C8CB800990CC5 /* WheelSwiftUIView.swift */,
 				B6A0F97B29F3C4A8003470EE /* WheelViewController.swift */,
-				B610EA952A4C8CB800990CC5 /* WheelView.swift */,
 			);
 			path = Wheel;
 			sourceTree = "<group>";
@@ -1134,7 +1131,7 @@
 				B610EA942A4C2ABD00990CC5 /* TabItemView.swift in Sources */,
 				B683140A29D596F600340782 /* Config.swift in Sources */,
 				B6D407C228AD3DF500E59CE3 /* SafeAreaUtils.swift in Sources */,
-				B610EA962A4C8CB800990CC5 /* WheelView.swift in Sources */,
+				B610EA962A4C8CB800990CC5 /* WheelSwiftUIView.swift in Sources */,
 				B610EA8E2A4C268A00990CC5 /* RootView.swift in Sources */,
 				B6CBE89528D5EE5E005BCA7D /* KeyboardHelper.swift in Sources */,
 				B6B9976B28BA0A2A007C3D1D /* NotchView.swift in Sources */,
@@ -1150,7 +1147,6 @@
 				B683140D29D6B8C900340782 /* AppCoordinator.swift in Sources */,
 				B6A0F96129F271E1003470EE /* MapViewController.swift in Sources */,
 				B68383AD2A9B90C00015B0E6 /* PlaceListViewCell.swift in Sources */,
-				B6A0F9BD29F3C795003470EE /* WheelCoordinator.swift in Sources */,
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
