@@ -13,6 +13,12 @@ protocol PlaceRepositoryProtocol {
 }
 
 final class PlaceRepository: PlaceRepositoryProtocol {
+	var placeNerworkProvider: NearbySearchProvider
+
+	init(placeNerworkProvider: NearbySearchProvider) {
+		self.placeNerworkProvider = placeNerworkProvider
+	}
+
 	func fetch(completion: @escaping ([PlaceApiResult], [[URL]]) -> Void) {
 		Task {
 			do {
@@ -20,7 +26,7 @@ final class PlaceRepository: PlaceRepositoryProtocol {
 //					return
 //				}
 				let results = PlaceApiResult.staticData
-//				let results = try await nearbySearchProvider.search(keyword: "food", latitude: lat , longitude: lon)
+//				let results = try await placeNerworkProvider.search(keyword: "food", latitude: lat , longitude: lon)
 				let photoReferences = results.map { ($0.photos ?? []).map(\.photoReference) }
 				let photoUrls = photoReferences.compactMap { $0.compactMap { PhotoRequest(reference: $0).url } }
 				await MainActor.run {

@@ -11,8 +11,8 @@ import Swinject
 
 extension DependencyContainer {
 	func registerPlaceRepository() {
-		container.register(PlaceRepositoryProtocol.self) { _ in
-			PlaceRepository()
+		container.register(PlaceRepositoryProtocol.self) { _, provider in
+			PlaceRepository(placeNerworkProvider: provider)
 		}
 	}
 	
