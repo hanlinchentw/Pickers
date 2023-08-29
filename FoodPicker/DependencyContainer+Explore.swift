@@ -11,14 +11,20 @@ import Swinject
 
 extension DependencyContainer {
 	func registerPlaceRepository() {
-		container.register(PlaceRepositoryProtocol.self) { _, provider in
+		container.register(PlaceRepositoryProtocol.self) { resolver, provider in
 			PlaceRepository(placeNerworkProvider: provider)
 		}
 	}
-	
+
 	func registerPlaceSelectionRepository() {
 		container.register(PlaceSelectionRepositoryProtocol.self) { resolver, store in
 			PlaceSelectionRepository(selectionStore: store)
+		}
+	}
+	
+	func registerNearybySearchProvider() {
+		container.register(NearbySearchProvider.self) { _ in
+			NearbySearchProviderImpl()
 		}
 	}
 }

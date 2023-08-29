@@ -15,11 +15,14 @@ struct WheelSwiftUIView: UIViewControllerRepresentable {
 	@ObservedObject var selectionStore: PlacesSelectionStore
 
 	func makeUIViewController(context: Context) -> WheelViewController {
-		return WheelViewController(selectionStore: selectionStore)
+		let presenter = WheelPresenter(selectionStore: selectionStore)
+		let viewController = WheelViewController(presenter: presenter)
+		presenter.wheelView = viewController
+		return viewController
 	}
 	
 	func updateUIViewController(_ uiViewController: WheelViewController, context: Context) {
-		uiViewController.refreshWheel()
+		uiViewController.refreshView()
 	}
 }
 

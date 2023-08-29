@@ -9,14 +9,14 @@
 import UIKit
 import WheelUI
 
-final class WheelViewController: UIViewController {
-	var selectionStore: PlacesSelectionStore
+final class WheelViewController: UIViewController, WheelView {
+	var presenter: WheelPresenter
 
 	lazy var wheel: Wheel = {
 		let wheel = Wheel(radius: 330/2)
 		wheel.animateLanding = false
-		wheel.delegate = self
-		wheel.dataSource = self
+		wheel.delegate = presenter
+		wheel.dataSource = presenter
 		wheel.setDimension(width: 330, height: 330)
 		return wheel
 	}()
@@ -29,11 +29,9 @@ final class WheelViewController: UIViewController {
 		button.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
 		return button
 	}()
-	
-	var wheelItems: Array<WheelItem> = WheelItem.dummyItems
 
-	init(selectionStore: PlacesSelectionStore) {
-		self.selectionStore = selectionStore
+	init(presenter: WheelPresenter) {
+		self.presenter = presenter
 		super.init(nibName: nil, bundle: nil)
 	}
 	
@@ -51,17 +49,9 @@ final class WheelViewController: UIViewController {
 		wheel.reloadData()
 	}
 
-	func refreshWheel() {
-		defer { wheel.reloadData() }
-
-		if selectionStore.selectedPlaces.isEmpty {
-			wheelItems = WheelItem.dummyItems
-			return
-		}
-		
-		wheelItems = selectionStore.selectedPlaces.enumerated().map {
-			WheelItem(id: $1.id, title: $1.name, titleColor: .customblack, itemColor: $0 % 2 == 0 ? .white : .pale)
-		}
+	func refreshView() {
+		presenter.refreshWheel()
+		wheel.reloadData()
 	}
 
 	@objc func didTapActionButton() {
@@ -78,19 +68,5 @@ extension WheelViewController {
 		wheel.centerX(inView: view)
 		view.addSubview(actionButton)
 		actionButton.center(inView: wheel)
-	}
-}
-
-extension WheelViewController: SpinWheelDelegate, SpinWheelDataSource {
-	func wheelDidChangeValue(_ newValue: Int) {
-		
-	}
-	
-	func numberOfSections() -> Int {
-		wheelItems.count
-	}
-	
-	func itemsForSections() -> [WheelUI.WheelItem] {
-		wheelItems
 	}
 }

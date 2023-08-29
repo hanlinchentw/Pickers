@@ -14,9 +14,13 @@ struct ExploreSwiftUIView: UIViewControllerRepresentable {
 	@ObservedObject var selectionStore: PlacesSelectionStore
 
 	func makeUIViewController(context: Context) -> ExploreMainViewController {
+		let provider: NearbySearchProvider = DependencyContainer.shared.getService()
+		let placeRepository: PlaceRepositoryProtocol = DependencyContainer.shared.getService(argument: provider)
+		let placeSelectionRepository: PlaceSelectionRepositoryProtocol = DependencyContainer.shared.getService(argument: selectionStore)
+
 		let presenter = ExplorePresenter(
-			placeRepository: DependencyContainer.shared.getService(argument: NearbySearchProviderImpl()),
-			placeSelectionRepository: DependencyContainer.shared.getService(argument: selectionStore)
+			placeRepository: placeRepository,
+			placeSelectionRepository: placeSelectionRepository
 		)
 		let viewController = ExploreMainViewController(presenter: presenter)
 		presenter.exploreView = viewController

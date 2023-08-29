@@ -27,6 +27,7 @@ final class DependencyContainer {
 			PlacesSelectionStore()
 		}
 
+		registerNearybySearchProvider()
 		registerPlaceRepository()
 		registerPlaceSelectionRepository()
 	}
