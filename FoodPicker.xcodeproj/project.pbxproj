@@ -69,7 +69,8 @@
 		B68383C42A9D91EA0015B0E6 /* WheelPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383C32A9D91EA0015B0E6 /* WheelPresenter.swift */; };
 		B68383C72A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383C62A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift */; };
 		B68383CB2A9F81190015B0E6 /* PlaceViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383CA2A9F81190015B0E6 /* PlaceViewModelFactory.swift */; };
-		B68383D52A9F8B9A0015B0E6 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383D42A9F8B9A0015B0E6 /* PersistenceManager.swift */; };
+		B68383D52A9F8B9A0015B0E6 /* RealmPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383D42A9F8B9A0015B0E6 /* RealmPersistenceManager.swift */; };
+		B68383D72A9F8C080015B0E6 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
 		B690436728A1633F00278964 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690436628A1633F00278964 /* Detail.swift */; };
@@ -247,7 +248,8 @@
 		B68383C32A9D91EA0015B0E6 /* WheelPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelPresenter.swift; sourceTree = "<group>"; };
 		B68383C62A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacePocketListViewModel.swift; sourceTree = "<group>"; };
 		B68383CA2A9F81190015B0E6 /* PlaceViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewModelFactory.swift; sourceTree = "<group>"; };
-		B68383D42A9F8B9A0015B0E6 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		B68383D42A9F8B9A0015B0E6 /* RealmPersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmPersistenceManager.swift; sourceTree = "<group>"; };
+		B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		B690436628A1633F00278964 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
@@ -684,7 +686,8 @@
 		B68383D12A9F8B860015B0E6 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				B68383D42A9F8B9A0015B0E6 /* PersistenceManager.swift */,
+				B68383D42A9F8B9A0015B0E6 /* RealmPersistenceManager.swift */,
+				B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -1129,6 +1132,7 @@
 				B64BE92428B28D3F0072F6A0 /* Alert.swift in Sources */,
 				B65917BE2A52A6EA00C92B54 /* SlidingSheetViewDelegate.swift in Sources */,
 				B634A70B28A6AF6100796D63 /* View+Extensions.swift in Sources */,
+				B68383D72A9F8C080015B0E6 /* PersistenceManager.swift in Sources */,
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B683143129E2AF5500340782 /* LocationManager.swift in Sources */,
@@ -1138,7 +1142,7 @@
 				B6F7898A2899883800829ED4 /* ViewModelType.swift in Sources */,
 				B683143329E412DD00340782 /* LocationManager+Status.swift in Sources */,
 				B6697F3F2A52BD3A009E321B /* Utilities.swift in Sources */,
-				B68383D52A9F8B9A0015B0E6 /* PersistenceManager.swift in Sources */,
+				B68383D52A9F8B9A0015B0E6 /* RealmPersistenceManager.swift in Sources */,
 				B6EF13A228B0B8F6009345D6 /* DetailAddButton.swift in Sources */,
 				B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */,
 				B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */,
