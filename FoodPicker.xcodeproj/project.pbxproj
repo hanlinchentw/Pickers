@@ -67,7 +67,7 @@
 		B68383B92A9BA3850015B0E6 /* PlaceSelectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383B82A9BA3850015B0E6 /* PlaceSelectionRepository.swift */; };
 		B68383BB2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383BA2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift */; };
 		B68383C42A9D91EA0015B0E6 /* WheelPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383C32A9D91EA0015B0E6 /* WheelPresenter.swift */; };
-		B68383C72A9F7FEC0015B0E6 /* PocketListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383C62A9F7FEC0015B0E6 /* PocketListModel.swift */; };
+		B68383C72A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383C62A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift */; };
 		B68383CB2A9F81190015B0E6 /* PlaceViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383CA2A9F81190015B0E6 /* PlaceViewModelFactory.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
@@ -75,8 +75,6 @@
 		B692F1A728E7FCE200DA90E9 /* StrechyHeaderLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B692F1A628E7FCE200DA90E9 /* StrechyHeaderLayout.swift */; };
 		B6A0F94A29EFB6B0003470EE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F94929EFB6B0003470EE /* TabBarController.swift */; };
 		B6A0F94C29EFB6DB003470EE /* Scrollable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F94B29EFB6DB003470EE /* Scrollable.swift */; };
-		B6A0F95129EFBA10003470EE /* PocketCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95029EFBA10003470EE /* PocketCoordinator.swift */; };
-		B6A0F95329EFBA1A003470EE /* PocketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95229EFBA1A003470EE /* PocketViewController.swift */; };
 		B6A0F95829F00A98003470EE /* LocationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F95729F00A98003470EE /* LocationManagerProtocol.swift */; };
 		B6A0F96129F271E1003470EE /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F96029F271E1003470EE /* MapViewController.swift */; };
 		B6A0F96529F27BC5003470EE /* NearbySearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0F96429F27BC5003470EE /* NearbySearchRequest.swift */; };
@@ -246,7 +244,7 @@
 		B68383B82A9BA3850015B0E6 /* PlaceSelectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceSelectionRepository.swift; sourceTree = "<group>"; };
 		B68383BA2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListBottomSheetView.swift; sourceTree = "<group>"; };
 		B68383C32A9D91EA0015B0E6 /* WheelPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelPresenter.swift; sourceTree = "<group>"; };
-		B68383C62A9F7FEC0015B0E6 /* PocketListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketListModel.swift; sourceTree = "<group>"; };
+		B68383C62A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacePocketListViewModel.swift; sourceTree = "<group>"; };
 		B68383CA2A9F81190015B0E6 /* PlaceViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewModelFactory.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
@@ -254,8 +252,6 @@
 		B692F1A628E7FCE200DA90E9 /* StrechyHeaderLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrechyHeaderLayout.swift; sourceTree = "<group>"; };
 		B6A0F94929EFB6B0003470EE /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		B6A0F94B29EFB6DB003470EE /* Scrollable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scrollable.swift; sourceTree = "<group>"; };
-		B6A0F95029EFBA10003470EE /* PocketCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketCoordinator.swift; sourceTree = "<group>"; };
-		B6A0F95229EFBA1A003470EE /* PocketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketViewController.swift; sourceTree = "<group>"; };
 		B6A0F95729F00A98003470EE /* LocationManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerProtocol.swift; sourceTree = "<group>"; };
 		B6A0F96029F271E1003470EE /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B6A0F96429F27BC5003470EE /* NearbySearchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbySearchRequest.swift; sourceTree = "<group>"; };
@@ -701,9 +697,7 @@
 		B6A0F94F29EFBA06003470EE /* Pocket */ = {
 			isa = PBXGroup;
 			children = (
-				B68383C62A9F7FEC0015B0E6 /* PocketListModel.swift */,
-				B6A0F95029EFBA10003470EE /* PocketCoordinator.swift */,
-				B6A0F95229EFBA1A003470EE /* PocketViewController.swift */,
+				B68383C62A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift */,
 				B610EA972A4C8D5D00990CC5 /* PocketView.swift */,
 			);
 			path = Pocket;
@@ -1100,7 +1094,6 @@
 				B6F789AE267610950003ED5C /* NetworkMonitor.swift in Sources */,
 				B685484C24B6D390009BC800 /* Constants.swift in Sources */,
 				B6B9976828B9F1A1007C3D1D /* NSAttributedString+Extensions.swift in Sources */,
-				B6A0F95129EFBA10003470EE /* PocketCoordinator.swift in Sources */,
 				B683143529E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift in Sources */,
 				B6ABC1ED28B09550007398F4 /* ThirdRowPresenter.swift in Sources */,
 				B68383B52A9B9E990015B0E6 /* DependencyContainer+Explore.swift in Sources */,
@@ -1128,7 +1121,6 @@
 				B63548F628B51EB500136A15 /* URLCache+Extensions.swift in Sources */,
 				B6C7D5B2255992E0005D2AA0 /* LoadingCell.swift in Sources */,
 				B683143129E2AF5500340782 /* LocationManager.swift in Sources */,
-				B6A0F95329EFBA1A003470EE /* PocketViewController.swift in Sources */,
 				B6AFD0852A58599600E968B4 /* ExploreSearchBarView.swift in Sources */,
 				B6CBE88E28D37DD9005BCA7D /* HeightPreferenceKey.swift in Sources */,
 				B6CB5FE428B0A2220042C34C /* FourthRowPresenter.swift in Sources */,
@@ -1185,7 +1177,7 @@
 				B68383AD2A9B90C00015B0E6 /* PlaceListViewCell.swift in Sources */,
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */,
-				B68383C72A9F7FEC0015B0E6 /* PocketListModel.swift in Sources */,
+				B68383C72A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6697F412A580876009E321B /* ExploreSearchViewController.swift in Sources */,
 				B612E40128DEFE05005721E3 /* AppSettingHelper.swift in Sources */,
