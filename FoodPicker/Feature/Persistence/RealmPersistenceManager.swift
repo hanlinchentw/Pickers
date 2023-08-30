@@ -17,7 +17,7 @@ protocol RealmPersistenceManagerProtocol {
 	func delete<T: Object>(_ data: T)
 }
 
-class RealmPersistenceManager: RealmPersistenceManagerProtocol {
+final class RealmPersistenceManager: RealmPersistenceManagerProtocol {
 	static let shared = RealmPersistenceManager()
 	
 	var testSuite: String?
