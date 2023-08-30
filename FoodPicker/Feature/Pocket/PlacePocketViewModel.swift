@@ -1,5 +1,5 @@
 //
-//  PlacePocketListViewModel.swift
+//  PlacePocketViewModel.swift
 //  FoodPicker
 //
 //  Created by 陳翰霖 on 2023/8/30.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct PlacePocketListViewModel {
+struct PlacePocketViewModel {
 	var id: String
 	var name: String
 	var items: [PlaceViewModel]

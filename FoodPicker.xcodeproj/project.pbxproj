@@ -67,10 +67,12 @@
 		B68383B92A9BA3850015B0E6 /* PlaceSelectionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383B82A9BA3850015B0E6 /* PlaceSelectionRepository.swift */; };
 		B68383BB2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383BA2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift */; };
 		B68383C42A9D91EA0015B0E6 /* WheelPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383C32A9D91EA0015B0E6 /* WheelPresenter.swift */; };
-		B68383C72A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383C62A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift */; };
+		B68383C72A9F7FEC0015B0E6 /* PlacePocketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383C62A9F7FEC0015B0E6 /* PlacePocketViewModel.swift */; };
 		B68383CB2A9F81190015B0E6 /* PlaceViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383CA2A9F81190015B0E6 /* PlaceViewModelFactory.swift */; };
 		B68383D52A9F8B9A0015B0E6 /* RealmPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383D42A9F8B9A0015B0E6 /* RealmPersistenceManager.swift */; };
 		B68383D72A9F8C080015B0E6 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */; };
+		B68383DA2A9F8F550015B0E6 /* RLM_PlacePocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383D92A9F8F550015B0E6 /* RLM_PlacePocket.swift */; };
+		B68383DC2A9F8F840015B0E6 /* RLM_Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383DB2A9F8F840015B0E6 /* RLM_Place.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
 		B690436728A1633F00278964 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690436628A1633F00278964 /* Detail.swift */; };
@@ -246,10 +248,12 @@
 		B68383B82A9BA3850015B0E6 /* PlaceSelectionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceSelectionRepository.swift; sourceTree = "<group>"; };
 		B68383BA2A9C46E30015B0E6 /* PlaceListBottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListBottomSheetView.swift; sourceTree = "<group>"; };
 		B68383C32A9D91EA0015B0E6 /* WheelPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WheelPresenter.swift; sourceTree = "<group>"; };
-		B68383C62A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacePocketListViewModel.swift; sourceTree = "<group>"; };
+		B68383C62A9F7FEC0015B0E6 /* PlacePocketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacePocketViewModel.swift; sourceTree = "<group>"; };
 		B68383CA2A9F81190015B0E6 /* PlaceViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewModelFactory.swift; sourceTree = "<group>"; };
 		B68383D42A9F8B9A0015B0E6 /* RealmPersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmPersistenceManager.swift; sourceTree = "<group>"; };
 		B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		B68383D92A9F8F550015B0E6 /* RLM_PlacePocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_PlacePocket.swift; sourceTree = "<group>"; };
+		B68383DB2A9F8F840015B0E6 /* RLM_Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Place.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		B690436628A1633F00278964 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
@@ -686,10 +690,20 @@
 		B68383D12A9F8B860015B0E6 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				B68383D82A9F8F430015B0E6 /* Model */,
 				B68383D42A9F8B9A0015B0E6 /* RealmPersistenceManager.swift */,
 				B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */,
 			);
 			path = Persistence;
+			sourceTree = "<group>";
+		};
+		B68383D82A9F8F430015B0E6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B68383D92A9F8F550015B0E6 /* RLM_PlacePocket.swift */,
+				B68383DB2A9F8F840015B0E6 /* RLM_Place.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
@@ -711,7 +725,7 @@
 		B6A0F94F29EFBA06003470EE /* Pocket */ = {
 			isa = PBXGroup;
 			children = (
-				B68383C62A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift */,
+				B68383C62A9F7FEC0015B0E6 /* PlacePocketViewModel.swift */,
 				B610EA972A4C8D5D00990CC5 /* PocketView.swift */,
 			);
 			path = Pocket;
@@ -1114,6 +1128,7 @@
 				B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */,
 				B65917CD2A52AB8B00C92B54 /* ExploreMainViewController.swift in Sources */,
 				B6C9752128D370D500287369 /* TwoHorizontalButton.swift in Sources */,
+				B68383DC2A9F8F840015B0E6 /* RLM_Place.swift in Sources */,
 				B6EF13AF28B229E1009345D6 /* TextField+Extensions.swift in Sources */,
 				B647A4CD24B1F7BA0098B7A2 /* AppDelegate.swift in Sources */,
 				B690436728A1633F00278964 /* Detail.swift in Sources */,
@@ -1172,6 +1187,7 @@
 				B6F789A92675DC440003ED5C /* Validators.swift in Sources */,
 				B68383AB2A9B8FA40015B0E6 /* PlaceListView.swift in Sources */,
 				B610EA982A4C8D5D00990CC5 /* PocketView.swift in Sources */,
+				B68383DA2A9F8F550015B0E6 /* RLM_PlacePocket.swift in Sources */,
 				B610EA942A4C2ABD00990CC5 /* TabItemView.swift in Sources */,
 				B683140A29D596F600340782 /* Config.swift in Sources */,
 				B6D407C228AD3DF500E59CE3 /* SafeAreaUtils.swift in Sources */,
@@ -1193,7 +1209,7 @@
 				B68383AD2A9B90C00015B0E6 /* PlaceListViewCell.swift in Sources */,
 				B6C7D5B4255BA967005D2AA0 /* DetailHeaderPresenter.swift in Sources */,
 				B612E3FB28DCC99F005721E3 /* TextFieldClearButton.swift in Sources */,
-				B68383C72A9F7FEC0015B0E6 /* PlacePocketListViewModel.swift in Sources */,
+				B68383C72A9F7FEC0015B0E6 /* PlacePocketViewModel.swift in Sources */,
 				B6F789A5267351230003ED5C /* MBProgressHUDProtocol.swift in Sources */,
 				B6697F412A580876009E321B /* ExploreSearchViewController.swift in Sources */,
 				B612E40128DEFE05005721E3 /* AppSettingHelper.swift in Sources */,

@@ -19,6 +19,10 @@ final class DependencyContainer {
 	}
 	
 	func registerAllComponents() {
+		container.register(RealmPersistenceManagerProtocol.self) { resolver in
+			RealmPersistenceManager.shared
+		}
+
 		container.register(LocationManagerProtocol.self) { _ in
 			LocationManager.shared
 		}
