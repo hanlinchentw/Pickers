@@ -20,6 +20,11 @@ PODS:
   - Kingfisher (7.8.1)
   - MBProgressHUD (1.2.0)
   - R.swift (7.3.0)
+  - Realm (10.41.0):
+    - Realm/Headers (= 10.41.0)
+  - Realm/Headers (10.41.0)
+  - RealmSwift (10.41.0):
+    - Realm (= 10.41.0)
   - Swinject (2.8.3)
 
 DEPENDENCIES:
@@ -35,6 +40,7 @@ DEPENDENCIES:
   - Kingfisher
   - MBProgressHUD
   - R.swift
+  - RealmSwift
   - Swinject
 
 SPEC REPOS:
@@ -50,6 +56,8 @@ SPEC REPOS:
     - Kingfisher
     - MBProgressHUD
     - R.swift
+    - Realm
+    - RealmSwift
     - Swinject
 
 SPEC CHECKSUMS:
@@ -64,8 +72,10 @@ SPEC CHECKSUMS:
   Kingfisher: 63f677311d36a3473f6b978584f8a3845d023dc5
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   R.swift: cef1c530541cb49412752721797f10dae6b32d11
+  Realm: 669efee7dc1ce0aa9f6739a60f8c0df0a3835067
+  RealmSwift: 6b7b0e91b79dc66d5cfceeb3b319cacfc9b1a70e
   Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
 
-PODFILE CHECKSUM: 5b64f8fea4aae4aa413ad56282033fe4543b628f
+PODFILE CHECKSUM: 664a0ec9e64d17c3db4cf7e5463c44c37868c028
 
 COCOAPODS: 1.12.1

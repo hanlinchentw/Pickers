@@ -19,7 +19,8 @@ target 'FoodPicker' do
 	pod 'Defaults'
 	pod 'Kingfisher'
 	pod 'Swinject'
-	
+	pod 'RealmSwift'
+
 	target 'FoodPickerTests' do
 		inherit! :search_paths
 	end
