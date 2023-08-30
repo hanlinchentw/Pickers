@@ -10,13 +10,13 @@ import UIKit
 import Kingfisher
 
 protocol PlaceListViewCellDelegate: AnyObject {
-	func didTapAddButton(viewModel: PlaceListViewModel)
+	func didTapAddButton(viewModel: PlaceViewModel)
 }
 
 class PlaceListViewCell: UICollectionViewCell {
 	weak var delegate: PlaceListViewCellDelegate?
 
-	var viewModel: PlaceListViewModel?
+	var viewModel: PlaceViewModel?
 
 	private let imageView: UIImageView = {
 		let iv = UIImageView()

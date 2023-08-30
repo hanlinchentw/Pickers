@@ -10,8 +10,8 @@ import UIKit
 
 protocol PlaceListViewDelegate: AnyObject {
 	func placesCount() -> Int
-	func viewModel(atIndex index: Int) -> PlaceListViewModel
-	func didTapAddButton(viewModel: PlaceListViewModel)
+	func viewModel(atIndex index: Int) -> PlaceViewModel
+	func didTapAddButton(viewModel: PlaceViewModel)
 }
 
 final class PlaceListView: UIView {
@@ -51,7 +51,7 @@ extension PlaceListView: UICollectionViewDataSource {
 }
 
 extension PlaceListView: PlaceListViewCellDelegate {
-	func didTapAddButton(viewModel: PlaceListViewModel) {
+	func didTapAddButton(viewModel: PlaceViewModel) {
 		delegate?.didTapAddButton(viewModel: viewModel)
 	}
 }

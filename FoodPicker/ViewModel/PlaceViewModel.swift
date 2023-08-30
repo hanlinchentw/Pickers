@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct PlaceListViewModel {
+struct PlaceViewModel {
 	var id: String
 	var name: String
 	var price: String?

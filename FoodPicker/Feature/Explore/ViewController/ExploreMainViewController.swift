@@ -91,11 +91,11 @@ extension ExploreMainViewController: PlaceListViewDelegate {
 		presenter.count()
 	}
 	
-	func viewModel(atIndex index: Int) -> PlaceListViewModel {
+	func viewModel(atIndex index: Int) -> PlaceViewModel {
 		presenter.viewModel(index: index)
 	}
 	
-	func didTapAddButton(viewModel: PlaceListViewModel) {
+	func didTapAddButton(viewModel: PlaceViewModel) {
 		presenter.didSelectPlace(viewModel: viewModel)
 	}
 }

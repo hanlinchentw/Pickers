@@ -1,17 +1,17 @@
 //
-//  MapPlaceApiResultToRestaurantViewObject.swift
+//  PlaceViewModelFactory.swift
 //  FoodPicker
 //
-//  Created by 陳翰霖 on 2023/8/26.
+//  Created by 陳翰霖 on 2023/8/30.
 //  Copyright © 2023 陳翰霖. All rights reserved.
 //
 
 import Foundation
 
-extension Zip2Sequence where Sequence1 == [PlaceApiResult], Sequence2 == [[URL?]] {
-	func mapPlaceApiResultToRestaurantViewObject() -> [PlaceListViewModel] {
-		self.map { (place, images) in
-			PlaceListViewModel(
+final class PlaceViewModelFactory {
+	static func placeViewModel(from apiResults: ([PlaceApiResult]), andImageUrls placeImageUrls: [[URL]]) -> [PlaceViewModel] {
+		zip(apiResults, placeImageUrls).map { (place, images) in
+			PlaceViewModel(
 				id: place.placeId,
 				name: place.name,
 				rating: place.rating,

@@ -15,13 +15,13 @@ protocol ExploreView: AnyObject {
 
 protocol ExplorePresenting {
 	func onViewDidLoad()
-	func didSelectPlace(viewModel: PlaceListViewModel)
+	func didSelectPlace(viewModel: PlaceViewModel)
 	func count() -> Int
-	func viewModel(index: Int) -> PlaceListViewModel
+	func viewModel(index: Int) -> PlaceViewModel
 }
 
 final class ExplorePresenter: ExplorePresenting {
-	var viewModels: [PlaceListViewModel] = []
+	var viewModels: [PlaceViewModel] = []
 	var placeRepository: PlaceRepositoryProtocol
 	var placeSelectionRepository: PlaceSelectionRepositoryProtocol
 
@@ -33,13 +33,13 @@ final class ExplorePresenter: ExplorePresenting {
 	func onViewDidLoad() {
 		placeRepository.fetch { results, imageUrls in
 			DispatchQueue.main.async {
-				self.viewModels = zip(results, imageUrls).mapPlaceApiResultToRestaurantViewObject()
+				self.viewModels =  PlaceViewModelFactory.placeViewModel(from: results, andImageUrls: imageUrls)
 				self.exploreView?.didFetchPlace()
 			}
 		}
 	}
 
-	func didSelectPlace(viewModel: PlaceListViewModel) {
+	func didSelectPlace(viewModel: PlaceViewModel) {
 		placeSelectionRepository.didChangeSelectionStatus(with: PlaceSelectionDomainModel(id: viewModel.id, name: viewModel.name))
 		exploreView?.didChangePlaceStatus()
 	}
@@ -48,7 +48,7 @@ final class ExplorePresenter: ExplorePresenting {
 		viewModels.count
 	}
 	
-	func viewModel(index: Int) -> PlaceListViewModel {
+	func viewModel(index: Int) -> PlaceViewModel {
 		viewModels[index].isSelected = placeSelectionRepository.isSelected(id: viewModels[index].id)
 		return viewModels[index]
 	}
