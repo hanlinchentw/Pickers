@@ -15,6 +15,7 @@ protocol RealmPersistenceManagerProtocol {
 	func add<T: Object>(_ data: T, update: Bool)
 	func delete<T: Object>(_ data: [T])
 	func delete<T: Object>(_ data: T)
+	func runTransaction(action: () -> Void)
 }
 
 final class RealmPersistenceManager: RealmPersistenceManagerProtocol {
@@ -73,7 +74,7 @@ final class RealmPersistenceManager: RealmPersistenceManagerProtocol {
 			action()
 		}
 	}
-	
+
 	func delete<T: Object>(_ data: [T]) {
 		let realm = getRealm()
 		realm.refresh()

@@ -8,11 +8,22 @@
 
 import Foundation
 
-struct PlaceSelectionDomainModel {
-	var id: String
-	var name: String
-}
-
 class PlacesSelectionStore: ObservableObject {
-	@Published var selectedPlaces: [PlaceSelectionDomainModel] = []
+	@Published var status: PlaceSelectionStatus = .draft([])
+
+	var selectedPlaces: [PlaceViewModel] {
+		switch status {
+		case .draft(let array):
+			return array
+		case .active(let viewModel, _):
+			return viewModel.items
+		}
+	}
+
+	var activePocket: PlacePocketViewModel? {
+		if case .active(let viewModel, _) = status {
+			return viewModel
+		}
+		return nil
+	}
 }

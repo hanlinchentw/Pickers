@@ -9,7 +9,7 @@
 import Foundation
 
 protocol PlaceSelectionRepositoryProtocol {
-	func didChangeSelectionStatus(with model: PlaceSelectionDomainModel)
+	func didChangeSelectionStatus(with model: PlaceViewModel)
 	func isSelected(id: String) -> Bool
 }
 
@@ -20,15 +20,30 @@ final class PlaceSelectionRepository: PlaceSelectionRepositoryProtocol {
 		self.selectionStore = selectionStore
 	}
 
-	func didChangeSelectionStatus(with model: PlaceSelectionDomainModel) {
-		let firstIndex = selectionStore.selectedPlaces.firstIndex(where: { $0.id == model.id })
-		if let firstIndex {
-			selectionStore.selectedPlaces.remove(at: firstIndex)
-		} else {
-			selectionStore.selectedPlaces.append(PlaceSelectionDomainModel(id: model.id, name: model.name))
+	func didChangeSelectionStatus(with model: PlaceViewModel) {
+		isSelected(id: model.id) ? removePlace(with: model) : addPlace(with: model)
+	}
+
+	func removePlace(with model: PlaceViewModel) {
+		switch selectionStore.status {
+		case .draft(let places):
+			selectionStore.status = .draft(places.filter({ $0 != model }))
+		case .active(var viewModel, let original):
+			viewModel.items = viewModel.items.filter({ $0 != model })
+			selectionStore.status = .active(viewModel, original: original)
 		}
 	}
-	
+
+	func addPlace(with model: PlaceViewModel) {
+		switch selectionStore.status {
+		case .draft(let places):
+			selectionStore.status = .draft(places + [model])
+		case .active(var viewModel, let original):
+			viewModel.items = viewModel.items + [model]
+			selectionStore.status = .active(viewModel, original: original)
+		}
+	}
+
 	func isSelected(id: String) -> Bool {
 		selectionStore.selectedPlaces.contains(where: { $0.id == id })
 	}

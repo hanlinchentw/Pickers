@@ -73,6 +73,10 @@
 		B68383D72A9F8C080015B0E6 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */; };
 		B68383DA2A9F8F550015B0E6 /* RLM_PlacePocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383D92A9F8F550015B0E6 /* RLM_PlacePocket.swift */; };
 		B68383DC2A9F8F840015B0E6 /* RLM_Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383DB2A9F8F840015B0E6 /* RLM_Place.swift */; };
+		B68383E52A9FAA090015B0E6 /* PocketRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383E42A9FAA090015B0E6 /* PocketRepository.swift */; };
+		B68383E92AA0442F0015B0E6 /* RLMPlaceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383E82AA0442F0015B0E6 /* RLMPlaceFactory.swift */; };
+		B68383EB2AA0468D0015B0E6 /* RealmListBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383EA2AA0468D0015B0E6 /* RealmListBuilder.swift */; };
+		B68383ED2AA047B30015B0E6 /* PlaceSelectionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68383EC2AA047B30015B0E6 /* PlaceSelectionStatus.swift */; };
 		B685484C24B6D390009BC800 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685484B24B6D390009BC800 /* Constants.swift */; };
 		B68DD02C26803935008E1FDE /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */; };
 		B690436728A1633F00278964 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B690436628A1633F00278964 /* Detail.swift */; };
@@ -254,6 +258,10 @@
 		B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		B68383D92A9F8F550015B0E6 /* RLM_PlacePocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_PlacePocket.swift; sourceTree = "<group>"; };
 		B68383DB2A9F8F840015B0E6 /* RLM_Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Place.swift; sourceTree = "<group>"; };
+		B68383E42A9FAA090015B0E6 /* PocketRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketRepository.swift; sourceTree = "<group>"; };
+		B68383E82AA0442F0015B0E6 /* RLMPlaceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLMPlaceFactory.swift; sourceTree = "<group>"; };
+		B68383EA2AA0468D0015B0E6 /* RealmListBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmListBuilder.swift; sourceTree = "<group>"; };
+		B68383EC2AA047B30015B0E6 /* PlaceSelectionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceSelectionStatus.swift; sourceTree = "<group>"; };
 		B685484B24B6D390009BC800 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B68DD02B26803935008E1FDE /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		B690436628A1633F00278964 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
@@ -376,6 +384,7 @@
 			isa = PBXGroup;
 			children = (
 				B61C99392A6A8E5E000ADEFE /* PlacesSelectionStore.swift */,
+				B68383EC2AA047B30015B0E6 /* PlaceSelectionStatus.swift */,
 			);
 			path = Selection;
 			sourceTree = "<group>";
@@ -690,9 +699,10 @@
 		B68383D12A9F8B860015B0E6 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				B68383EE2AA047CF0015B0E6 /* Builder */,
 				B68383D82A9F8F430015B0E6 /* Model */,
-				B68383D42A9F8B9A0015B0E6 /* RealmPersistenceManager.swift */,
 				B68383D62A9F8C080015B0E6 /* PersistenceManager.swift */,
+				B68383D42A9F8B9A0015B0E6 /* RealmPersistenceManager.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -704,6 +714,39 @@
 				B68383DB2A9F8F840015B0E6 /* RLM_Place.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		B68383DF2A9F9E690015B0E6 /* Interactor */ = {
+			isa = PBXGroup;
+			children = (
+				B68383E42A9FAA090015B0E6 /* PocketRepository.swift */,
+			);
+			path = Interactor;
+			sourceTree = "<group>";
+		};
+		B68383E02A9F9E6D0015B0E6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B610EA972A4C8D5D00990CC5 /* PocketView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B68383E12A9F9E6F0015B0E6 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				B68383C62A9F7FEC0015B0E6 /* PlacePocketViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		B68383EE2AA047CF0015B0E6 /* Builder */ = {
+			isa = PBXGroup;
+			children = (
+				B68383EA2AA0468D0015B0E6 /* RealmListBuilder.swift */,
+				B68383E82AA0442F0015B0E6 /* RLMPlaceFactory.swift */,
+			);
+			path = Builder;
 			sourceTree = "<group>";
 		};
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
@@ -725,8 +768,9 @@
 		B6A0F94F29EFBA06003470EE /* Pocket */ = {
 			isa = PBXGroup;
 			children = (
-				B68383C62A9F7FEC0015B0E6 /* PlacePocketViewModel.swift */,
-				B610EA972A4C8D5D00990CC5 /* PocketView.swift */,
+				B68383E12A9F9E6F0015B0E6 /* ViewModel */,
+				B68383E02A9F9E6D0015B0E6 /* View */,
+				B68383DF2A9F9E690015B0E6 /* Interactor */,
 			);
 			path = Pocket;
 			sourceTree = "<group>";
@@ -1123,6 +1167,7 @@
 				B685484C24B6D390009BC800 /* Constants.swift in Sources */,
 				B6B9976828B9F1A1007C3D1D /* NSAttributedString+Extensions.swift in Sources */,
 				B683143529E4130400340782 /* LocationManager+CLLocationManagerDelegate.swift in Sources */,
+				B68383ED2AA047B30015B0E6 /* PlaceSelectionStatus.swift in Sources */,
 				B6ABC1ED28B09550007398F4 /* ThirdRowPresenter.swift in Sources */,
 				B68383B52A9B9E990015B0E6 /* DependencyContainer+Explore.swift in Sources */,
 				B6F7618C24D3EE2300318AB1 /* DetailHeader.swift in Sources */,
@@ -1159,7 +1204,10 @@
 				B6697F3F2A52BD3A009E321B /* Utilities.swift in Sources */,
 				B68383D52A9F8B9A0015B0E6 /* RealmPersistenceManager.swift in Sources */,
 				B6EF13A228B0B8F6009345D6 /* DetailAddButton.swift in Sources */,
+				B68383E52A9FAA090015B0E6 /* PocketRepository.swift in Sources */,
 				B6ABC1E328B087FC007398F4 /* Map+Extensions.swift in Sources */,
+				B68383EB2AA0468D0015B0E6 /* RealmListBuilder.swift in Sources */,
+				B68383E92AA0442F0015B0E6 /* RLMPlaceFactory.swift in Sources */,
 				B6B84D4D2665D4DE002E418D /* UIButton+ Extension.swift in Sources */,
 				B666C4562A3038A8003E2FBF /* ExploreSwiftUIView.swift in Sources */,
 				B6A0F94C29EFB6DB003470EE /* Scrollable.swift in Sources */,

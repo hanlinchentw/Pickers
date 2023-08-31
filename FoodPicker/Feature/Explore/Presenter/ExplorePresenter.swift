@@ -40,7 +40,7 @@ final class ExplorePresenter: ExplorePresenting {
 	}
 
 	func didSelectPlace(viewModel: PlaceViewModel) {
-		placeSelectionRepository.didChangeSelectionStatus(with: PlaceSelectionDomainModel(id: viewModel.id, name: viewModel.name))
+		placeSelectionRepository.didChangeSelectionStatus(with: viewModel)
 		exploreView?.didChangePlaceStatus()
 	}
 

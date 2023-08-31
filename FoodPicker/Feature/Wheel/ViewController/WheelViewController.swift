@@ -20,7 +20,7 @@ final class WheelViewController: UIViewController, WheelView {
 		wheel.setDimension(width: 330, height: 330)
 		return wheel
 	}()
-	
+
 	private lazy var actionButton: UIButton = {
 		let button = UIButton()
 		var configuration = UIButton.Configuration.plain()
@@ -34,7 +34,7 @@ final class WheelViewController: UIViewController, WheelView {
 		self.presenter = presenter
 		super.init(nibName: nil, bundle: nil)
 	}
-	
+
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -43,7 +43,7 @@ final class WheelViewController: UIViewController, WheelView {
 		super.viewDidLoad()
 		setupWheelUI()
 	}
-	
+
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		wheel.reloadData()

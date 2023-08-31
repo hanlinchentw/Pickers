@@ -13,8 +13,8 @@ class RLM_PlacePocket: Object {
 	@Persisted(primaryKey: true) var id: String
 	@Persisted var name: String
 	@Persisted var items: List<RLM_Place>
-	
-	convenience init(id: String, name: String) {
+
+	convenience init(id: String = UUID().uuidString, name: String) {
 		self.init()
 		self.id = id
 		self.name = name

@@ -21,3 +21,6 @@ struct PlaceViewModel {
 	var isClosed: Bool
 	var isSelected: Bool
 }
+
+extension PlaceViewModel: Equatable {
+}

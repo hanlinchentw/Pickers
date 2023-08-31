@@ -12,7 +12,7 @@ import RealmSwift
 class RLM_Place: Object {
 	@Persisted(primaryKey: true) var id: String
 	@Persisted var name: String
-	@Persisted var price: String
+	@Persisted var price: String?
 	@Persisted var rating: Double?
 	@Persisted var reviewCount: Int?
 	@Persisted var businessCategory: String?
@@ -20,7 +20,7 @@ class RLM_Place: Object {
 	@Persisted var latitude: Double
 	@Persisted var longitude: Double
 
-	init(id: String, name: String, price: String, rating: Double? = nil, reviewCount: Int? = nil, businessCategory: String? = nil, imageUrls: List<String>, latitude: Double, longitude: Double) {
+	init(id: String, name: String, price: String? = nil, rating: Double? = nil, reviewCount: Int? = nil, businessCategory: String? = nil, latitude: Double, longitude: Double) {
 		super.init()
 		self.id = id
 		self.name = name
@@ -28,7 +28,6 @@ class RLM_Place: Object {
 		self.rating = rating
 		self.reviewCount = reviewCount
 		self.businessCategory = businessCategory
-		self.imageUrls = imageUrls
 		self.latitude = latitude
 		self.longitude = longitude
 	}

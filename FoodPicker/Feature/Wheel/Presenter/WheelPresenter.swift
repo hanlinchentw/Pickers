@@ -24,7 +24,7 @@ final class WheelPresenter: NSObject, WheelPresenting {
 	init(selectionStore: PlacesSelectionStore) {
 		self.selectionStore = selectionStore
 	}
-	
+
 	func refreshWheel() {
 		if selectionStore.selectedPlaces.isEmpty {
 			wheelItems = WheelItem.dummyItems

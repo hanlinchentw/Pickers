@@ -13,3 +13,9 @@ struct PlacePocketViewModel {
 	var name: String
 	var items: [PlaceViewModel]
 }
+
+extension PlacePocketViewModel: Equatable {
+	static func == (lhs: PlacePocketViewModel, rhs: PlacePocketViewModel) -> Bool {
+		return lhs.id == rhs.id && lhs.name == rhs.name && lhs.items == rhs.items
+	}
+}
