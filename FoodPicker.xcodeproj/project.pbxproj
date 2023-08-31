@@ -444,13 +444,12 @@
 				B647A4DA24B1F7BE0098B7A2 /* Info.plist */,
 				B683140C29D6B8C900340782 /* AppCoordinator.swift */,
 				B647A4CC24B1F7BA0098B7A2 /* AppDelegate.swift */,
-				B68383A32A9B8E140015B0E6 /* DependencyContainer.swift */,
-				B68383B42A9B9E990015B0E6 /* DependencyContainer+Explore.swift */,
 				B610EA8D2A4C268A00990CC5 /* RootView.swift */,
 				B647A4CE24B1F7BA0098B7A2 /* SceneDelegate.swift */,
 				B647A4D724B1F7BE0098B7A2 /* LaunchScreen.storyboard */,
 				B647A4D524B1F7BE0098B7A2 /* Assets.xcassets */,
 				B683140B29D6B61C00340782 /* Configuration */,
+				B68383EF2AA0493B0015B0E6 /* Dependency */,
 				B68383CF2A9F85B40015B0E6 /* Defaults */,
 				B6A0F96629F27DB0003470EE /* Error */,
 				B692F1A128E7EBA400DA90E9 /* Feature */,
@@ -747,6 +746,15 @@
 				B68383E82AA0442F0015B0E6 /* RLMPlaceFactory.swift */,
 			);
 			path = Builder;
+			sourceTree = "<group>";
+		};
+		B68383EF2AA0493B0015B0E6 /* Dependency */ = {
+			isa = PBXGroup;
+			children = (
+				B68383A32A9B8E140015B0E6 /* DependencyContainer.swift */,
+				B68383B42A9B9E990015B0E6 /* DependencyContainer+Explore.swift */,
+			);
+			path = Dependency;
 			sourceTree = "<group>";
 		};
 		B692F1A128E7EBA400DA90E9 /* Feature */ = {
