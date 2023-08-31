@@ -23,4 +23,7 @@ struct PlaceViewModel {
 }
 
 extension PlaceViewModel: Equatable {
+	static func == (lhs: Self, rhs: Self) -> Bool {
+		lhs.id == rhs.id
+	}
 }

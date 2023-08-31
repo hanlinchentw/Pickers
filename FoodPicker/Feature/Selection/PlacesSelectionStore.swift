@@ -9,7 +9,11 @@
 import Foundation
 
 class PlacesSelectionStore: ObservableObject {
-	@Published var status: PlaceSelectionStatus = .draft([])
+	@Published var status: PlaceSelectionStatus = .draft([]) {
+		didSet {
+			print(status)
+		}
+	}
 
 	var selectedPlaces: [PlaceViewModel] {
 		switch status {
