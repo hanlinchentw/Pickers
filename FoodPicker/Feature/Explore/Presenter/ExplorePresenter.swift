@@ -23,9 +23,9 @@ protocol ExplorePresenting {
 final class ExplorePresenter: ExplorePresenting {
 	var viewModels: [PlaceViewModel] = []
 	var placeRepository: PlaceRepositoryProtocol
-	var placeSelectionRepository: PlaceSelectionRepositoryProtocol
+	var placeSelectionRepository: any PlaceSelectionRepositoryProtocol
 
-	init(placeRepository: PlaceRepositoryProtocol, placeSelectionRepository: PlaceSelectionRepositoryProtocol) {
+	init(placeRepository: PlaceRepositoryProtocol, placeSelectionRepository: any PlaceSelectionRepositoryProtocol) {
 		self.placeRepository = placeRepository
 		self.placeSelectionRepository = placeSelectionRepository
 	}
@@ -40,7 +40,11 @@ final class ExplorePresenter: ExplorePresenting {
 	}
 
 	func didSelectPlace(viewModel: PlaceViewModel) {
-		placeSelectionRepository.didChangeSelectionStatus(with: viewModel)
+		if placeSelectionRepository.isSelected(id: viewModel.id) {
+			placeSelectionRepository.removePlace(with: viewModel)
+		} else {
+			placeSelectionRepository.addPlace(with: viewModel)
+		}
 		exploreView?.didChangePlaceStatus()
 	}
 

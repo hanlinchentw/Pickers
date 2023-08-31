@@ -8,9 +8,10 @@
 
 import Foundation
 
-protocol PlaceSelectionRepositoryProtocol {
-	func didChangeSelectionStatus(with model: PlaceViewModel)
+protocol PlaceSelectionRepositoryProtocol: AnyObject {
 	func isSelected(id: String) -> Bool
+	func removePlace(with model: PlaceViewModel)
+	func addPlace(with model: PlaceViewModel)
 }
 
 final class PlaceSelectionRepository: PlaceSelectionRepositoryProtocol {
@@ -18,10 +19,6 @@ final class PlaceSelectionRepository: PlaceSelectionRepositoryProtocol {
 
 	init(selectionStore: PlacesSelectionStore) {
 		self.selectionStore = selectionStore
-	}
-
-	func didChangeSelectionStatus(with model: PlaceViewModel) {
-		isSelected(id: model.id) ? removePlace(with: model) : addPlace(with: model)
 	}
 
 	func removePlace(with model: PlaceViewModel) {
