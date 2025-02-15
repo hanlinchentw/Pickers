@@ -91,11 +91,11 @@ Also, Picker can save the user's favorite restaurant and the list of user picks.
 
 ### iOS Developer
 
-陳翰霖 Chen, Han-Lin - [Linkedin](https://www.linkedin.com/in/han-lin-chen-07b635200/) - s3876531@gmail.com
+陳翰霖 Chen, Han-Lin - [Linkedin](https://www.linkedin.com/in/han-lin-chen-07b635200/) - hanlin.chen.tw@gmail.com
 
-### UI/UX Designer
+### Product Designer
 
-侯凱馨 Hou, Kai-Hsin - [Linkedin](https://www.linkedin.com/in/caseyhou/) - 12326casey@gmail.com
+侯凱馨 Hou, Kai-Hsin - [Linkedin](https://www.linkedin.com/in/caseyhou/) - [Portfolio](https://www.caseyhou.com) - casey_hou@berkeley.edu
 
 <!-- ACKNOWLEDGEMENTS -->
 
