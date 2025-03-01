@@ -1,0 +1,49 @@
+name: Picker
+options:
+  minimumXcodeGenVersion: 2.10
+  usesTabs: true
+  indentWidth: 2
+  tabWidth: 2
+  bundleIdPrefix: com.hanlin.FoodPicker
+  developmentLanguage: en
+  preGenCommand: |
+                  FILE=Source/Resource/R.generated.swift
+                  if [ ! -f "$FILE" ]; then
+                    touch "$FILE"
+                    echo "Create R.swift because it not exist"
+                  fi
+  postGenCommand: pod install
+targets:
+  FoodPickerTests:
+    platform: iOS
+    type: bundle.unit-test
+    sources:
+      - FoodPickerTests
+  Picker:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources: [Source]
+    settings:
+      configs:
+        debug:
+          CUSTOM_BUILD_SETTING: my_debug_value
+        release:
+          CUSTOM_BUILD_SETTING: my_release_value
+    preBuildScripts:
+      - name: R.swift
+        script: |
+                "$PODS_ROOT/R.swift/rswift" generate "$SRCROOT/Source/Resource/R.generated.swift"
+        inputFiles:
+          - $TEMP_DIR/rswift-lastrun
+        outputFiles:
+          - $SRCROOT/Source/Resource/R.generated.swift
+      - name: SwiftFormat
+        script: |
+                "${PODS_ROOT}/SwiftFormat/CommandLineTool/swiftformat" "$SRCROOT"
+    postCompileScripts:
+      - script: |
+                if [ "${DEBUG_INFORMATION_FORMAT}" = "dwarf" ]; then
+                 "${PODS_ROOT}/SwiftLint/swiftlint"
+                fi
+        name: Swiftlint
