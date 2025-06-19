@@ -4,7 +4,7 @@ options:
   usesTabs: true
   indentWidth: 2
   tabWidth: 2
-  bundleIdPrefix: com.hanlin.FoodPicker
+  bundleIdPrefix: com.hanlin
   developmentLanguage: en
   preGenCommand: |
                   FILE=Source/Resource/R.generated.swift
@@ -13,23 +13,34 @@ options:
                     echo "Create R.swift because it not exist"
                   fi
   postGenCommand: pod install
+packages:
+  Defaults:
+    from: 8.0.0
+    url: "https://github.com/sindresorhus/Defaults.git"
+  URL:
+    from: 1.1.1
+    url: "https://github.com/davidsteppenbeck/URL.git"
+configs:
+  DEBUG: debug
+  RELEASE: release
 targets:
-  FoodPickerTests:
-    platform: iOS
-    type: bundle.unit-test
-    sources:
-      - FoodPickerTests
   Picker:
     type: application
     platform: iOS
     deploymentTarget: "18.0"
-    sources: [Source]
+    sources:
+      - name: Source
+        path: Source
+      - name: Configuration
+        path: Configuration
     settings:
-      configs:
-        debug:
-          CUSTOM_BUILD_SETTING: my_debug_value
-        release:
-          CUSTOM_BUILD_SETTING: my_release_value
+      VALIDATE_WORKSPACE: true
+    configFiles:
+        DEBUG: Configuration/DEBUG.xcconfig
+        RELEASE: Configuration/RELEASE.xcconfig
+    dependencies:
+      - package: Defaults
+      - package: URL
     preBuildScripts:
       - name: R.swift
         script: |
@@ -38,12 +49,30 @@ targets:
           - $TEMP_DIR/rswift-lastrun
         outputFiles:
           - $SRCROOT/Source/Resource/R.generated.swift
-      - name: SwiftFormat
-        script: |
-                "${PODS_ROOT}/SwiftFormat/CommandLineTool/swiftformat" "$SRCROOT"
+#      - name: SwiftFormat
+#       script: |
+#              "${PODS_ROOT}/SwiftFormat/CommandLineTool/swiftformat" "$SRCROOT"
     postCompileScripts:
       - script: |
                 if [ "${DEBUG_INFORMATION_FORMAT}" = "dwarf" ]; then
                  "${PODS_ROOT}/SwiftLint/swiftlint"
                 fi
         name: Swiftlint
+  FoodPickerTests:
+    platform: iOS
+    type: bundle.unit-test
+    sources:
+      - name: PickerTests
+        path: FoodPickerTests
+    dependencies:
+      - target: Picker
+schemes:
+  Picker:
+    build:
+      targets:
+        Picker: all
+    run:
+      config: DEBUG
+    test:
+      targets:
+        - FoodPickerTests

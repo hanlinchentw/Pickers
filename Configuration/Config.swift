@@ -7,11 +7,12 @@
 //
 
 import Foundation
+import URL
 
 // swiftlint:disable force_cast
 final class Configuration {
-  static var yelpBaseURL: String {
-    getBundleValueByKey("YELP_URL")
+	static var yelpBaseURL: URL {
+		#URL("https://api.yelp.com/v3")
   }
 
   static var googlePlaceApiBaseURL: String {
