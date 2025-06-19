@@ -24,6 +24,20 @@ extension View {
     }
   }
 
+	@ViewBuilder func `ifLet`<T, Content: View>(_ optional: T?, transform: (T, Self) -> Content, elsewhat: ((Self) -> Content)? = nil) -> some View {
+		if let optional {
+			withAnimation {
+				transform(optional, self)
+			}
+		} else if let elsewhat {
+			withAnimation {
+				elsewhat(self)
+			}
+		} else {
+			self
+		}
+	}
+
   func height(_ height: CGFloat) -> some View {
     frame(height: height)
   }
@@ -66,4 +80,13 @@ extension View {
       }
     }
   }
+}
+
+extension Image {
+	@ViewBuilder
+	func size(_ value: CGFloat) -> some View {
+		resizable()
+		.scaledToFit()
+		.frame(width: value, height: value)
+	}
 }
