@@ -17,29 +17,32 @@ final class YelpPlaceRequestBuilder {
     case radius(Int)
     case limit(Int)
     case offset(Int)
+		case locale(String)
 
-    var codingKey: [String: String] {
+    var codingKey: [String: Any] {
       switch self {
       case let .coordinate(lat, lon):
-        ["latitude": "\(lat)", "longitude": "\(lon)"]
+        ["latitude": lat, "longitude": lon]
       case let .limit(limit):
-        ["limit": "\(limit)"]
+        ["limit": limit]
       case let .location(location):
         ["location": location]
       case let .offset(offset):
-        ["offset": "\(offset)"]
+        ["offset": offset]
       case let .radius(radius):
-        ["radius": "\(radius)"]
+        ["radius": radius]
       case let .sortBy(sortBy):
-        ["sory_by": sortBy]
+        ["sort_by": sortBy]
       case let .term(term):
         ["term": term]
+			case let .locale(locale):
+				["locale": locale]
       }
     }
   }
 
   let endPoint: YelpPlaceRequest.EndPoint
-  var queryParameters = [String: String]()
+  var queryParameters = [String: Any]()
 
   init(endPoint: YelpPlaceRequest.EndPoint) {
     self.endPoint = endPoint
@@ -52,7 +55,7 @@ final class YelpPlaceRequestBuilder {
 
   func build() -> YelpPlaceRequest {
     var request = YelpPlaceRequest(endPoint: endPoint)
-    request.queryParameter = queryParameters
+    request.customQueryParameter = queryParameters
     return request
   }
 }

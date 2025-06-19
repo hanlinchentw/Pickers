@@ -23,6 +23,14 @@ final class DependencyContainer {
     container.register(RestClient.self) { resolver in
       RestClient(httpClient: resolver.resolve(HttpClient.self)!)
     }
+    container.register(PlaceRepository.self) { resolver in
+      PlaceRepositoryImpl(restClient: resolver.resolve(RestClient.self)!)
+    }
+		container.register(LocationManager.self) { resolver in
+			LocationManager()
+		}
+		.inObjectScope(.container)
+
     registerPlaceModelContainer()
   }
 

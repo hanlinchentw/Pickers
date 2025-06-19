@@ -7,37 +7,59 @@
 //
 
 import CoreLocation
+import Defaults
 import Observation
+import SwiftData
 import SwiftUI
 
 struct ExploreView: View {
-  @Environment(\.modelContext) var context
-  @Environment(LocationManager.self) var locationManager
-  @State var searchedText = ""
-  @State var browseMode: BrowseMode = .list
-  @State var priceRange: Double = 0
-  @State var isLoading = false
-  @State var sortOption: SortOption = .distance
-  @State var showFilterSheet = false
+  @Environment(\.modelContext)
+  private var context
+	@Environment(LocationManager.self)
+	private var locationManager
 
-  var userAddress: UserAddress?
-  var exploreModel: ExploreModel
-  var isLocationServiceEnabled: LocationEnabled {
-    locationManager.isLocationEnabled
-  }
+  @State private var searchedText = ""
+  @State private var browseMode: BrowseMode = .list
+  @State private var priceRange: Double = 0
+  @State private var isLoading = false
+  @State private var sortOption: SortOption = .distance
+  @State private var showFilterSheet = false
+	
+	@Query private var addresses: [UserAddress]
+	@AppStorage(Defaults.Keys.currentAddressId.name)
+	var currentAddressId: String?
+
+	@Bindable var exploreModel: ExploreModel
+
+	let onSelectPlace: (PlaceViewModel) -> Void
+
+	var currentAddress: UserAddress? {
+		if let address = addresses.first(where: {
+			$0.id == currentAddressId
+		}) {
+			return address
+		}
+		return addresses.first
+	}
 
   var body: some View {
     ZStack {
       Color.clear
-      if let location = userAddress?.location {
-        placeBrowserView(location: location, address: userAddress?.postalAddress)
-      } else if let location = locationManager.currLocation,
-                let address = UserAddress(cllocation: location) {
-        placeBrowserView(location: location.coordinate, address: address.postalAddress)
-      } else {
-        LocationNotFoundView(isLocationServiceEnabled: isLocationServiceEnabled)
-      }
+			let status = locationManager.getLocationAuthStatus()
+			if let address = currentAddress, let location = address.location {
+				placeBrowserView(
+					location: location,
+					address: address.postalAddress
+				)
+			} else if status == .disabled {
+				LocationNotFoundView()
+			} else {
+				ProgressView()
+			}
     }
+		.onAppear {
+			locationManager.askPermissionIfNeeded()
+		}
   }
 
   @ViewBuilder
@@ -47,24 +69,29 @@ struct ExploreView: View {
   ) -> some View {
     VStack {
       ExploreHeaderView(
-        address: address,
+				address: address,
+				location: location,
         browseMode: $browseMode,
         searchText: $searchedText,
-        onClickFilterButton: onClickFilterButton
+        onClickFilterButton: onClickFilterButton,
+				onPressAddress: {
+					Task {
+						await exploreModel.fetch(location: location)
+					}
+				}
       )
 
       ZStack {
         ExploreMapView().if(browseMode != .map) { $0.opacity(0) }
         ExploreMainScrollView(
+					currentLocation: location,
           viewModels: exploreModel.viewModels,
           isLoading: isLoading,
-          onClickHeart: { exploreModel.onClickLikeButton($0) },
-          onClickSelect: { exploreModel.onClickSelectButton(viewModel: $0) },
+					hasMoreToLoad: exploreModel.hasMoreToLoad,
+          onClickHeart: exploreModel.onClickLikeButton,
+					onClickSelect: onSelectPlace,
           loadMoreIfNeeded: {
             await exploreModel.fetchMore(location: location)
-          },
-          shouldLoadMore: { index in
-            exploreModel.hasMoreToLoad && exploreModel.reachEnd(index: index)
           },
           refresh: {
             await exploreModel.fetch(location: location)
@@ -75,11 +102,7 @@ struct ExploreView: View {
       }
     }
     .task {
-      isLoading = true
-      if exploreModel.viewModels.isEmpty {
-        await exploreModel.fetch(location: location)
-      }
-      isLoading = false
+			await exploreModel.fetch(location: location)
     }
     .sheet(isPresented: $showFilterSheet) {
       Text("Filter")
@@ -95,28 +118,22 @@ extension PlaceViewModel: Identifiable {}
 
 #if DEBUG
 struct ExploreView_Previews: PreviewProvider {
-  static let container = DependencyContainer.shared.getPreviewPlaceModelContainer().modelContainer
   static var previews: some View {
     ExploreView(
-      userAddress: .init(
-        latitude: 0,
-        longitude: 0,
-        postalAddress: "中山北路, 43 號"
-      ),
-      exploreModel: .init()
-    )
-    .modelContainer(container)
+			exploreModel: .init(placeRepository: PlaceRepositoryPreview())
+		) { _ in }
+    .dummySwiftDataModelContainer()
+		.environment(LocationManager())
   }
 }
 
 struct ExploreViewLocationNotFoundPreviews: PreviewProvider {
-  static let container = DependencyContainer.shared.getPreviewPlaceModelContainer().modelContainer
   static var previews: some View {
     ExploreView(
-      userAddress: .init(),
-      exploreModel: .init()
-    )
-    .modelContainer(container)
+			exploreModel: .init(placeRepository: PlaceRepositoryPreview())
+		) { _ in }
+    .dummySwiftDataModelContainer()
+		.environment(LocationManager())
   }
 }
 
@@ -142,9 +159,10 @@ struct PlaceRepositoryPreview: PlaceRepository {
       imageUrl: Constants.defaultImageURL,
       distance: 125,
       isClosed: false,
-      categories: ["Food"],
+			categories: [.init(title: "Food")],
       reviewCount: 12555,
-      coordinates: .init(latitude: 23.5, longitude: 123.2)
+      coordinates: .init(latitude: 23.5, longitude: 123.2),
+			location: Location(displayAddress: ["EmeryVile"])
     )
   }
 }

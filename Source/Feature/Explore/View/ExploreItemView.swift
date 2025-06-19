@@ -12,13 +12,14 @@ import SwiftUI
 
 struct ExploreItemView: View {
   var viewModel: PlaceViewModel
+	var distance: Distance
   var onClickHeart: () -> Void
   var onClickSelect: () -> Void
 
   var body: some View {
     HStack {
       HStack {
-        KFImage(URL(string: viewModel.imageUrl ?? ""))
+        KFImage(viewModel.imageUrl)
           .placeholder { _ in
             Color.gray4
           }
@@ -66,9 +67,9 @@ struct ExploreItemView: View {
     if let reviewCount = viewModel.reviewCount {
       str += " (\(String(reviewCount))+)"
     }
-    if let distance = viewModel.distance?.description {
-      str = str.isEmpty ? distance : str + " \u{00B7} " + distance
-    }
+		let distance = distance.description
+		str = str.isEmpty ? distance : str + " \u{00B7} " + distance
+
     if let price = viewModel.price {
       str += " \u{00B7} " + price
     }
@@ -77,8 +78,25 @@ struct ExploreItemView: View {
 }
 
 #Preview {
+	var dummyBusiness: Business {
+		.init(
+			id: UUID().uuidString,
+			name: "Apple",
+			rating: 5.0,
+			price: "$$$",
+			imageUrl: Constants.defaultImageURL,
+			distance: 125,
+			isClosed: false,
+			categories: [.init(title: "Food")],
+			reviewCount: 12555,
+			coordinates: .init(latitude: 23.5, longitude: 123.2),
+			location: Location(displayAddress: ["EmeryVile"])
+		)
+	}
+
   ExploreItemView(
-    viewModel: .dummy,
+		viewModel: .init(business: dummyBusiness),
+		distance: .meter(500),
     onClickHeart: {
       print("onClickHeart")
     },

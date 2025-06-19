@@ -11,7 +11,7 @@ import Foundation
 import Observation
 import SwiftData
 
-@Observable
+@Model
 final class UserAddress {
   var id: String
 
@@ -48,6 +48,13 @@ extension UserAddress {
       postalAddress: sdAddress.postalAddress
     )
   }
+
+	convenience init(location: CLLocation) {
+		self.init(
+			latitude: location.coordinate.latitude,
+			longitude: location.coordinate.longitude
+		)
+	}
 }
 
 extension UserAddress {

@@ -9,14 +9,8 @@
 import SwiftUI
 
 struct LocationNotFoundView: View {
-  var isLocationServiceEnabled: LocationEnabled
-
   var body: some View {
-    if isLocationServiceEnabled == .enabled {
-      needRefreshLocationView
-    } else {
-      needTurnOnLocationServiceView
-    }
+		needTurnOnLocationServiceView
   }
 
   var needTurnOnLocationServiceView: some View {
@@ -33,31 +27,8 @@ struct LocationNotFoundView: View {
       .buttonStyle(.plain)
     }
   }
-
-  var needRefreshLocationView: some View {
-    VStack {
-      Image("illustrationLocation")
-      Button(
-        action: {
-        }, label: {
-          Text("Refresh current location")
-            .bold(size: 18)
-            .foregroundStyle(Color.butterScotch)
-        }
-      )
-      .buttonStyle(.plain)
-    }
-  }
 }
 
 #Preview {
-  LocationNotFoundView(isLocationServiceEnabled: .idle)
-}
-
-#Preview {
-  LocationNotFoundView(isLocationServiceEnabled: .enabled)
-}
-
-#Preview {
-  LocationNotFoundView(isLocationServiceEnabled: .disabled)
+  LocationNotFoundView()
 }

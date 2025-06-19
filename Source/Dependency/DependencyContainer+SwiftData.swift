@@ -46,10 +46,6 @@ extension DependencyContainer {
     }
 
     for _ in 1..<12 {
-      try! container.insert(SDFolder.dummy)
-    }
-
-    for _ in 1..<12 {
       try! container.insert(SDListModel.dummy)
     }
 

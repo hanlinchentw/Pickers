@@ -26,14 +26,15 @@ final class ApplePlaceRepository: PlaceRepository {
   }
 
   func fetch(config: PlaceSearchConfig) async throws -> [Business] {
-    let categories = config.categories.map { MKPointOfInterestCategory(rawValue: $0.rawValue) }
-    let mapItems = try await searchPlaces(
-      location: config.location,
-      radius: config.radius,
-      keyword: config.keyword,
-      categories: categories
-    )
-    return mapItems.map { Business(from: $0) }
+//    let categories = config.categories.map { MKPointOfInterestCategory(rawValue: $0.rawValue) }
+//    let mapItems = try await searchPlaces(
+//      location: config.location,
+//      radius: config.radius,
+//      keyword: config.keyword,
+//      categories: categories
+//    )
+//    return mapItems.map { Business(from: $0) }
+		return []
   }
 
   func fetchMore(config: PlaceSearchConfig) async throws -> [Business] {
@@ -56,8 +57,6 @@ private extension ApplePlaceRepository {
 
     if let location {
       request.region = MKCoordinateRegion(center: location, latitudinalMeters: radius, longitudinalMeters: radius)
-    } else if let userLocation = locationManager.currLocation?.coordinate {
-      request.region = MKCoordinateRegion(center: userLocation, latitudinalMeters: radius, longitudinalMeters: radius)
     }
 
     if let categories {

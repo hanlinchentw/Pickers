@@ -42,7 +42,7 @@ struct TabBarView: View {
       } image: {
         makeItemImage(R.image.list.name)
       } selectedImage: {
-        makeItemImage(R.image.listFilled.name)
+				makeItemImage(R.image.listHeartFilled.name)
       }
 
       Spacer().frame(width: 36)

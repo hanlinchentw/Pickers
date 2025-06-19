@@ -6,35 +6,45 @@
 //  Copyright © 2024 陳翰霖. All rights reserved.
 //
 
+import CoreLocation
 import SwiftUI
 
 struct ExploreHeaderView: View {
   var address: String?
+	let location: CLLocationCoordinate2D
+
   @Binding var browseMode: BrowseMode
   @Binding var searchText: String
+
   var onClickFilterButton: () -> Void
+	let onPressAddress: () -> Void
+
+	var displayedLocation: String {
+		guard let address else {
+			return "\(location.latitude), \(location.longitude)"
+		}
+		return address
+	}
 
   var body: some View {
     VStack {
-      if let address {
-        HStack {
-          addressView(address: address)
-          Spacer()
-          Button {
-            withAnimation {
-              browseMode = browseMode.toggle()
-            }
-          } label: {
-            Image(browseMode == .map ? "search" : "map")
-              .resizable()
-              .scaledToFit()
-              .frame(width: 28, height: 28)
-              .tint(.butterScotch)
-          }
-          .buttonStyle(.plain)
-        }
-        .padding(.horizontal, 20)
-      }
+			HStack {
+				addressView(displayedLocation)
+				Spacer()
+				Button {
+					withAnimation {
+						browseMode = browseMode.toggle()
+					}
+				} label: {
+					Image(browseMode == .map ? "search" : "map_color")
+						.resizable()
+						.scaledToFit()
+						.frame(width: 28, height: 28)
+						.tint(.butterScotch)
+				}
+				.buttonStyle(.plain)
+			}
+			.padding(.horizontal, 20)
       searchBar.padding(.horizontal, 16)
     }
   }
@@ -70,28 +80,27 @@ struct ExploreHeaderView: View {
   }
 
   @ViewBuilder
-  func addressView(address: String) -> some View {
-    HStack {
-      VStack(alignment: .leading, spacing: 6) {
-        Text("Current At:")
-          .semibold(size: 13)
-        HStack {
-          Text(address)
-            .bold(size: 15)
-          Button(
-            action: {
-            }, label: {
-              Image(systemName: "chevron.down")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 12)
-            }
-          )
-          .buttonStyle(.plain)
-        }
-      }
-      Spacer()
-    }
+  func addressView(_ displayedLocation: String) -> some View {
+		Button {
+			onPressAddress()
+		} label: {
+			HStack {
+				VStack(alignment: .leading, spacing: 6) {
+					Text("Current At:")
+						.semibold(size: 13)
+					HStack {
+						Text(displayedLocation)
+							.bold(size: 15)
+						Image(systemName: "chevron.down")
+							.resizable()
+							.aspectRatio(contentMode: .fit)
+							.frame(width: 12)
+					}
+				}
+				Spacer()
+			}
+		}
+		.buttonStyle(.plain)
   }
 }
 
@@ -100,9 +109,11 @@ struct ExploreHeaderView: View {
     Color.clear
     ExploreHeaderView(
       address: "中山北路, 43 號",
+			location: CLLocationCoordinate2D(latitude: 23.5, longitude: 121.5),
       browseMode: .constant(.list),
       searchText: .constant(String()),
-      onClickFilterButton: {}
+      onClickFilterButton: {},
+			onPressAddress: {}
     )
   }
 }

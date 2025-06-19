@@ -8,6 +8,7 @@
 
 import APIKit
 import Foundation
+import URL
 
 struct YelpPlaceRequest: Request {
   enum EndPoint {
@@ -16,18 +17,23 @@ struct YelpPlaceRequest: Request {
   }
 
   let endPoint: EndPoint
-  var queryParameter: [String: String] = [:]
+
+	var customQueryParameter: [String: Any] = [:]
+
+	var queryParameters: [String: Any]? {
+		customQueryParameter
+	}
 
   var baseURL: URL {
-    URL(string: Configuration.yelpBaseURL)!
+		Configuration.yelpBaseURL
   }
 
   var path: String {
     switch endPoint {
     case .search:
-      "/v3/businesses/search"
+      "/businesses/search"
     case let .detail(id):
-      "/v3/businesses/\(id)"
+      "/businesses/\(id)"
     }
   }
 
@@ -35,12 +41,9 @@ struct YelpPlaceRequest: Request {
     .get
   }
 
-  var httpHeaders: [String: String] {
-    [
-      "accept": "application/json",
-      "Authorization": "Bearer \(Configuration.yelpApiKey)"
-    ]
-  }
+	var headerFields: [String: String] {
+		["Authorization": "Bearer \(Configuration.yelpApiKey)"]
+	}
 
   var timeout: TimeInterval? {
     5

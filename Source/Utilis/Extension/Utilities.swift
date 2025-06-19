@@ -14,3 +14,7 @@ func with<T>(_ item: T, update: (inout T) -> Void) -> T {
   update(&this)
   return this
 }
+
+extension Optional {
+  var isNil: Bool { self == nil }
+}

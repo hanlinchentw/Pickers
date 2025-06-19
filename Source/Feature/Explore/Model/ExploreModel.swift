@@ -14,12 +14,15 @@ import SwiftUI
 
 @Observable
 class ExploreModel {
-  var placeRepositories: [PlaceRepository] = []
-  var selectStore: PlacesSelectionStore?
+  let placeRepository: PlaceRepository
 
   private(set) var viewModels = [PlaceViewModel]()
 
   var searchRange = Distance.kilometer(5)
+
+	init(placeRepository: PlaceRepository = DependencyContainer.shared.getService()) {
+		self.placeRepository = placeRepository
+	}
 
   var searchRangeBinding: Binding<Double> {
     Binding {
@@ -33,93 +36,52 @@ class ExploreModel {
     }
   }
 
-  func setupRepos(placeRepositories: [PlaceRepository], selectStore: PlacesSelectionStore?) {
-    self.placeRepositories = placeRepositories
-    self.selectStore = selectStore
-  }
-
-  func reachEnd(index: Int) -> Bool {
-    viewModels.endIndex == index + 1
-  }
-
   var hasMoreToLoad: Bool {
-    placeRepositories.contains(where: \.hasMoreToLoad)
+    placeRepository.hasMoreToLoad
   }
 
-  func fetch(location: CLLocationCoordinate2D?) async {
-    guard let location,
-          !placeRepositories.isEmpty, !placeRepositories.contains(where: \.isLoading) else { return }
-    var viewModels = [PlaceViewModel]()
-    for placeRepository in placeRepositories {
-      do {
-        let result = try await placeRepository.fetch(
-          config: PlaceSearchConfig(
-            location: location,
-            keyword: "",
-            categories: SearchCategory.all,
-            radius: searchRange.value
-          )
+  func fetch(location: CLLocationCoordinate2D) async {
+    guard !placeRepository.isLoading else { return }
+    do {
+      let result = try await placeRepository.fetch(
+        config: PlaceSearchConfig(
+          location: location,
+          keyword: "",
+          categories: SearchCategory.all,
+          radius: searchRange.value
         )
-        viewModels += result.map {
-          PlaceViewModel(
-            id: $0.id,
-            name: $0.name,
-            price: $0.price,
-            rating: $0.rating,
-            reviewCount: $0.reviewCount,
-            category: $0.categories[safe: 0],
-            imageUrl: $0.imageUrl,
-            latitude: $0.coordinates.latitude,
-            longitude: $0.coordinates.longitude,
-            isClosed: $0.isClosed ?? false,
-            distance: distance(from: $0, to: location),
-            isSelected: isSelected($0),
-            isLiked: isLiked($0)
-          )
-        }
-      } catch {
-        print(error.localizedDescription)
-      }
+      )
+			print(">>> DEBUG: Explore fetch \(result.map { $0.name })")
+			Task { @MainActor in
+				viewModels = result.map {
+					PlaceViewModel(business: $0)
+				}
+			}
+    } catch {
+      print(error.localizedDescription)
     }
-    self.viewModels = viewModels.sorted(by: { $0.distance ?? .meter(0) < $1.distance ?? .meter(0) })
   }
 
-  func fetchMore(location: CLLocationCoordinate2D?) async {
-    guard let location,
-          !placeRepositories.isEmpty, !placeRepositories.contains(where: \.isLoading) else { return }
-    var viewModels = [PlaceViewModel]()
-    for placeRepository in placeRepositories {
-      do {
-        let result = try await placeRepository.fetch(
-          config: PlaceSearchConfig(
-            location: location,
-            keyword: "food",
-            categories: [],
-            radius: 5000
-          )
+  func fetchMore(location: CLLocationCoordinate2D) async {
+    guard !placeRepository.isLoading else { return }
+    do {
+			let result = try await placeRepository.fetchMore(
+        config: PlaceSearchConfig(
+          location: location,
+          keyword: "food",
+          categories: [],
+          radius: 5000
         )
-        viewModels += result.map { place in
-          PlaceViewModel(
-            id: place.id,
-            name: place.name,
-            price: place.price,
-            rating: place.rating,
-            reviewCount: place.reviewCount,
-            category: place.categories[safe: 0],
-            imageUrl: place.imageUrl,
-            latitude: place.coordinates.latitude,
-            longitude: place.coordinates.longitude,
-            isClosed: place.isClosed ?? false,
-            distance: distance(from: place, to: location),
-            isSelected: isSelected(place),
-            isLiked: isLiked(place)
-          )
-        }
-      } catch {
-        print(error.localizedDescription)
-      }
+      )
+			print(">>> DEBUG: Explore fetchMore \(result.map { $0.name })")
+			Task { @MainActor in
+				viewModels += result.map {
+					PlaceViewModel(business: $0)
+				}
+			}
+    } catch {
+      print(error.localizedDescription)
     }
-    self.viewModels += viewModels.sorted(by: { $0.distance ?? .meter(0) < $1.distance ?? .meter(0) })
   }
 
   func onClickLikeButton(_ viewModel: PlaceViewModel) {
@@ -140,27 +102,16 @@ class ExploreModel {
     }
   }
 
-  func onClickSelectButton(viewModel: PlaceViewModel) {
-    selectStore?.onClickSelectButton(viewModel: viewModel)
-
-    if let firstIndex = viewModels.firstIndex(of: viewModel) {
-      viewModels[firstIndex].isSelected.toggle()
-    }
-  }
-
   func isLiked(_ business: Business) -> Bool {
     let container: PlaceModelContainer = DependencyContainer.shared.getService()
     let context = ModelContext(container.modelContainer)
+		let id = business.id
     let predicate = #Predicate<SDPlaceModel> {
-      $0.id == business.id && $0.isLiked
+      $0.id == id && $0.isLiked
     }
     let fetchDescript = FetchDescriptor(predicate: predicate)
     let rowCount = try? context.fetchCount(fetchDescript)
     return rowCount != 0
-  }
-
-  func isSelected(_ business: Business) -> Bool {
-    selectStore?.isSelected(id: business.id) ?? false
   }
 
   func distance(
@@ -188,7 +139,7 @@ class ExploreModel {
       name: viewModel.name,
       rating: viewModel.rating,
       price: viewModel.price,
-      imageUrl: viewModel.imageUrl,
+			imageUrl: viewModel.imageUrl?.absoluteString,
       category: viewModel.category,
       reviewCount: viewModel.reviewCount ?? 0,
       latitude: viewModel.latitude,

@@ -8,26 +8,27 @@
 
 import UIKit
 
-final class WheelViewController: UIViewController {
-  var presenter: WheelPresenter
+struct WheelConfiguration {
+  let buttonEnable: Bool
+  let diameter: CGFloat
+}
 
-  private var listMenuView: UIView = {
-    let view = UIView()
-    view.layer.cornerRadius = 16
-    return view
-  }()
+final class WheelViewController: UIViewController {
+  var wheelItems: [WheelItem]
+  let configuration: WheelConfiguration
 
   private lazy var wheel: Wheel = {
-    let wheel = Wheel(radius: 330 / 2)
+    let wheel = Wheel(radius: configuration.diameter / 2)
     wheel.animateLanding = false
-    wheel.delegate = presenter
-    wheel.dataSource = presenter
-    wheel.setDimension(width: 330, height: 330)
+    wheel.delegate = self
+    wheel.dataSource = self
+    wheel.setDimension(width: configuration.diameter, height: configuration.diameter)
     return wheel
   }()
 
   private lazy var actionButton: UIButton = {
     let button = UIButton()
+    button.isEnabled = configuration.buttonEnable
     var configuration = UIButton.Configuration.plain()
     configuration.image = UIImage(named: R.image.btnSpin.name)?.withRenderingMode(.alwaysOriginal)
     button.configuration = configuration
@@ -35,22 +36,20 @@ final class WheelViewController: UIViewController {
     return button
   }()
 
-  private lazy var selectionListView = WheelSelectionListView(delegate: presenter)
-
-  init(presenter: WheelPresenter) {
-    self.presenter = presenter
+  init(wheelItems: [WheelItem], configuration: WheelConfiguration) {
+    self.wheelItems = wheelItems
+    self.configuration = configuration
     super.init(nibName: nil, bundle: nil)
   }
 
   @available(*, unavailable)
-  required init?(coder _: NSCoder) {
+  required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
     setupWheelUI()
-    presenter.onViewDidLoad()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -76,9 +75,8 @@ extension WheelViewController {
 }
 
 extension WheelViewController: WheelView {
-  func refreshView() {
-    presenter.refreshWheel()
+  func refreshView(with data: [WheelItem]) {
+		wheelItems = data
     wheel.reloadData()
-    selectionListView.refresh()
   }
 }

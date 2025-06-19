@@ -5,14 +5,16 @@
 //  Created by 陳翰霖 on 2025/3/1.
 //
 
+import SwiftData
 import SwiftUI
 
 @main
 struct PickerApp: App {
-  @UIApplicationDelegateAdaptor(AppDelegate.self)
-	var appDelegate
-
   var containerWrapper: PlaceModelContainer { DependencyContainer.shared.getService() }
+
+  init() {
+    DependencyContainer.shared.registerAllComponents()
+  }
 
   var body: some Scene {
     WindowGroup {

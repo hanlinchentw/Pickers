@@ -11,50 +11,48 @@ import Foundation
 final class PlaceRepositoryImpl: PlaceRepository {
   let restClient: RestClient
 
+	private let limit = 50
   private(set) var currentPage = 0
-  private(set) var hasMoreToLoad = true
+	private(set) var hasMoreToLoad = false
   private(set) var isLoading = false
 
   init(restClient: RestClient) {
     self.restClient = restClient
   }
 
-  func fetch(config: PlaceSearchConfig) async throws -> [Business] {
-    let location = config.location
-    isLoading = true
-    defer { isLoading = false }
+	var baseRequest: YelpPlaceRequestBuilder {
+		let language = Locale.current.language
+		let code = language.languageCode == "zh" ? "zh_TW" : "en_US"
+		return YelpPlaceRequestBuilder(endPoint: .search)
+			.addQuery(.limit(limit))
+			.addQuery(.offset(currentPage))
+			.addQuery(.locale(code))
+	}
 
-    let lat = location.latitude
-    let lon = location.longitude
-    let request = YelpPlaceRequestBuilder(endPoint: .search)
-      .addQuery(.coordinate(lat, lon))
-      .addQuery(.limit(20))
-      .addQuery(.offset(0))
-      .addQuery(.term("food"))
-      .build()
-    let task: Task<Root, Error> = Task { try await restClient.execute(request) }
-    let result: Root = try await task.value
-    hasMoreToLoad = result.businesses.count == 20
-    return result.businesses
+	func fetch(config: PlaceSearchConfig) async throws -> [Business] {
+		currentPage = 0
+		return try await getBusinesses(config: config)
   }
 
   func fetchMore(config: PlaceSearchConfig) async throws -> [Business] {
-    let location = config.location
-    isLoading = true
-    defer { isLoading = false }
-
-    let lat = location.latitude
-    let lon = location.longitude
-    currentPage += 1
-    let request = YelpPlaceRequestBuilder(endPoint: .search)
-      .addQuery(.coordinate(lat, lon))
-      .addQuery(.limit(20))
-      .addQuery(.offset(currentPage))
-      .addQuery(.term("food"))
-      .build()
-    let task: Task<Root, Error> = Task { try await restClient.execute(request) }
-    let result: Root = try await task.value
-    hasMoreToLoad = result.businesses.count == 20
-    return result.businesses
+		currentPage += 1
+		return try await getBusinesses(config: config)
   }
+
+	private func getBusinesses(config: PlaceSearchConfig) async throws -> [Business] {
+		let location = config.location
+		isLoading = true
+		defer { isLoading = false }
+
+		let lat = location.latitude
+		let lon = location.longitude
+		let request = baseRequest
+			.addQuery(.coordinate(lat, lon))
+			.build()
+
+		let result: Root = try await restClient.execute(request)
+		let totalCount = result.total
+		hasMoreToLoad = totalCount >= ((currentPage + 1) * limit)
+		return result.businesses
+	}
 }

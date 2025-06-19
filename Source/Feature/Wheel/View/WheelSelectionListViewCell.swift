@@ -33,9 +33,9 @@ final class WheelSelectionListViewCell: UITableViewCell, Reusable {
 
 extension WheelSelectionListViewCell {
   func configure(viewModel: PlaceViewModel) {
-    if let urlString = viewModel.imageUrl, let url = URL(string: urlString) {
-      thumbnailView.kf.setImage(with: url)
-    }
+//    if let urlString = viewModel.imageUrl, let url = URL(string: urlString) {
+//      thumbnailView.kf.setImage(with: url)
+//    }
     label.text = viewModel.name
   }
 }

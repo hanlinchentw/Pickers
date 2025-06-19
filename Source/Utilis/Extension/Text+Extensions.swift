@@ -29,6 +29,10 @@ extension Text {
     font(Font.custom("Avenir", fixedSize: 18))
   }
 
+	func en16Medium() -> Text {
+		font(Font.custom("AvenirNext-Medium", fixedSize: 16))
+	}
+
   func en18Medium() -> Text {
     font(Font.custom("AvenirNext-Medium", fixedSize: 18))
   }

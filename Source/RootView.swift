@@ -16,9 +16,14 @@ struct RootView: View {
   @State private var locationManager = LocationManager()
   @State private var exploreModel = ExploreModel()
   @State private var navigator = RootNavigator()
-  @Query private var userAddresses: [SDUserAddress]
+	@State private var isExploringMode = false
 
-  @State private var isExploringMode = false
+	@State private var currentPocket: Pocket?
+
+	@State private var animated3d = false
+	@State private var scale = 1.0
+	@State private var rotation = 0.0
+	@State private var offset = CGSize.zero
 
   @Environment(\.modelContext) var context
 
@@ -27,51 +32,56 @@ struct RootView: View {
   }
 
   var body: some View {
-    NavigationStack(path: $navigator.path) {
-      WheelSwiftUIView {
-        withAnimation(.easeInOut(duration: 0.5)) {
-          isExploringMode = true
-        }
-      }
-      .fullScreenCover(isPresented: $isExploringMode, content: {
-        ExploreView(
-          userAddress: UserAddress(sdAddress: userAddresses[safe: 0]),
-          exploreModel: exploreModel
-        )
-        .modelContainer(context.container)
-        .if(!selectStore.selectedPlaces.isEmpty) {
-          $0
-            .overlay {
-              VStack {
-                Spacer()
-                ZStack {
-                  Color.white
-                  Text("Hello")
-                }
-                .frame(height: 72)
-              }
-              .ignoresSafeArea()
-            }
-        }
-      })
+    ZStack {
+			if isExploringMode {
+				ExploreView(exploreModel: exploreModel) { place in
+				}
+				.rotation3DEffect(
+					.degrees(180),
+					axis: (x: 0, y: 1, z: 0)
+				)
+				.modelContainer(context.container)
+				.environment(locationManager)
+			} else {
+				PocketWheelContainerView(currentPocket: $currentPocket) {
+					flipCard()
+				}
+				.modelContainer(context.container)
+			}
     }
+		.rotation3DEffect(
+			.degrees(animated3d ? 180 : 0),
+			axis: (x: 0, y: 1, z: 0)
+		)
+		.rotationEffect(.degrees(rotation))
+		.scaleEffect(scale)
+		.animation(.spring(), value: animated3d)
     .environment(selectStore)
     .environment(locationManager)
     .navigationBarHidden(true)
-    .onAppear {
-      locationManager.updateStatus()
-      exploreModel.setupRepos(
-        placeRepositories: [ApplePlaceRepository(locationManager: locationManager)],
-        selectStore: selectStore
-      )
-    }
   }
+
+	private func flipCard() {
+		let flipped = isExploringMode
+		withAnimation(.easeInOut(duration: 2)) {
+			scale = 0.9
+			rotation = flipped ? -15 : 15
+			Task {
+				try? await Task.sleep(for: .seconds(0.1))
+				animated3d.toggle()
+				isExploringMode.toggle()
+				try? await Task.sleep(for: .seconds(0.3))
+				withAnimation(.spring(duration: 1)) {
+					scale = 1
+					rotation = 0
+				}
+			}
+		}
+	}
 }
 
 #Preview {
-  RootView(
-    exploreModel: .init()
-  )
+  RootView(exploreModel: .init())
   .modelContainer(
     DependencyContainer.shared.getPreviewPlaceModelContainer().modelContainer
   )

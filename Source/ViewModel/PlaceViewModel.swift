@@ -8,53 +8,57 @@
 
 import CoreLocation
 import Foundation
+import SwiftData
 
-@Observable
-class PlaceViewModel {
+final class PlaceViewModel {
   var id: String
   var name: String
   var price: String?
   var rating: Double?
   var reviewCount: Int?
   var category: String?
-  var imageUrl: String?
+	var imageUrl: URL?
   var latitude: Double
   var longitude: Double
-  var isClosed: Bool?
+	var postalAddress: String?
 
-  var distance: Distance?
-  var isSelected: Bool
-  var isLiked: Bool
+	var isClosed = false
 
-  init(
-    id: String,
-    name: String,
-    price: String? = nil,
-    rating: Double? = nil,
-    reviewCount: Int? = nil,
-    category: String? = nil,
-    imageUrl: String? = nil,
-    latitude: Double,
-    longitude: Double,
-    isClosed: Bool? = nil,
-    distance: Distance? = nil,
-    isSelected: Bool,
-    isLiked: Bool
-  ) {
-    self.id = id
-    self.name = name
-    self.price = price
-    self.rating = rating
-    self.reviewCount = reviewCount
-    self.category = category
-    self.imageUrl = imageUrl
-    self.latitude = latitude
-    self.longitude = longitude
-    self.isClosed = isClosed
-    self.distance = distance
-    self.isSelected = isSelected
-    self.isLiked = isLiked
-  }
+  var isSelected = false
+  var isLiked = false
+
+	init(business: Business) {
+		self.id = business.id
+		self.name = business.name
+		self.price = business.price
+		self.rating = business.rating
+		self.reviewCount = business.reviewCount
+		self.category = business.categories[safe: 0]?.title
+		self.imageUrl =
+			if let imageUrl = business.imageUrl {
+				URL(string: imageUrl)
+			} else {
+				nil
+			}
+		self.latitude = business.coordinates.latitude
+		self.longitude = business.coordinates.longitude
+		self.isClosed = business.isClosed ?? false
+	}
+
+	func distance(to location: CLLocationCoordinate2D) -> Distance {
+		return Distance.meter(
+			CLLocation(
+				latitude: latitude,
+				longitude: longitude
+			)
+			.distance(
+				from: CLLocation(
+					latitude: location.latitude,
+					longitude: location.longitude
+				)
+			)
+		)
+	}
 }
 
 extension PlaceViewModel: Equatable {
@@ -63,22 +67,22 @@ extension PlaceViewModel: Equatable {
   }
 }
 
-extension PlaceViewModel {
-  static var dummy: PlaceViewModel {
-    PlaceViewModel(
-      id: "123",
-      name: "McDonald's",
-      price: "$$$",
-      rating: 5.0,
-      reviewCount: 125,
-      category: "food",
-      imageUrl: Constants.defaultImageURL,
-      latitude: 23.5,
-      longitude: 123.1,
-      isClosed: false,
-      distance: Distance.meter(123),
-      isSelected: false,
-      isLiked: false
-    )
-  }
-}
+//extension PlaceViewModel {
+//  static var dummy: PlaceViewModel {
+//    PlaceViewModel(
+//      id: "123",
+//      name: "McDonald's",
+//      price: "$$$",
+//      rating: 5.0,
+//      reviewCount: 125,
+//      category: "food",
+//      imageUrl: Constants.defaultImageURL,
+//      latitude: 23.5,
+//      longitude: 123.1,
+//      isClosed: false,
+//      distance: Distance.meter(123),
+//      isSelected: false,
+//      isLiked: false
+//    )
+//  }
+//}

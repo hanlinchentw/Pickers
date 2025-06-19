@@ -16,14 +16,15 @@ final class PlaceModelContainer {
     let storeURL = URL.documentsDirectory.appending(path: "pickers.sqlite")
     let config = ModelConfiguration(url: storeURL)
     self.modelContainer = try ModelContainer(
-      for: SDPlaceModel.self, SDUserAddress.self, SDFolder.self, SDListModel.self,
+      for: SDPlaceModel.self, UserAddress.self, SDListModel.self, PocketVO.self,
       configurations: config
     )
+		print("DEBUG: DB URL=\(config.url)")
   }
 
   init(configurations: ModelConfiguration) throws {
     self.modelContainer = try ModelContainer(
-      for: SDPlaceModel.self, SDUserAddress.self, SDFolder.self, SDListModel.self,
+      for: SDPlaceModel.self, UserAddress.self, SDListModel.self, PocketVO.self,
       configurations: configurations
     )
   }
@@ -45,4 +46,8 @@ final class PlaceModelContainer {
   func fetchCount<T: PersistentModel>(_ type: T.Type, descriptor: FetchDescriptor<T>) throws -> Int {
     try context().fetchCount(descriptor)
   }
+
+	func remove(_ model: some PersistentModel) {
+		context().delete(model)
+	}
 }

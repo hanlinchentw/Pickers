@@ -6,69 +6,64 @@
 //  Copyright © 2024 陳翰霖. All rights reserved.
 //
 
+import CoreLocation
 import SwiftUI
 
 struct ExploreMainScrollView: View {
-  var viewModels: [PlaceViewModel]
-  var isLoading: Bool
-  var onClickHeart: (PlaceViewModel) -> Void
-  var onClickSelect: (PlaceViewModel) -> Void
-  var loadMoreIfNeeded: @Sendable () async -> Void
-  var shouldLoadMore: (Int) -> Bool
-  var refresh: @Sendable () async -> Void
+	let currentLocation: CLLocationCoordinate2D
+	var viewModels: [PlaceViewModel]
+	var isLoading: Bool
+	var hasMoreToLoad: Bool
+	var onClickHeart: (PlaceViewModel) -> Void
+	var onClickSelect: (PlaceViewModel) -> Void
+	var loadMoreIfNeeded: @Sendable () async -> Void
+	var refresh: @Sendable () async -> Void
 }
 
 extension ExploreMainScrollView {
-  var body: some View {
-    VStack(alignment: .leading) {
-      List {
-        ForEach(viewModels.indices, id: \.self) { index in
-          VStack {
-            ExploreItemView(
-              viewModel: viewModels[index],
-              onClickHeart: {
-                onClickHeart(viewModels[index])
-              },
-              onClickSelect: {
-                onClickSelect(viewModels[index])
-              }
-            )
-            .padding(.vertical)
-            if shouldLoadMore(index) {
-              ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: .butterScotch))
-                .scaleEffect(1.2, anchor: .center)
-                .padding(.vertical)
-                .task {
-                  await loadMoreIfNeeded()
-                }
-            }
-          }
-        }
-        .listRowSeparator(.hidden)
-        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-      }
-      .refreshable(action: refresh)
-      .selectionDisabled()
-      .listStyle(.plain)
-      .scrollIndicators(.hidden)
-    }
-  }
+	var body: some View {
+		ScrollView {
+			LazyVStack(alignment: .center) {
+				ForEach(viewModels) { viewModel in
+					ExploreItemView(
+						viewModel: viewModel,
+						distance: viewModel.distance(to: currentLocation),
+						onClickHeart: {
+							onClickHeart(viewModel)
+						},
+						onClickSelect: {
+							onClickSelect(viewModel)
+						}
+					)
+					.padding(.vertical)
+				}
+				if hasMoreToLoad {
+					ProgressView("Loading Mode Good chooice...")
+						.tint(.butterScotch)
+						.padding(.vertical)
+						.task { await loadMoreIfNeeded() }
+				}
+			}
+			.padding(.horizontal)
+		}
+		.refreshable { await refresh() }
+		.scrollIndicators(.hidden)
+	}
 }
 
 #Preview {
-  ExploreMainScrollView(
-    viewModels: [.dummy, .dummy, .dummy],
-    isLoading: false,
-    onClickHeart: {
-      print($0)
-    }, onClickSelect: {
-      print($0)
-    }, loadMoreIfNeeded: {
-      print("Load more")
-    }, shouldLoadMore: { _ in
-      false
-    }
-  ) {
-  }
+	ExploreMainScrollView(
+		currentLocation: .init(latitude: 23.5, longitude: 121),
+		viewModels: [],
+		isLoading: false,
+		hasMoreToLoad: true,
+		onClickHeart: {
+			print($0)
+		}, onClickSelect: {
+			print($0)
+		}, loadMoreIfNeeded: {
+			print("Load more")
+		}
+	) {
+	}
 }

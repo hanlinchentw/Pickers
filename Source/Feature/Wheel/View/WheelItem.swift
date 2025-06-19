@@ -34,4 +34,13 @@ extension WheelItem {
       WheelItem(title: "Picker!", titleColor: .black, itemColor: .white)
     ]
   }
+
+	static func createWheel(items: [(id: String, name: String)]) -> [WheelItem] {
+		items.enumerated().map { (index, item) in
+			let id = item.id
+			let name = item.name
+			let color: UIColor = index % 2 == 0 ? .pale : .white
+			return WheelItem(id: id, title: name, titleColor: .customblack, itemColor: color)
+		}
+	}
 }

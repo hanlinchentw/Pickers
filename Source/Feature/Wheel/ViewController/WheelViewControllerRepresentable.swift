@@ -9,22 +9,42 @@
 import SwiftUI
 
 struct WheelViewControllerRepresentable: UIViewControllerRepresentable {
+  let pocket: Pocket?
+
   typealias UIViewControllerType = WheelViewController
 
   func makeUIViewController(context: Context) -> WheelViewController {
-    let interactor = WheelInteractor()
-    let presenter = WheelPresenter()
-    let view = WheelViewController(presenter: presenter)
-    presenter.view = view
-    presenter.interactor = interactor
-    return view
+    let wheelItems = WheelItem.dummyItems
+    let config = WheelConfiguration(buttonEnable: !pocket.isNil, diameter: 330)
+    return WheelViewController(wheelItems: wheelItems, configuration: config)
   }
 
-  func updateUIViewController(_ uiViewController: WheelViewController, context: Context) {
-    uiViewController.refreshView()
+  func updateUIViewController(
+		_ uiViewController: WheelViewController,
+		context: Context
+	) {
+		if let places = pocket?.places {
+			let data = WheelItem.createWheel(items: places.map { ($0.id, $0.name) })
+			uiViewController.refreshView(with: data)
+		}
   }
 }
 
 #Preview {
-  WheelViewControllerRepresentable()
+	WheelViewControllerRepresentable(pocket: nil)
+}
+
+extension WheelViewController: WheelDelegate, WheelDataSource {
+  func wheelDidChangeValue(_: Int) {}
+
+  func onClickItem(id: String) {
+  }
+
+  func numberOfSections() -> Int {
+    wheelItems.count
+  }
+
+  func itemsForSections() -> [WheelItem] {
+    wheelItems
+  }
 }

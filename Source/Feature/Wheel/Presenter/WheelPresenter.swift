@@ -13,7 +13,7 @@ import SwiftUI
 protocol WheelPresenting: AnyObject {}
 
 protocol WheelView: AnyObject where Self: UIViewController {
-  func refreshView()
+	func refreshView(with data: [WheelItem])
 }
 
 final class WheelPresenter: WheelPresenting {
@@ -59,7 +59,7 @@ final class WheelPresenter: WheelPresenting {
       guard let self else { return }
       try? interactor?.createEmptyList(name: alert.textFields?[0].text ?? "")
       fetchLists()
-      view?.refreshView()
+//			view?.refreshView(with: )
     }))
     view?.present(alert, animated: true)
   }
@@ -71,21 +71,6 @@ final class WheelPresenter: WheelPresenting {
   func listViewModel(indexPath: IndexPath) -> ListShortcutViewModel {
     let list = lists[indexPath.row - 1]
     return ListShortcutViewModel(id: list.id, name: list.name)
-  }
-}
-
-extension WheelPresenter: WheelDelegate, WheelDataSource {
-  func wheelDidChangeValue(_: Int) {}
-
-  func onClickItem(id: String) {
-  }
-
-  func numberOfSections() -> Int {
-    wheelItems.count
-  }
-
-  func itemsForSections() -> [WheelItem] {
-    wheelItems
   }
 }
 

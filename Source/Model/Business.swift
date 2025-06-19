@@ -12,9 +12,10 @@ import MapKit
 
 struct Root: Decodable {
   let businesses: [Business]
+	let total: Int
 }
 
-struct Business: Codable {
+struct Business: Decodable {
   let id: String
   let name: String
   let rating: Double?
@@ -22,9 +23,34 @@ struct Business: Codable {
   let imageUrl: String?
   let distance: Double?
   let isClosed: Bool?
-  let categories: [String]
+  let categories: [Category]
   let reviewCount: Int?
   let coordinates: CLLocationCoordinate2D
+
+	let location: Location
+
+	enum CodingKeys: String, CodingKey {
+		case id
+		case name
+		case rating
+		case price
+		case imageUrl = "image_url"
+		case distance
+		case isClosed
+		case categories
+		case reviewCount
+		case coordinates
+		case location
+	}
+}
+
+struct Category: Decodable {
+	var alias: String?
+	let title: String
+}
+
+struct Location: Decodable {
+	let displayAddress: [String]?
 }
 
 extension CLLocationCoordinate2D: Codable {
@@ -50,21 +76,6 @@ extension CLLocationCoordinate2D: Codable {
 extension Business: Equatable {
   static func == (lhs: Business, rhs: Business) -> Bool {
     lhs.id == rhs.id
-  }
-}
-
-extension Business {
-  init(from mapItem: MKMapItem) {
-    self.id = mapItem.placemark.coordinate.latitude.description + mapItem.placemark.coordinate.longitude.description
-    self.name = mapItem.name ?? "Unknown"
-    self.rating = nil // Default as MKMapItem doesn't provide rating
-    self.price = nil // MKMapItem doesn't have price info
-    self.imageUrl = nil // No image URL in MKMapItem
-    self.distance = mapItem.distanceFromUser // Custom computed property
-    self.isClosed = nil // MKMapItem doesn't indicate if business is closed
-    self.categories = mapItem.pointOfInterestCategoryTitles
-    self.reviewCount = nil // Default as MKMapItem doesn't provide review count
-    self.coordinates = mapItem.placemark.coordinate
   }
 }
 
