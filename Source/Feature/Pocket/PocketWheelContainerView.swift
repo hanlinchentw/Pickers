@@ -5,27 +5,23 @@
 //  Created by 陳翰霖 on 2024/10/6.
 //
 
-import SwiftData
 import SwiftUI
 
 struct PocketWheelContainerView: View {
-	@Environment(\.modelContext)
-	private var modelContext
 	@State private var isSwitchPocketSheetPresented = false
 	@State private var isSettingsSheetPresented = false
 	@State private var toBeEditedPocket: Pocket?
-	@Binding var currentPocket: Pocket?
+ 	@State private var currentPocket: Pocket = .playground
 
-	var onExploring: () -> Void
+	private var store: PlacesSelectionStore { .shared }
 
-	var pockets: [Pocket] = []
+	var pockets: [Pocket] = [.playground]
 
 	var isPocketEmpty: Bool { pockets.isEmpty }
 
 	var body: some View {
 		PocketWheelView(
-			isPocketEmpty: isPocketEmpty,
-			currentPocketName: currentPocket?.name,
+			currentPocket: currentPocket,
 			onAppear: onAppear,
 			onExplore: goExplore,
 			onPressSettings: goSettings,
@@ -75,7 +71,7 @@ struct PocketWheelContainerView: View {
 // MARK: - Actions
 extension PocketWheelContainerView {
 	func onAppear() {
-		currentPocket = pockets.first
+//		currentPocket = pockets.first
 	}
 
 	func onPressPocketMenu() {
@@ -91,7 +87,6 @@ extension PocketWheelContainerView {
 	}
 
 	func goExplore() {
-		onExploring()
 		toBeEditedPocket = nil
 	}
 
@@ -125,7 +120,5 @@ extension PocketWheelContainerView {
 }
 
 #Preview {
-	PocketWheelContainerView(currentPocket: .constant(nil)) {
-		print("Hello")
-	}
+	PocketWheelContainerView()
 }

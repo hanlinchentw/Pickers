@@ -9,10 +9,9 @@ import SwiftUI
 
 struct PocketWheelView<WheelView: View>: View {
 	// MARK: - States
-	let isPocketEmpty: Bool
+	let currentPocket: Pocket
 
 	// MARK: - Actions
-	let currentPocketName: String?
 	let onAppear: () -> Void
 	let onExplore: () -> Void
 	let onPressSettings: () -> Void
@@ -27,11 +26,7 @@ struct PocketWheelView<WheelView: View>: View {
 		VStack {
 			topHorizontalView.padding(.horizontal)
 			wheelView()
-			if isPocketEmpty {
-				emptyView
-			} else {
-				editListBtn
-			}
+			editListBtn
 		}
 		.onAppear { onAppear() }
 	}
@@ -55,20 +50,22 @@ private extension PocketWheelView {
 
 	@ViewBuilder var pocketSwitchEntryView: some View {
 		ZStack {
-				let title = currentPocketName ?? "Create a New Pocket"
-				Text(title).en16Bold()
-				HStack {
-						Spacer()
-						Image(systemName: "chevron.down")
-								.size(14)
-								.padding(.trailing)
-				}
+			Text(currentPocket.name).en16Bold()
+			HStack {
+				Spacer()
+				Image(systemName: "chevron.down")
+					.size(14)
+					.padding(.trailing)
+			}
 		}
-		.foregroundStyle(Color.primary)
+		.foregroundStyle(
+			currentPocket.isPlayground ? Color.gray9 : Color.primary
+		)
 		.frame(width: UIScreen.screenWidth / 2, height: 48)
-		.overlay {
-			RoundedCorner(radius: 24).stroke(.black)
-		}
+		.background { Color.white }
+		.clipShape(
+			Capsule()
+		)
 		.onTapGesture {
 			onPressPocketMenu()
 		}
@@ -127,8 +124,7 @@ private extension PocketWheelView {
 
 #Preview {
 	PocketWheelView(
-		isPocketEmpty: false,
-		currentPocketName: "My Pocket",
+		currentPocket: .playground,
 		onAppear: {},
 		onExplore: {},
 		onPressSettings: {},

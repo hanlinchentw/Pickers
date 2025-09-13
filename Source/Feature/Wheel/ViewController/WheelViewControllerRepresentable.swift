@@ -35,16 +35,20 @@ struct WheelViewControllerRepresentable: UIViewControllerRepresentable {
 }
 
 extension WheelViewController: WheelDelegate, WheelDataSource {
+	var items: [WheelItem] {
+		wheelItems.isEmpty ? WheelItem.dummyItems : wheelItems
+	}
+
   func wheelDidChangeValue(_: Int) {}
 
   func onClickItem(id: String) {
   }
 
   func numberOfSections() -> Int {
-    wheelItems.count
+		items.count
   }
 
   func itemsForSections() -> [WheelItem] {
-    wheelItems
+		items
   }
 }

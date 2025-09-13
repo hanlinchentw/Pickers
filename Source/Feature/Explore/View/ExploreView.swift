@@ -13,25 +13,21 @@ import SwiftData
 import SwiftUI
 
 struct ExploreView: View {
-  @Environment(\.modelContext)
-  private var context
-	@Environment(LocationManager.self)
-	private var locationManager
+	@Environment(LocationManager.self) private var locationManager
+
+	@State private var exploreModel = ExploreModel()
 
   @State private var searchedText = ""
   @State private var browseMode: BrowseMode = .list
+
   @State private var priceRange: Double = 0
-  @State private var isLoading = false
-  @State private var sortOption: SortOption = .distance
+	@State private var sortOption: SortOption = .distance
   @State private var showFilterSheet = false
-	
+
+	@State private var isLoading = false
+
 	@Query private var addresses: [UserAddress]
-	@AppStorage(Defaults.Keys.currentAddressId.name)
-	var currentAddressId: String?
-
-	@Bindable var exploreModel: ExploreModel
-
-	let onSelectPlace: (PlaceViewModel) -> Void
+	@AppStorage(Defaults.Keys.currentAddressId.name) var currentAddressId: String?
 
 	var currentAddress: UserAddress? {
 		if let address = addresses.first(where: {
@@ -89,7 +85,9 @@ struct ExploreView: View {
           isLoading: isLoading,
 					hasMoreToLoad: exploreModel.hasMoreToLoad,
           onClickHeart: exploreModel.onClickLikeButton,
-					onClickSelect: onSelectPlace,
+					onClickSelect: {
+						exploreModel.onClickSelectButton($0)
+					},
           loadMoreIfNeeded: {
             await exploreModel.fetchMore(location: location)
           },
@@ -119,9 +117,7 @@ extension PlaceViewModel: Identifiable {}
 #if DEBUG
 struct ExploreView_Previews: PreviewProvider {
   static var previews: some View {
-    ExploreView(
-			exploreModel: .init(placeRepository: PlaceRepositoryPreview())
-		) { _ in }
+		ExploreView()
     .dummySwiftDataModelContainer()
 		.environment(LocationManager())
   }
@@ -129,9 +125,7 @@ struct ExploreView_Previews: PreviewProvider {
 
 struct ExploreViewLocationNotFoundPreviews: PreviewProvider {
   static var previews: some View {
-    ExploreView(
-			exploreModel: .init(placeRepository: PlaceRepositoryPreview())
-		) { _ in }
+    ExploreView()
     .dummySwiftDataModelContainer()
 		.environment(LocationManager())
   }

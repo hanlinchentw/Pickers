@@ -15,13 +15,18 @@ import SwiftUI
 @Observable
 class ExploreModel {
   let placeRepository: PlaceRepository
+	let selectionStore: PlacesSelectionStore
 
   private(set) var viewModels = [PlaceViewModel]()
 
   var searchRange = Distance.kilometer(5)
 
-	init(placeRepository: PlaceRepository = DependencyContainer.shared.getService()) {
+	init(
+		placeRepository: PlaceRepository = DependencyContainer.shared.getService(),
+		selectionStore: PlacesSelectionStore = .shared
+	) {
 		self.placeRepository = placeRepository
+		self.selectionStore = selectionStore
 	}
 
   var searchRangeBinding: Binding<Double> {
@@ -83,6 +88,14 @@ class ExploreModel {
       print(error.localizedDescription)
     }
   }
+
+	func onClickSelectButton(_ viewModel: PlaceViewModel) {
+		if selectionStore.togglePlace(model: viewModel) {
+			if let firstIndex = viewModels.firstIndex(of: viewModel) {
+				viewModels[firstIndex].isSelected.toggle()
+			}
+		}
+	}
 
   func onClickLikeButton(_ viewModel: PlaceViewModel) {
     let container: PlaceModelContainer = DependencyContainer.shared.getService()

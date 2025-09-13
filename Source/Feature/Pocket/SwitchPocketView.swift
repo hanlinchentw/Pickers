@@ -17,7 +17,7 @@ struct PocketRowItem: Identifiable, Equatable {
 }
 
 struct SwitchPocketView: View {
-	@State var pocketRowItems: [PocketRowItem]
+	@State private var pocketRowItems: [PocketRowItem]
 
 	let onClickCreateBtn: () -> Void
 	let onSelectPocket: (Pocket) -> Void

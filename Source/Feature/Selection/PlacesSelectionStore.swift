@@ -11,23 +11,31 @@ import Observation
 
 @Observable
 final class PlacesSelectionStore {
+	static let shared = PlacesSelectionStore()
+
   var selectedPlaces: [PlaceViewModel] = []
 
-  func onClickSelectButton(viewModel: PlaceViewModel) {
-    if isSelected(id: viewModel.id) {
-      removePlace(with: viewModel)
-    } else {
-      addPlace(with: viewModel)
-    }
+	@discardableResult
+	func togglePlace(model: PlaceViewModel) -> Bool {
+		if selectedPlaces.contains(model) {
+			removePlace(with: model)
+		} else {
+			addPlace(with: model)
+		}
+	}
+
+	@discardableResult
+	func removePlace(with model: PlaceViewModel) -> Bool {
+		if !selectedPlaces.contains(model) { return false }
+		selectedPlaces.removeAll(where: { $0 == model })
+		return true
   }
 
-  func removePlace(with model: PlaceViewModel) {
-    selectedPlaces = selectedPlaces.filter { $0.id == model.id }
-  }
-
-  func addPlace(with model: PlaceViewModel) {
-    if selectedPlaces.contains(model) { return }
+	@discardableResult
+	func addPlace(with model: PlaceViewModel) -> Bool {
+    if selectedPlaces.contains(model) { return false }
     selectedPlaces.append(model)
+		return true
   }
 
   func isSelected(id: String) -> Bool {

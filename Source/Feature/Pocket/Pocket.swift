@@ -11,6 +11,15 @@ struct Pocket: Identifiable, Equatable {
 	let id: String
 	let name: String
 	var places: [Place] = []
-	let createdTime: Date = Date()
+	let createdTime = Date()
 }
 
+extension Pocket {
+	static var playground: Pocket {
+		.init(id: "Playground", name: "Playground")
+	}
+
+	var isPlayground: Bool {
+		self.id == Self.playground.id
+	}
+}

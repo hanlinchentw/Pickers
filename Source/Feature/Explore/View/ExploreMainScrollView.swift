@@ -18,9 +18,7 @@ struct ExploreMainScrollView: View {
 	var onClickSelect: (PlaceViewModel) -> Void
 	var loadMoreIfNeeded: @Sendable () async -> Void
 	var refresh: @Sendable () async -> Void
-}
 
-extension ExploreMainScrollView {
 	var body: some View {
 		ScrollView {
 			LazyVStack(alignment: .center) {
@@ -28,12 +26,8 @@ extension ExploreMainScrollView {
 					ExploreItemView(
 						viewModel: viewModel,
 						distance: viewModel.distance(to: currentLocation),
-						onClickHeart: {
-							onClickHeart(viewModel)
-						},
-						onClickSelect: {
-							onClickSelect(viewModel)
-						}
+						onClickHeart: { onClickHeart(viewModel) },
+						onClickSelect: { onClickSelect(viewModel) }
 					)
 					.padding(.vertical)
 				}
